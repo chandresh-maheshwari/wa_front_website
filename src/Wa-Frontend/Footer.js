@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-// import wastefooterlogo from '../Images/wasteAccountfooterlogo.png'
 import { useEffect, useState } from 'react';
 import Authapi from '../Authapi';
 
@@ -52,7 +51,7 @@ const Footer = () => {
                                 <div className="col-md-4">
                                     <div className="address-waste">
                                         <p style={{ fontWeight: "500" }}>{topbardata.title2}</p>
-                                        <p style={{ fontWeight: "100", marginTop: "-3%" }}>
+                                        <p style={{ fontWeight: "100", marginTop: "-3%",width:"167px",margin:"auto" }}>
                                             {topbardata.description}
                                             {/* Filwood Green Business Park<br />
                                         l Filwood Park Lane <br />
@@ -67,9 +66,9 @@ const Footer = () => {
                                         {/* <div class="vl"></div> */}
                                         <span>{topbardata.title3}</span><br />
 
-                                        <Link className="mail-link" href="#" > > {topbardata.mailtitle1} </Link><br />
-                                        <Link className="mail-link" href="#" > > {topbardata.mailtitle2}</Link><br />
-                                        <Link className="mail-link" href="#" > > {topbardata.mailtitle3} </Link><br />
+                                        <Link className="mail-link" to={topbardata.maillink1} > > {topbardata.mailtitle1} </Link><br />
+                                        <Link className="mail-link" to={topbardata.maillink2}> > {topbardata.mailtitle2}</Link><br />
+                                        <Link className="mail-link" to={topbardata.maillink3} > > {topbardata.mailtitle3} </Link><br />
                                     </div>
                                 </div>
                             </div>

@@ -9,12 +9,13 @@ export default {
     : "http://hrmsstagingapi.cherrypiksoftware.com/",
 
   apis: {
-    // login: 'api/login',
-    // LoginExToken: 'api/refresh',
-    Toppageget:'api/page/Top Page',
-    Footerpageget:'api/page/Footer',
-    Navbarpageget:'api/page/Navbar',
-    dynamicpageget:'api/page/',
+    Toppageget: 'api/page/Top Page',
+    Footerpageget: 'api/page/Footer',
+    Navbarpageget: 'api/page/Navbar',
+    dynamicpageget: 'api/page/',
+    notfoundpageget: 'api/page/Page Not Found',
 
+    Alldynamicpageget: 'api/pages',
+    contactdatapost: 'api/contact-page-store',
   },
 };

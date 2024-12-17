@@ -1,13 +1,13 @@
 import { Outlet, Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from 'react';
 import Authapi from '../Authapi';
 
 const Navlayout = () => {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const [topbardata, setTopbardata] = useState([]);
-    const [statu, setStatus] = useState([]);
+    // const [statu, setStatus] = useState([]);
     const [buttonData, setButtonData] = useState({});
 
     useEffect(() => {
