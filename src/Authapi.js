@@ -117,6 +117,25 @@ export default new (class AuthApi {
     }
 
 
+    async Alldynamicpagegetnav() {
+        try {
+            const url = Config.apiurl + Config.apis.Alldynamicpagegetnav;
+            this.setHeaders("get");
+            const response = await axios.get(url, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            throw error;
+        }
+    }
+
+
+
+
     async contactdatapost(formData) {
         console.log(formData)
         const formDataapi = {

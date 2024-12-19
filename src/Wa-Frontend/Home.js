@@ -14,7 +14,7 @@ import Authapi from '../Authapi';
 import plushicon from './Ourproductimages/plush.png';
 import righticon from './Ourproductimages/righticon.png';
 import Swal from 'sweetalert2';
-
+import ls from 'local-storage';
 
 const Home = () => {
 
@@ -37,7 +37,7 @@ const Home = () => {
     const [description, setDescription] = useState([]);
     const [formData, setFormData] = useState({});
     const [errors, setErrors] = useState({});
-    const [statu, setStatus] = useState([]);
+    const [statu, setStatus] = useState({});
 
     useEffect(() => {
         if (sliderRef) {
@@ -52,22 +52,25 @@ const Home = () => {
     useEffect(() => {
         fetchData();
     }, []);
-
+    // console.log(statu)
     const fetchData = async () => {
         try {
             const response = await Authapi.Alldynamicpageget();
-            if (response.status === true) {
-                setHomesection(response.results[0].post_store[0])
-                setTransforming(response.results[1].post_store)
-                setStatus(response.results)
 
-                const dynamicTitles = response.results[9].post_store.flatMap(post =>
+            if (response.status === true) {
+                // console.log(response.results)
+                ls("data", response.results)
+                setStatus(response.results)
+                setHomesection(response.results.home_section.post_store[0])
+                setTransforming(response.results.page_section.post_store)
+
+                const dynamicTitles = response.results.about_us.post_store.flatMap(post =>
                     Object.keys(post)
                         .filter(key => key.startsWith('Title'))
                         .map(key => post[key])
                 );
                 setTitles(dynamicTitles);
-                const dynamicDescriptions = response.results[9].post_store.flatMap(post =>
+                const dynamicDescriptions = response.results.about_us.post_store.flatMap(post =>
                     Object.keys(post)
                         .filter(key => key.startsWith('Description'))
                         .map(key => post[key])
@@ -112,7 +115,7 @@ const Home = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         const newErrors = {};
-        statu[8]?.post_store.forEach((item, index) => {
+        statu.contact_us?.post_store.forEach((item, index) => {
             const value = formData[`field${index}`];
             if (!value) {
                 newErrors[`label${index}`] = "This field is required";
@@ -164,7 +167,7 @@ const Home = () => {
 
 
     const renderCards = () => {
-        return statu[3]?.post_store.map((card, index) => {
+        return statu.our_products?.post_store.map((card, index) => {
             const hasContent = card.Title1 || card.Cardtext1 || card.Cardtext2 || card.Cardtext3 || card.Cardtext4 || card.Cardtext5 || card.Cardtextlight1 || card.Montlyfeetext || card.Montlyfeecardtext1 || card.Montlyfeecardtext2;
             if (!hasContent) return null;
 
@@ -212,7 +215,8 @@ const Home = () => {
 
     return (
         <>
-            {statu[0]?.status === 1 &&
+            {console.log(statu.home_section?.post_store[0])}
+            {statu.home_section?.status === 1 &&
                 <section className="homesection">
                     <div className="container">
                         <div className='home'>
@@ -237,13 +241,13 @@ const Home = () => {
                 </section>
             }
             {/* Treansforming the wast industre section */}
-            {statu[1]?.status === 1 &&
+            {statu.page_section?.status === 1 &&
                 <section className="page-section" id="transforming_section">
                     <div className="container p-5">
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="transfo">
-                                    <h5 className="text-center">{statu[1]?.page_description}</h5>
+                                    <h5 className="text-center">{statu.page_section?.page_description}</h5>
                                 </div>
                             </div>
                         </div>
@@ -276,17 +280,17 @@ const Home = () => {
             }
 
             {/* qutesection */}
-            {statu[2]?.status === 1 &&
+            {statu.qute_section?.status === 1 &&
                 <section className="qute-sec" id="testimonial_section">
                     <div className="container-fluid">
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="sec-3-text">
-                                    <img src={statu[2]?.post_store[0]?.Qutesectionimage} className="quoteimage1" alt="quoteimage1" />
+                                    <img src={statu.qute_section?.post_store[0]?.Qutesectionimage} className="quoteimage1" alt="quoteimage1" />
                                 </div>
                                 <div className="sec-3-text2">
-                                    <p className="text-light">{statu[2]?.post_store[0]?.Qutesectiontitle} <br />
-                                        <span className="text-secondary" style={{ fontSize: "small" }}>{statu[2]?.post_store[0]?.Qutesectiondescription}</span>
+                                    <p className="text-light">{statu.qute_section?.post_store[0]?.Qutesectiontitle} <br />
+                                        <span className="text-secondary" style={{ fontSize: "medium" }}>{statu.qute_section?.post_store[0]?.Qutesectiondescription}</span>
                                     </p>
                                 </div>
                             </div>
@@ -296,32 +300,36 @@ const Home = () => {
             }
 
             {/* medal section */}
-            {statu[3]?.status === 1 &&
+            {statu.our_products?.status === 1 &&
                 <section className="packages-sec" id="package_section">
                     <div className="container mt-2">
                         <div className="waste-management-service-title">
-                            <h4>{statu[3]?.page_description}</h4>
+                            <h4>{statu.our_products?.page_description}</h4>
                         </div>
                         <div className="row">
                             {renderCards()}
                         </div>
-                        <div className="row mt-5">
-                            <div className="col-12">
-                                <button type="button" onClick={() => navigate("/menu/contact-us")} className="btn sky-blue-btn">Contact Us</button>
+                        {statu.contact_us?.page_status === 1 &&
+
+                            <div className="row mt-5">
+                                <div className="col-12">
+                                    <button type="button" onClick={() => navigate("/menu/contact-us")} className="btn sky-blue-btn">Contact Us</button>
+                                </div>
                             </div>
-                        </div>
+                        }
+
                     </div>
                 </section>
             }
 
             {/* why chose wasted account section */}
-            {statu[4]?.status === 1 &&
+            {statu.choose_section?.status === 1 &&
                 <section className="why_choose_section">
                     <div className="container p-5">
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="transfo">
-                                    <h5 className="text-center">{statu[4]?.page_description}</h5>
+                                    <h5 className="text-center">{statu.choose_section?.page_description}</h5>
                                 </div>
                             </div>
                         </div>
@@ -329,7 +337,7 @@ const Home = () => {
 
                     <div className="container type-2">
                         <div className="row">
-                            {statu[4]?.post_store.map((item, index) => (
+                            {statu.choose_section?.post_store.map((item, index) => (
                                 <div className={`col col-md-6 col-sm-6 col-xs-3 ${index % 2 === 0 ? 'text-end' : 'text-start'}`} key={item.id}>
                                     <h5 className="for-waste">{item.Title1}</h5>
                                     <p style={{ marginTop: "25px" }}>
@@ -347,18 +355,18 @@ const Home = () => {
             }
 
             {/* slider section */}
-            {statu[5]?.status === 1 &&
+            {statu.why_section?.status === 1 &&
                 <section className="why-section" id="logo_section">
                     <div className="container" onClick={handlePlayPause}>
                         <div className="sliderconatainer">
                             <h2 className="font-weight-light slider-heading text-center">
-                                {statu[5]?.page_description}
+                                {statu.why_section?.page_description}
                             </h2>
                             <div className="slider-container">
                                 {isPlaying ? '' : ''}
                                 <div onClick={handleContainerClick}>
                                     <Slider ref={(slider) => setSliderRef(slider)} {...settings}>
-                                        {statu[5]?.post_store.map((item, index) => (
+                                        {statu.why_section?.post_store.map((item, index) => (
                                             <div key={item.id}>
                                                 <img src={item.Image} className="sliderimages" alt={`Logo ${index + 1}`} />
                                             </div>
@@ -375,17 +383,17 @@ const Home = () => {
             }
 
             {/* qutesection2 */}
-            {statu[3]?.status === 1 &&
+            {statu.our_products?.status === 1 &&
                 <section className="qute-sec" id="testimonial_section">
                     <div className="container-fluid">
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="sec-3-text">
-                                    <img src={statu[2]?.post_store[1]?.Qutesectionimage} className="quoteimage1" alt="quoteimage1" />
+                                    <img src={statu.qute_section?.post_store[1]?.Qutesectionimage} className="quoteimage1" alt="quoteimage1" />
                                 </div>
                                 <div className="sec-3-text2">
-                                    <p className="text-light">{statu[2]?.post_store[1]?.Qutesectiontitle}  <br />
-                                        <span className="text-secondary" style={{ fontSize: "x-small" }}>{statu[2]?.post_store[1]?.Qutesectiondescription}</span>
+                                    <p className="text-light">{statu.qute_section?.post_store[1]?.Qutesectiontitle}  <br />
+                                        <span className="text-secondary" style={{ fontSize: "medium" }}>{statu.qute_section?.post_store[1]?.Qutesectiondescription}</span>
                                     </p>
                                 </div>
                             </div>
@@ -395,26 +403,26 @@ const Home = () => {
             }
 
             {/* section tell more  */}
-            {statu[6]?.status === 1 &&
+            {statu.tell_me_more_section?.status === 1 &&
                 <section className='tellmemore'>
                     <div className='container'>
-                        <h4 className='tellmemoretitle'>{statu[6]?.post_store[0]?.Title}</h4>
+                        <h4 className='tellmemoretitle'>{statu.tell_me_more_section?.post_store[0]?.Title}</h4>
                         <div className="row">
                             <div className="col-12">
-                                <button type="submit" className="btn w-auto sky-blue-btn-tellmemore">{statu[6]?.post_store[0]?.Buttontext}</button>
+                                <button type="submit" className="btn w-auto sky-blue-btn-tellmemore">{statu.tell_me_more_section?.post_store[0]?.Buttontext}</button>
                             </div>
                         </div>
                     </div>
                 </section>
             }
 
-            {statu[9]?.status === 1 &&
+            {statu.about_us?.status === 1 &&
                 <section className="page-section" id="package_section">
                     <div className="container type-1">
                         <div className="row">
                             <div className="col-12">
                                 <div className="sec-8-heading">
-                                    <h1 className="text-center mb-4">{statu[9]?.page_name}</h1>
+                                    <h1 className="text-center mb-4" id='About-us'>{statu.about_us?.page_name}</h1>
                                 </div>
                             </div>
                         </div>
@@ -447,12 +455,12 @@ const Home = () => {
             }
             {/* section image  */}
 
-            {statu[7]?.status === 1 &&
+            {statu.page_image_section?.status === 1 &&
                 <section className="imagesection" id="parallaximagesection">
                     <div className="container-fluid">
                         <div className="row">
                             <div className="col-12 p-0">
-                                <div className="parallax-img" style={{ backgroundImage: `url(${statu[7]?.image})` }}>
+                                <div className="parallax-img" style={{ backgroundImage: `url(${statu.page_image_section?.image})` }}>
                                 </div>
                             </div>
                         </div>
@@ -461,7 +469,7 @@ const Home = () => {
             }
 
             {/* lets talk section */}
-            {statu[8]?.status === 1 &&
+            {statu.contact_us?.status === 1 &&
                 <section className="lets-talk-sec" id="package_section">
                     <div className="container" id="sec-10">
                         <div className='contactusswction'>
@@ -469,16 +477,16 @@ const Home = () => {
                                 <div className='row ' >
 
                                     <div className='col-12' >
-                                        <h4 className="letstallktitle">{statu[8]?.post_store[0]?.Title}</h4>
+                                        <h4 className="letstallktitle">{statu.contact_us?.post_store[0]?.Title}</h4>
                                         <div className="inputgroup">
-                                            {statu[8]?.post_store[0]?.Description}
+                                            {statu.contact_us?.post_store[0]?.Description}
 
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="row">
-                                    {statu[8]?.post_store.map((item, index) => (
+                                    {statu.contact_us?.post_store.map((item, index) => (
                                         <div className='col-md-6' key={index}>
                                             <div className="inputgroup">
                                                 <label>

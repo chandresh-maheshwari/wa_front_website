@@ -6,7 +6,7 @@ const TopNav = () => {
     const [topbardata, setTopbardata] = useState({});
     const [statu, setStatus] = useState([]);
     useEffect(() => {
-        fetchData();    
+        fetchData();
     }, []);
 
     const fetchData = async () => {
@@ -20,7 +20,7 @@ const TopNav = () => {
             }
         } catch (error) {
             console.log(error)
-            alert(error)
+
         }
     };
 
@@ -46,6 +46,7 @@ const TopNav = () => {
                             </div>
                         </div>
                     </div>
+                    <div class="topbarline"></div>
                 </div>
             ) : ("")
             }

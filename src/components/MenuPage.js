@@ -5,7 +5,7 @@ import righticon from './img/righticon.png';
 import plushicon from './img/plush.png';
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
-
+import ls from 'local-storage';
 const MenuPage = () => {
     const location = useLocation();
     const { menuName } = useParams();
@@ -29,7 +29,7 @@ const MenuPage = () => {
         marginRight: '10px',
     };
 
-    console.log(topbardata);
+    // console.log(status);
 
     useEffect(() => {
         const menuTitle = location.state?.menuName ||
@@ -48,6 +48,7 @@ const MenuPage = () => {
         try {
             const response = await Authapi.dynamicpageget(currentMenu);
             if (response.status === true) {
+                // ls()
                 setTopbardata(response.post_store || []);
                 setStatus(response.page);
 
@@ -103,7 +104,7 @@ const MenuPage = () => {
 
         if (Object.values(newErrors).some(error => error)) {
             setErrors(newErrors);
-            console.log(newErrors);
+            // console.log(newErrors);
         } else {
             try {
                 const response = await Authapi.contactdatapost(formData);
@@ -112,7 +113,7 @@ const MenuPage = () => {
                         icon: 'success',
                         title: 'Success!',
                         text: 'Form submitted successfully!',
-                        background: '#f8f9fa', 
+                        background: '#f8f9fa',
                         showConfirmButton: true,
                         confirmButtonText: 'OK'
                     }).then(() => {
@@ -126,7 +127,7 @@ const MenuPage = () => {
                         icon: 'error',
                         title: 'Oops...',
                         text: 'Failed to submit form. Please try again!',
-                        background: '#f8f9fa', 
+                        background: '#f8f9fa',
                         showConfirmButton: true,
                         confirmButtonText: 'OK'
                     });
@@ -146,13 +147,13 @@ const MenuPage = () => {
 
     return (
         <>
-            {currentMenu === 'About Us' && (
+            {currentMenu === 'About Us' && status.page_status === 1 && topbardata.length > 0 ? (
                 <section className="page-section" id="package_section">
                     <div className="container type-1">
                         <div className="row">
                             <div className="col-12">
                                 <div className="sec-8-heading">
-                                    <h1 className="text-center mb-4">{currentMenu}</h1>
+                                    <h1 className="text-center mb-4" id='About-us'>{currentMenu}</h1>
                                 </div>
                             </div>
                         </div>
@@ -163,6 +164,7 @@ const MenuPage = () => {
                                     {titles.map((title, index) => (
                                         <div key={index}>
                                             <h5 className="title-sm">{title}</h5>
+                                            <p></p>
                                         </div>
                                     ))}
                                 </div>
@@ -181,19 +183,19 @@ const MenuPage = () => {
                         </div>
                     </div>
                 </section>
-            )}
-            
-            {currentMenu === 'Our Products' && (
+            ) : currentMenu === 'About Us' && status.page_status === 0 ? (
+                <div className="text-center"> 404 Page Not Found</div>
+            ) : null}
+
+            {currentMenu === 'Our Products' && status.page_status === 1 && topbardata.length > 0 ? (
                 <section className="packages-sec" id="package_section">
                     <div className="container mt-2 mb-5">
                         <div className="row">
-                            <div className="col-12">
-                                <div className="sec-8-heading">
-                                    <h1 className="text-center mb-4">{currentMenu}</h1>
-                                </div>
+                            <div className="col-12 waste-management-service-title ">
+                                <h4>{status.page_description}</h4>
                             </div>
                         </div>
-                        <div className="row">
+                        <div className="row mt-5">
                             {topbardata.map((card, index) => {
                                 const hasContent = card.data.title1 || card.data.cardtext1 || card.data.cardtext2 || card.data.cardtext3 || card.data.cardtext4 || card.data.cardtext5 || card.data.cardtextlight1 || card.data.montlyfeetext || card.data.montlyfeecardtext1 || card.data.montlyfeecardtext2;
 
@@ -240,74 +242,84 @@ const MenuPage = () => {
                                 );
                             })}
                         </div>
-                        <div className="row">
-                            <div className="col-12 mt-5">
-                                <button type="button" onClick={() => navigate("/Contact")} className="btn sky-blue-btn">Contact Us</button>
+                        {/* {console.log(ls("data").about_us)}s */}
+                        {ls("data").about_us.page_status === 1 && (
+                            <div className="row">
+                                <div className="col-12 mt-5">
+                                    <button type="button" onClick={() => navigate("/menu/contact-us")} className="btn sky-blue-btn">Contact Us</button>
+                                </div>
                             </div>
-                        </div>
+                        )}
+
                     </div>
-                </section>
-            )}
+                </section >
+            ) : currentMenu === 'Our Products' && status.page_status === 0 ? (
+                <div className="text-center"> 404 Page Not Found</div>
+            ) : null}
 
-            {currentMenu === 'Contact Us' && (
-                <section className="lets-talk-sec" id="package_section">
-                    <div className="container" id="sec-10">
-                        <div className="row">
-                            <div className="col-12">
-                                <div className="sec-8-heading">
-                                    <h1 className="text-center mb-4">{currentMenu}</h1>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='contactusswction'>
-                            <form id="contactForm">
-                                <div className='row'>
-                                    {topbardata.map((item, index) => (
-                                        <div className='col-12' key={index}>
-                                            <h4 className="letstallktitle">{item.data.title}</h4>
-                                            <div className="inputgroup">
-                                                {item.data.description}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                <div className="row">
-                                    {topbardata.map((item, index) => (
-                                        <div className='col-md-6' key={index}>
-                                            <div className="inputgroup">
-                                                <label>{item.data.label}</label>
-                                                {item.data.label === "Tell us what you need" ? (
-                                                    <textarea
-                                                        className='form-control'
-                                                        name={`field${index}`}
-                                                        rows="4"
-                                                        onChange={(e) => handleInputChange(e, index)}
-                                                    />
-                                                ) : (
-                                                    <input
-                                                        className='form-control'
-                                                        name={`field${index}`}
-                                                        type={item.data.type}
-                                                        onChange={(e) => handleInputChange(e, index)}
-                                                    />
-                                                )}
-                                                {errors[`label${index}`] && <span style={{ color: 'red' }}>{errors[`label${index}`]}</span>}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                <div className="row mt-3">
-                                    <div className="col-12">
-                                        <button type="submit" onClick={handleSubmit} className="btn w-auto sky-blue-btn-sendmeasge">Send my message</button>
+            {
+                currentMenu === 'Contact Us' && status.page_status === 1 && topbardata.length > 0 ? (
+                    <section className="lets-talk-sec" id="package_section">
+                        <div className="container" id="sec-10">
+                            <div className="row">
+                                <div className="col-12">
+                                    <div className="sec-8-heading">
+                                        <h1 className="text-center mb-4">{currentMenu}</h1>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
+                            <div className='contactusswction'>
+                                <form id="contactForm">
+                                    <div className='row'>
+                                        {topbardata.map((item, index) => (
+                                            <div className='col-12' key={index}>
+                                                <h4 className="letstallktitle">{item.data.title}</h4>
+                                                <div className="inputgroup">
+                                                    {item.data.description}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="row">
+                                        {topbardata.map((item, index) => (
+                                            <div className='col-md-6' key={index}>
+                                                <div className="inputgroup">
+                                                    <label>{item.data.label}</label>
+                                                    {item.data.label === "Tell us what you need" ? (
+                                                        <textarea
+                                                            className='form-control'
+                                                            name={`field${index}`}
+                                                            rows="4"
+                                                            onChange={(e) => handleInputChange(e, index)}
+                                                        />
+                                                    ) : (
+                                                        <input
+                                                            className='form-control'
+                                                            name={`field${index}`}
+                                                            type={item.data.type}
+                                                            onChange={(e) => handleInputChange(e, index)}
+                                                        />
+                                                    )}
+                                                    {errors[`label${index}`] && <span style={{ color: 'red' }}>{errors[`label${index}`]}</span>}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="row mt-3">
+                                        <div className="col-12">
+                                            <button type="submit" onClick={handleSubmit} className="btn w-auto sky-blue-btn-sendmeasge">Send my message</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                    </div>
-                </section>
-            )}
+                    </section>
+                ) : currentMenu === 'Contact Us' && status.page_status === 0 ? (
+                    <div className="text-center"> 404 Page Not Found</div>
+                ) : null
+            }
         </>
     );
 };

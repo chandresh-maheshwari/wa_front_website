@@ -7,12 +7,27 @@ const Navlayout = () => {
     // const navigate = useNavigate();
 
     const [topbardata, setTopbardata] = useState([]);
-    // const [statu, setStatus] = useState([]);
+    const [statu, setStatus] = useState([]);
     const [buttonData, setButtonData] = useState({});
+    const [pagegetnav, setPagegetnav] = useState({});
+
+
+    const allowedPageNames = Array.isArray(pagegetnav)
+        ? pagegetnav.map(item => item.page_name)
+        : [];
 
     useEffect(() => {
         fetchData();
+        hardik()
     }, []);
+
+    const hardik = async () => {
+        const response = await Authapi.Alldynamicpagegetnav();
+        if (response.status === true) {
+            setPagegetnav(response.data)
+        }
+    }
+    // console.log(pagegetnav)
 
     const fetchData = async () => {
         try {
@@ -55,51 +70,56 @@ const Navlayout = () => {
             return null;
         }
 
-        return topbardata.map((item, index) => {
-            const menuKey = Object.keys(item).find(key => key.startsWith('menu'));
-            if (!menuKey) return null;
+        return allowedPageNames
+            .map((item, index) => {
 
-            const menuName = item[menuKey];
 
-            return (
-                <div key={index} className="d-flex align-items-center">
-                    {index > 0 && (
-                        <div className="line">
-                            <span>|</span>
-                        </div>
-                    )}
-                    <li className="nav-item">
-                        <Link
-                            className="nav-link"
-                            id="menu-item"
-                            to={`/menu/${menuName.replace(/\s+/g, '-').toLowerCase()}`}
-                            state={{ menuName: menuName }}
-                        >
-                            {menuName}
-                        </Link>
-                    </li>
-                </div>
-            );
-        });
+                return (
+                    <div key={index} className="d-flex align-items-center">
+                        {index > 0 && (
+                            <div className="line">
+                                <span>|</span>
+                            </div>
+                        )}
+                        <li className="nav-item">
+                            <Link
+                                className="nav-link"
+                                id="menu-item"
+                                to={`/menu/${item.replace(/\s+/g, '-').toLowerCase()}`}
+                                state={{ menuName: item }}
+                            >
+                                {item}
+                            </Link>
+                        </li>
+                    </div>
+                );
+            });
     };
 
     const renderButtons = () => {
-        return Object.entries(buttonData).map(([buttonNum, data]) => (
-            <button
-                key={buttonNum}
-                type="button"
-                className="btn btn-outline-light"
-                onClick={() => data.buttonlink ? window.location.href = data.buttonlink : null}
-                id={`button${buttonNum}`}
-                style={{
-                    backgroundColor: data.buttonbackgroundcolor || '',
-                    color: data.buttontextcolor || '',
-                    marginLeft: '10px'
-                }}
-            >
-                {data.buttontitle}
-            </button>
-        ));
+        const showContactButton = allowedPageNames.includes('Contact Us');
+        return Object.entries(buttonData).map(([buttonNum, data]) => {
+            if (data.buttontitle === 'Contact Us' && !showContactButton) {
+                return null;
+            }
+
+            return (
+                <button
+                    key={buttonNum}
+                    type="button"
+                    className="btn btn-outline-light"
+                    onClick={() => data.buttonlink ? window.location.href = data.buttonlink : null}
+                    id={`button${buttonNum}`}
+                    style={{
+                        backgroundColor: data.buttonbackgroundcolor || '',
+                        color: data.buttontextcolor || '',
+                        marginLeft: '10px'
+                    }}
+                >
+                    {data.buttontitle}
+                </button>
+            );
+        });
     };
 
     return (
