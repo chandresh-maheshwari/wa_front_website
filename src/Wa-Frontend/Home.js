@@ -56,10 +56,12 @@ const Home = () => {
     const fetchData = async () => {
         try {
             const response = await Authapi.Alldynamicpageget();
+            console.log(response.results.contact_us.ordering)
 
+            console.log(response.results)
             if (response.status === true) {
-                // console.log(response.results)
                 ls("data", response.results)
+
                 setStatus(response.results)
                 setHomesection(response.results.home_section.post_store[0])
                 setTransforming(response.results.page_section.post_store)
@@ -83,6 +85,40 @@ const Home = () => {
             console.log(error)
         }
     };
+
+    // const fetchData = async () => {
+    //     try {
+    //         const response = await Authapi.Alldynamicpageget();
+
+    //         // Sort the results based on the ordering number
+    //         const sortedResults = response.results.sort((a, b) => a.orderingNumber - b.orderingNumber);
+    //         console.log(sortedResults); // Log the sorted results
+
+    //         if (response.status === true) {
+    //             ls("data", sortedResults);
+    //             setStatus(sortedResults);
+    //             setHomesection(sortedResults.home_section.post_store[0]);
+    //             setTransforming(sortedResults.page_section.post_store);
+
+    //             const dynamicTitles = sortedResults.about_us.post_store.flatMap(post =>
+    //                 Object.keys(post)
+    //                     .filter(key => key.startsWith('Title'))
+    //                     .map(key => post[key])
+    //             );
+    //             setTitles(dynamicTitles);
+    //             const dynamicDescriptions = sortedResults.about_us.post_store.flatMap(post =>
+    //                 Object.keys(post)
+    //                     .filter(key => key.startsWith('Description'))
+    //                     .map(key => post[key])
+    //             );
+    //             setDescription(dynamicDescriptions);
+    //         } else {
+    //             console.error('Invalid response structure:', response);
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
 
     const handlePlayPause = () => {
         setIsPlaying(!isPlaying);
@@ -213,318 +249,337 @@ const Home = () => {
         });
     };
 
+    const renderSections = () => {
+
+        const sections = [
+            {
+                condition: statu.home_section?.status === 1, ordering: statu.home_section?.ordering || 0, content: (
+                    <section className="homesection">
+                        <div className="container">
+                            <div className='home'>
+                                <div className='row'>
+                                    <div className="col-sm-2">
+                                        <img src={homesection.Homesectionimage} alt="homeimg" className='homeimg' />
+                                    </div>
+                                    <div className="col-sm-10">
+                                        <div className='homefont'>
+                                            <h4>{homesection.Homesectiontitle}</h4>
+                                        </div>
+                                        <p className='home-p-font' style={{
+                                            Color: "rgb(173, 173, 173)",
+                                            maxWidth: "46%",
+                                            marginBottom: "27px"
+                                        }}>{homesection.Homesectiondescription}</p>
+                                        <button type="button" className="btn" id="tellmemore">{homesection.Homesectionbuttontitle}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                )
+            },
+            {
+                condition: statu.page_section?.status === 1, ordering: statu.page_section?.ordering || 0, content: (
+                    <section className="page-section" id="transforming_section">
+                        <div className="container p-5">
+                            <div className="row">
+                                <div className="col-md-12">
+                                    <div className="transfo">
+                                        <h5 className="text-center">{statu.page_section?.page_description}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="container">
+                            <div className="row p-5">
+                                <div className="col-md-5">
+                                    <h5 className="transfotext1 for-waste">{Transforming[0]?.Pagesectiontitle1} <br />
+                                        <b>{Transforming[0]?.Pagesectiontitle2}</b>
+                                    </h5>
+                                    <p className="transfotextdes1">
+                                        {Transforming[0]?.Pagesectiondescription}
+                                    </p>
+                                </div>
+                                <div className="col-md-2 stretch-line">
+                                    <img src={homeimg} width="60px" className="strech" alt="strech" />
+                                </div>
+                                <div className="col-md-5">
+                                    <h5 className="transfotext2 for-waste">{Transforming[1]?.Pagesectiontitle1} <br />
+                                        <b>{Transforming[1]?.Pagesectiontitle2}</b>
+                                    </h5>
+                                    <p className="transfotextdes2">
+                                        {Transforming[1]?.Pagesectiondescription}
+                                    </p>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                )
+            },
+            {
+                condition: statu.qute_section_1?.status === 1, ordering: statu.qute_section_1?.ordering || 0, content: (
+                    <section className="qute-sec" id="testimonial_section">
+                        <div className="container-fluid">
+                            <div className="row">
+                                <div className="col-md-12">
+                                    <div className="sec-3-text">
+                                        <img src={statu.qute_section_1?.post_store[0]?.Qutesectionimage} className="quoteimage1" alt="quoteimage1" />
+                                    </div>
+                                    <div className="sec-3-text2">
+                                        <p className="text-light">{statu.qute_section_1?.post_store[0]?.Qutesectiontitle} <br />
+                                            <span className="text-secondary" style={{ fontSize: "medium" }}>{statu.qute_section_1?.post_store[0]?.Qutesectiondescription}</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                )
+            },
+            {
+                condition: statu.qute_section_2?.status === 1, ordering: statu.qute_section_2?.ordering || 0, content: (
+                    <section className="qute-sec" id="testimonial_section">
+                        <div className="container-fluid">
+                            <div className="row">
+                                <div className="col-md-12">
+                                    <div className="sec-3-text">
+                                        <img src={statu.qute_section_2?.post_store[0]?.Qutesectionimage} className="quoteimage1" alt="quoteimage1" />
+                                    </div>
+                                    <div className="sec-3-text2">
+                                        <p className="text-light">{statu.qute_section_2?.post_store[0]?.Qutesectiontitle} <br />
+                                            <span className="text-secondary" style={{ fontSize: "medium" }}>{statu.qute_section_2?.post_store[0]?.Qutesectiondescription}</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                )
+            },
+            {
+                condition: statu.our_products?.status === 1, ordering: statu.our_products?.ordering || 0, content: (
+                    <section className="packages-sec" id="package_section">
+                        <div className="container mt-2">
+                            <div className="waste-management-service-title">
+                                <h4>{statu.our_products?.page_description}</h4>
+                            </div>
+                            <div className="row">
+                                {renderCards()}
+                            </div>
+                            {statu.contact_us?.page_status === 1 &&
+
+                                <div className="row mt-5">
+                                    <div className="col-12">
+                                        <button type="button" onClick={() => navigate("/menu/contact-us")} className="btn sky-blue-btn">Contact Us</button>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    </section>
+                )
+            },
+            {
+                condition: statu.choose_section?.status === 1, ordering: statu.choose_section?.ordering || 0, content: (
+                    <section className="why_choose_section">
+                        <div className="container p-5">
+                            <div className="row">
+                                <div className="col-md-12">
+                                    <div className="transfo">
+                                        <h5 className="text-center">{statu.choose_section?.page_description}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="container type-2">
+                            <div className="row">
+                                {statu.choose_section?.post_store.map((item, index) => (
+                                    <div className={`col col-md-6 col-sm-6 col-xs-3 ${index % 2 === 0 ? 'text-end' : 'text-start'}`} key={item.id}>
+                                        <h5 className="for-waste">{item.Title1}</h5>
+                                        <p style={{ marginTop: "25px" }}>
+                                            {item.Description.split('\r\n').map((line, i) => (
+                                                <React.Fragment key={i}>
+                                                    {line}<br />
+                                                </React.Fragment>
+                                            ))}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                )
+            },
+            {
+                condition: statu.why_section?.status === 1, ordering: statu.why_section?.ordering || 0, content: (
+                    <section className="why-section" id="logo_section">
+                        <div className="container" onClick={handlePlayPause}>
+                            <div className="sliderconatainer">
+                                <h2 className="font-weight-light slider-heading text-center">
+                                    {statu.why_section?.page_description}
+                                </h2>
+                                <div className="slider-container">
+                                    {isPlaying ? '' : ''}
+                                    <div onClick={handleContainerClick}>
+                                        <Slider ref={(slider) => setSliderRef(slider)} {...settings}>
+                                            {statu.why_section?.post_store.map((item, index) => (
+                                                <div key={item.id}>
+                                                    <img src={item.Image} className="sliderimages" alt={`Logo ${index + 1}`} />
+                                                </div>
+                                            ))}
+                                        </Slider>
+                                    </div>
+                                    <button type="submit" onClick={() => navigate("/OurProducts")} className="btn w-auto blue-btn-Find-out-More">
+                                        Find out More
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                )
+            },
+            {
+                condition: statu.tell_me_more_section?.status === 1, ordering: statu.tell_me_more_section?.ordering || 0, content: (
+                    <section className='tellmemore'>
+                        <div className='container'>
+                            <h4 className='tellmemoretitle'>{statu.tell_me_more_section?.post_store[0]?.Title}</h4>
+                            <div className="row">
+                                <div className="col-12">
+                                    <button type="submit" className="btn w-auto sky-blue-btn-tellmemore">{statu.tell_me_more_section?.post_store[0]?.Buttontext}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                )
+            },
+            {
+                condition: statu.about_us?.status === 1, ordering: statu.about_us?.ordering || 0, content: (
+                    <section className="page-section" id="package_section">
+                        <div className="container type-1">
+                            <div className="row">
+                                <div className="col-12">
+                                    <div className="sec-8-heading">
+                                        <h1 className="text-center mb-4" id='About-us'>{statu.about_us?.page_name}</h1>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="row" style={{ marginBottom: "6%" }}>
+                                <div className="col-md-3">
+                                    <div className="content-box">
+                                        {titles.map((title, index) => (
+                                            <div key={index}>
+                                                <h5 className="title-sm">{title}</h5>
+                                                <p></p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="col-md-9">
+                                    <div className="content-box">
+                                        {Array.isArray(description) ? (
+                                            description.map((descItem, index) => (
+                                                <p key={index}>{descItem}</p>
+                                            ))
+                                        ) : (
+                                            <p>{description}</p>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                )
+            },
+            {
+                condition: statu.page_image_section?.status === 1, ordering: statu.page_image_section?.ordering || 0, content: (
+                    <section className="imagesection" id="parallaximagesection">
+                        <div className="container-fluid">
+                            <div className="row">
+                                <div className="col-12 p-0">
+                                    <div className="parallax-img" style={{ backgroundImage: `url(${statu.page_image_section?.image})` }}>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                )
+            },
+            {
+                condition: statu.contact_us?.status === 1, ordering: statu.contact_us?.ordering || 0, content: (
+                    <section className="lets-talk-sec" id="package_section">
+                        <div className="container" id="sec-10">
+                            <div className='contactusswction'>
+                                <form id="contactForm">
+                                    <div className='row ' >
+
+                                        <div className='col-12' >
+                                            <h4 className="letstallktitle">{statu.contact_us?.post_store[0]?.Title}</h4>
+                                            <div className="inputgroup">
+                                                {statu.contact_us?.post_store[0]?.Description}
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="row">
+                                        {statu.contact_us?.post_store.map((item, index) => (
+                                            <div className='col-md-6' key={index}>
+                                                <div className="inputgroup">
+                                                    <label>
+                                                        {item.Label}
+                                                    </label>
+                                                    {item.Type === "textarea" ? (
+                                                        <textarea
+                                                            className='form-control'
+                                                            name={`field${index}`}
+                                                            rows="4"
+                                                            value={formData[`field${index}`] || ''}
+                                                            onChange={handleInputChange} />
+                                                    ) : (
+                                                        <input
+                                                            className='form-control'
+                                                            name={`field${index}`}
+                                                            id={`field${index}`}
+                                                            type={item.Type}
+                                                            value={formData[`field${index}`] || ''}
+                                                            onChange={handleInputChange} />
+                                                    )}
+                                                    {errors[`label${index}`] && <span style={{ color: 'red' }}>{errors[`label${index}`]}</span>}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                </form>
+
+                                <div className="row mt-3 ">
+                                    <div className="col-12">
+                                        <button type="submit" onClick={handleSubmit} className="btn w-auto sky-blue-btn-sendmeasge">Send my message</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                )
+            }
+        ];
+
+
+        const orderedSections = sections
+            .filter(section => section.condition)
+            .sort((a, b) => a.ordering - b.ordering);
+
+        return orderedSections.map((section, index) => (
+            <div key={index}>{section.content}</div>
+        ));
+    };
+
     return (
         <>
-            {console.log(statu.home_section?.post_store[0])}
-            {statu.home_section?.status === 1 &&
-                <section className="homesection">
-                    <div className="container">
-                        <div className='home'>
-                            <div className='row'>
-                                <div className="col-sm-2">
-                                    <img src={homesection.Homesectionimage} alt="homeimg" className='homeimg' />
-                                </div>
-                                <div className="col-sm-10">
-                                    <div className='homefont'>
-                                        <h4>{homesection.Homesectiontitle}</h4>
-                                    </div>
-                                    <p className='home-p-font' style={{
-                                        Color: "rgb(173, 173, 173)",
-                                        maxWidth: "46%",
-                                        marginBottom: "27px"
-                                    }}>{homesection.Homesectiondescription}</p>
-                                    <button type="button" className="btn" id="tellmemore">{homesection.Homesectionbuttontitle}</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            }
-            {/* Treansforming the wast industre section */}
-            {statu.page_section?.status === 1 &&
-                <section className="page-section" id="transforming_section">
-                    <div className="container p-5">
-                        <div className="row">
-                            <div className="col-md-12">
-                                <div className="transfo">
-                                    <h5 className="text-center">{statu.page_section?.page_description}</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="container">
-                        <div className="row p-5">
-                            <div className="col-md-5">
-                                <h5 className="transfotext1 for-waste">{Transforming[0]?.Pagesectiontitle1} <br />
-                                    <b>{Transforming[0]?.Pagesectiontitle2}</b>
-                                </h5>
-                                <p className="transfotextdes1">
-                                    {Transforming[0]?.Pagesectiondescription}
-                                </p>
-                            </div>
-                            <div className="col-md-2 stretch-line">
-                                <img src={homeimg} width="60px" className="strech" alt="strech" />
-                            </div>
-                            <div className="col-md-5">
-                                <h5 className="transfotext2 for-waste">{Transforming[1]?.Pagesectiontitle1} <br />
-                                    <b>{Transforming[1]?.Pagesectiontitle2}</b>
-                                </h5>
-                                <p className="transfotextdes2">
-                                    {Transforming[1]?.Pagesectiondescription}
-                                </p>
-                                <br />
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            }
-
-            {/* qutesection */}
-            {statu.qute_section?.status === 1 &&
-                <section className="qute-sec" id="testimonial_section">
-                    <div className="container-fluid">
-                        <div className="row">
-                            <div className="col-md-12">
-                                <div className="sec-3-text">
-                                    <img src={statu.qute_section?.post_store[0]?.Qutesectionimage} className="quoteimage1" alt="quoteimage1" />
-                                </div>
-                                <div className="sec-3-text2">
-                                    <p className="text-light">{statu.qute_section?.post_store[0]?.Qutesectiontitle} <br />
-                                        <span className="text-secondary" style={{ fontSize: "medium" }}>{statu.qute_section?.post_store[0]?.Qutesectiondescription}</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            }
-
-            {/* medal section */}
-            {statu.our_products?.status === 1 &&
-                <section className="packages-sec" id="package_section">
-                    <div className="container mt-2">
-                        <div className="waste-management-service-title">
-                            <h4>{statu.our_products?.page_description}</h4>
-                        </div>
-                        <div className="row">
-                            {renderCards()}
-                        </div>
-                        {statu.contact_us?.page_status === 1 &&
-
-                            <div className="row mt-5">
-                                <div className="col-12">
-                                    <button type="button" onClick={() => navigate("/menu/contact-us")} className="btn sky-blue-btn">Contact Us</button>
-                                </div>
-                            </div>
-                        }
-
-                    </div>
-                </section>
-            }
-
-            {/* why chose wasted account section */}
-            {statu.choose_section?.status === 1 &&
-                <section className="why_choose_section">
-                    <div className="container p-5">
-                        <div className="row">
-                            <div className="col-md-12">
-                                <div className="transfo">
-                                    <h5 className="text-center">{statu.choose_section?.page_description}</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="container type-2">
-                        <div className="row">
-                            {statu.choose_section?.post_store.map((item, index) => (
-                                <div className={`col col-md-6 col-sm-6 col-xs-3 ${index % 2 === 0 ? 'text-end' : 'text-start'}`} key={item.id}>
-                                    <h5 className="for-waste">{item.Title1}</h5>
-                                    <p style={{ marginTop: "25px" }}>
-                                        {item.Description.split('\r\n').map((line, i) => (
-                                            <React.Fragment key={i}>
-                                                {line}<br />
-                                            </React.Fragment>
-                                        ))}
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            }
-
-            {/* slider section */}
-            {statu.why_section?.status === 1 &&
-                <section className="why-section" id="logo_section">
-                    <div className="container" onClick={handlePlayPause}>
-                        <div className="sliderconatainer">
-                            <h2 className="font-weight-light slider-heading text-center">
-                                {statu.why_section?.page_description}
-                            </h2>
-                            <div className="slider-container">
-                                {isPlaying ? '' : ''}
-                                <div onClick={handleContainerClick}>
-                                    <Slider ref={(slider) => setSliderRef(slider)} {...settings}>
-                                        {statu.why_section?.post_store.map((item, index) => (
-                                            <div key={item.id}>
-                                                <img src={item.Image} className="sliderimages" alt={`Logo ${index + 1}`} />
-                                            </div>
-                                        ))}
-                                    </Slider>
-                                </div>
-                                <button type="submit" onClick={() => navigate("/OurProducts")} className="btn w-auto blue-btn-Find-out-More">
-                                    Find out More
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            }
-
-            {/* qutesection2 */}
-            {statu.our_products?.status === 1 &&
-                <section className="qute-sec" id="testimonial_section">
-                    <div className="container-fluid">
-                        <div className="row">
-                            <div className="col-md-12">
-                                <div className="sec-3-text">
-                                    <img src={statu.qute_section?.post_store[1]?.Qutesectionimage} className="quoteimage1" alt="quoteimage1" />
-                                </div>
-                                <div className="sec-3-text2">
-                                    <p className="text-light">{statu.qute_section?.post_store[1]?.Qutesectiontitle}  <br />
-                                        <span className="text-secondary" style={{ fontSize: "medium" }}>{statu.qute_section?.post_store[1]?.Qutesectiondescription}</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            }
-
-            {/* section tell more  */}
-            {statu.tell_me_more_section?.status === 1 &&
-                <section className='tellmemore'>
-                    <div className='container'>
-                        <h4 className='tellmemoretitle'>{statu.tell_me_more_section?.post_store[0]?.Title}</h4>
-                        <div className="row">
-                            <div className="col-12">
-                                <button type="submit" className="btn w-auto sky-blue-btn-tellmemore">{statu.tell_me_more_section?.post_store[0]?.Buttontext}</button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            }
-
-            {statu.about_us?.status === 1 &&
-                <section className="page-section" id="package_section">
-                    <div className="container type-1">
-                        <div className="row">
-                            <div className="col-12">
-                                <div className="sec-8-heading">
-                                    <h1 className="text-center mb-4" id='About-us'>{statu.about_us?.page_name}</h1>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="row" style={{ marginBottom: "6%" }}>
-                            <div className="col-md-3">
-                                <div className="content-box">
-                                    {titles.map((title, index) => (
-                                        <div key={index}>
-                                            <h5 className="title-sm">{title}</h5>
-                                            <p></p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                            <div className="col-md-9">
-                                <div className="content-box">
-                                    {Array.isArray(description) ? (
-                                        description.map((descItem, index) => (
-                                            <p key={index}>{descItem}</p>
-                                        ))
-                                    ) : (
-                                        <p>{description}</p>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            }
-            {/* section image  */}
-
-            {statu.page_image_section?.status === 1 &&
-                <section className="imagesection" id="parallaximagesection">
-                    <div className="container-fluid">
-                        <div className="row">
-                            <div className="col-12 p-0">
-                                <div className="parallax-img" style={{ backgroundImage: `url(${statu.page_image_section?.image})` }}>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            }
-
-            {/* lets talk section */}
-            {statu.contact_us?.status === 1 &&
-                <section className="lets-talk-sec" id="package_section">
-                    <div className="container" id="sec-10">
-                        <div className='contactusswction'>
-                            <form id="contactForm">
-                                <div className='row ' >
-
-                                    <div className='col-12' >
-                                        <h4 className="letstallktitle">{statu.contact_us?.post_store[0]?.Title}</h4>
-                                        <div className="inputgroup">
-                                            {statu.contact_us?.post_store[0]?.Description}
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="row">
-                                    {statu.contact_us?.post_store.map((item, index) => (
-                                        <div className='col-md-6' key={index}>
-                                            <div className="inputgroup">
-                                                <label>
-                                                    {item.Label}
-                                                </label>
-                                                {item.Type === "textarea" ? (
-                                                    <textarea
-                                                        className='form-control'
-                                                        name={`field${index}`}
-                                                        rows="4"
-                                                        value={formData[`field${index}`] || ''}
-                                                        onChange={handleInputChange} />
-                                                ) : (
-                                                    <input
-                                                        className='form-control'
-                                                        name={`field${index}`}
-                                                        id={`field${index}`}
-                                                        type={item.Type}
-                                                        value={formData[`field${index}`] || ''}
-                                                        onChange={handleInputChange} />
-                                                )}
-                                                {errors[`label${index}`] && <span style={{ color: 'red' }}>{errors[`label${index}`]}</span>}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-
-                            </form>
-
-                            <div className="row mt-3 ">
-                                <div className="col-12">
-                                    <button type="submit" onClick={handleSubmit} className="btn w-auto sky-blue-btn-sendmeasge">Send my message</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            }
+            {renderSections()}
         </>
     );
 };
