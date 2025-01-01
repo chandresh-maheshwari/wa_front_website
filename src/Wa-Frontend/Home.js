@@ -56,13 +56,14 @@ const Home = () => {
     const fetchData = async () => {
         try {
             const response = await Authapi.Alldynamicpageget();
-            console.log(response.results.contact_us.ordering)
+            // console.log(response.results.contact_us.ordering)
 
-            console.log(response.results)
+            // console.log(response.results)
             if (response.status === true) {
                 ls("data", response.results)
 
                 setStatus(response.results)
+                // console.log(response.results.home_section.post_store[0].)
                 setHomesection(response.results.home_section.post_store[0])
                 setTransforming(response.results.page_section.post_store)
 
@@ -259,18 +260,19 @@ const Home = () => {
                             <div className='home'>
                                 <div className='row'>
                                     <div className="col-sm-2">
-                                        <img src={homesection.Homesectionimage} alt="homeimg" className='homeimg' />
+                                        <img src={homesection?.Homesectionimage} alt="homeimg" className='homeimg' />
                                     </div>
                                     <div className="col-sm-10">
                                         <div className='homefont'>
-                                            <h4>{homesection.Homesectiontitle}</h4>
+                                            <h4>{homesection?.Homesectiontitle}</h4>
                                         </div>
                                         <p className='home-p-font' style={{
                                             Color: "rgb(173, 173, 173)",
                                             maxWidth: "46%",
                                             marginBottom: "27px"
-                                        }}>{homesection.Homesectiondescription}</p>
-                                        <button type="button" className="btn" id="tellmemore">{homesection.Homesectionbuttontitle}</button>
+                                        }}>{homesection?.Homesectiondescription}</p>
+                                        <button type="button" className="btn" id="tellmemore">{homesection?.Homesectionbuttontitle}</button>
+                                        {/* {console.log(homesection.HomeSectionTitle)} */}
                                     </div>
                                 </div>
                             </div>

@@ -10,7 +10,7 @@ const Navlayout = () => {
     const [statu, setStatus] = useState([]);
     const [buttonData, setButtonData] = useState({});
     const [pagegetnav, setPagegetnav] = useState({});
-
+    // console.log(buttonData)
 
     const allowedPageNames = Array.isArray(pagegetnav)
         ? pagegetnav.map(item => item.page_name)
@@ -32,8 +32,9 @@ const Navlayout = () => {
     const fetchData = async () => {
         try {
             const response = await Authapi.Navbarpageget();
+            // console.log(response)zz
             if (response.status === true) {
-                const data = response.post_store[0].data || {};
+                const data = response.page.post_store[0].data || {};
                 const menuData = Object.entries(data)
                     .filter(([key]) => key.startsWith('menu'))
                     .sort((a, b) => {
@@ -41,10 +42,13 @@ const Navlayout = () => {
                         const numB = parseInt(b[0].replace('menu', ''));
                         return numA - numB;
                     })
+
+
                     .map(([key, value]) => ({ [key]: value }));
                 const buttonData = {};
                 Object.entries(data).forEach(([key, value]) => {
-                    if (key.startsWith('button')) {
+                    if (key.startsWith('Button')) {
+                        // console.log(key)
                         const buttonNum = key.replace(/[^0-9]/g, '');
                         if (!buttonData[buttonNum]) {
                             buttonData[buttonNum] = {};
@@ -56,6 +60,7 @@ const Navlayout = () => {
                 setTopbardata(menuData);
                 setButtonData(buttonData);
                 setStatus(response.page)
+                // console.log(menuData)
             } else {
                 console.error('Invalid response structure:', response);
             }
@@ -69,6 +74,7 @@ const Navlayout = () => {
         if (!Array.isArray(topbardata)) {
             return null;
         }
+
 
         return allowedPageNames
             .map((item, index) => {
@@ -98,7 +104,9 @@ const Navlayout = () => {
 
     const renderButtons = () => {
         const showContactButton = allowedPageNames.includes('Contact Us');
+
         return Object.entries(buttonData).map(([buttonNum, data]) => {
+            // console.log(data)
             if (data.buttontitle === 'Contact Us' && !showContactButton) {
                 return null;
             }
@@ -108,15 +116,15 @@ const Navlayout = () => {
                     key={buttonNum}
                     type="button"
                     className="btn btn-outline-light"
-                    onClick={() => data.buttonlink ? window.location.href = data.buttonlink : null}
+                    onClick={() => data.Buttonlink ? window.location.href = data.Buttonlink : null}
                     id={`button${buttonNum}`}
                     style={{
-                        backgroundColor: data.buttonbackgroundcolor || '',
-                        color: data.buttontextcolor || '',
+                        backgroundColor: data.Buttonbackgroundcolor || '',
+                        color: data.Buttontextcolor || '',
                         marginLeft: '10px'
                     }}
                 >
-                    {data.buttontitle}
+                    {data.Buttontitle}
                 </button>
             );
         });

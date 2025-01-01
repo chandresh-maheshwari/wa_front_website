@@ -14,8 +14,9 @@ const Footer = () => {
     const fetchData = async () => {
         try {
             const response = await Authapi.Footerpageget();
+            // console.log(response.page.post_store[0].data)
             if (response.status === true) {
-                setTopbardata(response.post_store[0].data || {});
+                setTopbardata(response.page.post_store[0].data|| {});
                 setStatus(response.page)
             } else {
                 console.error('Invalid response structure:', response);
@@ -33,26 +34,26 @@ const Footer = () => {
                         <div className="container-fluid" id="containerfooter">
                             <div className="row">
                                 <div className="col-md-12" id="waste-white">
-                                    <img src={topbardata.footerlogo} alt="" id="waste-white" />
+                                    <img src={topbardata.Footerlogoimage} alt="" id="waste-white" />
                                 </div>
                             </div>
                             <div className="row">
                                 <div className="col-md-4">
                                     <div className="get-touch">
-                                        <span>{topbardata.title1}</span>
+                                        <span>{topbardata.Title1}</span>
                                         <p></p>
 
-                                        <p className="contactno">{topbardata.footercontact}
+                                        <p className="contactno">{topbardata.Footercontact}
 
                                         </p>
-                                        <p className="footeremail"> {topbardata.footergmail}</p>
+                                        <p className="footeremail"> {topbardata.Footergmail}</p>
                                     </div>
                                 </div>
                                 <div className="col-md-4">
                                     <div className="address-waste">
                                         <p style={{ fontWeight: "500" }}>{topbardata.title2}</p>
                                         <p style={{ fontWeight: "100", marginTop: "-3%",width:"167px",margin:"auto" }}>
-                                            {topbardata.description}
+                                            {topbardata.Description}
                                             {/* Filwood Green Business Park<br />
                                         l Filwood Park Lane <br />
                                         Bristol<br />
@@ -66,9 +67,9 @@ const Footer = () => {
                                         {/* <div class="vl"></div> */}
                                         <span>{topbardata.title3}</span><br />
 
-                                        <Link className="mail-link" to={topbardata.maillink1} > > {topbardata.mailtitle1} </Link><br />
-                                        <Link className="mail-link" to={topbardata.maillink2}> > {topbardata.mailtitle2}</Link><br />
-                                        <Link className="mail-link" to={topbardata.maillink3} > > {topbardata.mailtitle3} </Link><br />
+                                        <Link className="mail-link" to={topbardata.Maillink1} > > {topbardata.Mailtitle1} </Link><br />
+                                        <Link className="mail-link" to={topbardata.Maillink2}> > {topbardata.Mailtitle2}</Link><br />
+                                        <Link className="mail-link" to={topbardata.Maillink3} > > {topbardata.Mailtitle3} </Link><br />
                                     </div>
                                 </div>
                             </div>
@@ -86,16 +87,16 @@ const Footer = () => {
                                         margin: "3%",
                                         margintop: "5%",
                                         fontWeight: "lighter"
-                                    }}>{topbardata.lowerfootertitle}
+                                    }}>{topbardata.Lowerfootertitle}
                                         {/* <strong style={{ fontWeight: "600", color: "gray" }}>MTS Group</strong> */}
                                     </p>
                                     <p>
-                                        <span className="orange-text">{topbardata.lowerfooterdescription}</span>
+                                        <span className="orange-text">{topbardata.Lowerfooterdescription}</span>
                                         {/* <span className="green-text">{topbardata.lowerfooterdescription}</span> */}
                                     </p>
                                     <div className='PartoftheMTSGroup'>
-                                        <p>{topbardata.lowerfooteraddress}</p>
-                                        <p>{topbardata.lowerfootercopyright}</p>
+                                        <p>{topbardata.Lowerfooteraddress}</p>
+                                        <p>{topbardata.Lowerfootercopyright}</p>
                                     </div>
                                 </div>
                             </div>

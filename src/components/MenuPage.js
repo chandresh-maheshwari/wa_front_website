@@ -47,6 +47,7 @@ const MenuPage = () => {
     const fetchData = async () => {
         try {
             const response = await Authapi.dynamicpageget(currentMenu);
+            // console.log(response)
             if (response.status === true) {
                 // ls()
                 setTopbardata(response.post_store || []);
