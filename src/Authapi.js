@@ -3,20 +3,29 @@ import Config from "./Config";
 import axios from "axios";
 import ls from "local-storage";
 
-export default new (class AuthApi {
-    setHeaders(type) {
-        let authToken =
-            ls.get("authToken") &&
-                ls.get("authToken") !== null &&
-                ls.get("authToken") !== false
-                ? ls.get("authToken")
-                : "";
-        axios.defaults.headers[type]["Content-Type"] = "multipart/form-data";
-        // axios.defaults.headers[type]['Content-Type'] = 'application/json;charset=utf-8';
-        axios.defaults.headers[type]["Access-Control-Allow-Origin"] = "*";
-        axios.defaults.headers[type]["Authorization"] = `Bearer ${authToken}`;
-    }
+// export default new (class AuthApi {
+//     setHeaders(type) {
+//         let authToken =
+//             ls.get("authToken") &&
+//                 ls.get("authToken") !== null &&
+//                 ls.get("authToken") !== false
+//                 ? ls.get("authToken")
+//                 : "";
+//         axios.defaults.headers[type]["Content-Type"] = "multipart/form-data";
+//         // axios.defaults.headers[type]['Content-Type'] = 'application/json;charset=utf-8';
+//         axios.defaults.headers[type]["Access-Control-Allow-Origin"] = "*";
+//         axios.defaults.headers[type]["Authorization"] = `Bearer ${authToken}`;
+//     }
 
+
+export default new (class AuthApi {
+    // Helper method to set headers for the request
+    setHeaders(type) {
+        let authToken = ls.get("authToken") || ""; // Simplified the ternary check
+        axios.defaults.headers[type]["Content-Type"] = "application/json";  // Default Content-Type is 'application/json'
+        axios.defaults.headers[type]["Authorization"] = authToken ? `Bearer ${authToken}` : "";
+        axios.defaults.headers[type]["Access-Control-Allow-Origin"] = "*";
+    }
 
     async Toppageget() {
         try {

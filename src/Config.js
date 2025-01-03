@@ -6,7 +6,7 @@ export default {
   apiurl: process.env.NODE_ENV === "development"
     ? "http://wa_front.localhost.com/"
     // : "https://hrmsapi.cherrypiksoftware.com/",
-    : "http://hrmsstagingapi.cherrypiksoftware.com/",
+    : "https://front.wasteaccountant.com/",
 
   apis: {
     Toppageget: 'api/page/Top Page',
@@ -18,6 +18,6 @@ export default {
     Alldynamicpageget: 'api/pages',
     contactdatapost: 'api/contact-page-store',
     Alldynamicpagegetnav: 'api/page-status-data',
-    
+
   },
 };

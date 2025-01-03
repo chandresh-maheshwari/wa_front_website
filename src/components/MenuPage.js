@@ -47,23 +47,23 @@ const MenuPage = () => {
     const fetchData = async () => {
         try {
             const response = await Authapi.dynamicpageget(currentMenu);
-            // console.log(response)
+            // console.log(response.page.post_store)
             if (response.status === true) {
                 // ls()
-                setTopbardata(response.post_store || []);
+                setTopbardata(response.page.post_store || []);
                 setStatus(response.page);
 
-                const dynamicTitles = response.post_store.flatMap(post =>
+                const dynamicTitles = response.page.post_store.flatMap(post =>
                     Object.keys(post.data)
-                        .filter(key => key.startsWith('title'))
+                        .filter(key => key.startsWith('Title'))
                         .map(key => post.data[key])
                 );
 
                 setTitles(dynamicTitles);
 
-                const dynamicDescriptions = response.post_store.flatMap(post =>
+                const dynamicDescriptions = response.page.post_store.flatMap(post =>
                     Object.keys(post.data)
-                        .filter(key => key.startsWith('description'))
+                        .filter(key => key.startsWith('Description'))
                         .map(key => post.data[key])
                 );
 
@@ -76,12 +76,30 @@ const MenuPage = () => {
         }
     };
 
+    console.log(topbardata)
     const handleInputChange = (event, index) => {
-        const { value } = event.target;
+        const { value, name } = event.target;
         const newErrors = { ...errors };
+        if (topbardata[index]?.data?.Type === "tel" && name.includes("field")) {
 
-        if (value) {
-            newErrors[`label${index}`] = "";
+            let cleanedValue = value.replace(/\D/g, "");
+            console.log(cleanedValue);
+            if (cleanedValue.length > 10) {
+                cleanedValue = cleanedValue.slice(0, 10);
+            }
+
+            event.target.value = cleanedValue;
+            if (cleanedValue.length === 10) {
+                newErrors[`label${index}`] = "";
+            }
+            else {
+                newErrors[`label${index}`] = "";
+            }
+        } else {
+
+            if (value) {
+                newErrors[`label${index}`] = "";
+            }
         }
 
         setErrors(newErrors);
@@ -95,8 +113,19 @@ const MenuPage = () => {
         topbardata.forEach((item, index) => {
             const value = document.querySelector(`[name="field${index}"]`).value;
             formData[`field${index}`] = value;
+            if (item.data.Type === "tel") {
+                const cleanedValue = value.replace(/\D/g, "");
+                if (!value) {
+                    // newErrors[`label${index}`] = "Phone number must be 10 digits";
+                    newErrors[`label${index}`] = "This field is required";
+                } else if (cleanedValue.length !== 10) {
+                    // newErrors[`label${index}`] = "";
+                    newErrors[`label${index}`] = "Phone number must be 10 digits";
+                } else {
 
-            if (!value) {
+                    newErrors[`label${index}`] = "";
+                }
+            } else if (!value) {
                 newErrors[`label${index}`] = "This field is required";
             } else {
                 newErrors[`label${index}`] = "";
@@ -105,7 +134,6 @@ const MenuPage = () => {
 
         if (Object.values(newErrors).some(error => error)) {
             setErrors(newErrors);
-            // console.log(newErrors);
         } else {
             try {
                 const response = await Authapi.contactdatapost(formData);
@@ -198,7 +226,7 @@ const MenuPage = () => {
                         </div>
                         <div className="row mt-5">
                             {topbardata.map((card, index) => {
-                                const hasContent = card.data.title1 || card.data.cardtext1 || card.data.cardtext2 || card.data.cardtext3 || card.data.cardtext4 || card.data.cardtext5 || card.data.cardtextlight1 || card.data.montlyfeetext || card.data.montlyfeecardtext1 || card.data.montlyfeecardtext2;
+                                const hasContent = card.data.Title1 || card.data.Cardtext1 || card.data.Cardtext2 || card.data.Cardtext3 || card.data.Cardtext4 || card.data.Cardtext5 || card.data.Cardtextlight1 || card.data.Montlyfeetext || card.data.Montlyfeecardtext1 || card.data.Montlyfeecardtext2;
 
                                 if (!hasContent) return null;
 
@@ -206,9 +234,9 @@ const MenuPage = () => {
                                     <div className={`col-lg-4`} id={`card${index + 1}`} key={card.id}>
                                         <div className={`card-liner-card-${index + 1}`} id='card-liner-card'></div>
                                         <div className={`card${index + 1} card `}>
-                                            {card.data.title1 && <span className='medaltype'>{card.data.title1}</span>}
+                                            {card.data.Title1 && <span className='medaltype'>{card.data.Title1}</span>}
                                             <div className={`card${index + 1}-text`}>
-                                                {[card.data.cardtext1, card.data.cardtext2, card.data.cardtext3, card.data.cardtext4, card.data.cardtext5].map((text, i) => (
+                                                {[card.data.Cardtext1, card.data.Cardtext2, card.data.Cardtext3, card.data.Cardtext4, card.data.Cardtext5].map((text, i) => (
                                                     text && (
                                                         <p style={cardTextStyle} key={i} className='cardtext'>
                                                             <img src={righticon} className={`card${index + 1}righticon`} alt={`Icon ${i + 1}`} style={cardTextImageStyle} />
@@ -216,19 +244,19 @@ const MenuPage = () => {
                                                         </p>
                                                     )
                                                 ))}
-                                                {card.data.cardtext1 || card.data.cardtext2 || card.data.cardtext3 || card.data.cardtext4 || card.data.cardtext5 ? <div className="card-liner-inside"></div> : null}
+                                                {card.data.Cardtext1 || card.data.Cardtext2 || card.data.Cardtext3 || card.data.Cardtext4 || card.data.Cardtext5 ? <div className="card-liner-inside"></div> : null}
                                             </div>
                                             <div className={`card${index + 1}-sec-2-text`}>
-                                                {card.data.cardtextlight1 && (
+                                                {card.data.Cardtextlight1 && (
                                                     <p style={cardTextStyle}>
                                                         <img src={plushicon} className={`card${index + 1}plushicon`} alt="Add On Icon" style={cardTextImageStyle} />
-                                                        {card.data.cardtextlight1}
+                                                        {card.data.Cardtextlight1}
                                                     </p>
                                                 )}
-                                                {card.data.cardtextlight1 ? <div className="card-liner-inside-2"></div> : null}
+                                                {card.data.Cardtextlight1 ? <div className="card-liner-inside-2"></div> : null}
                                                 <div className={`card-${index + 1}-sec-3`}>
-                                                    {card.data.montlyfeetext && <p className={`card${index + 1}-sec-3-text1`}>{card.data.montlyfeetext}</p>}
-                                                    {[card.data.montlyfeecardtext1, card.data.montlyfeecardtext2].map((text, i) => (
+                                                    {card.data.Montlyfeetext && <p className={`card${index + 1}-sec-3-text1`}>{card.data.Montlyfeetext}</p>}
+                                                    {[card.data.Montlyfeecardtext1, card.data.Montlyfeecardtext2].map((text, i) => (
                                                         text && (
                                                             <p className={`card${index + 1}-sec-3-text`} key={i}>
                                                                 <img src={plushicon} className={`card${index + 1}plushicon`} alt={`Icon ${i + 1}`} style={cardTextImageStyle} />
@@ -274,9 +302,9 @@ const MenuPage = () => {
                                     <div className='row'>
                                         {topbardata.map((item, index) => (
                                             <div className='col-12' key={index}>
-                                                <h4 className="letstallktitle">{item.data.title}</h4>
+                                                <h4 className="letstallktitle">{item.data.Title}</h4>
                                                 <div className="inputgroup">
-                                                    {item.data.description}
+                                                    {item.data.Description}
                                                 </div>
                                             </div>
                                         ))}
@@ -286,7 +314,7 @@ const MenuPage = () => {
                                         {topbardata.map((item, index) => (
                                             <div className='col-md-6' key={index}>
                                                 <div className="inputgroup">
-                                                    <label>{item.data.label}</label>
+                                                    <label>{item.data.Label}</label>
                                                     {item.data.label === "Tell us what you need" ? (
                                                         <textarea
                                                             className='form-control'
@@ -294,11 +322,18 @@ const MenuPage = () => {
                                                             rows="4"
                                                             onChange={(e) => handleInputChange(e, index)}
                                                         />
+                                                    ) : item.data.type === "tel" ? (
+                                                        <input
+                                                            className='form-control'
+                                                            name={`field${index}`}
+                                                            type="tel"
+                                                            onChange={(e) => handleInputChange(e, index)}
+                                                        />
                                                     ) : (
                                                         <input
                                                             className='form-control'
                                                             name={`field${index}`}
-                                                            type={item.data.type}
+                                                            type={item.data.Type}
                                                             onChange={(e) => handleInputChange(e, index)}
                                                         />
                                                     )}
@@ -307,6 +342,7 @@ const MenuPage = () => {
                                             </div>
                                         ))}
                                     </div>
+
 
                                     <div className="row mt-3">
                                         <div className="col-12">

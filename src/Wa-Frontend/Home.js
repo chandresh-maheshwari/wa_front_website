@@ -140,21 +140,54 @@ const Home = () => {
         autoplaySpeed: 2000,
     };
 
-    const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            [name]: value
-        }));
-    };
+    const handleInputChange = (event, index) => {
+        const { value, name } = event.target;
+        const newErrors = { ...errors };
+        console.log(event.target.type === "tel")
+        if (event.target.type === "tel" && name.includes("field")) {
+            let cleanedValue = value.replace(/\D/g, "");;
+            if (cleanedValue.length > 10) {
+                cleanedValue = cleanedValue.slice(0, 10);
+            }
 
+            event.target.value = cleanedValue;
+            if (cleanedValue.length === 10) {
+                newErrors[`label${index}`] = "";
+            }
+            else {
+                newErrors[`label${index}`] = "";
+            }
+        } else {
+
+            if (value) {
+                newErrors[`label${index}`] = "";
+            }
+        }
+
+        setErrors(newErrors);
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         const newErrors = {};
+        const formData = {};
+
         statu.contact_us?.post_store.forEach((item, index) => {
-            const value = formData[`field${index}`];
-            if (!value) {
+            const value = document.querySelector(`[name="field${index}"]`).value;
+            formData[`field${index}`] = value;
+            if (item.Type === "tel") {
+                const cleanedValue = value.replace(/\D/g, "");
+                if (!value) {
+                    // newErrors[`label${index}`] = "Phone number must be 10 digits";
+                    newErrors[`label${index}`] = "This field is required";
+                } else if (cleanedValue.length !== 10) {
+                    // newErrors[`label${index}`] = "";
+                    newErrors[`label${index}`] = "Phone number must be 10 digits";
+                } else {
+
+                    newErrors[`label${index}`] = "";
+                }
+            } else if (!value) {
                 newErrors[`label${index}`] = "This field is required";
             } else {
                 newErrors[`label${index}`] = "";
@@ -175,8 +208,10 @@ const Home = () => {
                         showConfirmButton: true,
                         confirmButtonText: 'OK'
                     }).then(() => {
-                        setFormData({});
-                        setErrors({});
+                        const form = document.getElementById('contactForm');
+                        if (form) {
+                            form.reset();
+                        }
                     });
                 } else {
                     Swal.fire({
@@ -530,24 +565,28 @@ const Home = () => {
                                         {statu.contact_us?.post_store.map((item, index) => (
                                             <div className='col-md-6' key={index}>
                                                 <div className="inputgroup">
-                                                    <label>
-                                                        {item.Label}
-                                                    </label>
-                                                    {item.Type === "textarea" ? (
+                                                    <label>{item.Label}</label>
+                                                    {item.label === "Tell us what you need" ? (
                                                         <textarea
                                                             className='form-control'
                                                             name={`field${index}`}
                                                             rows="4"
-                                                            value={formData[`field${index}`] || ''}
-                                                            onChange={handleInputChange} />
+                                                            onChange={(e) => handleInputChange(e, index)}
+                                                        />
+                                                    ) : item.type === "tel" ? (
+                                                        <input
+                                                            className='form-control'
+                                                            name={`field${index}`}
+                                                            type="tel"
+                                                            onChange={(e) => handleInputChange(e, index)}
+                                                        />
                                                     ) : (
                                                         <input
                                                             className='form-control'
                                                             name={`field${index}`}
-                                                            id={`field${index}`}
                                                             type={item.Type}
-                                                            value={formData[`field${index}`] || ''}
-                                                            onChange={handleInputChange} />
+                                                            onChange={(e) => handleInputChange(e, index)}
+                                                        />
                                                     )}
                                                     {errors[`label${index}`] && <span style={{ color: 'red' }}>{errors[`label${index}`]}</span>}
                                                 </div>
