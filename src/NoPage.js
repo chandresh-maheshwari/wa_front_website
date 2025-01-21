@@ -12,8 +12,13 @@ const NoPage = () => {
   const fetchData = async () => {
     try {
       const response = await Authapi.notfoundpageget();
+      // console.log(response.status === true);
       if (response.status === true) {
-        setTopbardata(response.post_store[0].data);
+        // console.log("Test");
+        // console.log(response.page.image);
+        // console.log(response.page.image);
+        // setTopbardata(response.post_store[0].data);
+        setTopbardata(response.page.image);
       } else {
         console.error('Invalid response structure:', response);
       }
@@ -33,10 +38,11 @@ const NoPage = () => {
       borderRadius: "8px",
       backgroundColor: "#f9f9f9"
     }}>
-      <h1 style={{ margin: "20px 0 10px" }}>{topbardata.statuscode}</h1>
-      <h1 style={{ margin: "10px 0" }}>{topbardata.statusmessage}</h1>
+      {/* <h1 style={{ margin: "20px 0 10px" }}>{topbardata.statuscode}</h1>
+      <h1 style={{ margin: "10px 0" }}>{topbardata.statusmessage}</h1> */}
+      {/* {console.log(topbardata)} */}
       <img
-        src={topbardata.statusimage}
+        src={topbardata}
         alt="No Page"
         style={{
           width: '100%',
