@@ -1,3 +1,4 @@
+
 import { useLocation, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Authapi from '../Authapi';
@@ -113,64 +114,71 @@ const MenuPage = () => {
         topbardata.forEach((item, index) => {
             const value = document.querySelector(`[name="field${index}"]`).value;
             formData[`field${index}`] = value;
-            if (item.data.Type === "tel") {
-                const cleanedValue = value.replace(/\D/g, "");
-                if (!value) {
-                    // newErrors[`label${index}`] = "Phone number must be 10 digits";
-                    newErrors[`label${index}`] = "This field is required";
-                } else if (cleanedValue.length !== 10) {
-                    // newErrors[`label${index}`] = "";
-                    newErrors[`label${index}`] = "Phone number must be 10 digits";
-                } else {
 
-                    newErrors[`label${index}`] = "";
-                }
-            } else if (!value) {
+            if (!value) {
                 newErrors[`label${index}`] = "This field is required";
             } else {
-                newErrors[`label${index}`] = "";
+                if (item.data.Type === "tel") {
+                    const cleanedValue = value.replace(/\D/g, "");
+                    if (cleanedValue.length !== 10) {
+                        newErrors[`label${index}`] = "Phone number must be 10 digits";
+                    } else {
+                        newErrors[`label${index}`] = "";
+                    }
+                }
+                else if (item.data.Type === "email") {
+                    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailPattern.test(value)) {
+                        newErrors[`label${index}`] = "Please enter a valid email address";
+                    } else {
+                        newErrors[`label${index}`] = "";
+                    }
+                } else {
+                    newErrors[`label${index}`] = "";
+                }
             }
         });
 
         if (Object.values(newErrors).some(error => error)) {
             setErrors(newErrors);
-        } else {
-            try {
-                const response = await Authapi.contactdatapost(formData);
-                if (response && response.status === true) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: 'Form submitted successfully!',
-                        background: '#f8f9fa',
-                        showConfirmButton: true,
-                        confirmButtonText: 'OK'
-                    }).then(() => {
-                        const form = document.getElementById('contactForm');
-                        if (form) {
-                            form.reset();
-                        }
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Failed to submit form. Please try again!',
-                        background: '#f8f9fa',
-                        showConfirmButton: true,
-                        confirmButtonText: 'OK'
-                    });
-                }
-            } catch (error) {
+            return;
+        }
+
+        try {
+            const response = await Authapi.contactdatapost(formData);
+            if (response && response.status === true) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Form submitted successfully!',
+                    background: '#f8f9fa',
+                    showConfirmButton: true,
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    const form = document.getElementById('contactForm');
+                    if (form) {
+                        form.reset();
+                    }
+                });
+            } else {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Error',
-                    text: 'An error occurred while submitting the form.',
+                    title: 'Oops...',
+                    text: 'Failed to submit form. Please try again!',
                     background: '#f8f9fa',
                     showConfirmButton: true,
                     confirmButtonText: 'OK'
                 });
             }
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An error occurred while submitting the form.',
+                background: '#f8f9fa',
+                showConfirmButton: true,
+                confirmButtonText: 'OK'
+            });
         }
     };
 
@@ -271,7 +279,7 @@ const MenuPage = () => {
                                 );
                             })}
                         </div>
-                        {/* {console.log(ls("data").about_us)}s */}
+                        {/ {console.log(ls("data").about_us)}s /}
                         {ls("data").about_us.page_status === 1 && (
                             <div className="row">
                                 <div className="col-12 mt-5">

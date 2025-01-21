@@ -89,8 +89,7 @@ body {
 }
 
 .line {
-    color: white;
-    margin-top: 9px;
+    color: white;    
     font-weight: 500;
 }
 
@@ -1165,3 +1164,7 @@ footer #footer {
 .tier-card p {
     font-size: 16px;
 } */
+
+.text-center{
+    max-width: 1000px;
+}
