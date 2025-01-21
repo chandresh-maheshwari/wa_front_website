@@ -143,10 +143,18 @@ const MenuPage = () => {
             setErrors(newErrors);
             return;
         }
-
+        Swal.fire({
+            title: 'Submitting...',
+            html: 'Please wait while we process your request.',
+            allowOutsideClick: false,
+            onBeforeOpen: () => {
+                Swal.showLoading();
+            }
+        });
         try {
             const response = await Authapi.contactdatapost(formData);
             if (response && response.status === true) {
+               
                 Swal.fire({
                     icon: 'success',
                     title: 'Success!',
