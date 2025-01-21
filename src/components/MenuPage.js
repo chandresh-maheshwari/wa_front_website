@@ -6,6 +6,7 @@ import plushicon from './img/plush.png';
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 import ls from 'local-storage';
+import { Navigate } from 'react-router-dom';
 const MenuPage = () => {
     const location = useLocation();
     const { menuName } = useParams();
@@ -45,9 +46,11 @@ const MenuPage = () => {
     }, [currentMenu]);
 
     const fetchData = async () => {
+        // alert(332423);
         try {
+            // alert(2324);
             const response = await Authapi.dynamicpageget(currentMenu);
-            // console.log(response.page.post_store)
+            // console.log(response)
             if (response.status === true) {
                 // ls()
                 setTopbardata(response.page.post_store || []);
@@ -70,20 +73,25 @@ const MenuPage = () => {
                 setDescription(dynamicDescriptions);
             } else {
                 console.error('Invalid response structure:', response);
+                // alert("asdasd");
+                navigate("/Nopage");
             }
         } catch (error) {
+            if(error.status == 404){
+                navigate("/Nopage")
+            }
             console.log(error);
         }
     };
 
-    console.log(topbardata)
+    // console.log(topbardata)
     const handleInputChange = (event, index) => {
         const { value, name } = event.target;
         const newErrors = { ...errors };
         if (topbardata[index]?.data?.Type === "tel" && name.includes("field")) {
 
             let cleanedValue = value.replace(/\D/g, "");
-            console.log(cleanedValue);
+            // console.log(cleanedValue);
             if (cleanedValue.length > 10) {
                 cleanedValue = cleanedValue.slice(0, 10);
             }
@@ -151,7 +159,7 @@ const MenuPage = () => {
                             form.reset();
                         }
                     });
-                } else {
+                } else {                        
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
