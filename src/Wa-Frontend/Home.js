@@ -393,11 +393,12 @@ const Home = () => {
         ordering: statu.page_section?.ordering || 0,
         content: (
           <section className="page-section" id="transforming_section">
-            <div className="container p-5">
+            <div className="container p-5 transforming_section_container">
               <div className="row">
                 <div className="col-md-12">
                   <div className="transfo">
-                    <h5 className="text-center">
+
+                    <h5 className="text-center transforming ">
                       {statu.page_section?.page_description}
                     </h5>
                   </div>

@@ -1166,6 +1166,13 @@ footer #footer {
 } */
 
 /* Added On 22-01-25 START  */
-.text-center{
+/* .text-center{
     max-width: 1093px !important; 
+} */
+/* .transforming{
+    max-width: 1093px !important; 
+} */
+
+.transforming_section_container{
+    width: 60% !important;
 }
