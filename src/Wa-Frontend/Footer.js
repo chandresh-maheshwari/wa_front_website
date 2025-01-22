@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from 'react';
 import Authapi from '../Authapi';
+const currentYear = new Date().getFullYear();
 
 
 const Footer = () => {
@@ -95,8 +96,10 @@ const Footer = () => {
                                         {/* <span className="green-text">{topbardata.lowerfooterdescription}</span> */}
                                     </p>
                                     <div className='PartoftheMTSGroup'>
-                                        <p>{topbardata.Lowerfooteraddress}</p>
-                                        <p>{topbardata.Lowerfootercopyright}</p>
+                                        {/* <p>{topbardata.Lowerfooteraddress}</p>
+                                        <p>{topbardata.Lowerfootercopyright}</p> */}
+                                        <p>Copyright @{currentYear} All rights reserved. Terms & Conditions</p>
+
                                     </div>
                                 </div>
                             </div>

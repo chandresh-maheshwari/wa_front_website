@@ -339,7 +339,7 @@ const MenuPage = () => {
                                             <div className='col-md-6' key={index}>
                                                 <div className="inputgroup">
                                                     <label>{item.data.Label}</label>
-                                                    {item.data.label === "Tell us what you need" ? (
+                                                    {item.data.Label === "Tell us what you need" ? (
                                                         <textarea
                                                             className='form-control'
                                                             name={`field${index}`}
