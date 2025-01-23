@@ -134,7 +134,8 @@ const MenuPage = () => {
             title: 'Submitting...',
             html: 'Please wait while we process your request.',
             allowOutsideClick: false,
-            onBeforeOpen: () => {
+        showConfirmButton: false, 
+        willOpen: () => {
                 Swal.showLoading();
             }
         });
@@ -342,15 +343,19 @@ const MenuPage = () => {
                                                             value={item.data?.Value}
                                                         />
                                                     )}
-                                                    {errors[`label${index}`] && <span>{errors[`label${index}`]}</span>}
+                                                    {errors[`label${index}`] && (
+                                                        <span style={{ color: 'red', fontSize: '0.9em', marginTop: '5px' }}>
+                                                            {errors[`label${index}`]}
+                                                        </span>
+                                                    )}
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
 
-                                    <div className="row mt-4">
+                                    <div className="row mt-3">
                                         <div className="col-12">
-                                            <button type="submit" className="btn sky-blue-btn" onClick={handleSubmit}>Submit</button>
+                                            <button type="submit" onClick={handleSubmit} className="btn w-auto sky-blue-btn-sendmeasge">Send my message</button>
                                         </div>
                                     </div>
                                 </form>
