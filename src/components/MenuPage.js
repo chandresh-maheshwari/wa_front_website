@@ -1,4 +1,3 @@
-
 import { useLocation, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Authapi from '../Authapi';
@@ -8,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 import ls from 'local-storage';
 import { Navigate } from 'react-router-dom';
+
 const MenuPage = () => {
     const location = useLocation();
     const { menuName } = useParams();
@@ -31,8 +31,6 @@ const MenuPage = () => {
         marginRight: '10px',
     };
 
-    // console.log(status);
-
     useEffect(() => {
         const menuTitle = location.state?.menuName ||
             menuName.split('-')
@@ -47,13 +45,9 @@ const MenuPage = () => {
     }, [currentMenu]);
 
     const fetchData = async () => {
-        // alert(332423);
         try {
-            // alert(2324);
             const response = await Authapi.dynamicpageget(currentMenu);
-            // console.log(response)
             if (response.status === true) {
-                // ls()
                 setTopbardata(response.page.post_store || []);
                 setStatus(response.page);
 
@@ -62,7 +56,6 @@ const MenuPage = () => {
                         .filter(key => key.startsWith('Title'))
                         .map(key => post.data[key])
                 );
-
                 setTitles(dynamicTitles);
 
                 const dynamicDescriptions = response.page.post_store.flatMap(post =>
@@ -70,47 +63,33 @@ const MenuPage = () => {
                         .filter(key => key.startsWith('Description'))
                         .map(key => post.data[key])
                 );
-
                 setDescription(dynamicDescriptions);
             } else {
-                console.error('Invalid response structure:', response);
-                // alert("asdasd");
                 navigate("/Nopage");
             }
         } catch (error) {
-            if(error.status == 404){
-                navigate("/Nopage")
+            if (error.status === 404) {
+                navigate("/Nopage");
             }
             console.log(error);
         }
     };
 
-    // console.log(topbardata)
     const handleInputChange = (event, index) => {
         const { value, name } = event.target;
         const newErrors = { ...errors };
         if (topbardata[index]?.data?.Type === "tel" && name.includes("field")) {
-
             let cleanedValue = value.replace(/\D/g, "");
-            // console.log(cleanedValue);
             if (cleanedValue.length > 10) {
                 cleanedValue = cleanedValue.slice(0, 10);
             }
-
             event.target.value = cleanedValue;
-            if (cleanedValue.length === 10) {
-                newErrors[`label${index}`] = "";
-            }
-            else {
-                newErrors[`label${index}`] = "";
-            }
+            newErrors[`label${index}`] = cleanedValue.length === 10 ? "" : "";
         } else {
-
             if (value) {
                 newErrors[`label${index}`] = "";
             }
         }
-
         setErrors(newErrors);
     };
 
@@ -162,7 +141,6 @@ const MenuPage = () => {
         try {
             const response = await Authapi.contactdatapost(formData);
             if (response && response.status === true) {
-               
                 Swal.fire({
                     icon: 'success',
                     title: 'Success!',
@@ -216,8 +194,9 @@ const MenuPage = () => {
                                 <div className="content-box">
                                     {titles.map((title, index) => (
                                         <div key={index}>
-                                            <h5 className="title-sm">{title}</h5>
-                                            <p></p>
+                                            {typeof title === 'string' ? (
+                                                <h5 className="title-sm">{title}</h5>
+                                            ) : null}
                                         </div>
                                     ))}
                                 </div>
@@ -226,7 +205,7 @@ const MenuPage = () => {
                                 <div className="content-box">
                                     {Array.isArray(description) ? (
                                         description.map((descItem, index) => (
-                                            <p key={index}>{descItem}</p>
+                                            typeof descItem === 'string' ? <p key={index}>{descItem}</p> : null
                                         ))
                                     ) : (
                                         <p>{description}</p>
@@ -250,6 +229,7 @@ const MenuPage = () => {
                         </div>
                         <div className="row mt-5">
                             {topbardata.map((card, index) => {
+                                console.log("Card Data:", card.data); // Debug log for card data
                                 const hasContent = card.data.Title1 || card.data.Cardtext1 || card.data.Cardtext2 || card.data.Cardtext3 || card.data.Cardtext4 || card.data.Cardtext5 || card.data.Cardtextlight1 || card.data.Montlyfeetext || card.data.Montlyfeecardtext1 || card.data.Montlyfeecardtext2;
 
                                 if (!hasContent) return null;
@@ -258,10 +238,10 @@ const MenuPage = () => {
                                     <div className={`col-lg-4`} id={`card${index + 1}`} key={card.id}>
                                         <div className={`card-liner-card-${index + 1}`} id='card-liner-card'></div>
                                         <div className={`card${index + 1} card `}>
-                                            {card.data.Title1 && <span className='medaltype'>{card.data.Title1}</span>}
+                                            {typeof card.data.Title1 === 'string' && <span className='medaltype'>{card.data.Title1}</span>}
                                             <div className={`card${index + 1}-text`}>
                                                 {[card.data.Cardtext1, card.data.Cardtext2, card.data.Cardtext3, card.data.Cardtext4, card.data.Cardtext5].map((text, i) => (
-                                                    text && (
+                                                    typeof text === 'string' && (
                                                         <p style={cardTextStyle} key={i} className='cardtext'>
                                                             <img src={righticon} className={`card${index + 1}righticon`} alt={`Icon ${i + 1}`} style={cardTextImageStyle} />
                                                             {text}
@@ -271,7 +251,7 @@ const MenuPage = () => {
                                                 {card.data.Cardtext1 || card.data.Cardtext2 || card.data.Cardtext3 || card.data.Cardtext4 || card.data.Cardtext5 ? <div className="card-liner-inside"></div> : null}
                                             </div>
                                             <div className={`card${index + 1}-sec-2-text`}>
-                                                {card.data.Cardtextlight1 && (
+                                                {typeof card.data.Cardtextlight1 === 'string' && (
                                                     <p style={cardTextStyle}>
                                                         <img src={plushicon} className={`card${index + 1}plushicon`} alt="Add On Icon" style={cardTextImageStyle} />
                                                         {card.data.Cardtextlight1}
@@ -279,9 +259,9 @@ const MenuPage = () => {
                                                 )}
                                                 {card.data.Cardtextlight1 ? <div className="card-liner-inside-2"></div> : null}
                                                 <div className={`card-${index + 1}-sec-3`}>
-                                                    {card.data.Montlyfeetext && <p className={`card${index + 1}-sec-3-text1`}>{card.data.Montlyfeetext}</p>}
+                                                    {typeof card.data.Montlyfeetext === 'string' && <p className={`card${index + 1}-sec-3-text1`}>{card.data.Montlyfeetext}</p>}
                                                     {[card.data.Montlyfeecardtext1, card.data.Montlyfeecardtext2].map((text, i) => (
-                                                        text && (
+                                                        typeof text === 'string' && (
                                                             <p className={`card${index + 1}-sec-3-text`} key={i}>
                                                                 <img src={plushicon} className={`card${index + 1}plushicon`} alt={`Icon ${i + 1}`} style={cardTextImageStyle} />
                                                                 {text}
@@ -295,7 +275,7 @@ const MenuPage = () => {
                                 );
                             })}
                         </div>
-                        {/ {console.log(ls("data").about_us)}s /}
+
                         {ls("data").about_us.page_status === 1 && (
                             <div className="row">
                                 <div className="col-12 mt-5">
@@ -303,9 +283,8 @@ const MenuPage = () => {
                                 </div>
                             </div>
                         )}
-
                     </div>
-                </section >
+                </section>
             ) : currentMenu === 'Our Products' && status.page_status === 0 ? (
                 <div className="text-center"> 404 Page Not Found</div>
             ) : null}
@@ -352,33 +331,32 @@ const MenuPage = () => {
                                                             name={`field${index}`}
                                                             type="tel"
                                                             onChange={(e) => handleInputChange(e, index)}
+                                                            value={item.data?.Value}
                                                         />
                                                     ) : (
                                                         <input
                                                             className='form-control'
                                                             name={`field${index}`}
-                                                            type={item.data.Type}
+                                                            type="text"
                                                             onChange={(e) => handleInputChange(e, index)}
+                                                            value={item.data?.Value}
                                                         />
                                                     )}
-                                                    {errors[`label${index}`] && <span style={{ color: 'red' }}>{errors[`label${index}`]}</span>}
+                                                    {errors[`label${index}`] && <span>{errors[`label${index}`]}</span>}
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
 
-
-                                    <div className="row mt-3">
+                                    <div className="row mt-4">
                                         <div className="col-12">
-                                            <button type="submit" onClick={handleSubmit} className="btn w-auto sky-blue-btn-sendmeasge">Send my message</button>
+                                            <button type="submit" className="btn sky-blue-btn" onClick={handleSubmit}>Submit</button>
                                         </div>
                                     </div>
                                 </form>
                             </div>
                         </div>
                     </section>
-                ) : currentMenu === 'Contact Us' && status.page_status === 0 ? (
-                    <div className="text-center"> 404 Page Not Found</div>
                 ) : null
             }
         </>
