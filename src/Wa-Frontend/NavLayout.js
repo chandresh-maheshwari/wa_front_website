@@ -18,10 +18,10 @@ const Navlayout = () => {
 
     useEffect(() => {
         fetchData();
-        hardik()
+        getPostData()
     }, []);
 
-    const hardik = async () => {
+    const getPostData = async () => {
         const response = await Authapi.Alldynamicpagegetnav();
         if (response.status === true) {
             setPagegetnav(response.data)
@@ -32,40 +32,56 @@ const Navlayout = () => {
     const fetchData = async () => {
         try {
             const response = await Authapi.Navbarpageget();
-            // console.log(response)zz
-            if (response.status === true) {
-                const data = response.page.post_store[0].data || {};
-                const menuData = Object.entries(data)
-                    .filter(([key]) => key.startsWith('menu'))
-                    .sort((a, b) => {
-                        const numA = parseInt(a[0].replace('menu', ''));
-                        const numB = parseInt(b[0].replace('menu', ''));
-                        return numA - numB;
-                    })
+            // console.log('Response:', response);
+            if (response && response.status === true) {
+                const postStore = response.page?.post_store;
+                if (postStore && Array.isArray(postStore) && postStore.length > 0) {
+                    const firstPost = postStore[0];
+                    if (firstPost && firstPost.data) {
+                        const data = firstPost.data;
+                        // console.log('Data keys:', Object.keys(data)); // Log all keys in the data object
+                        
+                        const menuData = Object.entries(data)
+                            .filter(([key]) => key.startsWith('menu'))
+                            .sort((a, b) => {
+                                const numA = parseInt(a[0].replace('menu', ''));
+                                const numB = parseInt(b[0].replace('menu', ''));
+                                return numA - numB;
+                            })
+                            .map(([key, value]) => ({ [key]: value }));
 
-
-                    .map(([key, value]) => ({ [key]: value }));
-                const buttonData = {};
-                Object.entries(data).forEach(([key, value]) => {
-                    if (key.startsWith('Button')) {
-                        // console.log(key)
-                        const buttonNum = key.replace(/[^0-9]/g, '');
-                        if (!buttonData[buttonNum]) {
-                            buttonData[buttonNum] = {};
-                        }
-                        const propertyName = key.replace(buttonNum, '');
-                        buttonData[buttonNum][propertyName] = value;
+                        const buttonData = {};
+                        Object.entries(data).forEach(([key, value]) => {
+                            if (key.toLowerCase().includes('button')) {
+                                // console.log(`Found button key: ${key}`); // Log each button-related key
+                                const buttonNumMatch = key.match(/\d+/);
+                                const buttonNum = buttonNumMatch ? buttonNumMatch[0] : key; // Use key if no number
+                                if (!buttonData[buttonNum]) {
+                                    buttonData[buttonNum] = {};
+                                }
+                                // Assuming value is an object with button properties
+                                Object.entries(value).forEach(([propKey, propValue]) => {
+                                    const propertyName = propKey.replace(/\d+/g, '').replace(/\s+/g, '_').trim();
+                                    // console.log(`Processing property: ${propertyName} with value: ${propValue}`);
+                                    buttonData[buttonNum][propertyName] = propValue;
+                                });
+                            }
+                        });
+                        // console.log('Button Data:', buttonData);
+                        setTopbardata(menuData);
+                        setButtonData(buttonData);
+                        setStatus(response.page);
+                    } else {
+                        console.error('First post is null or does not contain data:', firstPost);
                     }
-                });
-                setTopbardata(menuData);
-                setButtonData(buttonData);
-                setStatus(response.page)
-                // console.log(menuData)
+                } else {
+                    console.error('Post store is empty, null, or not an array:', postStore);
+                }
             } else {
-                console.error('Invalid response structure:', response);
+                console.error('Invalid response structure or status is false:', response);
             }
         } catch (error) {
-            console.log(error);
+            console.error('Error fetching data:', error);
         }
     };
 
@@ -106,8 +122,8 @@ const Navlayout = () => {
         const showContactButton = allowedPageNames.includes('Contact Us');
 
         return Object.entries(buttonData).map(([buttonNum, data]) => {
-            // console.log(data)
-            if (data.buttontitle === 'Contact Us' && !showContactButton) {
+            // console.log(data);
+            if (data.Buttontitle === 'Contact Us' && !showContactButton) {
                 return null;
             }
 
@@ -124,7 +140,7 @@ const Navlayout = () => {
                         marginLeft: '10px'
                     }}
                 >
-                    {data.Buttontitle}
+                    {data.Buttontitle || 'Default Text'}
                 </button>
             );
         });

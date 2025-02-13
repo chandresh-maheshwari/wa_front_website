@@ -14,6 +14,7 @@ const TopNav = () => {
             const response = await Authapi.Toppageget();
             // console.log(response.page.post_store[0].data)
             if (response.status === true) {
+                // console.log(response.page.post_store[0].data);
                 setTopbardata(response.page.post_store[0].data || {})
                 // console.log(response.post_store[0].data)
                 setStatus(response.page)
@@ -34,17 +35,18 @@ const TopNav = () => {
                         <div className="row">
                             <div className='col-sm-6'>
                                 <div className='frontlogo'>
-
-                                    <Link to={topbardata.Logolike}><img src={topbardata.Logoimage} className="wa-logo" alt="wa-logo" /></Link>
+                                    {/* {console.log(topbardata.Top_bar_logo_section?.Logoimage)}     */}
+                                    {/* {console.log(topbardata.Mts_group_section?.Sidelogolmage)}    */}
+                                    <Link to={topbardata.Top_bar_logo_section?.Logolike}><img src={topbardata.Top_bar_logo_section?.Logoimage} className="wa-logo" alt="wa-logo" /></Link>
                                 </div>
                             </div>
                             <div className='col-sm-6'>
                                 <div className='toptext'>
                                     <div className='topcontent'>
-                                        <p className='partoflife'> {topbardata.Title}</p> <p className='mtsgroup' style={{ color: "rgb(173, 173, 173);" }}>{topbardata.Discussion}</p>
+                                        <p className='partoflife'> {topbardata.Mts_group_section?.Title}</p> <p className='mtsgroup' style={{ color: "rgb(173, 173, 173);" }}>{topbardata.Mts_group_section?.Discussion}</p>
                                     </div>
                                 </div>
-                                <img src={topbardata.Sidelogoimage} alt="mts-logo" className='mts-logo' />
+                                <img src={topbardata.Mts_group_section?.Sidelogolmage} alt="mts-logo" className='mts-logo' />
                                 {/* {console.log(topbardata)} */}
                             </div>
                         </div>

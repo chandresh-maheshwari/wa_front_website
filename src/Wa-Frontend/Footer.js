@@ -15,8 +15,9 @@ const Footer = () => {
     const fetchData = async () => {
         try {
             const response = await Authapi.Footerpageget();
-            // console.log(response.page.post_store[0].data)
             if (response.status === true) {
+                // console.log(response.page)
+                // console.log(response.page.post_store[0].data);
                 setTopbardata(response.page.post_store[0].data|| {});
                 setStatus(response.page)
             } else {
@@ -35,26 +36,28 @@ const Footer = () => {
                         <div className="container-fluid" id="containerfooter">
                             <div className="row">
                                 <div className="col-md-12" id="waste-white">
-                                    <img src={topbardata.Footerlogoimage} alt="" id="waste-white" />
+                                    <img src={topbardata.Footerlogo} alt="" id="waste-white" />
                                 </div>
                             </div>
                             <div className="row">
                                 <div className="col-md-4">
+                                        {/* {console.log(topbardata.Top_footer_part_1?.Footercontact)} */}
                                     <div className="get-touch">
-                                        <span>{topbardata.Title1}</span>
+                                        <span>{topbardata.Top_footer_part_1?.Title1}</span>
+                                        {/* <span>{topbardata.Title1}</span> */}
                                         <p></p>
 
-                                        <p className="contactno">{topbardata.Footercontact}
+                                        <p className="contactno">{topbardata.Top_footer_part_1?.Footercontact}
 
                                         </p>
-                                        <p className="footeremail"> {topbardata.Footergmail}</p>
+                                        <p className="footeremail"> {topbardata.Top_footer_part_1?.Footergmail}</p>
                                     </div>
                                 </div>
                                 <div className="col-md-4">
                                     <div className="address-waste">
-                                        <p style={{ fontWeight: "500" }}>{topbardata.title2}</p>
+                                        <p style={{ fontWeight: "500" }}>{topbardata.Top_footer_part_2?.Title2}</p>
                                         <p style={{ fontWeight: "100", marginTop: "-3%",width:"167px",margin:"auto" }}>
-                                            {topbardata.Description}
+                                            {topbardata.Top_footer_part_2?.Description}
                                             {/* Filwood Green Business Park<br />
                                         l Filwood Park Lane <br />
                                         Bristol<br />
@@ -66,11 +69,11 @@ const Footer = () => {
                                 <div className="col-md-4">
                                     <div className="mts">
                                         {/* <div class="vl"></div> */}
-                                        <span>{topbardata.title3}</span><br />
+                                        <span>{topbardata.Top_Footer_Part_3?.title3}</span><br />
 
-                                        <Link className="mail-link" to={topbardata.Maillink1} > > {topbardata.Mailtitle1} </Link><br />
-                                        <Link className="mail-link" to={topbardata.Maillink2}> > {topbardata.Mailtitle2}</Link><br />
-                                        <Link className="mail-link" to={topbardata.Maillink3} > > {topbardata.Mailtitle3} </Link><br />
+                                        <Link className="mail-link" to={topbardata.Top_footer_part_3?.Maillink1} > > {topbardata.Top_footer_part_3?.Mailtitle1} </Link><br />
+                                        <Link className="mail-link" to={topbardata.Top_footer_part_3?.Maillink2}> >  {topbardata.Top_footer_part_3?.Mailtitle2}</Link><br />
+                                        <Link className="mail-link" to={topbardata.Top_footer_part_3?.Maillink3} > > {topbardata.Top_footer_part_3?.Mailtitle3} </Link><br />
                                     </div>
                                 </div>
                             </div>
@@ -88,11 +91,11 @@ const Footer = () => {
                                         margin: "3%",
                                         margintop: "5%",
                                         fontWeight: "lighter"
-                                    }}>{topbardata.Lowerfootertitle}
+                                    }}>{topbardata.Bottom_footer?.Lowerfootertitle}
                                         {/* <strong style={{ fontWeight: "600", color: "gray" }}>MTS Group</strong> */}
                                     </p>
                                     <p>
-                                        <span className="orange-text">{topbardata.Lowerfooterdescription}</span>
+                                        <span className="orange-text">{topbardata.Bottom_footer?.Lowerfooterdescription}</span>
                                         {/* <span className="green-text">{topbardata.lowerfooterdescription}</span> */}
                                     </p>
                                     <div className='PartoftheMTSGroup'>

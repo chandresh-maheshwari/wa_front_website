@@ -13,10 +13,18 @@ const MenuPage = () => {
     const { menuName } = useParams();
     const [currentMenu, setCurrentMenu] = useState('');
     const [topbardata, setTopbardata] = useState([]);
-    const [status, setStatus] = useState([]);
+    // const [status, setStatus] = useState([]);
     const [titles, setTitles] = useState([]);
     const [description, setDescription] = useState([]);
     const [errors, setErrors] = useState({});
+    const [isPlaying, setIsPlaying] = useState(true);
+    const [sliderRef, setSliderRef] = useState(null);
+    const [homesection, setHomesection] = useState({});
+    // const [Transforming, setTransforming] = useState({});
+    const [formData, setFormData] = useState({});
+    const [statu, setStatus] = useState({});
+    const [Transforming, setTransforming] = useState({});
+
 
     const navigate = useNavigate();
 
@@ -37,8 +45,19 @@ const MenuPage = () => {
                 .map(word => word.charAt(0).toUpperCase() + word.slice(1))
                 .join(' ');
 
+        // console.log(menuTitle);
         setCurrentMenu(menuTitle);
     }, [location, menuName]);
+
+    useEffect(() => {
+        if (sliderRef) {
+            if (isPlaying) {
+                sliderRef.slickPlay();
+            } else {
+                sliderRef.slickPause();
+            }
+        }
+    }, [sliderRef, isPlaying]);
 
     useEffect(() => {
         fetchData();
@@ -48,10 +67,13 @@ const MenuPage = () => {
         try {
             const response = await Authapi.dynamicpageget(currentMenu);
             if (response.status === true) {
+                console.log(response.page.post_store);
                 setTopbardata(response.page.post_store || []);
-                setStatus(response.page);
+                setTransforming(response.page.post_store);
 
+                setStatus(response.page);
                 const dynamicTitles = response.page.post_store.flatMap(post =>
+                    // console.log(post);
                     Object.keys(post.data)
                         .filter(key => key.startsWith('Title'))
                         .map(key => post.data[key])
@@ -67,7 +89,62 @@ const MenuPage = () => {
             } else {
                 navigate("/Nopage");
             }
-        } catch (error) {
+        }
+        // try {
+        //     const response = await Authapi.Alldynamicpageget(currentMenu);
+        //     // console.log(response.results.contact_us.ordering)
+
+        //     // console.log(response.results)
+        //     if (response.status === true) {
+        //         ls("data", response.results);
+
+        //         // console.log(response.results)
+        //         setStatus(response.results);
+        //         setHomesection(response.results.home_section.post_store[0]['Data']);
+        //         setTransforming(response.results.page_section.post_store[0]['Data']);
+        //         // console.log(response.results.about_us.post_store);
+        //         // const dynamicTitles = response.results.about_us.post_store.flatMap(
+        //         //   (post) =>
+        //         //     Object.keys(post)
+        //         //       .filter((key) => key.startsWith("Title"))
+        //         //       .map((key) => post[key])
+        //         //     );
+        //         // console.log(dynamicTitles);
+        //         // setTitles(dynamicTitles);
+        //         // const dynamicDescriptions =
+        //         //   response.results.about_us.post_store.flatMap((post) =>
+        //         //     Object.keys(post)
+        //         //       .filter((key) => key.startsWith("Description"))
+        //         //       .map((key) => post[key])
+        //         //   );
+        //         // setDescription(dynamicDescriptions);
+        //         // console.log(response.results.about_us.post_store);
+
+        //         // Extract Titles
+        //         const dynamicTitles = response.results.about_us.post_store.flatMap(
+        //             (post) =>
+        //                 Object.keys(post.Data)  // Access 'Data' property directly
+        //                     .filter((key) => key.startsWith("Title"))  // Filter by keys that start with 'Title'
+        //                     .map((key) => post.Data[key])  // Get the corresponding value for each 'Title'
+        //         );
+
+        //         // console.log(dynamicTitles);
+        //         setTitles(dynamicTitles);
+
+        //         // Extract Descriptions
+        //         const dynamicDescriptions = response.results.about_us.post_store.flatMap((post) =>
+        //             Object.keys(post.Data)  // Access 'Data' property directly
+        //                 .filter((key) => key.startsWith("Description"))  // Filter by keys that start with 'Description'
+        //                 .map((key) => post.Data[key])  // Get the corresponding value for each 'Description'
+        //         );
+
+        //         setDescription(dynamicDescriptions);
+
+        //     } else {
+        //         console.error("Invalid response structure:", response);
+        //     }
+        // } 
+        catch (error) {
             if (error.status === 404) {
                 navigate("/Nopage");
             }
@@ -93,6 +170,195 @@ const MenuPage = () => {
         setErrors(newErrors);
     };
 
+    const renderCards = () => {
+        // console.log(4444444444444444444444444444444444444444444444444444444444444444444444);
+        // console.log(statu.our_products?.post_store);
+        return statu.post_store.map((card, index) => {
+            // Destructure and extract relevant fields from the Data object
+            // console.log(card.data.Information_section_1)
+            const feesSection3 = card.data.Fees_section_3 || {};
+            const infoSection1 = card.data.Information_section_1 || {};
+            const serviceSection2 = card.data.Service_section_2 || {};
+            const feessection3 = card.data.Fees_section_3 || {};
+            const purchaseButtonSection = card.data.Purchase_button_section_4 || {};
+
+            // Check if there's any content to display (excluding the Field_slug values)
+            const hasContent =
+                infoSection1.Information1 ||
+                infoSection1.Information2 ||
+                infoSection1.Information3 ||
+                infoSection1.Information4 ||
+                infoSection1.Information5 ||
+                serviceSection2.Service1 ||
+                serviceSection2.Service2 ||
+                feesSection3.Monthlyfee ||
+                feessection3.Montlyfeecardtext1 ||
+                feessection3.Montlyfeecardtext1 ||
+                purchaseButtonSection.Amount ||
+                purchaseButtonSection.Buttonbackgroundcolor ||
+                purchaseButtonSection.Buttoncolor ||
+                purchaseButtonSection.Buttontext;
+
+            if (!hasContent) return null;
+
+            return (
+                <div className={`col-lg-4`} id={`card${index + 1}`} key={card.Id}>
+                    <div className={`card-liner-card-${index + 1}`} id="card-liner-card"></div>
+                    <div className={`card${index + 1} card`}>
+                        {/* {console.log(card['Data'].Modelsectionpackagesection)} */}
+                        {/* <span className="medaltype">{card.Post_name}</span> */}
+                        <span className="medaltype">{card['data'].Modelsectionpackagesection}</span>
+                        <div className={`card${index + 1}-text`}>
+                            {/* Render Information Section */}
+                            {/* {console.log(infoSection1)} */}
+                            {[infoSection1.Information1, infoSection1.Information2, infoSection1.Information3, infoSection1.Information4, infoSection1.Information5].map((text, i) => (
+                                text && (
+                                    <p style={cardTextStyle} key={i} className='cardtext'>
+                                        <img src={righticon} className={`card${index + 1}righticon`} alt={`Icon ${i + 1}`} style={cardTextImageStyle} />
+                                        {text}
+                                    </p>
+                                )
+                            ))}
+                            {/* {infoSection1.Information1 || infoSection1.Information2 || infoSection1.Information3 || infoSection1.Information4 || infoSection1.Information5 ? <div className="card-liner-inside"></div> : null} */}
+
+                            {/* {infoSection1.Information1 && (
+                    <p style={cardTextStyle} key="info1" className="cardtext">
+                      <img
+                        src={righticon}
+                        className={`card${index + 1}righticon`}
+                        alt="Icon 1"
+                        style={cardTextImageStyle}
+                      />
+                      {infoSection1.Information1}
+                    </p>
+                  )}
+                  {infoSection1.Information2 && (
+                    <p style={cardTextStyle} key="info2" className="cardtext">
+                      <img
+                        src={righticon}
+                        className={`card${index + 1}righticon`}
+                        alt="Icon 2"
+                        style={cardTextImageStyle}
+                      />
+                      {infoSection1.Information2}
+                    </p>
+                  )}
+                  {infoSection1.Information3 && (
+                    <p style={cardTextStyle} key="info3" className="cardtext">
+                      <img
+                        src={righticon}
+                        className={`card${index + 1}righticon`}
+                        alt="Icon 3"
+                        style={cardTextImageStyle}
+                      />
+                      {infoSection1.Information3}
+                    </p>
+                  )}
+                  {infoSection1.Information4 && (
+                    <p style={cardTextStyle} key="info4" className="cardtext">
+                      <img
+                        src={righticon}
+                        className={`card${index + 1}righticon`}
+                        alt="Icon 4"
+                        style={cardTextImageStyle}
+                      />
+                      {infoSection1.Information4}
+                    </p>
+                  )}
+                  {infoSection1.Information5 && (
+                    <p style={cardTextStyle} key="info5" className="cardtext">
+                      <img
+                        src={righticon}
+                        className={`card${index + 1}righticon`}
+                        alt="Icon 5"
+                        style={cardTextImageStyle}
+                      />
+                      {infoSection1.Information5}
+                    </p>
+                  )} */}
+                            {Object.values(infoSection1).some((text) => text) && (
+                                <div className="card-liner-inside"></div>
+                            )}
+                        </div>
+
+                        <div className={`card${index + 1}-sec-2-text`}>
+                            {/* Render Service Section */}
+                            {serviceSection2.Service1 && (
+                                <p style={cardTextStyle}>
+                                    <img
+                                        src={plushicon}
+                                        className={`card${index + 1}plushicon`}
+                                        alt="Add On Icon"
+                                        style={cardTextImageStyle}
+                                    />
+                                    {serviceSection2.Service1}
+                                </p>
+                            )}
+                            {serviceSection2.Service1 && <div className="card-liner-inside-2"></div>}
+
+                            <div className={`card-${index + 1}-sec-3`}>
+                                {/* Render Monthly Fee */}
+                                {feesSection3.Monthlyfee && (
+                                    <p className={`card${index + 1}-sec-3-text1`}>
+                                        {feesSection3.Monthlyfee}
+                                    </p>
+                                )}
+                                {[feessection3.Montlyfeecardtext1, feessection3.Montlyfeecardtext2].map((text, i) => (
+                                    text && (
+                                        <p style={cardTextStyle} key={i} className='cardtext'>
+                                            <img
+                                                src={plushicon}
+                                                className={`card${index + 1}plushicon`}
+                                                alt="Add On Icon"
+                                                style={cardTextImageStyle}
+                                            />
+                                            {text}
+                                        </p>
+                                    )
+                                ))}
+
+                                {/* Render Service 2 */}
+                                {serviceSection2.Service2 && (
+                                    <p className={`card${index + 1}-sec-3-text`}>
+                                        <img
+                                            src={plushicon}
+                                            className={`card${index + 1}plushicon`}
+                                            alt="Add On Icon"
+                                            style={cardTextImageStyle}
+                                        />
+                                        {serviceSection2.Service2}
+                                    </p>
+                                )}
+                            </div>
+
+                        </div>
+                        {/* style={{ position: 'absolute', bottom: '13px', left: '0', right: '0' }} */}
+                        {purchaseButtonSection.Buttontext && (
+                            <div className="text-center purchase-btn">
+                                <button
+                                    role="link"
+                                    className="btn w-50"
+                                    style={{
+                                        backgroundColor: purchaseButtonSection.Buttonbackgroundcolor || '#40bedd',
+                                        color: purchaseButtonSection.Buttoncolor || '#ffffff',
+                                    }}
+                                // onMouseOver={(e) => {
+                                //   e.target.style.backgroundColor = card.data.Buttonhovercolor || '#17bee8';
+                                // }}
+                                // onMouseOut={(e) => {
+                                //   e.target.style.backgroundColor = card.data.Buttonbackgroundcolor || '#40bedd';
+                                // }}
+
+                                >
+                                    {`${purchaseButtonSection.Buttontext} - ${purchaseButtonSection.Amount}`}
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        });
+    };
     const handleSubmit = async (event) => {
         event.preventDefault();
         const newErrors = {};
@@ -134,8 +400,8 @@ const MenuPage = () => {
             title: 'Submitting...',
             html: 'Please wait while we process your request.',
             allowOutsideClick: false,
-        showConfirmButton: false, 
-        willOpen: () => {
+            showConfirmButton: false,
+            willOpen: () => {
                 Swal.showLoading();
             }
         });
@@ -177,15 +443,37 @@ const MenuPage = () => {
         }
     };
 
+    const handlePlayPause = () => {
+        setIsPlaying(!isPlaying);
+    };
+
+    const handleContainerClick = (event) => {
+        if (event.target === event.currentTarget) {
+            sliderRef.current.slickPause();
+        }
+    };
+
+    const settings = {
+        infinite: true,
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 2000,
+    };
+
     return (
         <>
-            {currentMenu === 'About Us' && status.page_status === 1 && topbardata.length > 0 ? (
+            {/* {console.log(statu)} */}
+            {currentMenu === 'About Us' && statu.page_status === 1 && topbardata.length > 0 ? (
                 <section className="page-section" id="package_section">
                     <div className="container type-1">
                         <div className="row">
                             <div className="col-12">
                                 <div className="sec-8-heading">
-                                    <h1 className="text-center mb-4" id='About-us'>{currentMenu}</h1>
+                                    <h1 className="text-center mb-4" id="About-us">
+                                        {/* {statu.about_us?.page_name} */}
+                                        {statu.page_name}
+                                    </h1>
                                 </div>
                             </div>
                         </div>
@@ -193,11 +481,13 @@ const MenuPage = () => {
                         <div className="row" style={{ marginBottom: "6%" }}>
                             <div className="col-md-3">
                                 <div className="content-box">
+                                    {/* {console.log(titles)} */}
+
                                     {titles.map((title, index) => (
                                         <div key={index}>
-                                            {typeof title === 'string' ? (
-                                                <h5 className="title-sm">{title}</h5>
-                                            ) : null}
+                                            {/* {console.log(title)} */}
+                                            <h5 className="title-sm">{title}</h5>
+                                            <p></p>
                                         </div>
                                     ))}
                                 </div>
@@ -206,7 +496,7 @@ const MenuPage = () => {
                                 <div className="content-box">
                                     {Array.isArray(description) ? (
                                         description.map((descItem, index) => (
-                                            typeof descItem === 'string' ? <p key={index}>{descItem}</p> : null
+                                            <p key={index}>{descItem}</p>
                                         ))
                                     ) : (
                                         <p>{description}</p>
@@ -216,154 +506,172 @@ const MenuPage = () => {
                         </div>
                     </div>
                 </section>
-            ) : currentMenu === 'About Us' && status.page_status === 0 ? (
+            ) : currentMenu === 'About Us' && statu.page_status === 0 ? (
                 <div className="text-center"> 404 Page Not Found</div>
             ) : null}
+            {/* {console.log(currentMenu === 'Our Products')} */}
 
-            {currentMenu === 'Our Products' && status.page_status === 1 && topbardata.length > 0 ? (
+            {currentMenu === 'Our Products' && statu.page_status === 1 && topbardata.length > 0 ? (
                 <section className="packages-sec" id="package_section">
-                    <div className="container mt-2 mb-5">
-                        <div className="row">
-                            <div className="col-12 waste-management-service-title ">
-                                <h4>{status.page_description}</h4>
-                            </div>
+                    {/* {console.log(333)} */}
+                    <div className="container mt-2">
+                        <div className="waste-management-service-title">
+                            {/* <h4>{statu.our_products?.page_description}</h4> */}
+                            <h4>{statu.page_description}</h4>
+
                         </div>
-                        <div className="row mt-5">
-                            {topbardata.map((card, index) => {
-                                console.log("Card Data:", card.data); // Debug log for card data
-                                const hasContent = card.data.Title1 || card.data.Cardtext1 || card.data.Cardtext2 || card.data.Cardtext3 || card.data.Cardtext4 || card.data.Cardtext5 || card.data.Cardtextlight1 || card.data.Montlyfeetext || card.data.Montlyfeecardtext1 || card.data.Montlyfeecardtext2;
-
-                                if (!hasContent) return null;
-
-                                return (
-                                    <div className={`col-lg-4`} id={`card${index + 1}`} key={card.id}>
-                                        <div className={`card-liner-card-${index + 1}`} id='card-liner-card'></div>
-                                        <div className={`card${index + 1} card `}>
-                                            {typeof card.data.Title1 === 'string' && <span className='medaltype'>{card.data.Title1}</span>}
-                                            <div className={`card${index + 1}-text`}>
-                                                {[card.data.Cardtext1, card.data.Cardtext2, card.data.Cardtext3, card.data.Cardtext4, card.data.Cardtext5].map((text, i) => (
-                                                    typeof text === 'string' && (
-                                                        <p style={cardTextStyle} key={i} className='cardtext'>
-                                                            <img src={righticon} className={`card${index + 1}righticon`} alt={`Icon ${i + 1}`} style={cardTextImageStyle} />
-                                                            {text}
-                                                        </p>
-                                                    )
-                                                ))}
-                                                {card.data.Cardtext1 || card.data.Cardtext2 || card.data.Cardtext3 || card.data.Cardtext4 || card.data.Cardtext5 ? <div className="card-liner-inside"></div> : null}
-                                            </div>
-                                            <div className={`card${index + 1}-sec-2-text`}>
-                                                {typeof card.data.Cardtextlight1 === 'string' && (
-                                                    <p style={cardTextStyle}>
-                                                        <img src={plushicon} className={`card${index + 1}plushicon`} alt="Add On Icon" style={cardTextImageStyle} />
-                                                        {card.data.Cardtextlight1}
-                                                    </p>
-                                                )}
-                                                {card.data.Cardtextlight1 ? <div className="card-liner-inside-2"></div> : null}
-                                                <div className={`card-${index + 1}-sec-3`}>
-                                                    {typeof card.data.Montlyfeetext === 'string' && <p className={`card${index + 1}-sec-3-text1`}>{card.data.Montlyfeetext}</p>}
-                                                    {[card.data.Montlyfeecardtext1, card.data.Montlyfeecardtext2].map((text, i) => (
-                                                        typeof text === 'string' && (
-                                                            <p className={`card${index + 1}-sec-3-text`} key={i}>
-                                                                <img src={plushicon} className={`card${index + 1}plushicon`} alt={`Icon ${i + 1}`} style={cardTextImageStyle} />
-                                                                {text}
-                                                            </p>
-                                                        )
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-
-                        {ls("data").about_us.page_status === 1 && (
-                            <div className="row">
-                                <div className="col-12 mt-5">
-                                    <button type="button" onClick={() => navigate("/menu/contact-us")} className="btn sky-blue-btn">Contact Us</button>
+                        <div className="row">{renderCards()}</div>
+                        {statu.page_status === 1 && (
+                            <div className="row mt-5">
+                                <div className="col-12">
+                                    <button
+                                        type="button"
+                                        onClick={() => navigate("/menu/contact-us")}
+                                        className="btn sky-blue-btn mb-5"
+                                    >
+                                        Contact Us
+                                    </button>
                                 </div>
                             </div>
                         )}
                     </div>
                 </section>
-            ) : currentMenu === 'Our Products' && status.page_status === 0 ? (
+            ) : currentMenu === 'Our Products' && statu.page_status === 0 ? (
                 <div className="text-center"> 404 Page Not Found</div>
             ) : null}
+            {/* {console.log(topbardata.length > 0)} */}
 
-            {
-                currentMenu === 'Contact Us' && status.page_status === 1 && topbardata.length > 0 ? (
-                    <section className="lets-talk-sec" id="package_section">
-                        <div className="container" id="sec-10">
-                            <div className="row">
-                                <div className="col-12">
-                                    <div className="sec-8-heading">
-                                        <h1 className="text-center mb-4">{currentMenu}</h1>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='contactusswction'>
-                                <form id="contactForm">
-                                    <div className='row'>
-                                        {topbardata.map((item, index) => (
-                                            <div className='col-12' key={index}>
-                                                <h4 className="letstallktitle">{item.data.Title}</h4>
-                                                <div className="inputgroup">
-                                                    {item.data.Description}
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    <div className="row">
-                                        {topbardata.map((item, index) => (
-                                            <div className='col-md-6' key={index}>
-                                                <div className="inputgroup">
-                                                    <label>{item.data.Label}</label>
-                                                    {item.data.Label === "Tell us what you need" ? (
-                                                        <textarea
-                                                            className='form-control'
-                                                            name={`field${index}`}
-                                                            rows="4"
-                                                            onChange={(e) => handleInputChange(e, index)}
-                                                        />
-                                                    ) : item.data.type === "tel" ? (
-                                                        <input
-                                                            className='form-control'
-                                                            name={`field${index}`}
-                                                            type="tel"
-                                                            onChange={(e) => handleInputChange(e, index)}
-                                                            value={item.data?.Value}
-                                                        />
-                                                    ) : (
-                                                        <input
-                                                            className='form-control'
-                                                            name={`field${index}`}
-                                                            type="text"
-                                                            onChange={(e) => handleInputChange(e, index)}
-                                                            value={item.data?.Value}
-                                                        />
-                                                    )}
-                                                    {errors[`label${index}`] && (
-                                                        <span style={{ color: 'red', fontSize: '0.9em', marginTop: '5px' }}>
-                                                            {errors[`label${index}`]}
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    <div className="row mt-3">
-                                        <div className="col-12">
-                                            <button type="submit" onClick={handleSubmit} className="btn w-auto sky-blue-btn-sendmeasge">Send my message</button>
+            {currentMenu === 'Contact Us' && statu.page_status === 1 && topbardata.length > 0 ? (
+                <section className="lets-talk-sec" id="package_section">
+                    <div className="container" id="sec-10">
+                        <div className="contactusswction">
+                            <form id="contactForm">
+                                <div className="row ">
+                                    <div className="col-12">
+                                        <h4 className="letstallktitle">
+                                            {/* {console.log(statu.post_store[0]['data'].Title)} */}
+                                            {/* {statu.contact_us?.post_store[0]?.Title} */}
+                                            {statu.post_store[0]['data'].Title}
+                                        </h4>
+                                        <div className="inputgroup">
+                                            {statu.post_store[0]['data']?.Description}
                                         </div>
                                     </div>
-                                </form>
+                                </div>
+
+                                <div className="row">
+                                    {console.log(statu.post_store)}
+                                    {statu?.post_store.map((item, index) => (
+                                        <div className="col-md-6" key={index}>
+                                            <div className="inputgroup">
+                                                <label>{item['data'].Label}</label>
+                                                {/* {item.Label === "Tell us what you need" ? ( */}
+                                                {item['data'].Label === "Tell us what you need" ? (
+                                                    <textarea
+                                                        className='form-control'
+                                                        name={`field${index}`}
+                                                        rows="4"
+                                                        onChange={(e) => handleInputChange(e, index)}
+                                                    />
+                                                ) : item.type === "tel" ? (
+                                                    <input0
+                                                        className='form-control'
+                                                        name={`field${index}`}
+                                                        type="tel"
+                                                        onChange={(e) => handleInputChange(e, index)}
+                                                    />
+                                                ) : (
+                                                    <input
+                                                        className='form-control'
+                                                        name={`field${index}`}
+                                                        type={item.Type}
+                                                        onChange={(e) => handleInputChange(e, index)}
+                                                    />
+                                                )}
+                                                {errors[`label${index}`] && <span style={{ color: 'red' }}>{errors[`label${index}`]}</span>}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </form>
+
+                            <div className="row mt-3 ">
+                                <div className="col-12">
+                                    <button
+                                        type="submit"
+                                        onClick={handleSubmit}
+                                        className="btn w-auto sky-blue-btn-sendmeasge"
+                                    >
+                                        Send my message
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </section>
-                ) : null
+                    </div>
+                </section>
+            ) : null
+
+
+
             }
+            {/* {currentMenu === 'Page Section' && statu.page_status === 1 && topbardata.length > 0 ? (
+
+                <section className="page-section" id="transforming_section">
+                    <div className="container p-5 transforming_section_container">
+                        <div className="row">
+                            <div className="col-md-12">
+                                <div className="transfo">
+
+                                    <h5 className="text-center transforming ">
+                                        {statu.page_description}
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="container">
+                        <div className="row p-5">
+                            <div className="col-md-5">
+                                <h5 className="transfotext1 for-waste">
+                                    {console.log(Transforming)}
+
+                                    {Transforming.Pagesectiontitle1} <br />
+                                    <b>{Transforming.Pagesectiontitle2}</b>
+                                </h5>
+
+                                <p className="transfotextdes1">
+                                    {Transforming.Pagesectiondescription}
+                                </p>
+                            </div>
+                            <div className="col-md-2 stretch-line">
+
+                                <img
+                                    src={statu.image}
+                                    // src={homeimg}
+                                    width="60px"
+                                    className="strech"
+                                    alt="strech"
+                                />
+                            </div>
+                            <div className="col-md-5">
+                                <h5 className="transfotext2 for-waste">
+
+                                    {Transforming.Pagesectiontitle1} <br />
+                                    <b>{Transforming.Pagesectiontitle2}</b>
+                                </h5>
+
+                                <p className="transfotextdes2">
+                                    {Transforming.Pagesectiondescription}
+                                </p>
+                                <br />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            ) : null
+            } */}
+
+
         </>
     );
 };

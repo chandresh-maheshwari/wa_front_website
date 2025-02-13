@@ -61,25 +61,48 @@ const Home = () => {
       if (response.status === true) {
         ls("data", response.results);
 
+        // console.log(response.results)
         setStatus(response.results);
-        // console.log(response.results.home_section.post_store[0].)
-        setHomesection(response.results.home_section.post_store[0]);
-        setTransforming(response.results.page_section.post_store);
+        setHomesection(response.results.home_section.post_store[0]['Data']);
+        setTransforming(response.results.page_section.post_store[0]['Data']);
+        // console.log(response.results.about_us.post_store);
+        // const dynamicTitles = response.results.about_us.post_store.flatMap(
+        //   (post) =>
+        //     Object.keys(post)
+        //       .filter((key) => key.startsWith("Title"))
+        //       .map((key) => post[key])
+        //     );
+        // console.log(dynamicTitles);
+        // setTitles(dynamicTitles);
+        // const dynamicDescriptions =
+        //   response.results.about_us.post_store.flatMap((post) =>
+        //     Object.keys(post)
+        //       .filter((key) => key.startsWith("Description"))
+        //       .map((key) => post[key])
+        //   );
+        // setDescription(dynamicDescriptions);
+        // console.log(response.results.about_us.post_store);
 
+        // Extract Titles
         const dynamicTitles = response.results.about_us.post_store.flatMap(
           (post) =>
-            Object.keys(post)
-              .filter((key) => key.startsWith("Title"))
-              .map((key) => post[key])
+            Object.keys(post.Data)  // Access 'Data' property directly
+              .filter((key) => key.startsWith("Title"))  // Filter by keys that start with 'Title'
+              .map((key) => post.Data[key])  // Get the corresponding value for each 'Title'
         );
+
+        // console.log(dynamicTitles);
         setTitles(dynamicTitles);
-        const dynamicDescriptions =
-          response.results.about_us.post_store.flatMap((post) =>
-            Object.keys(post)
-              .filter((key) => key.startsWith("Description"))
-              .map((key) => post[key])
-          );
+
+        // Extract Descriptions
+        const dynamicDescriptions = response.results.about_us.post_store.flatMap((post) =>
+          Object.keys(post.Data)  // Access 'Data' property directly
+            .filter((key) => key.startsWith("Description"))  // Filter by keys that start with 'Description'
+            .map((key) => post.Data[key])  // Get the corresponding value for each 'Description'
+        );
+
         setDescription(dynamicDescriptions);
+
       } else {
         console.error("Invalid response structure:", response);
       }
@@ -251,60 +274,216 @@ const Home = () => {
     }
   };
 
+  // const renderCards = () => {
+  //   // console.log(statu.our_products?.post_store)
+  //   return statu.our_products?.post_store.map((card, index) => {
+  //     const hasContent =
+  //       card.Title1 ||
+  //       card.Cardtext1 ||
+  //       card.Cardtext2 ||
+  //       card.Cardtext3 ||
+  //       card.Cardtext4 ||
+  //       card.Cardtext5 ||
+  //       card.Cardtextlight1 ||
+  //       card.Montlyfeetext ||
+  //       card.Montlyfeecardtext1 ||
+  //       card.Montlyfeecardtext2;
+  //     if (!hasContent) return null;
+
+  //     return (
+  //       <div className={`col-lg-4`} id={`card${index + 1}`} key={card.id}>
+  //         <div
+  //           className={`card-liner-card-${index + 1}`}
+  //           id="card-liner-card"
+  //         ></div>
+  //         <div className={`card${index + 1} card `}>
+  //           {card.Title1 && <span className="medaltype">{card.Title1}</span>}
+  //           <div className={`card${index + 1}-text`}>
+  //             {[
+  //               card.Cardtext1,
+  //               card.Cardtext2,
+  //               card.Cardtext3,
+  //               card.Cardtext4,
+  //               card.Cardtext5,
+  //             ].map(
+  //               (text, i) =>
+  //                 text && (
+  //                   <p style={cardTextStyle} key={i} className="cardtext">
+  //                     <img
+  //                       src={righticon}
+  //                       className={`card${index + 1}righticon`}
+  //                       alt={`Icon ${i + 1}`}
+  //                       style={cardTextImageStyle}
+  //                     />
+  //                     {text}
+  //                   </p>
+  //                 )
+  //             )}
+  //             {card.Cardtext1 ||
+  //               card.Cardtext2 ||
+  //               card.Cardtext3 ||
+  //               card.Cardtext4 ||
+  //               card.Cardtext5 ? (
+  //               <div className="card-liner-inside"></div>
+  //             ) : null}
+  //           </div>
+  //           <div className={`card${index + 1}-sec-2-text`}>
+  //             {card.Cardtextlight1 && (
+  //               <p style={cardTextStyle}>
+  //                 <img
+  //                   src={plushicon}
+  //                   className={`card${index + 1}plushicon`}
+  //                   alt="Add On Icon"
+  //                   style={cardTextImageStyle}
+  //                 />
+  //                 {card.Cardtextlight1}
+  //               </p>
+  //             )}
+  //             {card.Cardtextlight1 ? (
+  //               <div className="card-liner-inside-2"></div>
+  //             ) : null}
+  //             <div className={`card-${index + 1}-sec-3`}>
+  //               {card.Montlyfeetext && (
+  //                 <p className={`card${index + 1}-sec-3-text1`}>
+  //                   {card.Montlyfeetext}
+  //                 </p>
+  //               )}
+  //               {[card.Montlyfeecardtext1, card.Montlyfeecardtext2].map(
+  //                 (text, i) =>
+  //                   text && (
+  //                     <p className={`card${index + 1}-sec-3-text`} key={i}>
+  //                       <img
+  //                         src={plushicon}
+  //                         className={`card${index + 1}plushicon`}
+  //                         alt={`Icon ${i + 1}`}
+  //                         style={cardTextImageStyle}
+  //                       />
+  //                       {text}
+  //                     </p>
+  //                   )
+  //               )}
+  //             </div>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     );
+  //   });
+  // };
+
+
+
+
   const renderCards = () => {
+    console.log(statu.our_products?.post_store);
     return statu.our_products?.post_store.map((card, index) => {
+      // Destructure and extract relevant fields from the Data object
+      const feesSection3 = card.Data.Fees_section_3 || {};
+      const infoSection1 = card.Data.Information_section_1 || {};
+      const serviceSection2 = card.Data.Service_section_2 || {};
+      const feessection3 = card.Data.Fees_section_3 || {};
+      const purchaseButtonSection = card.Data.Purchase_button_section_4 || {};
+
+      // Check if there's any content to display (excluding the Field_slug values)
       const hasContent =
-        card.Title1 ||
-        card.Cardtext1 ||
-        card.Cardtext2 ||
-        card.Cardtext3 ||
-        card.Cardtext4 ||
-        card.Cardtext5 ||
-        card.Cardtextlight1 ||
-        card.Montlyfeetext ||
-        card.Montlyfeecardtext1 ||
-        card.Montlyfeecardtext2;
+        infoSection1.Information1 ||
+        infoSection1.Information2 ||
+        infoSection1.Information3 ||
+        infoSection1.Information4 ||
+        infoSection1.Information5 ||
+        serviceSection2.Service1 ||
+        serviceSection2.Service2 ||
+        feesSection3.Monthlyfee ||
+        feessection3.Montlyfeecardtext1 ||
+        feessection3.Montlyfeecardtext1 ||
+        purchaseButtonSection.Amount ||
+        purchaseButtonSection.Buttonbackgroundcolor ||
+        purchaseButtonSection.Buttoncolor ||
+        purchaseButtonSection.Buttontext;
+
       if (!hasContent) return null;
 
       return (
-        <div className={`col-lg-4`} id={`card${index + 1}`} key={card.id}>
-          <div
-            className={`card-liner-card-${index + 1}`}
-            id="card-liner-card"
-          ></div>
-          <div className={`card${index + 1} card `}>
-            {card.Title1 && <span className="medaltype">{card.Title1}</span>}
+        <div className={`col-lg-4`} id={`card${index + 1}`} key={card.Id}>
+          <div className={`card-liner-card-${index + 1}`} id="card-liner-card"></div>
+          <div className={`card${index + 1} card`}>
+            {/* {console.log(card['Data'].Modelsectionpackagesection)} */}
+            {/* <span className="medaltype">{card.Post_name}</span> */}
+            <span className="medaltype">{card['Data'].Modelsectionpackagesection}</span>
             <div className={`card${index + 1}-text`}>
-              {[
-                card.Cardtext1,
-                card.Cardtext2,
-                card.Cardtext3,
-                card.Cardtext4,
-                card.Cardtext5,
-              ].map(
-                (text, i) =>
-                  text && (
-                    <p style={cardTextStyle} key={i} className="cardtext">
-                      <img
-                        src={righticon}
-                        className={`card${index + 1}righticon`}
-                        alt={`Icon ${i + 1}`}
-                        style={cardTextImageStyle}
-                      />
-                      {text}
-                    </p>
-                  )
+              {/* Render Information Section */}
+              {[infoSection1.Information1, infoSection1.Information2, infoSection1.Information3, infoSection1.Information4, infoSection1.Information5].map((text, i) => (
+                text && (
+                  <p style={cardTextStyle} key={i} className='cardtext'>
+                    <img src={righticon} className={`card${index + 1}righticon`} alt={`Icon ${i + 1}`} style={cardTextImageStyle} />
+                    {text}
+                  </p>
+                )
+              ))}
+              {/* {infoSection1.Information1 || infoSection1.Information2 || infoSection1.Information3 || infoSection1.Information4 || infoSection1.Information5 ? <div className="card-liner-inside"></div> : null} */}
+
+              {/* {infoSection1.Information1 && (
+                <p style={cardTextStyle} key="info1" className="cardtext">
+                  <img
+                    src={righticon}
+                    className={`card${index + 1}righticon`}
+                    alt="Icon 1"
+                    style={cardTextImageStyle}
+                  />
+                  {infoSection1.Information1}
+                </p>
               )}
-              {card.Cardtext1 ||
-              card.Cardtext2 ||
-              card.Cardtext3 ||
-              card.Cardtext4 ||
-              card.Cardtext5 ? (
+              {infoSection1.Information2 && (
+                <p style={cardTextStyle} key="info2" className="cardtext">
+                  <img
+                    src={righticon}
+                    className={`card${index + 1}righticon`}
+                    alt="Icon 2"
+                    style={cardTextImageStyle}
+                  />
+                  {infoSection1.Information2}
+                </p>
+              )}
+              {infoSection1.Information3 && (
+                <p style={cardTextStyle} key="info3" className="cardtext">
+                  <img
+                    src={righticon}
+                    className={`card${index + 1}righticon`}
+                    alt="Icon 3"
+                    style={cardTextImageStyle}
+                  />
+                  {infoSection1.Information3}
+                </p>
+              )}
+              {infoSection1.Information4 && (
+                <p style={cardTextStyle} key="info4" className="cardtext">
+                  <img
+                    src={righticon}
+                    className={`card${index + 1}righticon`}
+                    alt="Icon 4"
+                    style={cardTextImageStyle}
+                  />
+                  {infoSection1.Information4}
+                </p>
+              )}
+              {infoSection1.Information5 && (
+                <p style={cardTextStyle} key="info5" className="cardtext">
+                  <img
+                    src={righticon}
+                    className={`card${index + 1}righticon`}
+                    alt="Icon 5"
+                    style={cardTextImageStyle}
+                  />
+                  {infoSection1.Information5}
+                </p>
+              )} */}
+              {Object.values(infoSection1).some((text) => text) && (
                 <div className="card-liner-inside"></div>
-              ) : null}
+              )}
             </div>
+
             <div className={`card${index + 1}-sec-2-text`}>
-              {card.Cardtextlight1 && (
+              {/* Render Service Section */}
+              {serviceSection2.Service1 && (
                 <p style={cardTextStyle}>
                   <img
                     src={plushicon}
@@ -312,39 +491,75 @@ const Home = () => {
                     alt="Add On Icon"
                     style={cardTextImageStyle}
                   />
-                  {card.Cardtextlight1}
+                  {serviceSection2.Service1}
                 </p>
               )}
-              {card.Cardtextlight1 ? (
-                <div className="card-liner-inside-2"></div>
-              ) : null}
+              {serviceSection2.Service1 && <div className="card-liner-inside-2"></div>}
+
               <div className={`card-${index + 1}-sec-3`}>
-                {card.Montlyfeetext && (
+                {/* Render Monthly Fee */}
+                {feesSection3.Monthlyfee && (
                   <p className={`card${index + 1}-sec-3-text1`}>
-                    {card.Montlyfeetext}
+                    {feesSection3.Monthlyfee}
                   </p>
                 )}
-                {[card.Montlyfeecardtext1, card.Montlyfeecardtext2].map(
-                  (text, i) =>
-                    text && (
-                      <p className={`card${index + 1}-sec-3-text`} key={i}>
-                        <img
-                          src={plushicon}
-                          className={`card${index + 1}plushicon`}
-                          alt={`Icon ${i + 1}`}
-                          style={cardTextImageStyle}
-                        />
-                        {text}
-                      </p>
-                    )
+                {[feessection3.Montlyfeecardtext1, feessection3.Montlyfeecardtext2].map((text, i) => (
+                  text && (
+                    <p style={cardTextStyle} key={i} className='cardtext'>
+                      <img
+                        src={plushicon}
+                        className={`card${index + 1}plushicon`}
+                        alt="Add On Icon"
+                        style={cardTextImageStyle}
+                      />
+                      {text}
+                    </p>
+                  )
+                ))}
+
+                {/* Render Service 2 */}
+                {serviceSection2.Service2 && (
+                  <p className={`card${index + 1}-sec-3-text`}>
+                    <img
+                      src={plushicon}
+                      className={`card${index + 1}plushicon`}
+                      alt="Add On Icon"
+                      style={cardTextImageStyle}
+                    />
+                    {serviceSection2.Service2}
+                  </p>
                 )}
               </div>
+              
             </div>
+            {/* style={{ position: 'absolute', bottom: '13px', left: '0', right: '0' }} */}
+            {purchaseButtonSection.Buttontext && (
+                <div className="text-center purchase-btn">
+                  <button
+                    role="link"
+                    className="btn w-50"
+                    style={{
+                      backgroundColor: purchaseButtonSection.Buttonbackgroundcolor || '#40bedd',
+                      color: purchaseButtonSection.Buttoncolor || '#ffffff',
+                    }}
+                    // onMouseOver={(e) => {
+                    //   e.target.style.backgroundColor = card.data.Buttonhovercolor || '#17bee8';
+                    // }}
+                    // onMouseOut={(e) => {
+                    //   e.target.style.backgroundColor = card.data.Buttonbackgroundcolor || '#40bedd';
+                    // }}
+
+                  >
+                    {`${purchaseButtonSection.Buttontext} - ${purchaseButtonSection.Amount}`}
+                  </button>
+                </div>
+              )}
           </div>
         </div>
       );
     });
   };
+
 
   const renderSections = () => {
     const sections = [
@@ -357,6 +572,7 @@ const Home = () => {
               <div className="home">
                 <div className="row">
                   <div className="col-sm-2">
+                    {/* {console.log(homesection.Tell_me_more_button_section?.Homesectionbuttontitle)} */}
                     <img
                       src={homesection?.Homesectionimage}
                       alt="homeimg"
@@ -365,6 +581,7 @@ const Home = () => {
                   </div>
                   <div className="col-sm-10">
                     <div className="homefont">
+                      {/* {console.log(homesection)} */}
                       <h4>{homesection?.Homesectiontitle}</h4>
                     </div>
                     <p
@@ -377,8 +594,12 @@ const Home = () => {
                     >
                       {homesection?.Homesectiondescription}
                     </p>
-                    <button type="button" className="btn" id="tellmemore">
-                      {homesection?.Homesectionbuttontitle}
+                    <button type="button" className="btn" id="tellmemore"
+                      style={{
+                        backgroundColor: homesection.Tell_me_more_button_section?.Homesectionbuttonbackgroundcolor || '',
+                        color: homesection.Tell_me_more_button_section?.Homesectionbuttontextcolor || '',
+                      }}>
+                      {homesection.Tell_me_more_button_section?.Homesectionbuttontitle}
                     </button>
                     {/* {console.log(homesection.HomeSectionTitle)} */}
                   </div>
@@ -409,16 +630,23 @@ const Home = () => {
               <div className="row p-5">
                 <div className="col-md-5">
                   <h5 className="transfotext1 for-waste">
-                    {Transforming[0]?.Pagesectiontitle1} <br />
-                    <b>{Transforming[0]?.Pagesectiontitle2}</b>
+                    {console.log(Transforming)}
+                    {/* {Transforming[0]?.Pagesectiontitle1} <br />
+                    <b>{Transforming[0]?.Pagesectiontitle2}</b> */}
+                    {Transforming.Pagesectiontitle1} <br />
+                    <b>{Transforming.Pagesectiontitle2}</b>
                   </h5>
+                  {/* <p className="transfotextdes1">
+                    {Transforming[0]?.Pagesectiondescription} */}
                   <p className="transfotextdes1">
-                    {Transforming[0]?.Pagesectiondescription}
+                    {Transforming.Pagesectiondescription}
                   </p>
                 </div>
                 <div className="col-md-2 stretch-line">
+                  {/* {console.log(statu.page_section?.image)} */}
                   <img
-                    src={homeimg}
+                    src={statu.page_section?.image}
+                    // src={homeimg}
                     width="60px"
                     className="strech"
                     alt="strech"
@@ -426,11 +654,15 @@ const Home = () => {
                 </div>
                 <div className="col-md-5">
                   <h5 className="transfotext2 for-waste">
-                    {Transforming[1]?.Pagesectiontitle1} <br />
-                    <b>{Transforming[1]?.Pagesectiontitle2}</b>
+                    {/* {Transforming[1]?.Pagesectiontitle1} <br />
+                    <b>{Transforming[1]?.Pagesectiontitle2}</b> */}
+                    {Transforming.Pagesectiontitle1} <br />
+                    <b>{Transforming.Pagesectiontitle2}</b>
                   </h5>
+                  {/* <p className="transfotextdes2">
+                    {Transforming[1]?.Pagesectiondescription} */}
                   <p className="transfotextdes2">
-                    {Transforming[1]?.Pagesectiondescription}
+                    {Transforming.Pagesectiondescription}
                   </p>
                   <br />
                 </div>
@@ -448,9 +680,13 @@ const Home = () => {
               <div className="row">
                 <div className="col-md-12">
                   <div className="sec-3-text">
+                    {/* {console.log(statu.qute_section_1?.post_store[0]['Data'].Qutesectionimage)} */}
                     <img
+                      // src={
+                      //   statu.qute_section_1?.post_store[0]?.Qutesectionimage
+                      // }
                       src={
-                        statu.qute_section_1?.post_store[0]?.Qutesectionimage
+                        statu.qute_section_1?.post_store[0]['Data'].Qutesectionimage
                       }
                       className="quoteimage1"
                       alt="quoteimage1"
@@ -458,14 +694,14 @@ const Home = () => {
                   </div>
                   <div className="sec-3-text2">
                     <p className="text-light">
-                      {statu.qute_section_1?.post_store[0]?.Qutesectiontitle}{" "}
+                      {statu.qute_section_1?.post_store[0]['Data']?.Qutesectiontitle}{" "}
                       <br />
                       <span
                         className="text-secondary"
                         style={{ fontSize: "medium" }}
                       >
                         {
-                          statu.qute_section_1?.post_store[0]
+                          statu.qute_section_1?.post_store[0]['Data']
                             ?.Qutesectiondescription
                         }
                       </span>
@@ -488,7 +724,7 @@ const Home = () => {
                   <div className="sec-3-text">
                     <img
                       src={
-                        statu.qute_section_2?.post_store[0]?.Qutesectionimage
+                        statu.qute_section_2?.post_store[0]['Data']?.Qutesectionimage
                       }
                       className="quoteimage1"
                       alt="quoteimage1"
@@ -496,14 +732,14 @@ const Home = () => {
                   </div>
                   <div className="sec-3-text2">
                     <p className="text-light">
-                      {statu.qute_section_2?.post_store[0]?.Qutesectiontitle}{" "}
+                      {statu.qute_section_2?.post_store[0]['Data']?.Qutesectiontitle}{" "}
                       <br />
                       <span
                         className="text-secondary"
                         style={{ fontSize: "medium" }}
                       >
                         {
-                          statu.qute_section_2?.post_store[0]
+                          statu.qute_section_2?.post_store[0]['Data']
                             ?.Qutesectiondescription
                         }
                       </span>
@@ -546,6 +782,7 @@ const Home = () => {
         condition: statu.choose_section?.status === 1,
         ordering: statu.choose_section?.ordering || 0,
         content: (
+          // <p>sdsd</p>
           <section className="why_choose_section">
             <div className="container p-5">
               <div className="row">
@@ -563,14 +800,14 @@ const Home = () => {
               <div className="row">
                 {statu.choose_section?.post_store.map((item, index) => (
                   <div
-                    className={`col col-md-6 col-sm-6 col-xs-3 ${
-                      index % 2 === 0 ? "text-end" : "text-start"
-                    }`}
+                    className={`col col-md-6 col-sm-6 col-xs-3 ${index % 2 === 0 ? "text-end" : "text-start"
+                      }`}
                     key={item.id}
                   >
-                    <h5 className="for-waste">{item.Title1}</h5>
+                    {/* {console.log(item['Data'].Title1)} */}
+                    <h5 className="for-waste">{item['Data'].Title1}</h5>
                     <p style={{ marginTop: "25px" }}>
-                      {item.Description.split("\r\n").map((line, i) => (
+                      {item['Data'].Description.split("\r\n").map((line, i) => (
                         <React.Fragment key={i}>
                           {line}
                           <br />
@@ -593,6 +830,9 @@ const Home = () => {
               <div className="sliderconatainer">
                 <h2 className="font-weight-light slider-heading text-center">
                   {statu.why_section?.page_description}
+                  {/* {console.log(statu.why_section?.post_store[0]['Data'])} */}
+                  {/* {console.log(statu.why_section?.post_store)} */}
+                  {/* {console.log(statu.why_section?.post_store[0]['Data'])} */}
                 </h2>
                 <div className="slider-container">
                   {isPlaying ? "" : ""}
@@ -603,8 +843,9 @@ const Home = () => {
                     >
                       {statu.why_section?.post_store.map((item, index) => (
                         <div key={item.id}>
+                          {/* {console.log(item['Data'].Image)} */}
                           <img
-                            src={item.Image}
+                            src={item['Data'].Image}
                             className="sliderimages"
                             alt={`Logo ${index + 1}`}
                           />
@@ -632,7 +873,8 @@ const Home = () => {
           <section className="tellmemore">
             <div className="container">
               <h4 className="tellmemoretitle">
-                {statu.tell_me_more_section?.post_store[0]?.Title}
+                {/* {console.log(statu.tell_me_more_section)} */}
+                {statu.tell_me_more_section?.post_store[0]['Data']?.Title}
               </h4>
               <div className="row">
                 <div className="col-12">
@@ -640,7 +882,7 @@ const Home = () => {
                     type="submit"
                     className="btn w-auto sky-blue-btn-tellmemore"
                   >
-                    {statu.tell_me_more_section?.post_store[0]?.Buttontext}
+                    {statu.tell_me_more_section?.post_store[0]['Data']?.Buttontext}
                   </button>
                 </div>
               </div>
@@ -667,8 +909,11 @@ const Home = () => {
               <div className="row" style={{ marginBottom: "6%" }}>
                 <div className="col-md-3">
                   <div className="content-box">
+                    {/* {console.log(titles)} */}
+
                     {titles.map((title, index) => (
                       <div key={index}>
+                        {/* {console.log(title)} */}
                         <h5 className="title-sm">{title}</h5>
                         <p></p>
                       </div>
@@ -722,47 +967,48 @@ const Home = () => {
                   <div className="row ">
                     <div className="col-12">
                       <h4 className="letstallktitle">
-                        {statu.contact_us?.post_store[0]?.Title}
+                        {/* {statu.contact_us?.post_store[0]?.Title} */}
+                        {statu.contact_us?.post_store[0]['Data']?.Title}
                       </h4>
                       <div className="inputgroup">
-                        {statu.contact_us?.post_store[0]?.Description}
+                        {statu.contact_us?.post_store[0]['Data']?.Description}
                       </div>
                     </div>
                   </div>
 
                   <div className="row">
-                  {statu.contact_us?.post_store.map((item, index) => (
-                       <div className="col-md-6" key={index}>
+                    {statu.contact_us?.post_store.map((item, index) => (
+                      <div className="col-md-6" key={index}>
                         <div className="inputgroup">
-                        <label>{item.Label}</label>
-                                  {/* {item.Label === "Tell us what you need" ? ( */}
-                                  {item.Label === "Tell us what you need" ? (
-                                     <textarea
-                                            className='form-control'
-                                                            name={`field${index}`}
-                                                            rows="4"
-                                                            onChange={(e) => handleInputChange(e, index)}
-                                                        />
-                                                    ) : item.type === "tel" ? (
-                                                        <input
-                                                            className='form-control'
-                                                            name={`field${index}`}
-                                                            type="tel"
-                                                            onChange={(e) => handleInputChange(e, index)}
-                                                        />
-                                                    ) : (
-                                                        <input
-                                                            className='form-control'
-                                                            name={`field${index}`}
-                                                            type={item.Type}
-                                                            onChange={(e) => handleInputChange(e, index)}
-                                                        />
-                                                    )}
-                                                    {errors[`label${index}`] && <span style={{ color: 'red' }}>{errors[`label${index}`]}</span>}
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
+                          <label>{item['Data'].Label}</label>
+                          {/* {item.Label === "Tell us what you need" ? ( */}
+                          {item['Data'].Label === "Tell us what you need" ? (
+                            <textarea
+                              className='form-control'
+                              name={`field${index}`}
+                              rows="4"
+                              onChange={(e) => handleInputChange(e, index)}
+                            />
+                          ) : item.type === "tel" ? (
+                            <input
+                              className='form-control'
+                              name={`field${index}`}
+                              type="tel"
+                              onChange={(e) => handleInputChange(e, index)}
+                            />
+                          ) : (
+                            <input
+                              className='form-control'
+                              name={`field${index}`}
+                              type={item.Type}
+                              onChange={(e) => handleInputChange(e, index)}
+                            />
+                          )}
+                          {errors[`label${index}`] && <span style={{ color: 'red' }}>{errors[`label${index}`]}</span>}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                   {/* <div className="row">
                     {statu.contact_us?.post_store.map((item, index) => (
                       <div className="col-md-6" key={index}>

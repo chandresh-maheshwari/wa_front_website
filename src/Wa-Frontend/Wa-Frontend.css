@@ -1176,3 +1176,10 @@ footer #footer {
 .transforming_section_container{
     width: 60% !important;
 }
+
+.purchase-btn{
+    position: absolute;
+    bottom: 13px;
+    left: 0;
+    right: 0;
+}
