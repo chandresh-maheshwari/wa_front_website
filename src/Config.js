@@ -14,7 +14,7 @@ export default {
     // : "https://hrmsapi.cherrypiksoftware.com/",
     : "https://front.wasteaccountant.com/",
 
-  waapiurl: process.env.NODE_ENV === "staging"
+  waapiurl: process.env.NODE_ENV === "development"
     ? "http://walara.localhost.com/admin/"
     // : "https://hrmsapi.cherrypiksoftware.com/",
     : "https://laravel.wasteaccountant.com/admin/",
