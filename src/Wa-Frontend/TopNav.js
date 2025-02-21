@@ -47,7 +47,7 @@ const TopNav = () => {
                                         <p className='partoflife'> {topbardata.Mts_group_section?.Title}</p> <p className='mtsgroup' style={{ color: "rgb(173, 173, 173);" }}>{topbardata.Mts_group_section?.Discussion}</p>
                                     </div>
                                 </div>
-                                {console.log(topbardata.Mts_group_section?.Sidelogoimage)}                                
+                                {/* {console.log(topbardata.Mts_group_section?.Sidelogoimage)}                                 */}
                                 <img src={topbardata.Mts_group_section?.Sidelogoimage} className="mts-logo" alt="mts-logo" />
 
                             </div>

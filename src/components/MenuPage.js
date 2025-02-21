@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 import ls from 'local-storage';
 import { Navigate } from 'react-router-dom';
+import { loadStripe } from '@stripe/stripe-js';
+const stripePromise = loadStripe('pk_test_51P4GXaAvL6Jnl0r3yHDSV2zN0JrGRt2UFxn217kqw9JFFBXe4K1n5xZHGfsKaIicVfUBAP5ch0TBIO8C8cI3ijQv00bNWJynzK');
 
 const MenuPage = () => {
     const location = useLocation();

@@ -110,6 +110,493 @@ export default new (class AuthApi {
     }
 
 
+    async login(userData) {
+        try {
+            const url = Config.waapiurl + Config.authApis.login;
+            this.setHeaders("post");
+            const response = await axios.post(url, userData);
+            console.log("API response:", response.data);
+
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            if (error.response) {
+                return error.response.data.message;
+            } else {
+                return "An error occurred, Please try again later!";
+            }
+        }
+    }
+
+    async logout(userData) {
+        try {
+            const url = Config.waapiurl + Config.authApis.logout;
+            this.setHeaders("post");
+
+            const authToken = ls.get("WAauthToken") || "";
+
+            const response = await axios.post(url, userData, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            console.log("API response:", response.data);
+
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            if (error.response) {
+                return error.response.data.message;
+            } else {
+                return "An error occurred, Please try again later!";
+            }
+        }
+    }
+
+    async stripeCheckoutSuccess(sessionId) {
+        try {
+            const url = `${Config.waapiurl}${Config.authApis.stripeCheckoutSuccess}`;
+            this.setHeaders("post");
+
+            const authToken = ls.get("WAauthToken") || "";
+
+            const response = await axios.post(
+                url,
+                { session_id: sessionId },
+                {
+                    headers: {
+                        Authorization: `Bearer ${authToken}`,
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                    },
+                }
+            );
+
+            console.log("Stripe Checkout Success response:", response.data);
+
+            // Check if the response contains the expected structure
+            if (response.data && response.data.status === true) {
+                return response.data;
+            } else {
+                throw new Error(response.data.message || "Failed to store session ID");
+            }
+        } catch (error) {
+            console.error("Stripe Checkout Success API Error:", error);
+            if (error.response) {
+                throw new Error(
+                    error.response.data.message || "Payment verification failed"
+                );
+            } else {
+                throw new Error(
+                    "An error occurred while verifying payment. Please try again later!"
+                );
+            }
+        }
+    }
+
+    async submitCompanyDetails(formData) {
+        try {
+            const url = `${Config.waapiurl}${Config.authApis.userCompanyDetails}`;
+            this.setHeaders("post");
+
+            const authToken = ls.get("WAauthToken") || "";
+            console.log("Auth Token:", authToken);
+
+            const response = await axios.post(url, formData, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            console.log("Company details submitted successfully:", response.data);
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            if (error.response) {
+                throw new Error(
+                    error.response.data.message || "Failed to submit company details"
+                );
+            } else {
+                throw new Error(
+                    "An error occurred while submitting company details. Please try again later!"
+                );
+            }
+        }
+    }
+    async getLatestCompanyDetails() {
+        try {
+          const url = `${Config.waapiurl}${Config.authApis.getLatestCompanyDetails}`;
+          this.setHeaders("get");
+    
+          const authToken = ls.get("WAauthToken") || ""; // Retrieve the auth token
+          console.log("Auth Token:", authToken);
+    
+          const response = await axios.get(url, {
+            headers: {
+              Authorization: `Bearer ${authToken}`, // Add the token to the headers
+              "Content-Type": "application/json",
+            },
+          });
+          return response.data;
+        } catch (error) {
+          console.error("API Error:", error);
+          throw error;
+        }
+      }
+
+    async submitContractDetails(formData) {
+        try {
+            const url = `${Config.waapiurl}${Config.authApis.userContractDetails}`;
+            this.setHeaders("post");
+
+            const authToken = ls.get("WAauthToken") || "";
+            console.log("Auth Token:", authToken);
+
+            const response = await axios.post(url, formData, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            console.log("Company details submitted successfully:", response.data);
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            if (error.response) {
+                throw new Error(
+                    error.response.data.message || "Failed to submit company details"
+                );
+            } else {
+                throw new Error(
+                    "An error occurred while submitting company details. Please try again later!"
+                );
+            }
+        }
+    }
+
+
+    async getLatestContractDetails() {
+        try {
+            const url = `${Config.waapiurl}${Config.authApis.getLatestContractDetails}`;
+            this.setHeaders("get");
+
+            const authToken = ls.get("WAauthToken") || ""; // Retrieve the auth token
+            console.log("Auth Token:", authToken);
+
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`, // Add the token to the headers
+                    "Content-Type": "application/json",
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            throw error;
+        }
+    }
+
+    async submitDepotDetails(formData) {
+        try {
+            const url = `${Config.waapiurl}${Config.authApis.userDepotDetails}`;
+            this.setHeaders("post");
+
+            const authToken = ls.get("WAauthToken") || "";
+            console.log("Auth Token:", authToken);
+
+            const response = await axios.post(url, formData, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            console.log("Company details submitted successfully:", response.data);
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            if (error.response) {
+                throw new Error(
+                    error.response.data.message || "Failed to submit company details"
+                );
+            } else {
+                throw new Error(
+                    "An error occurred while submitting company details. Please try again later!"
+                );
+            }
+        }
+    }
+
+
+    async userVehicleDetails(formData) {
+        try {
+            const url = `${Config.waapiurl}${Config.authApis.userVehicleDetails}`;
+            this.setHeaders("post");
+
+            const authToken = ls.get("WAauthToken") || "";
+            console.log("Auth Token:", authToken);
+
+            const response = await axios.post(url, formData, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            console.log("Company details submitted successfully:", response.data);
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            if (error.response) {
+                throw new Error(
+                    error.response.data.message || "Failed to submit company details"
+                );
+            } else {
+                throw new Error(
+                    "An error occurred while submitting company details. Please try again later!"
+                );
+            }
+        }
+    }
+
+
+    async getfualtypesdata() {
+        try {
+            const url = `${Config.waapiurl}${Config.authApis.getfualtypesdata}`;
+            this.setHeaders("get");
+
+            const authToken = ls.get("WAauthToken") || "";
+            console.log("Auth Token:", authToken);
+
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            if (error.response) {
+                throw new Error(
+                    error.response.data.message || "Failed to fetch contract details"
+                );
+            } else {
+                throw new Error(
+                    "An error occurred while fetching contract details. Please try again later!"
+                );
+            }
+        }
+    }
+
+
+    async getUserDepotTypeName() {
+        try {
+            const url = `${Config.waapiurl}${Config.authApis.getUserDepotTypeName}`;
+            this.setHeaders("get");
+
+            const authToken = ls.get("WAauthToken") || "";
+            console.log("Auth Token:", authToken);
+
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            throw error;
+        }
+    }
+
+    async getusercompanydetail() {
+        const maxRetries = 3;
+        let attempt = 0;
+
+        // while (attempt < maxRetries) {
+            try {
+                const url = `${Config.waapiurl}${Config.authApis.getusercompanydetail}`;
+                this.setHeaders("get");
+
+                const authToken = ls.get("WAauthToken") || "";
+                console.log("Auth Token:", authToken);
+
+                const response = await axios.get(url, {
+                    headers: {
+                        Authorization: `Bearer ${authToken}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                if (response.status === 200) {
+                    return response.data;
+                } else {
+                    console.error(`Unexpected response status: ${response.status}`);
+                }
+            } catch (error) {
+                console.error("API Error:", error);
+
+                // if (error.response && error.response.status >= 500) {
+                //     // Retry for server errors
+                //     attempt++;
+                //     console.log(`Retrying... (${attempt}/${maxRetries})`);
+                //     // continue;
+                // }
+
+                throw error; // Re-throw if it's not a server error
+            }
+        // }
+
+        throw new Error("Failed to fetch company details after multiple attempts");
+    }
+
+    async getUserContractdetail() {
+        try {
+            const url = `${Config.waapiurl}${Config.authApis.getUserContractdetail}`;
+            this.setHeaders("get");
+
+            const authToken = ls.get("WAauthToken") || "";
+            console.log("Auth Token:", authToken);
+
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            throw error;
+        }
+    }
+
+
+    async getUserDepotdetail() {
+        try {
+            const url = `${Config.waapiurl}${Config.authApis.getUserDepotdetail}`;
+            this.setHeaders("get");
+
+            const authToken = ls.get("WAauthToken") || "";
+            console.log("Auth Token:", authToken);
+
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            throw error;
+        }
+    }
+
+    async getUservehicledetail() {
+        try {
+            const url = `${Config.waapiurl}${Config.authApis.getUservehicledetail}`;
+            this.setHeaders("get");
+
+            const authToken = ls.get("WAauthToken") || "";
+            console.log("Auth Token:", authToken);
+
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            throw error;
+        }
+    }
+
+
+
+
+
+    async countynameget() {
+        try {
+            const url = `${Config.waapiurl}${Config.authApis.getcountyname}`;
+            this.setHeaders("get");
+
+            const authToken = ls.get("WAauthToken") || "";
+            console.log("Auth Token:", authToken);
+
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            throw error;
+        }
+    }
+
+
+    async userVehicleTypes() {
+        try {
+            const url = `${Config.waapiurl}${Config.authApis.userVehicleTypes}`;
+            this.setHeaders("get");
+
+            const authToken = ls.get("WAauthToken") || "";
+            console.log("Auth Token:", authToken);
+
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            throw error;
+        }
+    }
+
+
+    async getUser(userData) {
+        try {
+            const url = Config.waapiurl + Config.authApis.getUser;
+            this.setHeaders("get");
+
+            const authToken = ls.get("WAauthToken") || "";
+
+            const response = await axios.get(url, userData, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            console.log("API response:", response.data);
+
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            if (error.response) {
+                return error.response.data.message;
+            } else {
+                return "An error occurred, Please try again later!";
+            }
+        }
+    }
+
+
+
     async Alldynamicpageget() {
         try {
             const url = Config.apiurl + Config.apis.Alldynamicpageget;

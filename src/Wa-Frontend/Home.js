@@ -15,6 +15,9 @@ import plushicon from "./Ourproductimages/plush.png";
 import righticon from "./Ourproductimages/righticon.png";
 import Swal from "sweetalert2";
 import ls from "local-storage";
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe('pk_test_51P4GXaAvL6Jnl0r3yHDSV2zN0JrGRt2UFxn217kqw9JFFBXe4K1n5xZHGfsKaIicVfUBAP5ch0TBIO8C8cI3ijQv00bNWJynzK');
 
 const Home = () => {
   const cardTextStyle = {
@@ -37,6 +40,9 @@ const Home = () => {
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
   const [statu, setStatus] = useState({});
+  const [userEmail, setUserEmail] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
 
   useEffect(() => {
     if (sliderRef) {
@@ -370,8 +376,133 @@ const Home = () => {
   //   });
   // };
 
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+
+  const getUserEmail = async () => {
+    try {
+      const token = ls.get("WAauthToken");
+
+      if (!token) {
+        console.log("No auth token found");
+        return;
+      }
+
+      const response = await Authapi.getUser({
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+      });
+
+      console.log("API Response:", response);
+
+      const email = response?.data?.user?.email ||
+        response?.user?.email ||
+        response?.email;
+
+      console.log("Extracted Email:", email);
+
+      if (email) {
+        setUserEmail(email);
+        return email;
+      } else {
+        console.log("Email not found in response structure");
+        console.log("Response structure:", JSON.stringify(response, null, 2));
+      }
+
+    } catch (error) {
+      console.error("Error in getUserEmail:", error);
+    }
+  };
 
 
+
+  
+  const handlePurchaseSubmit = async (productName, amount, stripid) => {
+    const token = localStorage.getItem("WAauthToken");
+    // console.log(productName);
+    // console.log(amount);
+    // console.log(stripid);
+    if (!token) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Please Log In',
+        text: 'You need to be logged in to make a purchase.',
+        showConfirmButton: true,
+
+        showCancelButton: true,
+        cancelButtonText: 'Cancel'
+      }).then((result) => {
+        // Handle login redirect if needed
+      });
+      return;
+    }
+
+    try {
+      // Get user email first
+      let email = userEmail;
+      if (!email) {
+        email = await getUserEmail();
+        if (!email) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Could not retrieve user email. Please try again.',
+          });
+          return;
+        }
+      }
+      Swal.fire({
+        title: 'Processing...',
+        text: 'Please wait while we set up your payment.',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
+      const response = await fetch('http://walara.localhost.com/admin/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": `Bearer ${token}`,
+          "X-XSRF-TOKEN": getCookie('XSRF-TOKEN')
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          product_name: productName,
+          amount: parseFloat(amount),
+          email: email
+        })
+      });
+
+      const data = await response.json();
+
+      if (!data.status) {
+        throw new Error(data.message || data.error || 'Failed to create checkout session');
+      }
+
+      window.location.href = data.url;
+
+    } catch (error) {
+      console.error("Purchase Error:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Payment Error',
+        text: error.message || 'There was an error processing your payment. Please try again.',
+        background: '#f8f9fa',
+        showConfirmButton: true,
+        confirmButtonText: 'OK'
+      });
+    }
+  };
 
   const renderCards = () => {
     // console.log(statu.our_products?.post_store);
@@ -530,30 +661,50 @@ const Home = () => {
                   </p>
                 )}
               </div>
-              
+
             </div>
             {/* style={{ position: 'absolute', bottom: '13px', left: '0', right: '0' }} */}
             {purchaseButtonSection.Buttontext && (
-                <div className="text-center purchase-btn">
-                  <button
-                    role="link"
-                    className="btn w-50"
-                    style={{
-                      backgroundColor: purchaseButtonSection.Buttonbackgroundcolor || '#40bedd',
-                      color: purchaseButtonSection.Buttoncolor || '#ffffff',
-                    }}
-                    // onMouseOver={(e) => {
-                    //   e.target.style.backgroundColor = card.data.Buttonhovercolor || '#17bee8';
-                    // }}
-                    // onMouseOut={(e) => {
-                    //   e.target.style.backgroundColor = card.data.Buttonbackgroundcolor || '#40bedd';
-                    // }}
+              <div className="text-center purchase-btn">
+                {/* <button
+                  role="link"
+                  className="btn w-50"
+                  style={{
+                    backgroundColor: purchaseButtonSection.Buttonbackgroundcolor || '#40bedd',
+                    color: purchaseButtonSection.Buttoncolor || '#ffffff',
+                  }}
+                // onMouseOver={(e) => {
+                //   e.target.style.backgroundColor = card.data.Buttonhovercolor || '#17bee8';
+                // }}
+                // onMouseOut={(e) => {
+                //   e.target.style.backgroundColor = card.data.Buttonbackgroundcolor || '#40bedd';
+                // }}
 
-                  >
-                    {`${purchaseButtonSection.Buttontext} - ${purchaseButtonSection.Amount}`}
-                  </button>
-                </div>
-              )}
+                >
+                  {`${purchaseButtonSection.Buttontext} - ${purchaseButtonSection.Amount}`}
+                </button> */}
+                {/* {console.log(purchaseButtonSection.Stripid)} */}
+                <button
+                  role="link"
+                  className="btn w-50"
+                  style={{
+                    backgroundColor: purchaseButtonSection.Buttonbackgroundcolor || '#40bedd',
+                    color: purchaseButtonSection.Buttoncolor || '#ffffff',
+                  }}
+                  // onMouseOver={(e) => {
+                  //   e.target.style.backgroundColor = card.Buttonhovercolor || '#17bee8';
+                  // }}
+                  // onMouseOut={(e) => {
+                  //   e.target.style.backgroundColor = card.Buttonbackgroundcolor || '#40bedd';
+                  // }}
+
+                  onClick={() => handlePurchaseSubmit(card['Data'].Modelsectionpackagesection, purchaseButtonSection.Amount, purchaseButtonSection.Stripid)}
+                >
+                  {`${purchaseButtonSection.Buttontext} - $${purchaseButtonSection.Amount}`}
+                </button>
+
+              </div>
+            )}
           </div>
         </div>
       );

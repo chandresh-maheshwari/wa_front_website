@@ -1183,3 +1183,42 @@ footer #footer {
     left: 0;
     right: 0;
 }
+
+.dropdown-menu {
+    position: absolute;
+    top: 45px;
+    right: 87px;   
+    background-color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    width: 200px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000; 
+  }
+  
+  .dropdown-menu button {
+    background: none;
+    border: none;
+    padding: 8px;
+    text-align: left;
+    font-size: 14px;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  .dropdown-menu button:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .user-icon {
+    display: flex
+;
+    align-items: center;
+    gap: 8px;
+    padding: 5px;
+}
+
+
