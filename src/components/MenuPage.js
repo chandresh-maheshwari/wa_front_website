@@ -41,6 +41,7 @@ const MenuPage = () => {
         marginRight: '10px',
     };
 
+    
     useEffect(() => {
         const menuTitle = location.state?.menuName ||
             menuName.split('-')

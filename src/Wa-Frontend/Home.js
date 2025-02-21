@@ -425,16 +425,12 @@ const Home = () => {
   
   const handlePurchaseSubmit = async (productName, amount, stripid) => {
     const token = localStorage.getItem("WAauthToken");
-    // console.log(productName);
-    // console.log(amount);
-    // console.log(stripid);
     if (!token) {
       Swal.fire({
         icon: 'warning',
         title: 'Please Log In',
         text: 'You need to be logged in to make a purchase.',
         showConfirmButton: true,
-
         showCancelButton: true,
         cancelButtonText: 'Cancel'
       }).then((result) => {
@@ -467,29 +463,14 @@ const Home = () => {
         }
       });
 
-      const response = await fetch('http://walara.localhost.com/admin/api/create-checkout-session', {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          "Authorization": `Bearer ${token}`,
-          "X-XSRF-TOKEN": getCookie('XSRF-TOKEN')
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          product_name: productName,
-          amount: parseFloat(amount),
-          email: email
-        })
-      });
+      // Replace the fetch call with the Authapi function
+      const response = await Authapi.createCheckoutSession(productName, amount, email);
 
-      const data = await response.json();
-
-      if (!data.status) {
-        throw new Error(data.message || data.error || 'Failed to create checkout session');
+      if (!response.status) {
+        throw new Error(response.message || 'Failed to create checkout session');
       }
 
-      window.location.href = data.url;
+      window.location.href = response.url;
 
     } catch (error) {
       console.error("Purchase Error:", error);

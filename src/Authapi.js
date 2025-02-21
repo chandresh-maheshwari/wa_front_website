@@ -155,6 +155,35 @@ export default new (class AuthApi {
         }
     }
 
+
+
+    async paymentcheckouturl(userData) {
+        try {
+            const url = Config.waapiurl + Config.authApis.paymentcheckouturl;
+            this.setHeaders("post");
+
+            // const authToken = ls.get("WAauthToken") || "";
+
+            const response = await axios.post(url, userData, {
+                headers: {
+                    // Authorization: `Bearer ${authToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            console.log("API response:", response.data);
+
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            if (error.response) {
+                return error.response.data.message;
+            } else {
+                return "An error occurred, Please try again later!";
+            }
+        }
+    }
+
     async stripeCheckoutSuccess(sessionId) {
         try {
             const url = `${Config.waapiurl}${Config.authApis.stripeCheckoutSuccess}`;
@@ -612,6 +641,7 @@ export default new (class AuthApi {
             throw error;
         }
     }
+    
 
 
     async Alldynamicpagegetnav() {
@@ -647,6 +677,26 @@ export default new (class AuthApi {
             const response = await axios.post(url, formDataapi, {
                 headers: {
                     'Content-Type': formData instanceof FormData ? 'multipart/form-data' : 'application/json',
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            throw error;
+        }
+    }
+
+    async createCheckoutSession(productName, amount, email) {
+        try {
+            const url = Config.waapiurl + Config.authApis.createCheckoutSession;
+            this.setHeaders("post");
+            const response = await axios.post(url, {
+                product_name: productName,
+                amount: parseFloat(amount),
+                email: email
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
                 },
             });
             return response.data;
