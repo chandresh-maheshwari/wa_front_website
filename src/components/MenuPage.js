@@ -25,6 +25,8 @@ const MenuPage = () => {
     // const [Transforming, setTransforming] = useState({});
     const [formData, setFormData] = useState({});
     const [statu, setStatus] = useState({});
+      const [userEmail, setUserEmail] = useState(null);
+    
     const [Transforming, setTransforming] = useState({});
 
 
@@ -41,7 +43,108 @@ const MenuPage = () => {
         marginRight: '10px',
     };
 
+
+    const getUserEmail = async () => {
+        try {
+          const token = ls.get("WAauthToken");
     
+          if (!token) {
+            console.log("No auth token found");
+            return;
+          }
+    
+          const response = await Authapi.getUser({
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+          });
+    
+          console.log("API Response:", response);
+    
+          const email = response?.data?.user?.email ||
+            response?.user?.email ||
+            response?.email;
+    
+          console.log("Extracted Email:", email);
+    
+          if (email) {
+            setUserEmail(email);
+            return email;
+          } else {
+            console.log("Email not found in response structure");
+            console.log("Response structure:", JSON.stringify(response, null, 2));
+          }
+    
+        } catch (error) {
+          console.error("Error in getUserEmail:", error);
+        }
+      };
+
+    const handlePurchaseSubmit = async (productName, amount, stripid) => {
+        const token = localStorage.getItem("WAauthToken");
+        if (!token) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Please Log In',
+                text: 'You need to be logged in to make a purchase.',
+                showConfirmButton: true,
+                showCancelButton: true,
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                // Handle login redirect if needed
+            });
+            return;
+        }
+
+        try {
+            // Get user email first
+            let email = userEmail;
+            if (!email) {
+                email = await getUserEmail();
+                if (!email) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Could not retrieve user email. Please try again.',
+                    });
+                    return;
+                }
+            }
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we set up your payment.',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            // Replace the fetch call with the Authapi function
+            const response = await Authapi.createCheckoutSession(productName, amount, email);
+
+            if (!response.status) {
+                throw new Error(response.message || 'Failed to create checkout session');
+            }
+
+            window.location.href = response.url;
+
+        } catch (error) {
+            console.error("Purchase Error:", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Payment Error',
+                text: error.message || 'There was an error processing your payment. Please try again.',
+                background: '#f8f9fa',
+                showConfirmButton: true,
+                confirmButtonText: 'OK'
+            });
+        }
+    };
+
+
     useEffect(() => {
         const menuTitle = location.state?.menuName ||
             menuName.split('-')
@@ -338,7 +441,7 @@ const MenuPage = () => {
                         {/* style={{ position: 'absolute', bottom: '13px', left: '0', right: '0' }} */}
                         {purchaseButtonSection.Buttontext && (
                             <div className="text-center purchase-btn">
-                                <button
+                                {/* <button
                                     role="link"
                                     className="btn w-50"
                                     style={{
@@ -352,6 +455,22 @@ const MenuPage = () => {
                                 //   e.target.style.backgroundColor = card.data.Buttonbackgroundcolor || '#40bedd';
                                 // }}
 
+                                > */}
+                                <button
+                                    role="link"
+                                    className="btn w-50"
+                                    style={{
+                                        backgroundColor: purchaseButtonSection.Buttonbackgroundcolor || '#40bedd',
+                                        color: purchaseButtonSection.Buttoncolor || '#ffffff',
+                                    }}
+                                    // onMouseOver={(e) => {
+                                    //   e.target.style.backgroundColor = card.Buttonhovercolor || '#17bee8';
+                                    // }}
+                                    // onMouseOut={(e) => {
+                                    //   e.target.style.backgroundColor = card.Buttonbackgroundcolor || '#40bedd';
+                                    // }}
+
+                                    onClick={() => handlePurchaseSubmit(card['data'].Modelsectionpackagesection, purchaseButtonSection.Amount, purchaseButtonSection.Stripid)}
                                 >
                                     {`${purchaseButtonSection.Buttontext} - ${purchaseButtonSection.Amount}`}
                                 </button>
