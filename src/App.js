@@ -56,13 +56,13 @@ import MenuPage from './components/MenuPage';
 import NoPage from './NoPage';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
-import Company from "./components/Companypage/Company";
 // import PaymentComponent from "./components/PaymentComponent";
 // import SupplierPayments from "./components/SupplierPayments";
-import Contract from "./components/Companypage/Contract";
-import Depot from "./components/Companypage/Depot";
-import Vehicle from "./components/Companypage/Vehicle";  
-import Success from "./components/Companypage/Success";
+import Company from "../components/companypage/Company";
+import Contract from "../components/companypage/Contract";
+import Depot from "../components/companypage/Depot";
+import Vehicle from "../components/companypage/Vehicle";  
+import Success from "../components/companypage/Success";
 // Stripe key
 const stripePromise = loadStripe('pk_test_51P4GXaAvL6Jnl0r3yHDSV2zN0JrGRt2UFxn217kqw9JFFBXe4K1n5xZHGfsKaIicVfUBAP5ch0TBIO8C8cI3ijQv00bNWJynzK');
 
