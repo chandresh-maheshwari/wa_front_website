@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
-import ls from "local-storage";
+import axios from "axios";
 import "./Company.css";
 import Authapi from "../../Authapi";
-
 import { Stepper, Step } from "react-form-stepper";
+import ls from 'local-storage';
 
 const Company = () => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const Company = () => {
 
   const handleStripeCheckoutSuccess = async (sessionId) => {
     console.log("Session ID:", sessionId);
-  
+
     try {
       const response = await Authapi.stripeCheckoutSuccess(sessionId);
       if (response.status === true) {
@@ -46,6 +46,7 @@ const Company = () => {
       });
     }
   };
+
   useEffect(() => {
     const authToken = ls.get("WAauthToken");
     if (!authToken) {
@@ -62,27 +63,34 @@ const Company = () => {
 
     const queryParams = new URLSearchParams(location.search);
     const success = queryParams.get("success");
-    const sessionId = queryParams.get("session_id");
-    const hasShownSuccessMessage = ls.get("hasShownCompanySetupSuccess");
+    const userId = queryParams.get("user_id");
 
-    if (sessionId && success === "true" && !hasShownSuccessMessage) {
-      console.log(showForm);
-        if (!showForm) {
-        setShowForm(true);
-        }
-      Swal.fire({
-        icon: "success",
-        title: "Payment Successful!",
-        text: "Please complete your company setup below.",
-        confirmButtonText: "OK",
-      }).then(async () => {
-        try {
-          await handleStripeCheckoutSuccess(sessionId);
-          ls.set("hasShownCompanySetupSuccess", true);
-        } catch (error) {
-          console.error("Error calling stripeCheckoutSuccess API:", error);
-        }
-      });
+    if (success === "true" && userId) {
+      axios.get(`/api/session-id?user_id=${userId}`) 
+        .then(response => {
+          if (response.data.status) {
+            const sessionId = response.data.session_id;
+            if (!showForm) {
+              setShowForm(true);
+            }
+            Swal.fire({
+              icon: "success",
+              title: "Payment Successful!",
+              text: "Please complete your company setup below.",
+              confirmButtonText: "OK",
+            }).then(async () => {
+              try {
+                await handleStripeCheckoutSuccess(sessionId);
+                ls.set("hasShownCompanySetupSuccess", true);
+              } catch (error) {
+                console.error("Error calling stripeCheckoutSuccess API:", error);
+              }
+            });
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching session ID:", error);
+        });
     } else if (success === "true") {
       setShowForm(true);
     } else if (success === "false") {
@@ -125,7 +133,6 @@ const Company = () => {
       [name]: value,
     }));
   };
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -172,7 +179,6 @@ const Company = () => {
         required and proceed.
       </p>
       <div className="company-setup-container abcd">
-        {/* Stepper component */}
         <Stepper activeStep={activeStep} onStepClick={handleStepChange}>
           <Step label="Company" />
           <Step label="Contract" />
@@ -182,13 +188,15 @@ const Company = () => {
         <div className="pro-under-border"></div>
 
         <div className="steps-content mt-3">
-        {activeStep === 0 && showForm && (
+          {activeStep === 0 && showForm && (
             <div className="p-4 content ">
               <h5 className="title">Company details</h5>
               <p className="description">
                 Please fill your information so we can get in touch with you.
               </p>
               <form onSubmit={handleSubmit} className="company-form">
+                {console.log('Form Data:', formData)}
+
                 <div className="form-row">
                   <div className="form-group col-md-6">
                     <label className="label" htmlFor="companyName">
