@@ -423,7 +423,10 @@ const Home = () => {
 
 
   
-  const handlePurchaseSubmit = async (productName, amount, stripid) => {
+  const handlePurchaseSubmit = async (productName, amount, price_id) => {
+    console.log(productName);
+    console.log(amount);
+    console.log(price_id);
     const token = localStorage.getItem("WAauthToken");
     if (!token) {
       Swal.fire({
@@ -464,7 +467,7 @@ const Home = () => {
       });
 
       // Replace the fetch call with the Authapi function
-      const response = await Authapi.createCheckoutSession(productName, amount, email);
+      const response = await Authapi.createCheckoutSession(productName, amount, email, price_id);
 
       if (!response.status) {
         throw new Error(response.message || 'Failed to create checkout session');
