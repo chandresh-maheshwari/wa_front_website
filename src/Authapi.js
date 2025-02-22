@@ -686,14 +686,15 @@ export default new (class AuthApi {
         }
     }
 
-    async createCheckoutSession(productName, amount, email) {
+    async createCheckoutSession(productName, amount, email, price_id) {
         try {
             const url = Config.waapiurl + Config.authApis.createCheckoutSession;
             this.setHeaders("post");
             const response = await axios.post(url, {
                 product_name: productName,
                 amount: parseFloat(amount),
-                email: email
+                email: email,
+                price_id: price_id
             }, {
                 headers: {
                     'Content-Type': 'application/json',
