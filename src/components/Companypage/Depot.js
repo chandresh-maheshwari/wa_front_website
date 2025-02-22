@@ -274,6 +274,13 @@ const DepotForm = () => {
                     <label>Contract Name</label>
                     <input
                       className="form-control company"
+                      type="hidden"
+                      name="contractid"
+                      value={formData.contractId}
+                      disabled
+                    />
+                    <input
+                      className="form-control company"
                       type="text"
                       name="contractName"
                       value={formData.contractName}
