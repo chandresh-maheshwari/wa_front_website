@@ -91,7 +91,8 @@ const DepotForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log(formData);
+    console.log(formData.contractId);
     try {
       const response = await Authapi.submitDepotDetails({
         depot_type_id: formData.depotTypeId,
@@ -147,6 +148,7 @@ const DepotForm = () => {
             dateAddress: response.depots.depot_address_1 || "",
             countyId: response.depots.county_id || "",
             depotTypeId: response.depots.depot_type_id || "",
+            contractId: response.depots.contract_id || "",
           });
         }
       }
@@ -174,6 +176,7 @@ const DepotForm = () => {
         navigate("/contract", {
           state: {
             formData: {
+              companyName: response.contract.id || "",
               companyName: response.contract.contract_name || "",
             },
           },
@@ -272,13 +275,13 @@ const DepotForm = () => {
                 <div className="form-row">
                   <div className="form-group col-md-6">
                     <label>Contract Name</label>
-                    <input
+                    {/* <input
                       className="form-control company"
                       type="hidden"
-                      name="contractid"
+                      name="contractId"
                       value={formData.contractId}
                       disabled
-                    />
+                    /> */}
                     <input
                       className="form-control company"
                       type="text"

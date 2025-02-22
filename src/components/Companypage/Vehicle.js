@@ -18,6 +18,7 @@ const VehicleForm = () => {
     vehicle_tare_weight: "",
     vehicle_owner: "",
     contract_id: "",
+    contractName: "",
   });
   const [fuelTypes, setFuelTypes] = useState([]);
   const [activeStep, setActiveStep] = useState(4);
@@ -188,6 +189,7 @@ const VehicleForm = () => {
           setFormData((prevData) => ({
             ...prevData,
             contract_id: response.contract.id || "", // Correct contract ID mapping
+            contractName: response.contract.contract_name || "", // Correct contract ID mapping
           }));
         } else {
           console.warn("No contract data received");
@@ -418,15 +420,15 @@ const VehicleForm = () => {
 
               <div className="form-group col-md-6">
                 <label className="label" htmlFor="contractName">
-                  Contract ID
+                  Contract Name
                 </label>
                 <input
                   type="text"
                   className="form-control company"
                   id="contractName"
-                  name="contract_id"
-                  value={formData.contract_id || ""}
-                  placeholder="Contract ID"
+                  name="contractName"
+                  value={formData.contractName || ""}
+                  placeholder="Contract Name"
                   disabled
                 />
               </div>
