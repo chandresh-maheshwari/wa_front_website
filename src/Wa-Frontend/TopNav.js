@@ -37,14 +37,14 @@ const TopNav = () => {
                                 <div className='frontlogo'>
                                     {/* {console.log(topbardata.Top_bar_logo_section?.Logoimage)}     */}
                                     {/* {console.log(topbardata.Top_bar_logo_section?.Logoimage)}    */}
-                                    <Link to={topbardata.Top_bar_logo_section?.Logolike}>
+                                    <Link to={topbardata.Top_bar_logo_section?.Logolink}>
                                     <img src={topbardata.Top_bar_logo_section?.Logoimage} className="wa-logo" alt="wa-logo" /></Link>
                                 </div>
                             </div>
                             <div className='col-sm-6'>
                                 <div className='toptext'>
                                     <div className='topcontent'>
-                                        <p className='partoflife'> {topbardata.Mts_group_section?.Title}</p> <p className='mtsgroup' style={{ color: "rgb(173, 173, 173);" }}>{topbardata.Mts_group_section?.Discussion}</p>
+                                        <p className='partoflife'> {topbardata.Mts_group_section?.Title}</p> <p className='mtsgroup' style={{ color: "rgb(173, 173, 173);" }}>{topbardata.Mts_group_section?.Description}</p>
                                     </div>
                                 </div>
                                 {/* {console.log(topbardata.Mts_group_section?.Sidelogoimage)}                                 */}

@@ -70,7 +70,7 @@ const Home = () => {
         // console.log(response.results)
         setStatus(response.results);
         setHomesection(response.results.home_section.post_store[0]['Data']);
-        setTransforming(response.results.page_section.post_store[0]['Data']);
+        setTransforming(response.results.transforming_waste_industry.post_store[0]['Data']);
         // console.log(response.results.about_us.post_store);
         // const dynamicTitles = response.results.about_us.post_store.flatMap(
         //   (post) =>
@@ -129,7 +129,7 @@ const Home = () => {
   //             ls("data", sortedResults);
   //             setStatus(sortedResults);
   //             setHomesection(sortedResults.home_section.post_store[0]);
-  //             setTransforming(sortedResults.page_section.post_store);
+  //             setTransforming(sortedResults.transforming_waste_industry.post_store);
 
   //             const dynamicTitles = sortedResults.about_us.post_store.flatMap(post =>
   //                 Object.keys(post)
@@ -745,8 +745,8 @@ const Home = () => {
         ),
       },
       {
-        condition: statu.page_section?.status === 1,
-        ordering: statu.page_section?.ordering || 0,
+        condition: statu.transforming_waste_industry?.status === 1,
+        ordering: statu.transforming_waste_industry?.ordering || 0,
         content: (
           <section className="page-section" id="transforming_section">
             <div className="container p-5 transforming_section_container">
@@ -755,7 +755,7 @@ const Home = () => {
                   <div className="transfo">
 
                     <h5 className="text-center transforming ">
-                      {statu.page_section?.page_description}
+                      {statu.transforming_waste_industry?.page_description}
                     </h5>
                   </div>
                 </div>
@@ -778,9 +778,9 @@ const Home = () => {
                   </p>
                 </div>
                 <div className="col-md-2 stretch-line">
-                  {/* {console.log(statu.page_section?.image)} */}
+                  {/* {console.log(statu.transforming_waste_industry?.image)} */}
                   <img
-                    src={statu.page_section?.image}
+                    src={statu.transforming_waste_industry?.image}
                     // src={homeimg}
                     width="60px"
                     className="strech"
@@ -807,8 +807,8 @@ const Home = () => {
         ),
       },
       {
-        condition: statu.qute_section_1?.status === 1,
-        ordering: statu.qute_section_1?.ordering || 0,
+        condition: statu.quote_section_1?.status === 1,
+        ordering: statu.quote_section_1?.ordering || 0,
         content: (
           <section className="qute-sec" id="testimonial_section">
             <div className="container-fluid">
@@ -821,7 +821,7 @@ const Home = () => {
                       //   statu.qute_section_1?.post_store[0]?.Qutesectionimage
                       // }
                       src={
-                        statu.qute_section_1?.post_store[0]['Data'].Qutesectionimage
+                        statu.quote_section_1?.post_store[0]['Data'].Quotesectionimage
                       }
                       className="quoteimage1"
                       alt="quoteimage1"
@@ -829,15 +829,15 @@ const Home = () => {
                   </div>
                   <div className="sec-3-text2">
                     <p className="text-light">
-                      {statu.qute_section_1?.post_store[0]['Data']?.Qutesectiontitle}{" "}
+                      {statu.quote_section_1?.post_store[0]['Data']?.Quotesectiontitle}{" "}
                       <br />
                       <span
                         className="text-secondary"
                         style={{ fontSize: "medium" }}
                       >
                         {
-                          statu.qute_section_1?.post_store[0]['Data']
-                            ?.Qutesectiondescription
+                          statu.quote_section_1?.post_store[0]['Data']
+                            ?.Quotesectiondescription
                         }
                       </span>
                     </p>
@@ -849,8 +849,8 @@ const Home = () => {
         ),
       },
       {
-        condition: statu.qute_section_2?.status === 1,
-        ordering: statu.qute_section_2?.ordering || 0,
+        condition: statu.quote_section_2?.status === 1,
+        ordering: statu.quote_section_2?.ordering || 0,
         content: (
           <section className="qute-sec" id="testimonial_section">
             <div className="container-fluid">
@@ -859,7 +859,7 @@ const Home = () => {
                   <div className="sec-3-text">
                     <img
                       src={
-                        statu.qute_section_2?.post_store[0]['Data']?.Qutesectionimage
+                        statu.quote_section_2?.post_store[0]['Data']?.Quotesectionimage
                       }
                       className="quoteimage1"
                       alt="quoteimage1"
@@ -867,15 +867,15 @@ const Home = () => {
                   </div>
                   <div className="sec-3-text2">
                     <p className="text-light">
-                      {statu.qute_section_2?.post_store[0]['Data']?.Qutesectiontitle}{" "}
+                      {statu.quote_section_2?.post_store[0]['Data']?.Quotesectiontitle}{" "}
                       <br />
                       <span
                         className="text-secondary"
                         style={{ fontSize: "medium" }}
                       >
                         {
-                          statu.qute_section_2?.post_store[0]['Data']
-                            ?.Qutesectiondescription
+                          statu.quote_section_2?.post_store[0]['Data']
+                            ?.Quotesectiondescription
                         }
                       </span>
                     </p>
@@ -914,8 +914,8 @@ const Home = () => {
         ),
       },
       {
-        condition: statu.choose_section?.status === 1,
-        ordering: statu.choose_section?.ordering || 0,
+        condition: statu.why_choose_wa?.status === 1,
+        ordering: statu.why_choose_wa?.ordering || 0,
         content: (
           // <p>sdsd</p>
           <section className="why_choose_section">
@@ -924,7 +924,7 @@ const Home = () => {
                 <div className="col-md-12">
                   <div className="transfo">
                     <h5 className="text-center">
-                      {statu.choose_section?.page_description}
+                      {statu.why_choose_wa?.page_description}
                     </h5>
                   </div>
                 </div>
@@ -933,14 +933,14 @@ const Home = () => {
 
             <div className="container type-2">
               <div className="row">
-                {statu.choose_section?.post_store.map((item, index) => (
+                {statu.why_choose_wa?.post_store.map((item, index) => (
                   <div
                     className={`col col-md-6 col-sm-6 col-xs-3 ${index % 2 === 0 ? "text-end" : "text-start"
                       }`}
                     key={item.id}
                   >
                     {/* {console.log(item['Data'].Title1)} */}
-                    <h5 className="for-waste">{item['Data'].Title1}</h5>
+                    <h5 className="for-waste">{item['Data'].Title}</h5>
                     <p style={{ marginTop: "25px" }}>
                       {item['Data'].Description.split("\r\n").map((line, i) => (
                         <React.Fragment key={i}>
@@ -957,14 +957,14 @@ const Home = () => {
         ),
       },
       {
-        condition: statu.why_section?.status === 1,
-        ordering: statu.why_section?.ordering || 0,
+        condition: statu.who_use_wa?.status === 1,
+        ordering: statu.who_use_wa?.ordering || 0,
         content: (
           <section className="why-section" id="logo_section">
             <div className="container" onClick={handlePlayPause}>
               <div className="sliderconatainer">
                 <h2 className="font-weight-light slider-heading text-center">
-                  {statu.why_section?.page_description}
+                  {statu.who_use_wa?.page_description}
                   {/* {console.log(statu.why_section?.post_store[0]['Data'])} */}
                   {/* {console.log(statu.why_section?.post_store)} */}
                   {/* {console.log(statu.why_section?.post_store[0]['Data'])} */}
@@ -976,7 +976,7 @@ const Home = () => {
                       ref={(slider) => setSliderRef(slider)}
                       {...settings}
                     >
-                      {statu.why_section?.post_store.map((item, index) => (
+                      {statu.who_use_wa?.post_store.map((item, index) => (
                         <div key={item.id}>
                           {/* {console.log(item['Data'].Image)} */}
                           <img
@@ -1009,14 +1009,18 @@ const Home = () => {
             <div className="container">
               <h4 className="tellmemoretitle">
                 {/* {console.log(statu.tell_me_more_section)} */}
-                {statu.tell_me_more_section?.post_store[0]['Data']?.Title}
+                {/* {statu.tell_me_more_section?.post_store[0]['Data']?.Title} */}
               </h4>
               <div className="row">
                 <div className="col-12">
+                  {console.log(statu.tell_me_more_section?.post_store[0]['Data']?.Buttonbackgroundcolor + ' !important')}
                   <button
                     type="submit"
                     className="btn w-auto sky-blue-btn-tellmemore"
-                  >
+                    style={{
+                      backgroundColor: statu.tell_me_more_section?.post_store[0]['Data']?.Buttonbackgroundcolor + ' !important' || '',
+                      color: statu.tell_me_more_section?.post_store[0]['Data']?.Buttontextcolor || '',
+                    }}>
                     {statu.tell_me_more_section?.post_store[0]['Data']?.Buttontext}
                   </button>
                 </div>
