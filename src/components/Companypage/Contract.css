@@ -1,0 +1,23 @@
+.formbtn{
+    margin-top: 10px;
+    padding: 14px;
+    width: 127px;
+    border-radius: 20px;
+}
+/* ======squer issuue====== */
+#RFS-StepButton{
+width: 2em;
+    border: none;
+    cursor: pointer;
+    height: 2em;
+    margin: 0px;
+    display: flex
+;
+    padding: 0px;
+    font-size: 1em;
+    align-items: center;
+    border-radius: 50%;
+    justify-content: center;
+    background-color: rgb(224, 224, 224);
+    color: aliceblue;
+}
