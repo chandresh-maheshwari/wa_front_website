@@ -9,7 +9,7 @@ import Contact from "./Contactus/Contact us";
 import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
 // import OurProducts from './Our Products/OurProducts';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Authapi from "../Authapi";
 import plushicon from "./Ourproductimages/plush.png";
 import righticon from "./Ourproductimages/righticon.png";
@@ -492,11 +492,11 @@ const Home = () => {
     // console.log(statu.our_products?.post_store);
     return statu.our_products?.post_store.map((card, index) => {
       // Destructure and extract relevant fields from the Data object
-      const feesSection3 = card.Data.Fees_section_3 || {};
-      const infoSection1 = card.Data.Information_section_1 || {};
-      const serviceSection2 = card.Data.Service_section_2 || {};
-      const feessection3 = card.Data.Fees_section_3 || {};
-      const purchaseButtonSection = card.Data.Purchase_button_section_4 || {};
+      const feesSection = card.Data.Fees_section || {};
+      const infoSection1 = card.Data.Package_info || {};
+      const serviceSection = card.Data.Package_services || {};
+      const feessection = card.Data.Fees_section || {};
+      const purchaseButtonSection = card.Data.Purchase_button || {};
 
       // Check if there's any content to display (excluding the Field_slug values)
       const hasContent =
@@ -505,11 +505,11 @@ const Home = () => {
         infoSection1.Information3 ||
         infoSection1.Information4 ||
         infoSection1.Information5 ||
-        serviceSection2.Service1 ||
-        serviceSection2.Service2 ||
-        feesSection3.Monthlyfee ||
-        feessection3.Montlyfeecardtext1 ||
-        feessection3.Montlyfeecardtext1 ||
+        serviceSection.Service1 ||
+        serviceSection.Service2 ||
+        feesSection.Monthlyfee ||
+        feessection.Montlyfeecardtext1 ||
+        feessection.Montlyfeecardtext1 ||
         purchaseButtonSection.Amount ||
         purchaseButtonSection.Buttonbackgroundcolor ||
         purchaseButtonSection.Buttoncolor ||
@@ -523,7 +523,7 @@ const Home = () => {
           <div className={`card${index + 1} card`}>
             {/* {console.log(card['Data'].Modelsectionpackagesection)} */}
             {/* <span className="medaltype">{card.Post_name}</span> */}
-            <span className="medaltype">{card['Data'].Modelsectionpackagesection}</span>
+            <span className="medaltype">{card['Data'].Packagename}</span>
             <div className={`card${index + 1}-text`}>
               {/* Render Information Section */}
               {[infoSection1.Information1, infoSection1.Information2, infoSection1.Information3, infoSection1.Information4, infoSection1.Information5].map((text, i) => (
@@ -598,7 +598,7 @@ const Home = () => {
 
             <div className={`card${index + 1}-sec-2-text`}>
               {/* Render Service Section */}
-              {serviceSection2.Service1 && (
+              {serviceSection.Service1 && (
                 <p style={cardTextStyle}>
                   <img
                     src={plushicon}
@@ -606,19 +606,19 @@ const Home = () => {
                     alt="Add On Icon"
                     style={cardTextImageStyle}
                   />
-                  {serviceSection2.Service1}
+                  {serviceSection.Service1}
                 </p>
               )}
-              {serviceSection2.Service1 && <div className="card-liner-inside-2"></div>}
+              {serviceSection.Service1 && <div className="card-liner-inside-2"></div>}
 
               <div className={`card-${index + 1}-sec-3`}>
                 {/* Render Monthly Fee */}
-                {feesSection3.Monthlyfee && (
+                {feesSection.Monthlyfee && (
                   <p className={`card${index + 1}-sec-3-text1`}>
-                    {feesSection3.Monthlyfee}
+                    {feesSection.Monthlyfee}
                   </p>
                 )}
-                {[feessection3.Montlyfeecardtext1, feessection3.Montlyfeecardtext2].map((text, i) => (
+                {[feessection.Montlyfeecardtext1, feessection.Montlyfeecardtext2].map((text, i) => (
                   text && (
                     <p style={cardTextStyle} key={i} className='cardtext'>
                       <img
@@ -633,7 +633,7 @@ const Home = () => {
                 ))}
 
                 {/* Render Service 2 */}
-                {serviceSection2.Service2 && (
+                {serviceSection.Service2 && (
                   <p className={`card${index + 1}-sec-3-text`}>
                     <img
                       src={plushicon}
@@ -641,7 +641,7 @@ const Home = () => {
                       alt="Add On Icon"
                       style={cardTextImageStyle}
                     />
-                    {serviceSection2.Service2}
+                    {serviceSection.Service2}
                   </p>
                 )}
               </div>
@@ -979,11 +979,13 @@ const Home = () => {
                       {statu.who_use_wa?.post_store.map((item, index) => (
                         <div key={item.id}>
                           {/* {console.log(item['Data'].Image)} */}
+                          <Link to={item['Data'].Link}>
                           <img
                             src={item['Data'].Image}
                             className="sliderimages"
                             alt={`Logo ${index + 1}`}
                           />
+                          </Link>
                         </div>
                       ))}
                     </Slider>
