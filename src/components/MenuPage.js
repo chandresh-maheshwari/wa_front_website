@@ -7,8 +7,13 @@ import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 import ls from 'local-storage';
 import { Navigate } from 'react-router-dom';
+import Login from './Login/Login';
+import { loadStripe } from '@stripe/stripe-js';
+import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
+const stripePromise = loadStripe('pk_test_51P4GXaAvL6Jnl0r3yHDSV2zN0JrGRt2UFxn217kqw9JFFBXe4K1n5xZHGfsKaIicVfUBAP5ch0TBIO8C8cI3ijQv00bNWJynzK');
 
 const MenuPage = () => {
+
     const location = useLocation();
     const { menuName } = useParams();
     const [currentMenu, setCurrentMenu] = useState('');
@@ -17,6 +22,8 @@ const MenuPage = () => {
     const [titles, setTitles] = useState([]);
     const [description, setDescription] = useState([]);
     const [errors, setErrors] = useState({});
+    const [sessionId, setSessionId] = useState(null);
+    const [userEmail, setUserEmail] = useState(null);
 
     const navigate = useNavigate();
 
@@ -43,7 +50,17 @@ const MenuPage = () => {
     useEffect(() => {
         fetchData();
     }, [currentMenu]);
-
+  useEffect(() => {
+    if (sessionId) {
+      stripePromise
+        .then((stripe) => {
+          stripe.redirectToCheckout({ sessionId });
+        })
+        .catch((error) => {
+          console.error("Error redirecting to checkout:", error);
+        });
+    }
+  }, [sessionId]);
     const fetchData = async () => {
         try {
             const response = await Authapi.dynamicpageget(currentMenu);
@@ -177,6 +194,151 @@ const MenuPage = () => {
         }
     };
 
+  
+const handlePurchaseSubmit = async (productName, amount) => {
+    const token = localStorage.getItem("WAauthToken");
+    if (!token) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Please Log In',
+            text: 'You need to be logged in to make a purchase.',
+            showConfirmButton: true,          
+            showCancelButton: true,
+            cancelButtonText: 'Cancel'
+        });
+        return;
+    }
+
+    try {
+        let email = userEmail;
+        if (!email) {
+            email = await getUserEmail();
+            if (!email) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Could not retrieve user email. Please try again.',
+                });
+                return;
+            }
+        }
+
+        // Show loading state
+        Swal.fire({
+            title: 'Processing...',
+            text: 'Please wait while we set up your payment.',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        const response = await fetch('http://walara.localhost.com/admin/api/create-checkout-session', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`,
+                "X-XSRF-TOKEN": getCookie('XSRF-TOKEN')
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                product_name: productName,
+                amount: parseFloat(amount),
+                email: email,
+                success_url: `${window.location.origin}/company?payment_status=success`,
+                cancel_url: `${window.location.origin}/menu/our-products?payment_status=failed`
+            })
+        });
+
+        const data = await response.json();
+        
+        if (!data.status) {
+            throw new Error(data.message || data.error || 'Failed to create checkout session');
+        }
+
+        // Close loading dialog before redirect
+        Swal.close();
+
+        // Redirect to Stripe checkout
+        window.location.href = data.url;
+
+    } catch (error) {
+        console.error("Purchase Error:", error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Payment Error',
+            text: error.message || 'There was an error processing your payment. Please try again.',
+            background: '#f8f9fa',
+            showConfirmButton: true,
+            confirmButtonText: 'OK'
+        }).then(() => {
+            // Redirect to products page on error
+            window.location.href = `${window.location.origin}/menu/our-products?payment_status=failed`;
+        });
+    }
+};
+
+// Helper function to get CSRF cookie
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+// Function to map product name to the corresponding price_id
+const getPriceIdFromProductName = (productName) => {
+    // Replace with your actual product-price mapping
+    const priceMapping = {
+        "product_1": "price_1JYvT4F29HgYWjxWLzXWvSov", // Example price_id for product_1
+        "product_2": "price_1JYvT4F29HgYWjxWLzXWvSo", // Example price_id for product_2
+        // Add more products as needed
+    };
+
+    return priceMapping[productName] || null;
+};
+
+const getUserEmail = async () => {
+    try {
+        const token = ls.get("WAauthToken");
+        
+        if (!token) {
+            console.log("No auth token found");
+            return;
+        }
+
+        const response = await Authapi.getUser({
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        });
+
+        // Log the full response to see its structure
+        console.log("API Response:", response);
+
+        // Try different possible response structures
+        const email = response?.data?.user?.email || // If response has data.user.email
+                     response?.user?.email ||        // If response has user.email directly
+                     response?.email;                // If response has email directly
+
+        console.log("Extracted Email:", email);
+        
+        if (email) {
+            setUserEmail(email);
+            return email;
+        } else {
+            console.log("Email not found in response structure");
+            console.log("Response structure:", JSON.stringify(response, null, 2));
+        }
+
+    } catch (error) {
+        console.error("Error in getUserEmail:", error);
+    }
+};
+
     return (
         <>
             {currentMenu === 'About Us' && status.page_status === 1 && topbardata.length > 0 ? (
@@ -229,52 +391,68 @@ const MenuPage = () => {
                             </div>
                         </div>
                         <div className="row mt-5">
-                            {topbardata.map((card, index) => {
-                                console.log("Card Data:", card.data); // Debug log for card data
-                                const hasContent = card.data.Title1 || card.data.Cardtext1 || card.data.Cardtext2 || card.data.Cardtext3 || card.data.Cardtext4 || card.data.Cardtext5 || card.data.Cardtextlight1 || card.data.Montlyfeetext || card.data.Montlyfeecardtext1 || card.data.Montlyfeecardtext2;
-
-                                if (!hasContent) return null;
-
-                                return (
-                                    <div className={`col-lg-4`} id={`card${index + 1}`} key={card.id}>
-                                        <div className={`card-liner-card-${index + 1}`} id='card-liner-card'></div>
-                                        <div className={`card${index + 1} card `}>
-                                            {typeof card.data.Title1 === 'string' && <span className='medaltype'>{card.data.Title1}</span>}
-                                            <div className={`card${index + 1}-text`}>
-                                                {[card.data.Cardtext1, card.data.Cardtext2, card.data.Cardtext3, card.data.Cardtext4, card.data.Cardtext5].map((text, i) => (
+                            {topbardata.map((card, index) => (
+                                <div className={`col-lg-4`} id={`card${index + 1}`} key={card.id}>
+                                    <div className={`card-liner-card-${index + 1}`} id='card-liner-card'></div>
+                                    <div className={`card${index + 1} card`} style={{ position: 'relative', paddingBottom: '101px', height: '100%' }}>
+                                        {typeof card.data.Title1 === 'string' && <span className='medaltype'>{card.data.Title1}</span>}
+                                        <div className={`card${index + 1}-text`}>
+                                            {[card.data.Cardtext1, card.data.Cardtext2, card.data.Cardtext3, card.data.Cardtext4, card.data.Cardtext5].map((text, i) => (
+                                                typeof text === 'string' && (
+                                                    <p style={cardTextStyle} key={i} className='cardtext'>
+                                                        <img src={righticon} className={`card${index + 1}righticon`} alt={`Icon ${i + 1}`} style={cardTextImageStyle} />
+                                                        {text}
+                                                    </p>
+                                                )
+                                            ))}
+                                            {card.data.Cardtext1 || card.data.Cardtext2 || card.data.Cardtext3 || card.data.Cardtext4 || card.data.Cardtext5 ? <div className="card-liner-inside"></div> : null}
+                                        </div>
+                                        <div className={`card${index + 1}-sec-2-text`}>
+                                            {typeof card.data.Cardtextlight1 === 'string' && (
+                                                <p style={cardTextStyle}>
+                                                    <img src={plushicon} className={`card${index + 1}plushicon`} alt="Add On Icon" style={cardTextImageStyle} />
+                                                    {card.data.Cardtextlight1}
+                                                </p>
+                                            )}
+                                            {card.data.Cardtextlight1 ? <div className="card-liner-inside-2"></div> : null}
+                                            <div className={`card-${index + 1}-sec-3`}>
+                                                {typeof card.data.Montlyfeetext === 'string' && <p className={`card${index + 1}-sec-3-text1`}>{card.data.Montlyfeetext}</p>}
+                                                {[card.data.Montlyfeecardtext1, card.data.Montlyfeecardtext2].map((text, i) => (
                                                     typeof text === 'string' && (
-                                                        <p style={cardTextStyle} key={i} className='cardtext'>
-                                                            <img src={righticon} className={`card${index + 1}righticon`} alt={`Icon ${i + 1}`} style={cardTextImageStyle} />
+                                                        <p className={`card${index + 1}-sec-3-text`} key={i}>
+                                                            <img src={plushicon} className={`card${index + 1}plushicon`} alt={`Icon ${i + 1}`} style={cardTextImageStyle} />
                                                             {text}
                                                         </p>
                                                     )
                                                 ))}
-                                                {card.data.Cardtext1 || card.data.Cardtext2 || card.data.Cardtext3 || card.data.Cardtext4 || card.data.Cardtext5 ? <div className="card-liner-inside"></div> : null}
-                                            </div>
-                                            <div className={`card${index + 1}-sec-2-text`}>
-                                                {typeof card.data.Cardtextlight1 === 'string' && (
-                                                    <p style={cardTextStyle}>
-                                                        <img src={plushicon} className={`card${index + 1}plushicon`} alt="Add On Icon" style={cardTextImageStyle} />
-                                                        {card.data.Cardtextlight1}
-                                                    </p>
-                                                )}
-                                                {card.data.Cardtextlight1 ? <div className="card-liner-inside-2"></div> : null}
-                                                <div className={`card-${index + 1}-sec-3`}>
-                                                    {typeof card.data.Montlyfeetext === 'string' && <p className={`card${index + 1}-sec-3-text1`}>{card.data.Montlyfeetext}</p>}
-                                                    {[card.data.Montlyfeecardtext1, card.data.Montlyfeecardtext2].map((text, i) => (
-                                                        typeof text === 'string' && (
-                                                            <p className={`card${index + 1}-sec-3-text`} key={i}>
-                                                                <img src={plushicon} className={`card${index + 1}plushicon`} alt={`Icon ${i + 1}`} style={cardTextImageStyle} />
-                                                                {text}
-                                                            </p>
-                                                        )
-                                                    ))}
-                                                </div>
                                             </div>
                                         </div>
+                                        
+                                        {/* Purchase button with absolute positioning */}
+                                        {card.data.Buttontext && (
+                                            <div className="text-center " style={{ position: 'absolute', bottom: '13px', left: '0', right: '0' }}>
+                                                <button
+                                                role="link" 
+                                                    className="btn w-50"
+                                                    style={{
+                                                        backgroundColor: card.data.Buttonbackgroundcolor || '#40bedd',
+                                                        color: card.data.Buttontextcolor || '#ffffff',
+                                                    }}
+                                                    onMouseOver={(e) => {
+                                                        e.target.style.backgroundColor = card.data.Buttonhovercolor || '#17bee8';
+                                                    }}
+                                                    onMouseOut={(e) => {
+                                                        e.target.style.backgroundColor = card.data.Buttonbackgroundcolor || '#40bedd';
+                                                    }}
+                                                    onClick={() => handlePurchaseSubmit(card.data.Title1, card.data.Amount)}
+                                                >
+                                                    {`${card.data.Buttontext} - $${card.data.Amount}`}
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
-                                );
-                            })}
+                                </div>
+                            ))}
                         </div>
 
                         {ls("data").about_us.page_status === 1 && (
@@ -352,7 +530,6 @@ const MenuPage = () => {
                                             </div>
                                         ))}
                                     </div>
-
                                     <div className="row mt-3">
                                         <div className="col-12">
                                             <button type="submit" onClick={handleSubmit} className="btn w-auto sky-blue-btn-sendmeasge">Send my message</button>

@@ -1,5 +1,7 @@
 /* eslint-disable import/no-anonymous-default-export */
 
+import { get } from "local-storage";
+
 export default {
 
 
@@ -7,6 +9,33 @@ export default {
     ? "http://wa_front.localhost.com/"
     // : "https://hrmsapi.cherrypiksoftware.com/",
     : "https://front.wasteaccountant.com/",
+
+  waapiurl: process.env.NODE_ENV === "development"
+    ? "http://walara.localhost.com/admin/"
+    // : "https://hrmsapi.cherrypiksoftware.com/",
+    : "https://laravel.wasteaccountant.com/admin/",
+    
+
+    authApis: {  
+      login: "api/apilogin",
+      logout: "api/userlogout",
+      getUser : "api/user",
+      // createcheckoutsessionm:"api/create-checkout-sessionm",
+      stripeCheckoutSuccess : "api/stripe/checkout/success",
+      userCompanyDetails: "api/user-company-details" ,
+      userContractDetails: "api/user-contract-details",
+      getLatestCompanyDetails: "api/get_latest_user_company",
+      userDepotDetails: "api/user_depot_details",
+      getLatestContractDetails: "api/user_latest_contract_get",
+      userVehicleDetails: "api/userVehicleDetails",
+      getfualtypesdata : "api/user_getfualtypesdata",
+      getUserDepotTypeName : "api/user_getDepotTypeName",
+      getusercompanydetail : "api/user_company_details_get",
+      getUserContractdetail : "api/user-contract-details_get",
+      getUserDepotdetail : "api/user_depot_details_get",
+      getcountyname : "api/user_getCountyName",
+      userVehicleTypes : "api/user_getVehicleTypeDetails",
+    },
 
   apis: {
     Toppageget: 'api/page/Top Page',
@@ -18,6 +47,6 @@ export default {
     Alldynamicpageget: 'api/pages',
     contactdatapost: 'api/contact-page-store',
     Alldynamicpagegetnav: 'api/page-status-data',
-
+    
   },
 };

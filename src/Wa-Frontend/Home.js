@@ -15,6 +15,10 @@ import plushicon from "./Ourproductimages/plush.png";
 import righticon from "./Ourproductimages/righticon.png";
 import Swal from "sweetalert2";
 import ls from "local-storage";
+import Login from '../components/Login/Login';
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe('pk_test_51P4GXaAvL6Jnl0r3yHDSV2zN0JrGRt2UFxn217kqw9JFFBXe4K1n5xZHGfsKaIicVfUBAP5ch0TBIO8C8cI3ijQv00bNWJynzK');
 
 const Home = () => {
   const cardTextStyle = {
@@ -37,6 +41,8 @@ const Home = () => {
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
   const [statu, setStatus] = useState({});
+  const [sessionId, setSessionId] = useState(null);
+  const [userEmail, setUserEmail] = useState(null);
 
   useEffect(() => {
     if (sliderRef) {
@@ -51,7 +57,19 @@ const Home = () => {
   useEffect(() => {
     fetchData();
   }, []);
-  // console.log(statu)
+
+  useEffect(() => {
+    if (sessionId) {
+      stripePromise
+        .then((stripe) => {
+          stripe.redirectToCheckout({ sessionId });
+        })
+        .catch((error) => {
+          console.error("Error redirecting to checkout:", error);
+        });
+    }
+  }, [sessionId]);
+
   const fetchData = async () => {
     try {
       const response = await Authapi.Alldynamicpageget();
@@ -87,40 +105,6 @@ const Home = () => {
       console.log(error);
     }
   };
-
-  // const fetchData = async () => {
-  //     try {
-  //         const response = await Authapi.Alldynamicpageget();
-
-  //         // Sort the results based on the ordering number
-  //         const sortedResults = response.results.sort((a, b) => a.orderingNumber - b.orderingNumber);
-  //         console.log(sortedResults); // Log the sorted results
-
-  //         if (response.status === true) {
-  //             ls("data", sortedResults);
-  //             setStatus(sortedResults);
-  //             setHomesection(sortedResults.home_section.post_store[0]);
-  //             setTransforming(sortedResults.page_section.post_store);
-
-  //             const dynamicTitles = sortedResults.about_us.post_store.flatMap(post =>
-  //                 Object.keys(post)
-  //                     .filter(key => key.startsWith('Title'))
-  //                     .map(key => post[key])
-  //             );
-  //             setTitles(dynamicTitles);
-  //             const dynamicDescriptions = sortedResults.about_us.post_store.flatMap(post =>
-  //                 Object.keys(post)
-  //                     .filter(key => key.startsWith('Description'))
-  //                     .map(key => post[key])
-  //             );
-  //             setDescription(dynamicDescriptions);
-  //         } else {
-  //             console.error('Invalid response structure:', response);
-  //         }
-  //     } catch (error) {
-  //         console.log(error);
-  //     }
-  // };
 
   const handlePlayPause = () => {
     setIsPlaying(!isPlaying);
@@ -251,6 +235,138 @@ const Home = () => {
     }
   };
 
+  const createCheckoutSession = async () => {
+    const response = await fetch('/create-checkout-session', {
+      method: 'POST',
+    });
+    const session = await response.json();
+    setSessionId(session.id);
+  };
+
+  const handlePurchaseSubmit = async (productName, amount) => {
+    const token = localStorage.getItem("WAauthToken");
+    if (!token) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Please Log In',
+            text: 'You need to be logged in to make a purchase.',
+            showConfirmButton: true,
+
+            showCancelButton: true,
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+           
+        });
+        return;
+        
+    }
+
+    try {
+        // Get user email first
+        let email = userEmail;
+        if (!email) {
+            email = await getUserEmail();
+            if (!email) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Could not retrieve user email. Please try again.',
+                });
+                return;
+            }
+        }
+     Swal.fire({
+            title: 'Processing...',
+            text: 'Please wait while we set up your payment.',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        const response = await fetch('http://walara.localhost.com/admin/api/create-checkout-session', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`,
+                "X-XSRF-TOKEN": getCookie('XSRF-TOKEN')
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                product_name: productName,
+                amount: parseFloat(amount),
+                email: email
+            })
+        });
+
+        const data = await response.json();
+        
+        if (!data.status) {
+            throw new Error(data.message || data.error || 'Failed to create checkout session');
+        }
+
+        window.location.href = data.url;
+
+    } catch (error) {
+        console.error("Purchase Error:", error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Payment Error',
+            text: error.message || 'There was an error processing your payment. Please try again.',
+            background: '#f8f9fa',
+            showConfirmButton: true,
+            confirmButtonText: 'OK'
+        });
+    }
+  };
+
+  // Add helper functions
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+
+  const getUserEmail = async () => {
+    try {
+        const token = ls.get("WAauthToken");
+        
+        if (!token) {
+            console.log("No auth token found");
+            return;
+        }
+
+        const response = await Authapi.getUser({
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        });
+
+        console.log("API Response:", response);
+
+        const email = response?.data?.user?.email || 
+                     response?.user?.email ||        
+                     response?.email;                
+
+        console.log("Extracted Email:", email);
+        
+        if (email) {
+            setUserEmail(email);
+            return email;
+        } else {
+            console.log("Email not found in response structure");
+            console.log("Response structure:", JSON.stringify(response, null, 2));
+        }
+
+    } catch (error) {
+        console.error("Error in getUserEmail:", error);
+    }
+  };
+
   const renderCards = () => {
     return statu.our_products?.post_store.map((card, index) => {
       const hasContent =
@@ -272,7 +388,7 @@ const Home = () => {
             className={`card-liner-card-${index + 1}`}
             id="card-liner-card"
           ></div>
-          <div className={`card${index + 1} card `}>
+          <div className={`card${index + 1} card`} style={{ position: 'relative', paddingBottom: '101px', height: '100%' }}>
             {card.Title1 && <span className="medaltype">{card.Title1}</span>}
             <div className={`card${index + 1}-text`}>
               {[
@@ -340,6 +456,29 @@ const Home = () => {
                 )}
               </div>
             </div>
+
+            {/* Purchase button with onClick handler */}
+            {card.Buttontext && (
+              <div className="text-center" style={{ position: 'absolute', bottom: '13px', left: '0', right: '0' }}>
+                <button
+                  role="link"
+                  className="btn w-50"
+                  style={{
+                    backgroundColor: card.Buttonbackgroundcolor || '#40bedd',
+                    color: card.Buttontextcolor || '#ffffff',
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.backgroundColor = card.Buttonhovercolor || '#17bee8';
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.backgroundColor = card.Buttonbackgroundcolor || '#40bedd';
+                  }}
+                  onClick={() => handlePurchaseSubmit(card.Title1, card.Amount)}
+                >
+                  {`${card.Buttontext} - $${card.Amount}`}
+                </button>
+              </div>
+            )}
           </div>
         </div>
       );
@@ -832,3 +971,5 @@ const Home = () => {
 };
 
 export default Home;
+
+

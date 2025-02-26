@@ -1,3 +1,4 @@
+import { Button } from 'bootstrap';
 import plushicon from '../Our Products/Ourproductimages/plush.png';
 import righticon from '../Our Products/Ourproductimages/righticon.png';
 import { useNavigate } from "react-router-dom";
@@ -38,8 +39,9 @@ const OurProducts = () => {
                                     <p style={cardTextStyle}>
                                         <img src={righticon} className="card1righticon" alt="Track Icon" style={cardTextImageStyle} />
                                         Track and manage all waste
-                                    </p>
+                                    </p>                                    
                                     <div className="card-liner-inside"></div>
+                                
                                 </div>
                                 <div className="card1-sec-2-text">
                                     <p style={cardTextStyle}>
@@ -48,6 +50,7 @@ const OurProducts = () => {
                                     </p>
                                     <div className="card-liner-inside-2"></div>
                                     <p className="card-sec-3-text">Monthly Fee</p>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -127,11 +130,7 @@ const OurProducts = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <button type="button" onClick={() => navigate("/Contact")} className="btn sky-blue-btn">Contact Us</button>
-                        </div>
-                    </div>
+                   
 
                     {/* <div className="row">
                         <div className="col-12">
