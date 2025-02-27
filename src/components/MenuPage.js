@@ -1,4 +1,4 @@
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Authapi from '../Authapi';
 import righticon from './img/righticon.png';
@@ -25,8 +25,8 @@ const MenuPage = () => {
     // const [Transforming, setTransforming] = useState({});
     const [formData, setFormData] = useState({});
     const [statu, setStatus] = useState({});
-      const [userEmail, setUserEmail] = useState(null);
-    
+    const [userEmail, setUserEmail] = useState(null);
+
     const [Transforming, setTransforming] = useState({});
 
 
@@ -46,41 +46,41 @@ const MenuPage = () => {
 
     const getUserEmail = async () => {
         try {
-          const token = ls.get("WAauthToken");
-    
-          if (!token) {
-            console.log("No auth token found");
-            return;
-          }
-    
-          const response = await Authapi.getUser({
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-          });
-    
-          console.log("API Response:", response);
-    
-          const email = response?.data?.user?.email ||
-            response?.user?.email ||
-            response?.email;
-    
-          console.log("Extracted Email:", email);
-    
-          if (email) {
-            setUserEmail(email);
-            return email;
-          } else {
-            console.log("Email not found in response structure");
-            console.log("Response structure:", JSON.stringify(response, null, 2));
-          }
-    
+            const token = ls.get("WAauthToken");
+
+            if (!token) {
+                console.log("No auth token found");
+                return;
+            }
+
+            const response = await Authapi.getUser({
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            console.log("API Response:", response);
+
+            const email = response?.data?.user?.email ||
+                response?.user?.email ||
+                response?.email;
+
+            console.log("Extracted Email:", email);
+
+            if (email) {
+                setUserEmail(email);
+                return email;
+            } else {
+                console.log("Email not found in response structure");
+                console.log("Response structure:", JSON.stringify(response, null, 2));
+            }
+
         } catch (error) {
-          console.error("Error in getUserEmail:", error);
+            console.error("Error in getUserEmail:", error);
         }
-      };
+    };
 
     const handlePurchaseSubmit = async (productName, amount, stripid) => {
         const token = localStorage.getItem("WAauthToken");
@@ -151,7 +151,7 @@ const MenuPage = () => {
                 .map(word => word.charAt(0).toUpperCase() + word.slice(1))
                 .join(' ');
 
-        // console.log(menuTitle);
+        console.log(menuTitle);
         setCurrentMenu(menuTitle);
     }, [location, menuName]);
 
@@ -173,7 +173,7 @@ const MenuPage = () => {
         try {
             const response = await Authapi.dynamicpageget(currentMenu);
             if (response.status === true) {
-                console.log(response.page.post_store);
+                // console.log(response.page.post_store);
                 setTopbardata(response.page.post_store || []);
                 setTransforming(response.page.post_store);
 
@@ -276,211 +276,334 @@ const MenuPage = () => {
         setErrors(newErrors);
     };
 
+    // const renderCards = () => {
+    //     // console.log(4444444444444444444444444444444444444444444444444444444444444444444444);
+    //     // console.log(statu.our_products?.post_store);
+    //     return statu.post_store.map((card, index) => {
+    //         // Destructure and extract relevant fields from the Data object
+    //         // console.log(card.data.Information_section_1)
+    //         const feesSection3 = card.data.Fees_section_3 || {};
+    //         const infoSection1 = card.data.Information_section_1 || {};
+    //         const serviceSection2 = card.data.Service_section_2 || {};
+    //         const feessection3 = card.data.Fees_section_3 || {};
+    //         const purchaseButtonSection = card.data.Purchase_button_section_4 || {};
+
+    //         // Check if there's any content to display (excluding the Field_slug values)
+    //         const hasContent =
+    //             infoSection1.Information1 ||
+    //             infoSection1.Information2 ||
+    //             infoSection1.Information3 ||
+    //             infoSection1.Information4 ||
+    //             infoSection1.Information5 ||
+    //             serviceSection2.Service1 ||
+    //             serviceSection2.Service2 ||
+    //             feesSection3.Monthlyfee ||
+    //             feessection3.Montlyfeecardtext1 ||
+    //             feessection3.Montlyfeecardtext1 ||
+    //             purchaseButtonSection.Amount ||
+    //             purchaseButtonSection.Buttonbackgroundcolor ||
+    //             purchaseButtonSection.Buttoncolor ||
+    //             purchaseButtonSection.Buttontext;
+
+    //         if (!hasContent) return null;
+
+    //         return (
+    //             <div className={`col-lg-4`} id={`card${index + 1}`} key={card.Id}>
+    //                 <div className={`card-liner-card-${index + 1}`} id="card-liner-card"></div>
+    //                 <div className={`card${index + 1} card`}>
+    //                     {/* {console.log(card['Data'].Modelsectionpackagesection)} */}
+    //                     {/* <span className="medaltype">{card.Post_name}</span> */}
+    //                     <span className="medaltype">{card['data'].Modelsectionpackagesection}</span>
+    //                     <div className={`card${index + 1}-text`}>
+    //                         {/* Render Information Section */}
+    //                         {/* {console.log(infoSection1)} */}
+    //                         {[infoSection1.Information1, infoSection1.Information2, infoSection1.Information3, infoSection1.Information4, infoSection1.Information5].map((text, i) => (
+    //                             text && (
+    //                                 <p style={cardTextStyle} key={i} className='cardtext'>
+    //                                     <img src={righticon} className={`card${index + 1}righticon`} alt={`Icon ${i + 1}`} style={cardTextImageStyle} />
+    //                                     {text}
+    //                                 </p>
+    //                             )
+    //                         ))}
+    //                         {/* {infoSection1.Information1 || infoSection1.Information2 || infoSection1.Information3 || infoSection1.Information4 || infoSection1.Information5 ? <div className="card-liner-inside"></div> : null} */}
+
+    //                         {/* {infoSection1.Information1 && (
+    //                 <p style={cardTextStyle} key="info1" className="cardtext">
+    //                   <img
+    //                     src={righticon}
+    //                     className={`card${index + 1}righticon`}
+    //                     alt="Icon 1"
+    //                     style={cardTextImageStyle}
+    //                   />
+    //                   {infoSection1.Information1}
+    //                 </p>
+    //               )}
+    //               {infoSection1.Information2 && (
+    //                 <p style={cardTextStyle} key="info2" className="cardtext">
+    //                   <img
+    //                     src={righticon}
+    //                     className={`card${index + 1}righticon`}
+    //                     alt="Icon 2"
+    //                     style={cardTextImageStyle}
+    //                   />
+    //                   {infoSection1.Information2}
+    //                 </p>
+    //               )}
+    //               {infoSection1.Information3 && (
+    //                 <p style={cardTextStyle} key="info3" className="cardtext">
+    //                   <img
+    //                     src={righticon}
+    //                     className={`card${index + 1}righticon`}
+    //                     alt="Icon 3"
+    //                     style={cardTextImageStyle}
+    //                   />
+    //                   {infoSection1.Information3}
+    //                 </p>
+    //               )}
+    //               {infoSection1.Information4 && (
+    //                 <p style={cardTextStyle} key="info4" className="cardtext">
+    //                   <img
+    //                     src={righticon}
+    //                     className={`card${index + 1}righticon`}
+    //                     alt="Icon 4"
+    //                     style={cardTextImageStyle}
+    //                   />
+    //                   {infoSection1.Information4}
+    //                 </p>
+    //               )}
+    //               {infoSection1.Information5 && (
+    //                 <p style={cardTextStyle} key="info5" className="cardtext">
+    //                   <img
+    //                     src={righticon}
+    //                     className={`card${index + 1}righticon`}
+    //                     alt="Icon 5"
+    //                     style={cardTextImageStyle}
+    //                   />
+    //                   {infoSection1.Information5}
+    //                 </p>
+    //               )} */}
+    //                         {Object.values(infoSection1).some((text) => text) && (
+    //                             <div className="card-liner-inside"></div>
+    //                         )}
+    //                     </div>
+
+    //                     <div className={`card${index + 1}-sec-2-text`}>
+    //                         {/* Render Service Section */}
+    //                         {serviceSection2.Service1 && (
+    //                             <p style={cardTextStyle}>
+    //                                 <img
+    //                                     src={plushicon}
+    //                                     className={`card${index + 1}plushicon`}
+    //                                     alt="Add On Icon"
+    //                                     style={cardTextImageStyle}
+    //                                 />
+    //                                 {serviceSection2.Service1}
+    //                             </p>
+    //                         )}
+    //                         {serviceSection2.Service1 && <div className="card-liner-inside-2"></div>}
+
+    //                         <div className={`card-${index + 1}-sec-3`}>
+    //                             {/* Render Monthly Fee */}
+    //                             {feesSection3.Monthlyfee && (
+    //                                 <p className={`card${index + 1}-sec-3-text1`}>
+    //                                     {feesSection3.Monthlyfee}
+    //                                 </p>
+    //                             )}
+    //                             {[feessection3.Montlyfeecardtext1, feessection3.Montlyfeecardtext2].map((text, i) => (
+    //                                 text && (
+    //                                     <p style={cardTextStyle} key={i} className='cardtext'>
+    //                                         <img
+    //                                             src={plushicon}
+    //                                             className={`card${index + 1}plushicon`}
+    //                                             alt="Add On Icon"
+    //                                             style={cardTextImageStyle}
+    //                                         />
+    //                                         {text}
+    //                                     </p>
+    //                                 )
+    //                             ))}
+
+    //                             {/* Render Service 2 */}
+    //                             {serviceSection2.Service2 && (
+    //                                 <p className={`card${index + 1}-sec-3-text`}>
+    //                                     <img
+    //                                         src={plushicon}
+    //                                         className={`card${index + 1}plushicon`}
+    //                                         alt="Add On Icon"
+    //                                         style={cardTextImageStyle}
+    //                                     />
+    //                                     {serviceSection2.Service2}
+    //                                 </p>
+    //                             )}
+    //                         </div>
+
+    //                     </div>
+    //                     {/* style={{ position: 'absolute', bottom: '13px', left: '0', right: '0' }} */}
+    //                     {purchaseButtonSection.Buttontext && (
+    //                         <div className="text-center purchase-btn">
+    //                             {/* <button
+    //                                 role="link"
+    //                                 className="btn w-50"
+    //                                 style={{
+    //                                     backgroundColor: purchaseButtonSection.Buttonbackgroundcolor || '#40bedd',
+    //                                     color: purchaseButtonSection.Buttoncolor || '#ffffff',
+    //                                 }}
+    //                             // onMouseOver={(e) => {
+    //                             //   e.target.style.backgroundColor = card.data.Buttonhovercolor || '#17bee8';
+    //                             // }}
+    //                             // onMouseOut={(e) => {
+    //                             //   e.target.style.backgroundColor = card.data.Buttonbackgroundcolor || '#40bedd';
+    //                             // }}
+
+    //                             > */}
+    //                             <button
+    //                                 role="link"
+    //                                 className="btn w-50"
+    //                                 style={{
+    //                                     backgroundColor: purchaseButtonSection.Buttonbackgroundcolor || '#40bedd',
+    //                                     color: purchaseButtonSection.Buttoncolor || '#ffffff',
+    //                                 }}
+    //                                 // onMouseOver={(e) => {
+    //                                 //   e.target.style.backgroundColor = card.Buttonhovercolor || '#17bee8';
+    //                                 // }}
+    //                                 // onMouseOut={(e) => {
+    //                                 //   e.target.style.backgroundColor = card.Buttonbackgroundcolor || '#40bedd';
+    //                                 // }}
+
+    //                                 onClick={() => handlePurchaseSubmit(card['data'].Modelsectionpackagesection, purchaseButtonSection.Amount, purchaseButtonSection.Stripid)}
+    //                             >
+    //                                 {`${purchaseButtonSection.Buttontext} - ${purchaseButtonSection.Amount}`}
+    //                             </button>
+    //                         </div>
+    //                     )}
+    //                 </div>
+    //             </div>
+    //         );
+    //     });
+    // };
+
+
     const renderCards = () => {
-        // console.log(4444444444444444444444444444444444444444444444444444444444444444444444);
         // console.log(statu.our_products?.post_store);
         return statu.post_store.map((card, index) => {
-            // Destructure and extract relevant fields from the Data object
-            // console.log(card.data.Information_section_1)
-            const feesSection3 = card.data.Fees_section_3 || {};
-            const infoSection1 = card.data.Information_section_1 || {};
-            const serviceSection2 = card.data.Service_section_2 || {};
-            const feessection3 = card.data.Fees_section_3 || {};
-            const purchaseButtonSection = card.data.Purchase_button_section_4 || {};
-
-            // Check if there's any content to display (excluding the Field_slug values)
-            const hasContent =
-                infoSection1.Information1 ||
-                infoSection1.Information2 ||
-                infoSection1.Information3 ||
-                infoSection1.Information4 ||
-                infoSection1.Information5 ||
-                serviceSection2.Service1 ||
-                serviceSection2.Service2 ||
-                feesSection3.Monthlyfee ||
-                feessection3.Montlyfeecardtext1 ||
-                feessection3.Montlyfeecardtext1 ||
-                purchaseButtonSection.Amount ||
-                purchaseButtonSection.Buttonbackgroundcolor ||
-                purchaseButtonSection.Buttoncolor ||
-                purchaseButtonSection.Buttontext;
-
-            if (!hasContent) return null;
-
-            return (
-                <div className={`col-lg-4`} id={`card${index + 1}`} key={card.Id}>
-                    <div className={`card-liner-card-${index + 1}`} id="card-liner-card"></div>
-                    <div className={`card${index + 1} card`}>
-                        {/* {console.log(card['Data'].Modelsectionpackagesection)} */}
-                        {/* <span className="medaltype">{card.Post_name}</span> */}
-                        <span className="medaltype">{card['data'].Modelsectionpackagesection}</span>
-                        <div className={`card${index + 1}-text`}>
-                            {/* Render Information Section */}
-                            {/* {console.log(infoSection1)} */}
-                            {[infoSection1.Information1, infoSection1.Information2, infoSection1.Information3, infoSection1.Information4, infoSection1.Information5].map((text, i) => (
-                                text && (
-                                    <p style={cardTextStyle} key={i} className='cardtext'>
-                                        <img src={righticon} className={`card${index + 1}righticon`} alt={`Icon ${i + 1}`} style={cardTextImageStyle} />
-                                        {text}
-                                    </p>
-                                )
-                            ))}
-                            {/* {infoSection1.Information1 || infoSection1.Information2 || infoSection1.Information3 || infoSection1.Information4 || infoSection1.Information5 ? <div className="card-liner-inside"></div> : null} */}
-
-                            {/* {infoSection1.Information1 && (
-                    <p style={cardTextStyle} key="info1" className="cardtext">
-                      <img
-                        src={righticon}
-                        className={`card${index + 1}righticon`}
-                        alt="Icon 1"
-                        style={cardTextImageStyle}
-                      />
-                      {infoSection1.Information1}
-                    </p>
+          // Destructure and extract relevant fields from the Data object
+          const feesSection = card.data.Fees_section || {};
+          const infoSection1 = card.data.Package_info || {};
+          const serviceSection = card.data.Package_services || {};
+          const feessection = card.data.Fees_section || {};
+          const purchaseButtonSection = card.data.Purchase_button || {};
+    
+          // Check if there's any content to display (excluding the Field_slug values)
+          const hasContent =
+            infoSection1.Information1 ||
+            infoSection1.Information2 ||
+            infoSection1.Information3 ||
+            infoSection1.Information4 ||
+            infoSection1.Information5 ||
+            serviceSection.Service1 ||
+            serviceSection.Service2 ||
+            feesSection.Monthlyfee ||
+            feessection.Montlyfeecardtext1 ||
+            feessection.Montlyfeecardtext1 ||
+            purchaseButtonSection.Amount ||
+            purchaseButtonSection.Buttonbackgroundcolor ||
+            purchaseButtonSection.Buttoncolor ||
+            purchaseButtonSection.Buttontext;
+    
+          if (!hasContent) return null;
+    
+          return (
+            <div className={`col-lg-4`} id={`card${index + 1}`} key={card.Id}>
+              <div className={`card-liner-card-${index + 1}`} id="card-liner-card"></div>
+              <div className={`card${index + 1} card`}>
+                <span className="medaltype">{card['data'].Packagename}</span>
+                <div className={`card${index + 1}-text`}>
+                  {/* Render Information Section */}
+                  {[infoSection1.Information1, infoSection1.Information2, infoSection1.Information3, infoSection1.Information4, infoSection1.Information5].map((text, i) => (
+                    text && (
+                      <p style={cardTextStyle} key={i} className='cardtext'>
+                        <img src={righticon} className={`card${index + 1}righticon`} alt={`Icon ${i + 1}`} style={cardTextImageStyle} />
+                        {text}
+                      </p>
+                    )
+                  ))}
+                  {Object.values(infoSection1).some((text) => text) && (
+                    <div className="card-liner-inside"></div>
                   )}
-                  {infoSection1.Information2 && (
-                    <p style={cardTextStyle} key="info2" className="cardtext">
-                      <img
-                        src={righticon}
-                        className={`card${index + 1}righticon`}
-                        alt="Icon 2"
-                        style={cardTextImageStyle}
-                      />
-                      {infoSection1.Information2}
-                    </p>
-                  )}
-                  {infoSection1.Information3 && (
-                    <p style={cardTextStyle} key="info3" className="cardtext">
-                      <img
-                        src={righticon}
-                        className={`card${index + 1}righticon`}
-                        alt="Icon 3"
-                        style={cardTextImageStyle}
-                      />
-                      {infoSection1.Information3}
-                    </p>
-                  )}
-                  {infoSection1.Information4 && (
-                    <p style={cardTextStyle} key="info4" className="cardtext">
-                      <img
-                        src={righticon}
-                        className={`card${index + 1}righticon`}
-                        alt="Icon 4"
-                        style={cardTextImageStyle}
-                      />
-                      {infoSection1.Information4}
-                    </p>
-                  )}
-                  {infoSection1.Information5 && (
-                    <p style={cardTextStyle} key="info5" className="cardtext">
-                      <img
-                        src={righticon}
-                        className={`card${index + 1}righticon`}
-                        alt="Icon 5"
-                        style={cardTextImageStyle}
-                      />
-                      {infoSection1.Information5}
-                    </p>
-                  )} */}
-                            {Object.values(infoSection1).some((text) => text) && (
-                                <div className="card-liner-inside"></div>
-                            )}
-                        </div>
-
-                        <div className={`card${index + 1}-sec-2-text`}>
-                            {/* Render Service Section */}
-                            {serviceSection2.Service1 && (
-                                <p style={cardTextStyle}>
-                                    <img
-                                        src={plushicon}
-                                        className={`card${index + 1}plushicon`}
-                                        alt="Add On Icon"
-                                        style={cardTextImageStyle}
-                                    />
-                                    {serviceSection2.Service1}
-                                </p>
-                            )}
-                            {serviceSection2.Service1 && <div className="card-liner-inside-2"></div>}
-
-                            <div className={`card-${index + 1}-sec-3`}>
-                                {/* Render Monthly Fee */}
-                                {feesSection3.Monthlyfee && (
-                                    <p className={`card${index + 1}-sec-3-text1`}>
-                                        {feesSection3.Monthlyfee}
-                                    </p>
-                                )}
-                                {[feessection3.Montlyfeecardtext1, feessection3.Montlyfeecardtext2].map((text, i) => (
-                                    text && (
-                                        <p style={cardTextStyle} key={i} className='cardtext'>
-                                            <img
-                                                src={plushicon}
-                                                className={`card${index + 1}plushicon`}
-                                                alt="Add On Icon"
-                                                style={cardTextImageStyle}
-                                            />
-                                            {text}
-                                        </p>
-                                    )
-                                ))}
-
-                                {/* Render Service 2 */}
-                                {serviceSection2.Service2 && (
-                                    <p className={`card${index + 1}-sec-3-text`}>
-                                        <img
-                                            src={plushicon}
-                                            className={`card${index + 1}plushicon`}
-                                            alt="Add On Icon"
-                                            style={cardTextImageStyle}
-                                        />
-                                        {serviceSection2.Service2}
-                                    </p>
-                                )}
-                            </div>
-
-                        </div>
-                        {/* style={{ position: 'absolute', bottom: '13px', left: '0', right: '0' }} */}
-                        {purchaseButtonSection.Buttontext && (
-                            <div className="text-center purchase-btn">
-                                {/* <button
-                                    role="link"
-                                    className="btn w-50"
-                                    style={{
-                                        backgroundColor: purchaseButtonSection.Buttonbackgroundcolor || '#40bedd',
-                                        color: purchaseButtonSection.Buttoncolor || '#ffffff',
-                                    }}
-                                // onMouseOver={(e) => {
-                                //   e.target.style.backgroundColor = card.data.Buttonhovercolor || '#17bee8';
-                                // }}
-                                // onMouseOut={(e) => {
-                                //   e.target.style.backgroundColor = card.data.Buttonbackgroundcolor || '#40bedd';
-                                // }}
-
-                                > */}
-                                <button
-                                    role="link"
-                                    className="btn w-50"
-                                    style={{
-                                        backgroundColor: purchaseButtonSection.Buttonbackgroundcolor || '#40bedd',
-                                        color: purchaseButtonSection.Buttoncolor || '#ffffff',
-                                    }}
-                                    // onMouseOver={(e) => {
-                                    //   e.target.style.backgroundColor = card.Buttonhovercolor || '#17bee8';
-                                    // }}
-                                    // onMouseOut={(e) => {
-                                    //   e.target.style.backgroundColor = card.Buttonbackgroundcolor || '#40bedd';
-                                    // }}
-
-                                    onClick={() => handlePurchaseSubmit(card['data'].Modelsectionpackagesection, purchaseButtonSection.Amount, purchaseButtonSection.Stripid)}
-                                >
-                                    {`${purchaseButtonSection.Buttontext} - ${purchaseButtonSection.Amount}`}
-                                </button>
-                            </div>
-                        )}
-                    </div>
                 </div>
-            );
+    
+                <div className={`card${index + 1}-sec-2-text`}>
+                  {/* Render Service Section */}
+                  {serviceSection.Service1 && (
+                    <p style={cardTextStyle}>
+                      <img
+                        src={plushicon}
+                        className={`card${index + 1}plushicon`}
+                        alt="Add On Icon"
+                        style={cardTextImageStyle}
+                      />
+                      {serviceSection.Service1}
+                    </p>
+                  )}
+                  {serviceSection.Service1 && <div className="card-liner-inside-2"></div>}
+    
+                  <div className={`card-${index + 1}-sec-3`}>
+                    {/* Render Monthly Fee */}
+                    {feesSection.Monthlyfee && (
+                      <p className={`card${index + 1}-sec-3-text1`}>
+                        {feesSection.Monthlyfee}
+                      </p>
+                    )}
+                    {[feessection.Montlyfeecardtext1, feessection.Montlyfeecardtext2].map((text, i) => (
+                      text && (
+                        <p style={cardTextStyle} key={i} className='cardtext'>
+                          <img
+                            src={plushicon}
+                            className={`card${index + 1}plushicon`}
+                            alt="Add On Icon"
+                            style={cardTextImageStyle}
+                          />
+                          {text}
+                        </p>
+                      )
+                    ))}
+    
+                    {/* Render Service 2 */}
+                    {serviceSection.Service2 && (
+                      <p className={`card${index + 1}-sec-3-text`}>
+                        <img
+                          src={plushicon}
+                          className={`card${index + 1}plushicon`}
+                          alt="Add On Icon"
+                          style={cardTextImageStyle}
+                        />
+                        {serviceSection.Service2}
+                      </p>
+                    )}
+                  </div>
+    
+                </div>
+                {purchaseButtonSection.Buttontext && (
+                  <div className="text-center purchase-btn">
+                    <button
+                      role="link"
+                      className="btn w-50"
+                      style={{
+                        backgroundColor: purchaseButtonSection.Buttonbackgroundcolor || '#40bedd',
+                        color: purchaseButtonSection.Buttoncolor || '#ffffff',
+                      }}    
+                      onClick={() => handlePurchaseSubmit(card['data'].Packagename, purchaseButtonSection.Amount, purchaseButtonSection.Stripid)}
+                    >
+                      {`${purchaseButtonSection.Buttontext} - $${purchaseButtonSection.Amount}`}
+                    </button>
+    
+                  </div>
+                )}
+              </div>
+            </div>
+          );
         });
-    };
+      };
     const handleSubmit = async (event) => {
         event.preventDefault();
         const newErrors = {};
@@ -592,7 +715,7 @@ const MenuPage = () => {
                         <div className="row">
                             <div className="col-12">
                                 <div className="sec-8-heading">
-                                    <h1 className="text-center mb-4" id="About-us">
+                                    <h1 id="About-us">
                                         {/* {statu.about_us?.page_name} */}
                                         {statu.page_name}
                                     </h1>
@@ -682,7 +805,7 @@ const MenuPage = () => {
                                 </div>
 
                                 <div className="row">
-                                    {console.log(statu.post_store)}
+                                    {/* {console.log(statu.post_store)} */}
                                     {statu?.post_store.map((item, index) => (
                                         <div className="col-md-6" key={index}>
                                             <div className="inputgroup">
@@ -736,6 +859,41 @@ const MenuPage = () => {
 
 
             }
+
+
+
+            {/* {console.log(currentMenu)} */}
+            {currentMenu === 'Who Use WA' && statu.page_status === 1 ? (
+                <section className="clients-section" id="clients_section">
+                    <div className="container sliderconatainer">
+                    <h2 className="font-weight-light slider-heading text-center">
+                    {statu.page_description}</h2>
+                        <div className="clients-grid">
+                            {statu.post_store.map((item, index) => (
+                                <div key={item.Id} className="client-logo">
+                                    {/* {console.log(item.data)} */}
+                                    {item.data && item.data.Link ? (
+                                        <Link to={item.data.Link}>
+                                            <img
+                                                src={item.data.Image}
+                                                alt={`Client ${index + 1}`}
+                                                className="client-image sliderimages"
+                                            />
+                                        </Link>
+                                    ) : item.data ? (
+                                        <img
+                                            src={item.data.Image}
+                                            alt={`Client ${index + 1}`}
+                                            className="client-image sliderimages"
+                                        />
+                                    ) : null}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            ) : null} 
+
             {/* {currentMenu === 'Page Section' && statu.page_status === 1 && topbardata.length > 0 ? (
 
                 <section className="page-section" id="transforming_section">

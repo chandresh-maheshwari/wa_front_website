@@ -67,11 +67,11 @@ const Home = () => {
       if (response.status === true) {
         ls("data", response.results);
 
-        // console.log(response.results)
+        // console.log(response.results.transforming_waste_industry.post_store[0]['Data'].Pagesectiontitle1)
         setStatus(response.results);
         setHomesection(response.results.home_section.post_store[0]['Data']);
-        setTransforming(response.results.transforming_waste_industry.post_store[0]['Data']);
-        // console.log(response.results.about_us.post_store);
+        setTransforming(response.results.transforming_waste_industry.post_store);
+        // console.log(Transforming);
         // const dynamicTitles = response.results.about_us.post_store.flatMap(
         //   (post) =>
         //     Object.keys(post)
@@ -173,7 +173,7 @@ const Home = () => {
   const handleInputChange = (event, index) => {
     const { value, name } = event.target;
     const newErrors = { ...errors };
-    console.log(event.target.type === "tel");
+    // console.log(event.target.type === "tel");
     if (event.target.type === "tel" && name.includes("field")) {
       let cleanedValue = value.replace(/\D/g, "");
       if (cleanedValue.length > 10) {
@@ -424,9 +424,9 @@ const Home = () => {
 
   
   const handlePurchaseSubmit = async (productName, amount, price_id) => {
-    console.log(productName);
-    console.log(amount);
-    console.log(price_id);
+    // console.log(productName);
+    // console.log(amount);
+    // console.log(price_id);
     const token = localStorage.getItem("WAauthToken");
     if (!token) {
       Swal.fire({
@@ -682,7 +682,7 @@ const Home = () => {
                   //   e.target.style.backgroundColor = card.Buttonbackgroundcolor || '#40bedd';
                   // }}
 
-                  onClick={() => handlePurchaseSubmit(card['Data'].Modelsectionpackagesection, purchaseButtonSection.Amount, purchaseButtonSection.Stripid)}
+                  onClick={() => handlePurchaseSubmit(card['Data'].Packagename, purchaseButtonSection.Amount, purchaseButtonSection.Stripid)}
                 >
                   {`${purchaseButtonSection.Buttontext} - $${purchaseButtonSection.Amount}`}
                 </button>
@@ -762,45 +762,59 @@ const Home = () => {
               </div>
             </div>
             <div className="container">
-              <div className="row p-5">
-                <div className="col-md-5">
-                  <h5 className="transfotext1 for-waste">
-                    {/* {console.log(Transforming)} */}
-                    {/* {Transforming[0]?.Pagesectiontitle1} <br />
-                    <b>{Transforming[0]?.Pagesectiontitle2}</b> */}
-                    {Transforming.Pagesectiontitle1} <br />
-                    <b>{Transforming.Pagesectiontitle2}</b>
-                  </h5>
-                  {/* <p className="transfotextdes1">
-                    {Transforming[0]?.Pagesectiondescription} */}
-                  <p className="transfotextdes1">
-                    {Transforming.Pagesectiondescription}
-                  </p>
-                </div>
-                <div className="col-md-2 stretch-line">
-                  {/* {console.log(statu.transforming_waste_industry?.image)} */}
-                  <img
-                    src={statu.transforming_waste_industry?.image}
-                    // src={homeimg}
-                    width="60px"
-                    className="strech"
-                    alt="strech"
-                  />
-                </div>
-                <div className="col-md-5">
-                  <h5 className="transfotext2 for-waste">
-                    {/* {Transforming[1]?.Pagesectiontitle1} <br />
-                    <b>{Transforming[1]?.Pagesectiontitle2}</b> */}
-                    {Transforming.Pagesectiontitle1} <br />
-                    <b>{Transforming.Pagesectiontitle2}</b>
-                  </h5>
-                  {/* <p className="transfotextdes2">
-                    {Transforming[1]?.Pagesectiondescription} */}
-                  <p className="transfotextdes2">
-                    {Transforming.Pagesectiondescription}
-                  </p>
-                  <br />
-                </div>
+              <div className="row p-5 justify-content-center">
+                {Transforming[0]?.Data && !Transforming[1]?.Data && (
+                  <div className="col-md-8 text-center">
+                    <h5 className="for-waste centered-text">
+                      {Transforming[0]?.Data?.Pagesectiontitle1} <br />
+                      <b>{Transforming[0]?.Data?.Pagesectiontitle2}</b>
+                    </h5>
+                    <p className="transfotextdes1 centered-text">
+                      {Transforming[0]?.Data?.Pagesectiondescription}
+                    </p>
+                  </div>
+                )}
+                {Transforming[1]?.Data && !Transforming[0]?.Data && (
+                  <div className="col-md-8 text-center">
+                    <h5 className="for-waste">
+                      {Transforming[1]?.Data?.Pagesectiontitle1} <br />
+                      <b>{Transforming[1]?.Data?.Pagesectiontitle2}</b>
+                    </h5>
+                    <p className="transfotextdes2 centered-text">
+                      {Transforming[1]?.Data?.Pagesectiondescription}
+                    </p>
+                  </div>
+                )}
+                {Transforming[0]?.Data && Transforming[1]?.Data && (
+                  <>
+                    <div className="col-md-5">
+                      <h5 className="transfotext1 for-waste">
+                        {Transforming[0]?.Data?.Pagesectiontitle1} <br />
+                        <b>{Transforming[0]?.Data?.Pagesectiontitle2}</b>
+                      </h5>
+                      <p className="transfotextdes1">
+                        {Transforming[0]?.Data?.Pagesectiondescription}
+                      </p>
+                    </div>
+                    <div className="col-md-2 stretch-line">
+                      <img
+                        src={statu.transforming_waste_industry?.image}
+                        width="60px"
+                        className="strech"
+                        alt="strech"
+                      />
+                    </div>
+                    <div className="col-md-5">
+                      <h5 className="transfotext2 for-waste">
+                        {Transforming[1]?.Data?.Pagesectiontitle1} <br />
+                        <b>{Transforming[1]?.Data?.Pagesectiontitle2}</b>
+                      </h5>
+                      <p className="transfotextdes2">
+                        {Transforming[1]?.Data?.Pagesectiondescription}
+                      </p>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </section>
@@ -917,7 +931,6 @@ const Home = () => {
         condition: statu.why_choose_wa?.status === 1,
         ordering: statu.why_choose_wa?.ordering || 0,
         content: (
-          // <p>sdsd</p>
           <section className="why_choose_section">
             <div className="container p-5">
               <div className="row">
@@ -932,25 +945,37 @@ const Home = () => {
             </div>
 
             <div className="container type-2">
-              <div className="row">
-                {statu.why_choose_wa?.post_store.map((item, index) => (
-                  <div
-                    className={`col col-md-6 col-sm-6 col-xs-3 ${index % 2 === 0 ? "text-end" : "text-start"
-                      }`}
-                    key={item.id}
-                  >
-                    {/* {console.log(item['Data'].Title1)} */}
-                    <h5 className="for-waste">{item['Data'].Title}</h5>
-                    <p style={{ marginTop: "25px" }}>
-                      {item['Data'].Description.split("\r\n").map((line, i) => (
-                        <React.Fragment key={i}>
-                          {line}
-                          <br />
-                        </React.Fragment>
-                      ))}
-                    </p>
-                  </div>
-                ))}
+              <div className="row justify-content-center">
+                {statu.why_choose_wa?.post_store.map((item, index) => {
+                  const postCount = statu.why_choose_wa?.post_store.length;
+                  const isSinglePost = postCount === 1;
+                  const isTwoPosts = postCount === 2;
+                  const isThreePosts = postCount === 3;
+
+                  return (
+                    <div
+                      className={`col ${isSinglePost ? "col-12" : "col-md-6 col-sm-6 col-xs-3"} 
+                                  ${isSinglePost ? "center-text no-border" : ""} 
+                                  ${isTwoPosts ? "no-bottom-border" : ""} 
+                                  ${isThreePosts ? "no-top-right-border" : ""} 
+                                  ${isThreePosts && index === 2 ? "mx-auto" : ""} 
+                                  ${index % 2 === 0 ? "text-end" : "text-start"}`}
+                      key={item.id}
+                    >
+                      <h5 className={`for-waste ${isTwoPosts ? "margin-top-5" : ""} ${isSinglePost ? "center-text" : ""}`}>
+                        {item['Data'].Title}
+                      </h5>
+                      <p style={{ marginTop: "25px" }} className={isSinglePost ? "center-text" : ""}>
+                        {item['Data'].Description.split("\r\n").map((line, i) => (
+                          <React.Fragment key={i}>
+                            {line}
+                            <br />
+                          </React.Fragment>
+                        ))}
+                      </p>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </section>
@@ -1011,7 +1036,7 @@ const Home = () => {
             <div className="container">
               <h4 className="tellmemoretitle">
                 {/* {console.log(statu.tell_me_more_section)} */}
-                {/* {statu.tell_me_more_section?.post_store[0]['Data']?.Title} */}
+                {statu.tell_me_more_section?.post_store[0]['Data']?.Title}
               </h4>
               <div className="row">
                 <div className="col-12">
@@ -1040,7 +1065,7 @@ const Home = () => {
               <div className="row">
                 <div className="col-12">
                   <div className="sec-8-heading">
-                    <h1 className="text-center mb-4" id="About-us">
+                    <h1 id="About-us">
                       {statu.about_us?.page_name}
                     </h1>
                   </div>

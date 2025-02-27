@@ -23,7 +23,7 @@ const Navlayout = () => {
         : [];
 
     const renderContactUsButtons = () => {
-        console.log(buttonData);
+        // console.log(buttonData);
         return Object.entries(buttonData).map(([buttonNum, data]) => {
             if (data.buttontitle === 'Login') {
                 return null;
@@ -130,7 +130,7 @@ const Navlayout = () => {
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('userData', JSON.stringify(data));
         setShowLoginPopup(false);
-        console.log('Login successful:', data);
+        // console.log('Login successful:', data);
     };
 
     const toggleDropdown = () => {
@@ -140,7 +140,7 @@ const Navlayout = () => {
     const handleLogout = async () => {
         try {
             const response = await Authapi.logout(); 
-            console.log('Logout successful:', response); 
+            // console.log('Logout successful:', response); 
             setUserData(null);
             setIsLoggedIn(false);
             localStorage.removeItem('isLoggedIn');
@@ -257,7 +257,7 @@ const Navlayout = () => {
                                     {isDropdownOpen ? <MdArrowDropUp /> : <MdArrowDropDown />}
                                 </div>
 
-{console.log(isDropdownOpen)}
+{/* {console.log(isDropdownOpen)} */}
                                 {isDropdownOpen && (
                                     <div className="dropdown-menu">
                                         <button onClick={handleViewProfile}>View Profile</button>

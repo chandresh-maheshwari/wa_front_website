@@ -24,8 +24,8 @@ const DepotForm = () => {
   const navigate = useNavigate();
   const [depotTypes, setDepotTypes] = useState([]);
   const [countytypes, setCountyTypes] = useState([]);
-
-
+  const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     const getUserDepotTypeName = async () => {
@@ -63,6 +63,18 @@ const DepotForm = () => {
 
   useEffect(() => {
 
+    const message = sessionStorage.getItem("successMessage");
+    if (message) {
+      setSuccessMessage(message);
+      // Clear the message after it's displayed
+      sessionStorage.removeItem("successMessage");
+
+      // Remove the success message after 30 seconds
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 10000); // 30 seconds timeout
+    }
+
     if (location.state && location.state.formData) {
       const { formData } = location.state;
       setFormData(formData);
@@ -85,14 +97,81 @@ const DepotForm = () => {
     fetchContractDetails();
   }, []);
 
+  // const handleChange = (e) => {
+  //   setFormData({ ...formData, [e.target.name]: e.target.value });
+  // };
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setErrors({ ...errors, [name]: "" }); // Clear the error for that field
+
+    // Phone number validation: only numbers and up to 10 digits allowed
+    if (name === "depotTelephone") {
+      if (/^\d{0,10}$/.test(value)) {
+        setFormData({ ...formData, [name]: value }); // Update formData with the value
+      }
+      validateForm(); // Call the validation after updating phone number
+    } else {
+      setFormData({ ...formData, [name]: value }); // Update formData for other fields
+    }
   };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Validate Depot Type
+    if (!formData.depotTypeId) {
+      newErrors.depotTypeId = "Depot Type is required.";
+    }
+
+    // Validate Depot Name
+    if (!formData.depotName) {
+      newErrors.depotName = "Depot Name is required.";
+    }
+
+    // Validate County
+    if (!formData.countyId) {
+      newErrors.countyId = "County is required.";
+    }
+
+    // Validate Start Date
+    if (!formData.startDate) {
+      newErrors.startDate = "Start Date is required.";
+    }
+
+    // Validate End Date
+    if (!formData.endDate) {
+      newErrors.endDate = "End Date is required.";
+    }
+
+    // Validate Depot Postcode
+    if (!formData.depotPostcode) {
+      newErrors.depotPostcode = "Depot Postcode is required.";
+    }
+
+    // Validate Depot Telephone (Phone number validation - exactly 10 digits)
+    if (!formData.depotTelephone) {
+      newErrors.depotTelephone = "Depot Telephone is required.";
+    } else if (!/^\d{10}$/.test(formData.depotTelephone)) {
+      newErrors.depotTelephone = "Phone number must be 10 digits.";
+    }
+
+    // Validate Depot Address
+    if (!formData.dateAddress) {
+      newErrors.dateAddress = "Depot Address is required.";
+    }
+
+    setErrors(newErrors); // Set all errors
+    return Object.keys(newErrors).length === 0; // Return true if no errors
+  };
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    console.log(formData.contractId);
+    if (!validateForm()) return;
+    // console.log(formData);
+    // console.log(formData.contractId);
     try {
       const response = await Authapi.submitDepotDetails({
         depot_type_id: formData.depotTypeId,
@@ -107,12 +186,14 @@ const DepotForm = () => {
       });
 
       if (response.status === 200) {
-        await Swal.fire({
-          icon: "success",
-          title: "Depot Setup Complete",
-          text: "Your depot has been successfully registered.",
-          confirmButtonText: "OK",
-        });
+        // await Swal.fire({
+        //   icon: "success",
+        //   title: "Depot Setup Complete",
+        //   text: "Your depot has been successfully registered.",
+        //   confirmButtonText: "OK",
+        // });
+        sessionStorage.setItem("successMessage", "Depot Setup Complete! Your Depot has been successfully registered.");
+
         navigate("/vehicle");
       } else {
         throw new Error(response.message || "Failed to setup depot");
@@ -254,7 +335,13 @@ const DepotForm = () => {
         Please fill the form below to set up a Depot! Add as many details as
         required and proceed.
       </p>
-
+      <div className="container mb-0">
+        {successMessage && (
+          <div className="alert alert-success" role="alert">
+            {successMessage}
+          </div>
+        )}
+      </div>
       <div className="company-setup-container abcd">
         <Stepper activeStep={activeStep} onStepClick={handleStepChange}>
           <Step label="Company" />
@@ -306,6 +393,7 @@ const DepotForm = () => {
                         </option>
                       ))}
                     </select>
+                    {errors.depotTypeId && <small className="text-danger">{errors.depotTypeId}</small>}
                   </div>
                 </div>
                 <div className="form-row">
@@ -318,6 +406,7 @@ const DepotForm = () => {
                       value={formData.depotName}
                       onChange={handleChange}
                     />
+                    {errors.depotName && <small className="text-danger">{errors.depotName}</small>}
                   </div>
 
                   <div className="form-group col-md-6">
@@ -335,6 +424,7 @@ const DepotForm = () => {
                         </option>
                       ))}
                     </select>
+                    {errors.countyId && <small className="text-danger">{errors.countyId}</small>}
                   </div>
                 </div>
                 <div className="form-row">
@@ -347,6 +437,7 @@ const DepotForm = () => {
                       name="startDate"
                       onChange={handleChange}
                     />
+                    {errors.startDate && <small className="text-danger">{errors.startDate}</small>}
                   </div>
 
                   <div className="form-group col-md-6">
@@ -358,6 +449,7 @@ const DepotForm = () => {
                       name="endDate"
                       onChange={handleChange}
                     />
+                    {errors.endDate && <small className="text-danger">{errors.endDate}</small>}
                   </div>
                 </div>
                 <div className="form-row">
@@ -370,6 +462,7 @@ const DepotForm = () => {
                       value={formData.depotPostcode}
                       onChange={handleChange}
                     />
+                    {errors.depotPostcode && <small className="text-danger">{errors.depotPostcode}</small>}
                   </div>
 
                   <div className="form-group col-md-6">
@@ -381,6 +474,7 @@ const DepotForm = () => {
                       value={formData.depotTelephone}
                       onChange={handleChange}
                     />
+                    {errors.depotTelephone && <small className="text-danger">{errors.depotTelephone}</small>}
                   </div>
                 </div>
                 <div className="form-row">
@@ -394,6 +488,7 @@ const DepotForm = () => {
                       name="dateAddress"
                       onChange={handleChange}
                     />
+                    {errors.dateAddress && <small className="text-danger">{errors.dateAddress}</small>}
                   </div>
                   <div className="form-group col-md-6"></div>
                 </div>

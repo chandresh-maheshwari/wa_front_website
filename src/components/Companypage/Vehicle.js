@@ -22,13 +22,66 @@ const VehicleForm = () => {
   });
   const [fuelTypes, setFuelTypes] = useState([]);
   const [activeStep, setActiveStep] = useState(4);
+  const [errors, setErrors] = useState({});
   const [vehicletype, setVehicleType] = useState([]);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const navigate = useNavigate();
 
+  // const handleChange = (e) => {
+  //   setFormData({ ...formData, [e.target.name]: e.target.value });
+  // };
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setErrors({ ...errors, [name]: "" });
+    if (name === "phone_no" && /^\d{0,10}$/.test(value)) {
+      setFormData({ ...formData, [name]: value });
+    } else if (name !== "phone_no") {
+      setFormData({ ...formData, [name]: value });
+    }
+    if (name === "phone_no") {
+      validateForm();
+    }
   };
+
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Validate all required fields
+    if (!formData.vehicle_type_id)
+      newErrors.vehicle_type_id = "Vehicle Type is required";
+    if (!formData.vehicle_description)
+      newErrors.vehicle_description = "Vehicle Description is required";
+    if (!formData.driver_name)
+      newErrors.driver_name = "Driver Name is required";
+    if (!formData.vehicle_name)
+      newErrors.vehicle_name = "Vehicle Name is required";
+
+    // Phone number validation: check if it's provided and matches the 10-digit format
+    if (!formData.phone_no) {
+      newErrors.phone_no = "Phone Number is required";
+    } else if (formData.phone_no.length !== 10) {
+      newErrors.phone_no = "Phone Number must be exactly 10 digits";
+    }
+
+    if (!formData.vehicle_license_expire_date)
+      newErrors.vehicle_license_expire_date = "License Expiry Date is required";
+    if (!formData.fuel_type_id)
+      newErrors.fuel_type_id = "Fuel Type is required";
+    if (!formData.vehicle_tare_weight)
+      newErrors.vehicle_tare_weight = "Vehicle Tare Weight is required";
+    if (!formData.vehicle_owner)
+      newErrors.vehicle_owner = "Vehicle Owner is required";
+
+    setErrors(newErrors);
+
+    // Return true if there are no errors
+    return Object.keys(newErrors).length === 0;
+  };
+
+
+
   // const handlePreviousClick = () => {
   //   navigate("/depot");
   // };
@@ -117,6 +170,17 @@ const VehicleForm = () => {
 
 
   useEffect(() => {
+    const message = sessionStorage.getItem("successMessage");
+    if (message) {
+      setSuccessMessage(message);
+      // Clear the message after it's displayed
+      sessionStorage.removeItem("successMessage");
+
+      // Remove the success message after 30 seconds
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 10000); // 30 seconds timeout
+    }
     const fetchFuelTypes = async () => {
       try {
         const response = await Authapi.getfualtypesdata();
@@ -206,6 +270,7 @@ const VehicleForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!validateForm()) return;
     // Map the vehicle_owner to the appropriate database value
     const vehicleOwnerValue =
       formData.vehicle_owner === "contract_name" ? 1 : 2;
@@ -225,14 +290,16 @@ const VehicleForm = () => {
       });
 
       if (response.status === 200) {
-        Swal.fire({
-          icon: "success",
-          title: "Vehicle Details Submitted",
-          text: "Your vehicle details have been successfully submitted.",
-          confirmButtonText: "OK",
-        }).then(() => {
+        // Swal.fire({
+        //   icon: "success",
+        //   title: "Vehicle Details Submitted",
+        //   text: "Your vehicle details have been successfully submitted.",
+        //   confirmButtonText: "OK",
+        // }).then(() => {
+          // });
+        sessionStorage.setItem("successMessage", "Depot Setup Complete! Your Depot has been successfully registered.");
+
           navigate("/success");
-        });
       } else {
         throw new Error(response.message || "Failed to submit vehicle details");
       }
@@ -260,6 +327,13 @@ const VehicleForm = () => {
         Please fill the form below to set up a Vehicle! Add as many details as
         required and proceed.
       </p>
+      <div className="container mb-0">
+        {successMessage && (
+          <div className="alert alert-success" role="alert">
+            {successMessage}
+          </div>
+        )}
+      </div>
       <div className="container abcd mt-5">
         <Stepper activeStep={activeStep} onStepClick={handleStepChange}>
           <Step label="Company" />
@@ -299,6 +373,12 @@ const VehicleForm = () => {
                     </option>
                   ))}
                 </select>
+
+                {errors.vehicle_type_id && (
+                  <small className="text-danger">
+                    {errors.vehicle_type_id}
+                  </small>
+                )}
               </div>
 
               <div className="form-group col-md-6">
@@ -310,6 +390,11 @@ const VehicleForm = () => {
                   name="vehicle_description"
                   onChange={handleChange}
                 />
+                {errors.vehicle_description && (
+                  <small className="text-danger">
+                    {errors.vehicle_description}
+                  </small>
+                )}
               </div>
             </div>
 
@@ -323,6 +408,9 @@ const VehicleForm = () => {
                   name="driver_name"
                   onChange={handleChange}
                 />
+                {errors.driver_name && (
+                  <small className="text-danger">{errors.driver_name}</small>
+                )}
               </div>
 
               <div className="form-group col-md-6">
@@ -334,6 +422,9 @@ const VehicleForm = () => {
                   name="vehicle_name"
                   onChange={handleChange}
                 />
+                {errors.vehicle_name && (
+                  <small className="text-danger">{errors.vehicle_name}</small>
+                )}
               </div>
             </div>
 
@@ -347,6 +438,9 @@ const VehicleForm = () => {
                   name="phone_no"
                   onChange={handleChange}
                 />
+                {errors.phone_no && (
+                  <small className="text-danger">{errors.phone_no}</small>
+                )}
               </div>
               <div className="form-group col-md-6">
                 <label>Carrier's License Expiry Date</label>
@@ -357,6 +451,11 @@ const VehicleForm = () => {
                   name="vehicle_license_expire_date"
                   onChange={handleChange}
                 />
+                {errors.vehicle_license_expire_date && (
+                  <small className="text-danger">
+                    {errors.vehicle_license_expire_date}
+                  </small>
+                )}
               </div>
             </div>
 
@@ -376,6 +475,9 @@ const VehicleForm = () => {
                     </option>
                   ))}
                 </select>
+                {errors.fuel_type_id && (
+                  <small className="text-danger">{errors.fuel_type_id}</small>
+                )}
               </div>
 
               <div className="form-group col-md-6">
@@ -387,6 +489,11 @@ const VehicleForm = () => {
                   name="vehicle_tare_weight"
                   onChange={handleChange}
                 />
+                {errors.vehicle_tare_weight && (
+                  <small className="text-danger">
+                    {errors.vehicle_tare_weight}
+                  </small>
+                )}
               </div>
             </div>
 
@@ -405,6 +512,10 @@ const VehicleForm = () => {
                     Third Party Carrier
                   </option>
                 </select>
+                {errors.vehicle_owner && (
+                  <small className="text-danger">{errors.vehicle_owner}</small>
+                )}
+
               </div>
 
               {/* <div className="form-group col-md-6">

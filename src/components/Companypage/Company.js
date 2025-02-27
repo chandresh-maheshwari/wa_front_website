@@ -10,6 +10,7 @@ import { Stepper, Step } from "react-form-stepper";
 const Company = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [successMessage, setSuccessMessage] = useState('');
   const [showForm, setShowForm] = useState(true);
   const [formData, setFormData] = useState({
     companyName: "",
@@ -20,9 +21,17 @@ const Company = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [hasSetupCompleted, setHasSetupCompleted] = useState(false);
 
+  // CODE FOR VALIDATION 26-02-25 START
+  const [formErrors, setFormErrors] = useState({
+    companyName: "",
+    contactName: "",
+    contactNumber: "",
+    email: "",
+  });
+  // CODE FOR VALIDATION 26-02-25 END
   const handleStripeCheckoutSuccess = async (sessionId) => {
     console.log("Session ID:", sessionId);
-  
+
     try {
       const response = await Authapi.stripeCheckoutSuccess(sessionId);
       if (response.status === true) {
@@ -67,9 +76,9 @@ const Company = () => {
 
     if (sessionId && success === "true" && !hasShownSuccessMessage) {
       console.log(showForm);
-        if (!showForm) {
+      if (!showForm) {
         setShowForm(true);
-        }
+      }
       Swal.fire({
         icon: "success",
         title: "Payment Successful!",
@@ -118,51 +127,109 @@ const Company = () => {
     fetchDataForCompanyDetail();
   }, []);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-  
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     [name]: value,
+  //   }));
+  // };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (validateForm()) {
+      try {
+        const response = await Authapi.submitCompanyDetails({
+          company_name: formData.companyName,
+          company_contact_name: formData.contactName,
+          company_email: formData.email,
+          company_tel: formData.contactNumber,
+        });
 
-    try {
-      const response = await Authapi.submitCompanyDetails({
-        company_name: formData.companyName,
-        company_contact_name: formData.contactName,
-        company_email: formData.email,
-        company_tel: formData.contactNumber,
-      });
+        if (response.status === 200) {
+          // Save success message to sessionStorage
+          sessionStorage.setItem("successMessage", "Company Setup Complete! Your company has been successfully registered.");
 
-      if (response.status === 200) {
-        await Swal.fire({
-          icon: "success",
-          title: "Company Setup Complete",
-          text: "Your company has been successfully registered.",
+          // Redirect to another page
+          navigate("/contract");
+        } else {
+          throw new Error(response.message || "Failed to setup company");
+        }
+      } catch (error) {
+        console.error("Company setup error:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Setup Failed",
+          text: error.message || "Failed to setup company. Please try again.",
           confirmButtonText: "OK",
         });
-        navigate("/contract");
-      } else {
-        throw new Error(response.message || "Failed to setup company");
       }
-    } catch (error) {
-      console.error("Company setup error:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Setup Failed",
-        text: error.message || "Failed to setup company. Please try again.",
-        confirmButtonText: "OK",
-      });
     }
   };
 
   const handleStepChange = (step) => {
     setActiveStep(step);
   };
+
+
+  // CODE FOR VALIDATION 26-02-25 START
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+
+    setFormErrors({ ...formErrors, [name]: "" });
+
+
+    if (name === "contactNumber") {
+      if (/^\d{0,10}$/.test(value)) {
+        setFormData({ ...formData, [name]: value });
+
+        if (value.length === 0) {
+          setFormErrors({ ...formErrors, contactNumber: "" });
+        } else {
+          validateForm();
+        }
+      }
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  const validateForm = () => {
+    let errors = {};
+    let isValid = true;
+
+    if (!formData.companyName) {
+      errors.companyName = "Company Name is required";
+      isValid = false;
+    }
+
+    if (!formData.contactNumber) {
+      errors.contactNumber = "Phone Number is required";
+      isValid = false;
+    } else if (!/^\d{10}$/.test(formData.contactNumber)) {
+      errors.contactNumber = "Phone Number must be exactly 10 digits and only contain numbers";
+      isValid = false;
+    }
+
+    if (!formData.email) {
+      errors.email = "Email is required";
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = "Email is not valid";
+      isValid = false;
+    }
+
+    if (!formData.contactName) {
+      errors.contactName = "Contact  Name is required";
+      isValid = false;
+    }
+
+    setFormErrors(errors);
+    return isValid;
+  };
+  // CODE FOR VALIDATION 26-02-25 END
 
   return (
     <>
@@ -182,7 +249,7 @@ const Company = () => {
         <div className="pro-under-border"></div>
 
         <div className="steps-content mt-3">
-        {activeStep === 0 && showForm && (
+          {activeStep === 0 && showForm && (
             <div className="p-4 content ">
               <h5 className="title">Company details</h5>
               <p className="description">
@@ -196,7 +263,7 @@ const Company = () => {
                     </label>
                     <input
                       type="text"
-                      className="form-control company"
+                      className={`form-control company ${formErrors.companyName ? "is-invalid" : ""}`}
                       id="companyName"
                       name="companyName"
                       value={formData.companyName}
@@ -204,6 +271,9 @@ const Company = () => {
                       required
                       placeholder="Company Name"
                     />
+                    {formErrors.companyName && (
+                      <div className="invalid-feedback">{formErrors.companyName}</div>
+                    )}
                   </div>
                   <div className="form-group col-md-6">
                     <label className="label" htmlFor="email">
@@ -211,7 +281,7 @@ const Company = () => {
                     </label>
                     <input
                       type="email"
-                      className="form-control company"
+                      className={`form-control company ${formErrors.email ? "is-invalid" : ""}`}
                       id="email"
                       name="email"
                       value={formData.email}
@@ -219,6 +289,9 @@ const Company = () => {
                       required
                       placeholder="Company Email"
                     />
+                    {formErrors.email && (
+                      <div className="invalid-feedback">{formErrors.email}</div>
+                    )}
                   </div>
                 </div>
 
@@ -229,7 +302,7 @@ const Company = () => {
                     </label>
                     <input
                       type="tel"
-                      className="form-control company"
+                      className={`form-control company ${formErrors.contactNumber ? "is-invalid" : ""}`}
                       id="contactNumber"
                       name="contactNumber"
                       value={formData.contactNumber}
@@ -237,6 +310,9 @@ const Company = () => {
                       required
                       placeholder="Company Telephone"
                     />
+                    {formErrors.contactNumber && (
+                      <div className="invalid-feedback">{formErrors.contactNumber}</div>
+                    )}
                   </div>
                   <div className="form-group col-md-6">
                     <label className="label" htmlFor="contactName">
@@ -244,7 +320,7 @@ const Company = () => {
                     </label>
                     <input
                       type="text"
-                      className="form-control company"
+                      className={`form-control company ${formErrors.contactName ? "is-invalid" : ""}`}
                       id="contactName"
                       name="contactName"
                       value={formData.contactName}
@@ -252,6 +328,9 @@ const Company = () => {
                       required
                       placeholder="Company Contact Name"
                     />
+                    {formErrors.contactName && (
+                      <div className="invalid-feedback">{formErrors.contactName}</div>
+                    )}
                   </div>
                 </div>
               </form>

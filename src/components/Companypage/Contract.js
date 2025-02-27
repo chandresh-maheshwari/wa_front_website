@@ -8,11 +8,16 @@ import "./Contract.css";
 
 const Contract = () => {
   const [activeStep, setActiveStep] = useState(1);
+  const [successMessage, setSuccessMessage] = useState('');
   const [formData, setFormData] = useState({
     companyName: "",
     contractName: "",
     companyId: "",
     contractId: "",
+  });
+  const [formErrors, setFormErrors] = useState({
+    companyName: "",
+    contractName: "",
   });
 
   const navigate = useNavigate();
@@ -36,10 +41,21 @@ const Contract = () => {
   // }, []);
 
   useEffect(() => {
+    const message = sessionStorage.getItem("successMessage");
+    if (message) {
+      setSuccessMessage(message);
+      // Clear the message after it's displayed
+      sessionStorage.removeItem("successMessage");
+
+      // Remove the success message after 30 seconds
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 10000); // 30 seconds timeout
+    }
     const fetchContractDetails = async () => {
       try {
         const response = await Authapi.getLatestContractDetails();
-        console.log("API Response:", response); 
+        console.log("API Response:", response);
         console.log("Contract Name:", response.contract.contract_name);
         console.log("Contract ID:", response.contract.id);
         if (response.status === true) {
@@ -53,7 +69,7 @@ const Contract = () => {
         console.error("Error fetching contract details:", error);
       }
     };
-    fetchContractDetails();   
+    fetchContractDetails();
   }, []);
 
 
@@ -92,17 +108,51 @@ const Contract = () => {
     fetchContractDetails();
   }, []);
 
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     [name]: value,
+  //   }));
+  // };
+
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+    validateField(name, value);
   };
+
+  const validateField = (name, value) => {
+    let errors = { ...formErrors };
+    switch (name) {
+      case "companyName":
+        errors.companyName = value ? "" : "Company name is required";
+        break;
+      case "contractName":
+        errors.contractName = value ? "" : "Contract name is required";
+        break;
+      default:
+        break;
+    }
+    setFormErrors(errors);
+    // checkFormValidity();
+  };
+
+
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    validateField("companyName", formData.companyName);
+    validateField("contractName", formData.contractName);
+    if (formErrors.companyName || formErrors.contractName || !formData.companyName || !formData.contractName) {
+      return;
+    }
     try {
       const response = await Authapi.submitContractDetails({
         company_id: formData.companyId,
@@ -112,12 +162,14 @@ const Contract = () => {
       });
 
       if (response.status === 200) {
-        await Swal.fire({
-          icon: "success",
-          title: "Contract Setup Complete",
-          text: "Your contract has been successfully registered.",
-          confirmButtonText: "OK",
-        });
+        // await Swal.fire({
+        //   icon: "success",
+        //   title: "Contract Setup Complete",
+        //   text: "Your contract has been successfully registered.",
+        //   confirmButtonText: "OK",
+        // });
+        sessionStorage.setItem("successMessage", "Contract Setup Complete! Your Contract has been successfully registered.");
+
         navigate("/depot");
       } else {
         throw new Error(response.message || "Failed to setup contract");
@@ -166,7 +218,7 @@ const Contract = () => {
   //   };
 
   //   fetchCompanyData();
-    // navigate("/company");
+  // navigate("/company");
 
   // };
 
@@ -201,16 +253,16 @@ const Contract = () => {
   //   }
   //   navigate("/company");
   // };
-  
+
 
 
   const handlePreviousClick = async () => {
     try {
-      const response = await Authapi.getusercompanydetail(); 
-  
+      const response = await Authapi.getusercompanydetail();
+
       if (response.status === 200 && response.company) {
-        console.log(response.company.company_contact_name); 
-  
+        console.log(response.company.company_contact_name);
+
         navigate("/company", {
           state: {
             formData: {
@@ -239,8 +291,8 @@ const Contract = () => {
       });
     }
   };
-  
-  
+
+
 
   // const handleNextClick = async () => {
   //   try {
@@ -262,6 +314,13 @@ const Contract = () => {
         Please fill the form below to set up a Contract! Add as many details as
         required and proceed.
       </p>
+      <div className="container mb-0">
+        {successMessage && (
+          <div className="alert alert-success" role="alert">
+            {successMessage}
+          </div>
+        )}
+      </div>
       <div className="container abcd mt-5">
         <Stepper activeStep={activeStep} onStepClick={handleStepChange}>
           <Step label="Company" />
@@ -276,7 +335,6 @@ const Contract = () => {
           <p className="description">
             Please fill your information so we can get in touch with you.
           </p>
-
           <form >
             <div className="form-group col-md-6">
               <label className="label" htmlFor="companyName">
@@ -284,7 +342,7 @@ const Contract = () => {
               </label>
               <input
                 type="text"
-                className="form-control company"
+                className={`form-control company ${formErrors.companyName ? "is-invalid" : ""}`}
                 id="companyName"
                 name="companyName"
                 value={formData.companyName}
@@ -292,6 +350,9 @@ const Contract = () => {
                 disabled
                 placeholder="Company"
               />
+              {formErrors.companyName && (
+                <div className="invalid-feedback">{formErrors.companyName}</div>
+              )}
             </div>
             <div className="form-group col-md-6">
               <label className="label" htmlFor="contractName">
@@ -299,13 +360,16 @@ const Contract = () => {
               </label>
               <input
                 type="text"
-                className="form-control company"
+                className={`form-control company ${formErrors.contractName ? "is-invalid" : ""}`}
                 id="contractName"
                 name="contractName"
                 value={formData.contractName}
                 onChange={handleInputChange}
                 placeholder="Contract Name"
               />
+              {formErrors.contractName && (
+                <div className="invalid-feedback">{formErrors.contractName}</div>
+              )}
             </div>
           </form>
         </div>
