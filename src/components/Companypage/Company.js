@@ -238,7 +238,7 @@ const Company = () => {
         Please fill the form below to set up a company! Add as many details as
         required and proceed.
       </p>
-      <div className="company-setup-container abcd">
+      <div className="company-setup-container abcd mb-0">
         {/* Stepper component */}
         <Stepper activeStep={activeStep} onStepClick={handleStepChange}>
           <Step label="Company" />
@@ -345,13 +345,22 @@ const Company = () => {
         </div>
       </div>
 
-      <button
+      {/* <button
         type="button"
         onClick={handleSubmit}
         className="btn next btn-primary"
       >
         Next Step
-      </button>
+      </button> */}
+        <div className=" company-setup-container mt-1">
+        <button
+          type="button"
+          onClick={handleSubmit}
+          className="btn next btn-primary"
+        >
+          Next Step
+        </button>
+      </div>
     </>
   );
 };

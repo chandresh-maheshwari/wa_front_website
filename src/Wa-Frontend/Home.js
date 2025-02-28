@@ -1035,21 +1035,34 @@ const Home = () => {
           <section className="tellmemore">
             <div className="container">
               <h4 className="tellmemoretitle">
-                {/* {console.log(statu.tell_me_more_section)} */}
+                {/* {console.log(statu.tell_me_more_section.post_store[0]['Data'].Button_setting.Buttontext)} */}
                 {statu.tell_me_more_section?.post_store[0]['Data']?.Title}
               </h4>
               <div className="row">
                 <div className="col-12">
-                  {console.log(statu.tell_me_more_section?.post_store[0]['Data']?.Buttonbackgroundcolor + ' !important')}
-                  <button
+                  {/* Old Code Start */}
+                  {/* <button
                     type="submit"
                     className="btn w-auto sky-blue-btn-tellmemore"
                     style={{
-                      backgroundColor: statu.tell_me_more_section?.post_store[0]['Data']?.Buttonbackgroundcolor + ' !important' || '',
-                      color: statu.tell_me_more_section?.post_store[0]['Data']?.Buttontextcolor || '',
+                      backgroundColor: statu.tell_me_more_section?.post_store[0]['Data']?.Buttonbackgroundcolor || '#40bedd',
+                      color: statu.tell_me_more_section?.post_store[0]['Data']?.Buttontextcolor || '#ffffff',
                     }}>
                     {statu.tell_me_more_section?.post_store[0]['Data']?.Buttontext}
+                  </button> */}
+                  {/* Old Code Start */}
+
+                  {/* New Code Start */}
+                   <button
+                    type="submit"
+                    className="btn w-auto sky-blue-btn-tellmemore"
+                    style={{
+                      backgroundColor: statu.tell_me_more_section?.post_store[0]['Data']?.Button_setting.Buttonbackgroundcolor || '#40bedd',
+                      color: statu.tell_me_more_section?.post_store[0]['Data']?.Button_setting.Buttontextcolor || '#ffffff',
+                    }}>
+                    {statu.tell_me_more_section?.post_store[0]['Data']?.Button_setting.Buttontext}
                   </button>
+                  {/* New Code new */}
                 </div>
               </div>
             </div>

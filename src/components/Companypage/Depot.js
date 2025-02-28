@@ -20,7 +20,7 @@ const DepotForm = () => {
     dateAddress: ""
   });
   const location = useLocation();
-  const [activeStep, setActiveStep] = useState(3);
+  const [activeStep, setActiveStep] = useState(2);
   const navigate = useNavigate();
   const [depotTypes, setDepotTypes] = useState([]);
   const [countytypes, setCountyTypes] = useState([]);
@@ -342,7 +342,7 @@ const DepotForm = () => {
           </div>
         )}
       </div>
-      <div className="company-setup-container abcd">
+      <div className=" company-setup-container abcd mb-0">
         <Stepper activeStep={activeStep} onStepClick={handleStepChange}>
           <Step label="Company" />
           <Step label="Contract" />
@@ -351,7 +351,7 @@ const DepotForm = () => {
         </Stepper>
         <div className="pro-under-border"></div>
         <div className="steps-content mt-3">
-          {activeStep === 3 && (
+          {activeStep === 2 && (
             <div className="p-4 content">
               <h5 className="title">Depot details</h5>
               <p className="description">
@@ -497,18 +497,12 @@ const DepotForm = () => {
           )}
         </div>
       </div>
-      {/* <div className="form-navigation">
-                  <button type="button" onClick={() => setActiveStep(2)}>
-                    Previous step
-                  </button>
-                  <button type="submit">Next step</button>
-                </div> */}
-      <div className="container">
+      {/* <div className="container">
         <div className="row">
           <div className="col-6">
             <button
               type="button"
-              className="btn btn-secondary formbtn depotbuttons "
+              className="btn btn-secondary prevbtn depotbuttons "
               onClick={handlePreviousClick}
             >
               Previous step
@@ -517,13 +511,30 @@ const DepotForm = () => {
           <div className="col-6">
             <button
               type="button"
-              className="btn next btn-primary formbtn next1 depotbuttons"
+              className="btn next btn-primary prevbtn next1 depotbuttons"
               onClick={handleSubmit}
             >
               Next step
             </button>
           </div>
         </div>
+      </div> */}
+       <div className=" company-setup-container mt-0 ">
+        <button
+          type="button"
+          className="btn btn-secondary prevbtn"
+          onClick={handlePreviousClick}
+        >
+          Previous step
+        </button>
+
+        <button
+          type="button"
+          onClick={handleSubmit}
+          className="btn next btn-primary"
+        >
+          Next Step
+        </button>
       </div>
     </>
   );

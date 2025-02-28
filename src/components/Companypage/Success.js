@@ -5,7 +5,7 @@ import "./Company.css"; // Assuming you have a CSS file for styling
 import { Stepper, Step } from "react-form-stepper";
 
 const SuccessPage = () => {
-  const [activeStep, setActiveStep] = React.useState(5);
+  const [activeStep, setActiveStep] = React.useState(4);
 
   return (
     <div>
@@ -14,7 +14,7 @@ const SuccessPage = () => {
         "Your setup has been successfully created! Let's get started on your
         work and make it a great success..."
       </p>
-      <div className="container abcd mt-5 mb-5">
+      <div className="company-setup-container abcd ">
         <Stepper activeStep={activeStep} onStepClick={setActiveStep}>
           <Step label="Company" />
           <Step label="Contract" />

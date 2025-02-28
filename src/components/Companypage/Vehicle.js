@@ -21,7 +21,7 @@ const VehicleForm = () => {
     contractName: "",
   });
   const [fuelTypes, setFuelTypes] = useState([]);
-  const [activeStep, setActiveStep] = useState(4);
+  const [activeStep, setActiveStep] = useState(3);
   const [errors, setErrors] = useState({});
   const [vehicletype, setVehicleType] = useState([]);
   const [successMessage, setSuccessMessage] = useState('');
@@ -42,6 +42,7 @@ const VehicleForm = () => {
     if (name === "phone_no") {
       validateForm();
     }
+    
   };
 
 
@@ -89,7 +90,7 @@ const VehicleForm = () => {
   const handlePreviousClick = async () => {
     try {
       const response = await Authapi.getUserDepotdetail();
-      console.log(response);
+      // console.log(response);
 
       if (response.status === 200 && response.depots) {
         const depotData = {
@@ -109,7 +110,7 @@ const VehicleForm = () => {
             formData: depotData,
           },
         });
-        console.log("Redirecting to /depot");
+        // console.log("Redirecting to /depot");
       } else {
         console.error("Error fetching depot data:", response.message);
         Swal.fire({
@@ -184,7 +185,7 @@ const VehicleForm = () => {
     const fetchFuelTypes = async () => {
       try {
         const response = await Authapi.getfualtypesdata();
-        console.log("Fuel types data:", response);
+        // console.log("Fuel types data:", response);
         if (response && response.length > 0) {
           setFuelTypes(response);
         } else {
@@ -197,7 +198,7 @@ const VehicleForm = () => {
     const getVhicalTypeName = async () => {
       try {
         const response = await Authapi.userVehicleTypes();
-        console.log("Vehicle types data:", response);
+        // console.log("Vehicle types data:", response);
 
         if (response && response.length > 0) {
           // Set the state with the fetched vehicle types
@@ -220,6 +221,11 @@ const VehicleForm = () => {
         const response = await Authapi.getUservehicledetail();
         if (response.status === 200) {
           const Vehicle = response.Vehicle;
+          // console.log(Vehicle.vehicle_owner);
+          // console.log(Vehicle.vehicle_owner); 
+          // console.log(Vehicle.vehicle_owner === '1'); 
+          const vehicleOwnerMapped = Vehicle.vehicle_owner == '1' ? "contract_name" : "third_party_carrier";
+          // console.log(vehicleOwnerMapped);
           setFormData({
 
             vehicle_type_id: Vehicle.vehicle_type_id || "",
@@ -230,7 +236,7 @@ const VehicleForm = () => {
             vehicle_license_expire_date: Vehicle.vehicle_license_expire_date || "",
             fuel_type_id: Vehicle.fuel_type_id || "",
             vehicle_tare_weight: Vehicle.vehicle_tare_weight || "",
-            vehicleOwnerValue: Vehicle.vehicleOwnerValue || "",
+            vehicle_owner: vehicleOwnerMapped || "",
             contract_id: Vehicle.contract_id || "",
           });
         }
@@ -246,7 +252,7 @@ const VehicleForm = () => {
     const fetchContractDetails = async () => {
       try {
         const response = await Authapi.getUserContractdetail();
-        console.log("Contract details:", response);
+        // console.log("Contract details:", response);
 
         if (response.status === 200 && response.contract) {
           // Update the formData with contract_id
@@ -296,10 +302,10 @@ const VehicleForm = () => {
         //   text: "Your vehicle details have been successfully submitted.",
         //   confirmButtonText: "OK",
         // }).then(() => {
-          // });
+        // });
         sessionStorage.setItem("successMessage", "Depot Setup Complete! Your Depot has been successfully registered.");
 
-          navigate("/success");
+        navigate("/success");
       } else {
         throw new Error(response.message || "Failed to submit vehicle details");
       }
@@ -334,7 +340,7 @@ const VehicleForm = () => {
           </div>
         )}
       </div>
-      <div className="container abcd mt-5">
+      <div className=" company-setup-container abcd mb-0">
         <Stepper activeStep={activeStep} onStepClick={handleStepChange}>
           <Step label="Company" />
           <Step label="Contract" />
@@ -498,8 +504,9 @@ const VehicleForm = () => {
             </div>
 
             <div className="form-row">
-              <div className="form-group col-md-6">
+              {/* <div className="form-group col-md-6">
                 <label>Vehicle Owner</label>
+               
                 <select
                   value={formData.vehicle_owner}
                   className="form-control company"
@@ -516,6 +523,23 @@ const VehicleForm = () => {
                   <small className="text-danger">{errors.vehicle_owner}</small>
                 )}
 
+              </div> */}
+              <div className="form-group col-md-6">
+                <label>Vehicle Owner</label>
+                {/* {console.log(formData.vehicle_owner)} */}
+                <select
+                  value={formData.vehicle_owner || ""}
+                  className="form-control company"
+                  name="vehicle_owner"
+                  onChange={handleChange}
+                >
+                  <option value="">Select Owner</option>
+                  <option value="contract_name">Contract Name</option>
+                  <option value="third_party_carrier">Third Party Carrier</option>
+                </select>
+                {errors.vehicle_owner && (
+                  <small className="text-danger">{errors.vehicle_owner}</small>
+                )}
               </div>
 
               {/* <div className="form-group col-md-6">
@@ -551,12 +575,12 @@ const VehicleForm = () => {
           </form>
         </div>
       </div>
-      <div className="container">
+      {/* <div className="container">
         <div className="row">
           <div className="col-6">
             <button
               type="button"
-              className="btn btn-secondary formbtn vhicalbuttons "
+              className="btn btn-secondary prevbtn vhicalbuttons "
               onClick={handlePreviousClick}
             >
               Previous step
@@ -565,13 +589,30 @@ const VehicleForm = () => {
           <div className="col-6">
             <button
               type="button"
-              className="btn next btn-primary formbtn next1 vhicalbuttons submit"
+              className="btn next btn-primary prevbtn next1 vhicalbuttons submit"
               onClick={handleSubmit}
             >
               submit
             </button>
           </div>
         </div>
+      </div> */}
+      <div className=" company-setup-container mt-0 ">
+        <button
+          type="button"
+          className="btn btn-secondary prevbtn"
+          onClick={handlePreviousClick}
+        >
+          Previous step
+        </button>
+
+        <button
+          type="button"
+          onClick={handleSubmit}
+          className="btn next btn-primary final-submit"
+        >
+          submit
+        </button>
       </div>
     </>
   );

@@ -50,7 +50,7 @@ const Contract = () => {
       // Remove the success message after 30 seconds
       setTimeout(() => {
         setSuccessMessage("");
-      }, 10000); // 30 seconds timeout
+      }, 50000); // 30 seconds timeout
     }
     const fetchContractDetails = async () => {
       try {
@@ -321,7 +321,7 @@ const Contract = () => {
           </div>
         )}
       </div>
-      <div className="container abcd mt-5">
+      <div className=" company-setup-container abcd mb-0">
         <Stepper activeStep={activeStep} onStepClick={handleStepChange}>
           <Step label="Company" />
           <Step label="Contract" />
@@ -374,12 +374,12 @@ const Contract = () => {
           </form>
         </div>
       </div>
-      <div className="container">
+      {/* <div className="container">
         <div className="row">
           <div className="col-6">
             <button
               type="button"
-              className="btn btn-secondary formbtn"
+              className="btn btn-secondary prevbtn"
               onClick={handlePreviousClick}
             >
               Previous step
@@ -388,14 +388,32 @@ const Contract = () => {
           <div className="col-6">
             <button
               type="button"
-              className="btn next btn-primary formbtn"
+              className="btn next btn-primary prevbtn"
               onClick={handleSubmit}
             >
               Next step
             </button>
           </div>
         </div>
+      </div> */}
+        <div className=" company-setup-container mt-0 ">
+        <button
+          type="button"
+          className="btn btn-secondary prevbtn"
+          onClick={handlePreviousClick}
+        >
+          Previous step
+        </button>
+
+        <button
+          type="button"
+          onClick={handleSubmit}
+          className="btn next btn-primary"
+        >
+          Next Step
+        </button>
       </div>
+
     </>
   );
 };

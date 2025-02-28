@@ -1,18 +1,18 @@
-.formbtn{
+.prevbtn {
     margin-top: 10px;
     padding: 14px;
     width: 127px;
     border-radius: 20px;
 }
+
 /* ======squer issuue====== */
-#RFS-StepButton{
-width: 2em;
+#RFS-StepButton {
+    width: 2em;
     border: none;
     cursor: pointer;
     height: 2em;
     margin: 0px;
-    display: flex
-;
+    display: flex;
     padding: 0px;
     font-size: 1em;
     align-items: center;
@@ -20,4 +20,19 @@ width: 2em;
     justify-content: center;
     background-color: rgb(224, 224, 224);
     color: aliceblue;
+}
+
+.prevbtn {
+    margin-top: -1%;
+    border-radius: 20px;
+    padding: 1%;
+    font-size: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    float: left;
+    border-radius: 20px;
+
+}
+
+.alert-success{
+    margin: -1rem 6rem;
 }

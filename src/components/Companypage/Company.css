@@ -1,5 +1,5 @@
 /* Add this CSS to your project, e.g., in a separate CSS file or within a <style> tag */
-.firstcontent {
+/* .firstcontent {
     max-width: 439px;
     margin-left: 34%;
     text-align: center;
@@ -16,7 +16,7 @@
   
     text-underline-position: from-font;
     text-decoration-skip-ink: none;
-  }
+  } */
    /* .abcd {
     max-width: 700px;
     margin: 0 auto;
@@ -169,18 +169,8 @@
       display: block; 
       margin-bottom: 15px;
   }
-  
+/*   
   .next{
-      /* background-color: #0d3b66; 
-      color: #fff; 
-      border: none; 
-      border-radius: 20px; 
-      padding: 10px 20px; 
-      font-size: 1rem; 
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-      transition: background-color 0.3s ease; 
-      justify-content: end;
-      margin-top: 2%; */
       background-color: #0d3b66;
       color: #fff;
       border: none;
@@ -195,16 +185,16 @@
       align-items: end;
       margin-left: 79%;
       margin-bottom: 23px;
-  }
+  } */
   
   .btn-primary:hover {
       background-color: #0b2e4a; /* Darker blue on hover */
   }
   
   .company-setup-container {
-    max-width: 1000px;
+    max-width: 70%;
     margin: 2rem auto;
-    padding: 20px;
+    padding: 30px 0px;
     text-align: center;
   }
   
@@ -215,11 +205,11 @@
     margin-bottom: 0.5rem;
   }
   
-  .firstcontent {
+  /* .firstcontent {
     color: #6B7280;
     font-size: 14px;
     margin-bottom: 2rem;
-  }
+  } */
   
   .abcd {
     background: white;
@@ -453,6 +443,47 @@ background-color:#0d3b66;
     right: calc(50% + 2em - 8px);
     position: absolute;
 }
-.success-container{
+/* .success-container{
   margin-left: 38%;
+} */
+
+
+.firstcontent {
+  color: #6B7280;
+  font-size: 14px;
+  margin-bottom: 2rem;
+  max-width: 439px;
+  margin-left: 34%;
+  text-align: center;
+  margin-top: 15px;
+  width: 517px;
+  height: 70px;
+  top: 434px;
+  left: -730px;
+  gap: 0px;  
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 30px;  
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
 }
+
+
+.next{ 
+  background-color: #0d3b66;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 1%;
+  font-size: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);     
+  margin-top: -1%;      
+  float: right;     
+}
+.final-submit{
+  padding: 1% 3%;
+}
+
+
+
+
