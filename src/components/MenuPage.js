@@ -1,4 +1,4 @@
-import { useLocation, useParams, Link } from 'react-router-dom';
+import { useLocation, useParams, Link,Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Authapi from '../Authapi';
 import righticon from './img/righticon.png';
@@ -6,6 +6,7 @@ import plushicon from './img/plush.png';
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 import ls from 'local-storage';
+import Login from '../components/Login/Login';
 import { Navigate } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 const stripePromise = loadStripe('pk_test_51P4GXaAvL6Jnl0r3yHDSV2zN0JrGRt2UFxn217kqw9JFFBXe4K1n5xZHGfsKaIicVfUBAP5ch0TBIO8C8cI3ijQv00bNWJynzK');
@@ -26,7 +27,8 @@ const MenuPage = () => {
     const [formData, setFormData] = useState({});
     const [statu, setStatus] = useState({});
     const [userEmail, setUserEmail] = useState(null);
-
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [showLoginPopup, setShowLoginPopup] = useState(false);
     const [Transforming, setTransforming] = useState({});
 
 
@@ -81,7 +83,10 @@ const MenuPage = () => {
             console.error("Error in getUserEmail:", error);
         }
     };
-
+    const toggleLoginPopup = () => {  
+        setShowLoginPopup(!showLoginPopup);
+      };
+    
     const handlePurchaseSubmit = async (productName, amount, stripid) => {
         const token = localStorage.getItem("WAauthToken");
         if (!token) {
@@ -93,7 +98,10 @@ const MenuPage = () => {
                 showCancelButton: true,
                 cancelButtonText: 'Cancel'
             }).then((result) => {
-                // Handle login redirect if needed
+                if (result.isConfirmed) {
+                    // Show the login popup when "OK" is clicked
+                    toggleLoginPopup();
+                  }
             });
             return;
         }
@@ -143,7 +151,16 @@ const MenuPage = () => {
             });
         }
     };
-
+    const handleLoginSuccess = (data) => {
+        // setUserData(data);
+        setIsLoggedIn(true);
+        // setIsDropdownOpen(true);
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('userData', JSON.stringify(data));
+        setShowLoginPopup(false);
+        // console.log('Login successful:', data);
+      };
+    
 
     useEffect(() => {
         const menuTitle = location.state?.menuName ||
@@ -950,10 +967,46 @@ const MenuPage = () => {
                 </section>
             ) : null
             } */}
-
+ {showLoginPopup && (
+                  <Popup isOpen={showLoginPopup} onClose={toggleLoginPopup} onLoginSuccess={handleLoginSuccess} />
+              )}
+              <Outlet />
 
         </>
     );
 };
 
+
+const Popup = ({ isOpen, onClose, onLoginSuccess }) => {
+    if (!isOpen) return null;
+  console.log("Popup is call")
+    return (
+        <div className="popup-overlay" style={popupOverlayStyles}>
+            <div className="popup-content" style={popupContentStyles}>
+                <Login onLoginSuccess={onLoginSuccess} onClose={onClose} />
+            </div>
+        </div>
+    );
+  };
+  
+  const popupOverlayStyles = {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+    overflowY: 'auto',
+  };
+  
+  const popupContentStyles = {
+    backgroundColor: 'white',   
+    borderRadius: '5px',   
+    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+  };
+  
 export default MenuPage;
