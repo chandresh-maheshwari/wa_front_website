@@ -16,11 +16,13 @@ import righticon from "./Ourproductimages/righticon.png";
 import Swal from "sweetalert2";
 import ls from "local-storage";
 import { loadStripe } from '@stripe/stripe-js';
+import Login from '../components/Login/Login';
+import { Outlet } from "react-router-dom";
 
 const stripePromise = loadStripe('pk_test_51P4GXaAvL6Jnl0r3yHDSV2zN0JrGRt2UFxn217kqw9JFFBXe4K1n5xZHGfsKaIicVfUBAP5ch0TBIO8C8cI3ijQv00bNWJynzK');
 
 const Home = () => {
-  const cardTextStyle = {
+  const cardTextStyle = { 
     display: "flex",
     alignItems: "center",
     margin: "0",
@@ -420,9 +422,12 @@ const Home = () => {
     }
   };
 
+  const toggleLoginPopup = () => {  
+    setShowLoginPopup(!showLoginPopup);
+  };
 
 
-  
+
   const handlePurchaseSubmit = async (productName, amount, price_id) => {
     // console.log(productName);
     // console.log(amount);
@@ -437,7 +442,10 @@ const Home = () => {
         showCancelButton: true,
         cancelButtonText: 'Cancel'
       }).then((result) => {
-        // Handle login redirect if needed
+        if (result.isConfirmed) {
+          // Show the login popup when "OK" is clicked
+          toggleLoginPopup();
+        }
       });
       return;
     }
@@ -488,6 +496,20 @@ const Home = () => {
     }
   };
 
+  const handleLoginSuccess = (data) => {
+    // setUserData(data);
+    setIsLoggedIn(true);
+    // setIsDropdownOpen(true);
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('userData', JSON.stringify(data));
+    setShowLoginPopup(false);
+    // console.log('Login successful:', data);
+  };
+
+
+
+
+ 
   const renderCards = () => {
     // console.log(statu.our_products?.post_store);
     return statu.our_products?.post_store.map((card, index) => {
@@ -697,6 +719,7 @@ const Home = () => {
 
 
   const renderSections = () => {
+
     const sections = [
       {
         condition: statu.home_section?.status === 1,
@@ -1005,11 +1028,11 @@ const Home = () => {
                         <div key={item.id}>
                           {/* {console.log(item['Data'].Image)} */}
                           <Link to={item['Data'].Link}>
-                          <img
-                            src={item['Data'].Image}
-                            className="sliderimages"
-                            alt={`Logo ${index + 1}`}
-                          />
+                            <img
+                              src={item['Data'].Image}
+                              className="sliderimages"
+                              alt={`Logo ${index + 1}`}
+                            />
                           </Link>
                         </div>
                       ))}
@@ -1053,7 +1076,7 @@ const Home = () => {
                   {/* Old Code Start */}
 
                   {/* New Code Start */}
-                   <button
+                  <button
                     type="submit"
                     className="btn w-auto sky-blue-btn-tellmemore"
                     style={{
@@ -1253,7 +1276,45 @@ const Home = () => {
     ));
   };
 
-  return <>{renderSections()}</>;
+  return <>{renderSections()}
+  {showLoginPopup && (
+                  <Popup isOpen={showLoginPopup} onClose={toggleLoginPopup} onLoginSuccess={handleLoginSuccess} />
+              )}
+              <Outlet />
+  
+  </>;
+};
+
+const Popup = ({ isOpen, onClose, onLoginSuccess }) => {
+  if (!isOpen) return null;
+console.log("Popup is call")
+  return (
+      <div className="popup-overlay  " style={popupOverlayStyles}>
+          <div className="popup-content" style={popupContentStyles}>
+              <Login onLoginSuccess={onLoginSuccess} onClose={onClose} />
+          </div>
+      </div>
+  );
+};
+
+const popupOverlayStyles = {
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  zIndex: 1000,
+  overflowY: 'auto',
+};
+
+const popupContentStyles = {
+  backgroundColor: 'white',   
+  borderRadius: '5px',   
+  boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
 };
 
 export default Home;
