@@ -36,8 +36,9 @@ const Footer = () => {
                         <div className="container-fluid" id="containerfooter">
                             <div className="row">
                                 <div className="col-md-12" id="waste-white">                                
-                                    <img src={`http://wa_front.localhost.com/uploads/dynamic_post_store/${footerdata.Footerlogo}`} alt="" id="waste-white" />
-                                    {/* <img src={footerdata.Footerlogo} alt="" id="waste-white" /> */}
+                                    {/* <img src={`http://wa_front.localhost.com/uploads/dynamic_post_store/${footerdata.Footerlogo}`} alt="" id="waste-white" /> */}
+                                    <Link to={footerdata.Footerlogolink}>
+                                    <img src={footerdata.Footerlogo} alt="" id="waste-white" /></Link>
                                 </div>
                             </div>
                             <div className="row">

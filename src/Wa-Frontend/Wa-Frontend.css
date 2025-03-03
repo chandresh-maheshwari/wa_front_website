@@ -89,7 +89,7 @@ body {
 }
 
 .line {
-    color: white;    
+    color: white;
     font-weight: 500;
 }
 
@@ -535,7 +535,7 @@ body {
     color: black;
     font-weight: 700;
     margin: 9% 0 0 5%;
-    
+
     margin-left: 15%;
 
 }
@@ -732,9 +732,10 @@ body {
 }
 
 /* aboutus section */
-#About-us{
+#About-us {
     font-weight: 900;
 }
+
 .sec-8-liner {
     border-top-style: solid;
     border-top-color: #2c9dd4;
@@ -951,7 +952,8 @@ footer #footer {
     color: #fff !important;
     background-color: #2c9dd4 !important;
     /* font-size: 22px !important; */
-    font-weight: bold; /* 800 important */
+    font-weight: bold;
+    /* 800 important */
     border-radius: 6px !important;
     margin-left: 0%;
     margin-top: 0%;
@@ -1173,11 +1175,11 @@ footer #footer {
     max-width: 1093px !important; 
 } */
 
-.transforming_section_container{
+.transforming_section_container {
     width: 60% !important;
 }
 
-.purchase-btn{
+.purchase-btn {
     position: absolute;
     bottom: 13px;
     left: 0;
@@ -1187,7 +1189,7 @@ footer #footer {
 .dropdown-menu {
     position: absolute;
     top: 45px;
-    right: 87px;   
+    right: 87px;
     background-color: white;
     border: 1px solid #ddd;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -1196,10 +1198,10 @@ footer #footer {
     padding: 10px;
     display: flex;
     flex-direction: column;
-    z-index: 1000; 
-  }
-  
-  .dropdown-menu button {
+    z-index: 1000;
+}
+
+.dropdown-menu button {
     background: none;
     border: none;
     padding: 8px;
@@ -1207,15 +1209,14 @@ footer #footer {
     font-size: 14px;
     cursor: pointer;
     width: 100%;
-  }
-  
-  .dropdown-menu button:hover {
+}
+
+.dropdown-menu button:hover {
     background-color: #f1f1f1;
-  }
-  
-  .user-icon {
-    display: flex
-;
+}
+
+.user-icon {
+    display: flex;
     align-items: center;
     gap: 8px;
     padding: 5px;
@@ -1224,47 +1225,53 @@ footer #footer {
 
 .transfotextdes1.centered-text,
 .transfotextdes2.centered-text {
-  margin-top: 10px; /* Adjust this value as needed */
-  text-align: center;
+    margin-top: 10px;
+    /* Adjust this value as needed */
+    text-align: center;
 }
 
 .no-border-top-right {
     border-top: none !important;
     border-right: none !important;
-  }
-  .no-bottom-border {
-    border-bottom: none !important;
-  }
-  .margin-top-5 {
-    margin-top: 5%;
-    
-  }
-  .center-text {
-    text-align: center;
-  }
-  .no-border {
-    border: none !important;
-  }
-  .packages-sec{
-    margin-bottom: 5%;
-  }
+}
 
-  
-  .no-top-right-border {
+.no-bottom-border {
+    border-bottom: none !important;
+}
+
+.margin-top-5 {
+    margin-top: 5%;
+
+}
+
+.center-text {
+    text-align: center;
+}
+
+.no-border {
+    border: none !important;
+}
+
+.packages-sec {
+    margin-bottom: 5%;
+}
+
+
+.no-top-right-border {
     border-top: none !important;
     border-right: none !important;
-  }
-  
-  .margin-top-5 {
+}
+
+.margin-top-5 {
     margin-top: 5%;
-  }
-  
-  .center-text {
+}
+
+.center-text {
     text-align: center;
-  }
+}
 
 
-  .clients-section {
+.clients-section {
     padding: 40px 0;
     background-color: #f8f9fa;
 }
@@ -1278,7 +1285,8 @@ footer #footer {
 }
 
 .client-logo {
-    flex: 1 1 150px; /* Adjust the size as needed */
+    flex: 1 1 150px;
+    /* Adjust the size as needed */
     /* max-width: 200px; */
     text-align: center;
 }
@@ -1292,3 +1300,69 @@ footer #footer {
 .client-image:hover {
     transform: scale(1.05);
 }
+
+/* body::-webkit-scrollbar-thumb {
+    background-color: #113b4f;
+    border-radius: 10px;
+  }
+  
+  #root::-webkit-scrollbar-thumb {
+    background-color: #113b4f;
+    border-radius: 10px;
+  }
+  
+  body::-webkit-scrollbar {
+    width: 12px !important; 
+  }
+  
+  body::-webkit-scrollbar-track {
+    background: #9c0808c2 !important; 
+  }
+  
+  body::-webkit-scrollbar-thumb {
+    background-color: #d62b2b !important; 
+    border-radius: 10px !important; 
+    border: 3px solid #f1f1f1 !important; 
+  }
+  
+  body::-webkit-scrollbar-thumb:hover {
+    background: #555 !important;  
+  } */
+
+
+/* Code for main scroller css start */
+/* body {
+    /* width: 250px;
+    height: 300px;
+    padding: 2px; 
+    overflow-y: scroll;
+    /* border: 2.5px solid black; 
+    
+  }
+  
+  p {
+    margin: 0;
+  }
+  
+  body::-webkit-scrollbar { 
+    width: 20px; 
+  }
+  /*  
+  body::-webkit-scrollbar-track { 
+    background-color: #113b4f;
+    /* border-radius: 10px; 
+    background: none;
+  }
+  
+  body::-webkit-scrollbar-thumb {
+    /* background-image: url("https://img.icons8.com/?size=100&id=85612&format=png&color=000000"); 
+    background-image: ('../Images/bulding.png');
+    background-size: cover;
+    background-position: top;
+    border-radius: 10px; /* Optional, for rounded corners 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Adding shadow for 3D effect 
+    transform: perspective(500px) rotateX(10deg) rotateY(5deg); /* 3D rotation 
+  } */
+  
+  
+/* Code for main scroller css end */
