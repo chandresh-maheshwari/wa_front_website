@@ -3,9 +3,18 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 import ls from "local-storage";
 import "./Company.css";
+import "./CompanyExtra.css";
 import Authapi from "../../Authapi";
+// import { StartTokenExpiryCheck } from './components/CheckTokenExpier';
+// /import {Expired} from '../CheckTokenExpier';
+import Expired from '../CheckTokenExpier';
+import Navlayout from "../../Wa-Frontend/NavLayout";
 
-import { Stepper, Step } from "react-form-stepper";
+
+
+// import { Stepper, Step } from "react-form-stepper";
+import Stepper from 'react-stepper-horizontal';
+
 
 const Company = () => {
   const navigate = useNavigate();
@@ -57,17 +66,17 @@ const Company = () => {
   };
   useEffect(() => {
     const authToken = ls.get("WAauthToken");
-    if (!authToken) {
-      Swal.fire({
-        icon: "error",
-        title: "Authentication Required",
-        text: "Please login to continue.",
-        confirmButtonText: "OK",
-      }).then(() => {
-        navigate("/login");
-      });
-      return;
-    }
+    // if (!authToken) {
+    //   Swal.fire({
+    //     icon: "error",
+    //     title: "Authentication Required",
+    //     text: "Please login to continue.",
+    //     confirmButtonText: "OK",
+    //   }).then(() => {
+    //     // navigate("/login");
+    //   });
+    //   return;
+    // }
 
     const queryParams = new URLSearchParams(location.search);
     const success = queryParams.get("success");
@@ -119,8 +128,12 @@ const Company = () => {
             email: company.company_email || "",
           });
         }
+        else{
+          console.log(response.message);
+        }
       } catch (error) {
         console.error("Error fetching company details:", error);
+        // console.error("aaaaaaaaaaaaaaaaaa", error.response.data.message);
       }
     };
 
@@ -166,6 +179,46 @@ const Company = () => {
         });
       }
     }
+
+
+
+
+    // NEXT STEP CODE
+    // let step = 'step1';
+
+    // const step1 = document.getElementById('step-1');
+    // const step2 = document.getElementById('step-2');
+    // const step3 = document.getElementById('step-3');
+    // const step4 = document.getElementById('step-4');
+
+    // const step1p = document.getElementById('step1_progress');
+    // const step2p = document.getElementById('step2_progress');
+    // const step3p = document.getElementById('step3_progress');
+
+    //function next() {
+    // if (step === 'step1') {
+    //   step = 'step2';
+    //   step1.classList.remove("is-active");
+    //   step1p.css('transform', 'translateX(100%)');
+    //   step1p.css('-webkit-transform', 'translateX(100%)');
+    //   step1p.classList.add("is-active");
+    // } else if (step === 'step2') {
+    //   step = 'step3';
+    //   step2.classList.remove("is-active");
+    //   step2p.css('transform', 'translateX(100%)');
+    //   step2p.css('-webkit-transform', 'translateX(100%)');
+    //   step3.classList.add("is-active");
+    // } else if (step === 'step3') {
+    //   step = 'step4';
+    //   step3.classList.remove("is-active");
+    //   step3p.css('-webkit-transform', 'translateX(100%)');
+    //   step4.classList.add("is-active");
+    // } else if (step === 'step4') {
+    //   step = 'complete';
+    //   step4.classList.remove("is-active");
+    // }
+    // }
+
   };
 
   const handleStepChange = (step) => {
@@ -230,22 +283,130 @@ const Company = () => {
     return isValid;
   };
   // CODE FOR VALIDATION 26-02-25 END
+  // let step = 'step1';
 
+  // const step1 = document.getElementById('step-1');
+  // const step2 = document.getElementById('step-2');
+  // const step3 = document.getElementById('step-3');
+  // const step4 = document.getElementById('step-4');
+
+  // function next() {
+  // if (step === 'step1') {
+  //   step = 'step2';
+  //   step1.classList.remove("is-active");
+  //   $(step1).find('.progress-bar__bar').css('transform','translateX(100%)'); 
+  // $(step1).find('.progress-bar__bar').css('-webkit-transform','translateX(100%)');
+  //   step2.classList.add("is-active");
+  // } else if (step === 'step2') {
+  //   step = 'step3';
+  //   step2.classList.remove("is-active");
+  //   $(step2).find('.progress-bar__bar').css('transform','translateX(100%)');
+  //   $(step2).find('.progress-bar__bar').css('-webkit-transform','translateX(100%)');
+  //   step3.classList.add("is-active"); 
+  // } else if (step === 'step3') {
+  //   step = 'step4';
+  //   step3.classList.remove("is-active");
+  //   $(step3).find('.progress-bar__bar').css('-webkit-transform','translateX(100%)');
+  //   step4.classList.add("is-active");
+  // } else if (step === 'step4') {
+  //   step = 'complete';
+  //   step4.classList.remove("is-active");
+  // }
+  // }
+
+
+
+  // function App() {
+  const steps = [
+    { title: 'Company' },
+    { title: 'Contract' },
+    { title: 'Depot' },
+    { title: 'Vehicle' },
+  ];
+  const activeStep1 = 0;
+
+  function CustomStepper(props) {
+    return (
+      <Stepper
+        {...props}
+        activeColor="#113b4f"
+        defaultColor="#eee"
+        completeColor="#1e991c"
+        activeTitleColor="#113b4f"
+        completeTitleColor="#1e991c"
+        defaultTitleColor="#bbb"
+        circleFontColor="#fff"
+        completeBarColor="#1e991c" />
+    );
+  }
   return (
+
     <>
+    <Navlayout />
+      <Expired />
       <h1 className="header">Company</h1>
       <p className="firstcontent">
         Please fill the form below to set up a company! Add as many details as
         required and proceed.
       </p>
       <div className="company-setup-container abcd mb-0">
+
         {/* Stepper component */}
-        <Stepper activeStep={activeStep} onStepClick={handleStepChange}>
+        {/* <Stepper activeStep={activeStep} onStepClick={handleStepChange}>
           <Step label="Company" />
           <Step label="Contract" />
           <Step label="Depot" />
           <Step label="Vehicle" />
-        </Stepper>
+        </Stepper> */}
+
+        {/* <div className="stepper">
+            <Stepper
+              steps={steps}
+              activeStep={activeStep1} />
+          </div> */}
+
+
+        <div className="container stepper-connector">
+          <CustomStepper
+            steps={steps}
+            activeStep={activeStep}
+          />
+          {/* <div style={{padding: '20px'}}>
+        { getSectionComponent()  }
+        { (activeStep !== 0 && activeStep !== steps.length - 1)
+            && <button onClick={ () => setActiveStep(activeStep - 1) }>Previous</button>
+        }
+        { activeStep !== steps.length - 1
+          && <button onClick={ () => setActiveStep(activeStep + 1) }>Next</button>
+        } */}
+        </div>
+        {/* </div> */}
+        
+
+        {/* <div class="container-fluid">
+          <br /><br />
+          <ul class="list-unstyled multi-steps">
+            <li id="step-1" class="is-active">
+              <div class="progress-bar progress-bar--success">
+                <div className="progress-bar__bar" id="step1_progress"></div>
+              </div>
+            </li>
+            <li id="step-2">First Step
+              <div class="progress-bar progress-bar--success">
+                <div class="progress-bar__bar" id="step2_progress"></div>
+              </div>
+            </li>
+            <li id="step-3">Middle Stage
+              <div class="progress-bar progress-bar--success">
+                <div class="progress-bar__bar" id="step3_progress"></div>
+              </div>
+            </li>
+            <li id="step-4">Finish</li>
+          </ul>
+        </div> */}
+
+
+          <br />
         <div className="pro-under-border"></div>
 
         <div className="steps-content mt-3">
@@ -352,7 +513,7 @@ const Company = () => {
       >
         Next Step
       </button> */}
-        <div className=" company-setup-container mt-1">
+      <div className=" company-setup-container mt-1">
         <button
           type="button"
           onClick={handleSubmit}

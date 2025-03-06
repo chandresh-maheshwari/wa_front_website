@@ -3,8 +3,12 @@ import { useNavigate } from "react-router-dom";
 import "./Company.css";
 import Authapi from "../../Authapi";
 import Swal from "sweetalert2";
-import { Stepper, Step } from "react-form-stepper";
+// import { Stepper, Step } from "react-form-stepper";
 import "./Contract.css";
+import Stepper from 'react-stepper-horizontal';
+import Expired from '../CheckTokenExpier';
+import Navlayout from "../../Wa-Frontend/NavLayout";
+
 
 const Contract = () => {
   const [activeStep, setActiveStep] = useState(1);
@@ -188,7 +192,7 @@ const Contract = () => {
   // const handlePreviousClick = () => {
   //   const fetchCompanyData = async () => {
   //     try {
-  //       const response = await Authapi.getusercompanydetail(); 
+  //       const response = await Authapi.  (); 
   //       // console.log(response)
   //       if (response.status === 200 && response.company) {
   //       setFormData({
@@ -307,8 +311,42 @@ const Contract = () => {
     setActiveStep(step);
   };
 
+  const connectorStyleConfig = {
+    activeColor: '#4caf50', // Green color for completed steps
+    completedColor: '#4caf50', // Green color for completed steps
+    disabledColor: '#ccc', // Default color for incomplete steps
+  };
+
+  const steps = [
+    { title: 'Company' },
+    { title: 'Contract' },
+    { title: 'Depot' },
+    { title: 'Vehicle' },
+  ];
+  const activeStep1 = 1;
+
+  function CustomStepper(props) {
+    return (
+      <Stepper
+        {...props}
+        activeColor="#113b4f"
+        defaultColor="#eee"
+        completeColor="#1e991c"
+        activeTitleColor="#113b4f"
+        completeTitleColor="#1e991c"
+        defaultTitleColor="#bbb"
+        circleFontColor="#fff"
+        completeBarColor="#1e991c"
+        activeStepClassName="active-step"
+        
+        />
+    );
+  }
   return (
     <>
+    <Navlayout />
+      <Expired />
+
       <h2 className="header">Contract</h2>
       <p className="firstcontent">
         Please fill the form below to set up a Contract! Add as many details as
@@ -322,12 +360,32 @@ const Contract = () => {
         )}
       </div>
       <div className=" company-setup-container abcd mb-0">
-        <Stepper activeStep={activeStep} onStepClick={handleStepChange}>
+        {/* <Stepper
+          activeStep={activeStep}
+          onStepClick={handleStepChange}
+          connectorStyleConfig={connectorStyleConfig}
+        >
           <Step label="Company" />
           <Step label="Contract" />
           <Step label="Depot" />
           <Step label="Vehicle" />
-        </Stepper>
+        </Stepper> */}
+        {/* <div>
+          <Stepper
+            steps={steps}
+            activeStep={activeStep1} /> */}
+
+
+        <div className="container stepper-connector">
+          <CustomStepper
+            steps={steps}
+            activeStep={activeStep} />
+        </div><br />
+
+
+
+          {/* <Stepper steps={ [{title: 'Step One'}, {title: 'Step Two'}, {title: 'Step Three'}, {title: 'Step Four'}] } activeStep={ 1 } /> */}
+
         <div className="pro-under-border"></div>
 
         <div className="p-4 content">
@@ -396,7 +454,7 @@ const Contract = () => {
           </div>
         </div>
       </div> */}
-        <div className=" company-setup-container mt-0 ">
+      <div className=" company-setup-container mt-0 ">
         <button
           type="button"
           className="btn btn-secondary prevbtn"

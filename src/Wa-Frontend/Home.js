@@ -18,11 +18,13 @@ import ls from "local-storage";
 import { loadStripe } from '@stripe/stripe-js';
 import Login from '../components/Login/Login';
 import { Outlet } from "react-router-dom";
+import Navlayout from "./NavLayout";
+import Expired from "../components/CheckTokenExpier";
 
 const stripePromise = loadStripe('pk_test_51P4GXaAvL6Jnl0r3yHDSV2zN0JrGRt2UFxn217kqw9JFFBXe4K1n5xZHGfsKaIicVfUBAP5ch0TBIO8C8cI3ijQv00bNWJynzK');
 
 const Home = () => {
-  const cardTextStyle = { 
+  const cardTextStyle = {
     display: "flex",
     alignItems: "center",
     margin: "0",
@@ -422,7 +424,7 @@ const Home = () => {
     }
   };
 
-  const toggleLoginPopup = () => {  
+  const toggleLoginPopup = () => {
     setShowLoginPopup(!showLoginPopup);
   };
 
@@ -509,7 +511,7 @@ const Home = () => {
 
 
 
- 
+
   const renderCards = () => {
     // console.log(statu.our_products?.post_store);
     return statu.our_products?.post_store.map((card, index) => {
@@ -1149,9 +1151,12 @@ const Home = () => {
                   <div
                     className="parallax-img"
                     style={{
-                      backgroundImage: `url(${statu.page_image_section?.image})`,
+                      backgroundImage: `url(${statu.page_image_section?.image})`, // GET IMAGE FORM PAGE 
+                      // backgroundImage: `url(${statu.page_image_section?.post_store?.[0]?.['Data'].Image})`, // GET IMAGE FROM POST
                     }}
-                  ></div>
+                  >
+                    {console.log('Image URL:', statu.page_image_section?.image)}
+                  </div>
                 </div>
               </div>
             </div>
@@ -1249,7 +1254,7 @@ const Home = () => {
                   </div> */}
                 </form>
 
-                
+
 
                 <div className="row mt-3 ">
                   <div className="col-12">
@@ -1278,24 +1283,28 @@ const Home = () => {
     ));
   };
 
-  return <>{renderSections()}
-  {showLoginPopup && (
-                  <Popup isOpen={showLoginPopup} onClose={toggleLoginPopup} onLoginSuccess={handleLoginSuccess} />
-              )}
-              <Outlet />
-  
+  return <>
+    <Navlayout />
+    <Expired />
+
+    {renderSections()}
+    {showLoginPopup && (
+      <Popup isOpen={showLoginPopup} onClose={toggleLoginPopup} onLoginSuccess={handleLoginSuccess} />
+    )}
+    <Outlet />
+
   </>;
 };
 
 const Popup = ({ isOpen, onClose, onLoginSuccess }) => {
   if (!isOpen) return null;
-console.log("Popup is call")
+  console.log("Popup is call")
   return (
-      <div className="popup-overlay  " style={popupOverlayStyles}>
-          <div className="popup-content" style={popupContentStyles}>
-              <Login onLoginSuccess={onLoginSuccess} onClose={onClose} />
-          </div>
+    <div className="popup-overlay  " style={popupOverlayStyles}>
+      <div className="popup-content" style={popupContentStyles}>
+        <Login onLoginSuccess={onLoginSuccess} onClose={onClose} />
       </div>
+    </div>
   );
 };
 
@@ -1314,8 +1323,8 @@ const popupOverlayStyles = {
 };
 
 const popupContentStyles = {
-  backgroundColor: 'white',   
-  borderRadius: '5px',   
+  backgroundColor: 'white',
+  borderRadius: '5px',
   boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
 };
 

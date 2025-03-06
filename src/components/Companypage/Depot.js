@@ -3,7 +3,11 @@ import { useNavigate, useLocation } from "react-router-dom";
 import "./Company.css";
 import Authapi from "../../Authapi";
 import Swal from "sweetalert2";
-import { Stepper, Step } from "react-form-stepper";
+// import { Stepper, Step } from "react-form-stepper";
+import Stepper from 'react-stepper-horizontal';
+import Expired from '../CheckTokenExpier';
+import Navlayout from "../../Wa-Frontend/NavLayout";
+
 import "./Depot.css";
 
 const DepotForm = () => {
@@ -327,9 +331,33 @@ const DepotForm = () => {
   //   }
   // };
 
+  const steps = [
+    { title: 'Company' },
+    { title: 'Contract' },
+    { title: 'Depot' },
+    { title: 'Vehicle' },
+  ];
+  const activeStep1 = 2;
 
+
+  function CustomStepper(props) {
+    return (
+      <Stepper
+        {...props}
+        activeColor="#113b4f"
+        defaultColor="#eee"
+        completeColor="#1e991c"
+        activeTitleColor="#113b4f"
+        completeTitleColor="#1e991c"
+        defaultTitleColor="#bbb"
+        circleFontColor="#fff"
+        completeBarColor="#1e991c" />
+    );
+  }
   return (
     <>
+    <Navlayout />
+      <Expired />
       <h1 className="header">Depot</h1>
       <p className="firstcontent">
         Please fill the form below to set up a Depot! Add as many details as
@@ -343,12 +371,21 @@ const DepotForm = () => {
         )}
       </div>
       <div className=" company-setup-container abcd mb-0">
-        <Stepper activeStep={activeStep} onStepClick={handleStepChange}>
+        {/* <Stepper activeStep={activeStep} onStepClick={handleStepChange}>
           <Step label="Company" />
           <Step label="Contract" />
           <Step label="Depot" />
           <Step label="Vehicle" />
-        </Stepper>
+        </Stepper> */}
+        {/* <div>
+          <Stepper
+            steps={steps}
+            activeStep={activeStep1} /> */}
+        <div className="container stepper-connector">
+          <CustomStepper
+            steps={steps}
+            activeStep={activeStep} />
+        </div><br />
         <div className="pro-under-border"></div>
         <div className="steps-content mt-3">
           {activeStep === 2 && (
@@ -519,7 +556,7 @@ const DepotForm = () => {
           </div>
         </div>
       </div> */}
-       <div className=" company-setup-container mt-0 ">
+      <div className=" company-setup-container mt-0 ">
         <button
           type="button"
           className="btn btn-secondary prevbtn"

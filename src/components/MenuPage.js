@@ -9,6 +9,8 @@ import ls from 'local-storage';
 import Login from '../components/Login/Login';
 import { Navigate } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
+import Expired from "../components/CheckTokenExpier";
+import Navlayout from '../Wa-Frontend/NavLayout';
 const stripePromise = loadStripe('pk_test_51P4GXaAvL6Jnl0r3yHDSV2zN0JrGRt2UFxn217kqw9JFFBXe4K1n5xZHGfsKaIicVfUBAP5ch0TBIO8C8cI3ijQv00bNWJynzK');
 
 const MenuPage = () => {
@@ -725,6 +727,8 @@ const MenuPage = () => {
 
     return (
         <>
+            <Navlayout />
+            <Expired />
             {/* {console.log(statu)} */}
             {currentMenu === 'About Us' && statu.page_status === 1 && topbardata.length > 0 ? (
                 <section className="page-section" id="package_section">
@@ -872,12 +876,7 @@ const MenuPage = () => {
                     </div>
                 </section>
             ) : null
-
-
-
             }
-
-
 
             {/* {console.log(currentMenu)} */}
             {currentMenu === 'Who Use WA' && statu.page_status === 1 ? (

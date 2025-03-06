@@ -42,9 +42,10 @@
 
 
 
-
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { useEffect } from "react";
+// import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import ls from "local-storage";
 import './Wa-Frontend/Wa-Frontend.css';
 import './Wa-Frontend/Wa-MediaQuerys.css';
 import Home from "./Wa-Frontend/Home";
@@ -63,27 +64,41 @@ import Contract from "./components/companypage/Contract";
 import Depot from "./components/companypage/Depot";
 import Vehicle from "./components/companypage/Vehicle";  
 import Success from "./components/companypage/Success";
+// import { StartTokenExpiryCheck } from './components/CheckTokenExpier';
+// import Navlayout from "./Wa-Frontend/NavLayout";
 // Stripe key
 const stripePromise = loadStripe('pk_test_51P4GXaAvL6Jnl0r3yHDSV2zN0JrGRt2UFxn217kqw9JFFBXe4K1n5xZHGfsKaIicVfUBAP5ch0TBIO8C8cI3ijQv00bNWJynzK');
 
+function ProtectedRoute({ children }) {
+  const isLoggedIn = ls('userData') !== null; 
+  if (!isLoggedIn) {
+    return <Navigate to="/" />;
+  }
+  return children;
+}
+
+
 function App() {
+ 
   return (
     <div className="App">
       <BrowserRouter>
         <TopNav />
+        {/* {/ <Navlayout/> /} */}
         <Routes>
-          <Route element={<Navlayout />}>
+            {/* {/ <Route path="/" element={ls('userData') ? <Navigate to="/Company" /> :<Home/> } /> /} */}
+           {/* {/ <Route element={<Navlayout />}/> /} */}
             <Route path="/" element={<Home />} />
             <Route path="/menu/:menuName" element={<MenuPage />} />
-            <Route path="/company" element={<Company />} />
-            <Route path="/contract" element={<Contract />} />
-            <Route path="/depot" element={<Depot />} />
-            <Route path="/vehicle" element={<Vehicle />} />
-            {/* <Route path="/supplier_payments" element={<SupplierPayments />} /> */}
-            <Route path="/success" element={<Success />} />
-          </Route>
+            <Route path="/company" element={<ProtectedRoute><Company /></ProtectedRoute>} />
+            {/* {/ <ProtectedRoute><Dashboard /></ProtectedRoute> /} */}
+            <Route path="/contract" element={<ProtectedRoute><Contract /></ProtectedRoute>} />
+            <Route path="/depot" element={<ProtectedRoute><Depot /></ProtectedRoute>} />
+            <Route path="/vehicle" element={<ProtectedRoute><Vehicle /></ProtectedRoute>} />
+            <Route path="/success" element={<ProtectedRoute><Success /></ProtectedRoute>} />
+          {/* {/ </Route> /} */}
           
-          {/* {/ Payment Routes /} */}
+          {/* {/ {/ Payment Routes /} /} */}
           {/* <Route 
             path="/checkout" 
             element={
@@ -101,7 +116,7 @@ function App() {
             } 
           /> */}
 
-          {/* {/ 404 Route /} */}
+          {/* {/ {/ 404 Route /} /} */}
           <Route path="*" element={<NoPage />} />
         </Routes>
         <Footer />

@@ -487,3 +487,42 @@ background-color:#0d3b66;
 
 
 
+/* NEw CSS start================================================================================ */
+.stepper .step.active {
+  background-color: #ff5733 !important; /* Change this to your desired color */
+  border-color: #ff5733 !important; /* Change this to your desired color */
+}
+
+/* Optionally, change the connector color */
+.stepper .step.active + .step::before {
+  background-color: #ff5733 !important; /* Change this to your desired color */
+}
+
+
+/* ============================================== */
+
+.pulse-animation {
+  animation: pulse 2s infinite;
+}
+
+/* .test25 div div div div div{
+  
+  position: absolute;
+  top: 38px !important;
+  height: 1px;
+  border-top: 5px solid rgb(30, 153, 28) !important; 
+  right: 0px;
+  left: 50%;
+  margin-left: 20px;
+  border-radius: 12px !important;
+} */
+/* .container.test25 > div > div > div:nth-child(3) {
+  
+  position: absolute;
+  top: 38px !important;
+  height: 1px;
+  border-top: 5px solid rgb(30, 153, 28) !important;
+  right: 0px;
+  left: 50%;
+  margin-left: 20px;
+} */
