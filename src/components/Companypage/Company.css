@@ -466,6 +466,7 @@ background-color:#0d3b66;
   line-height: 30px;  
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
+  opacity: 0;
 }
 
 
