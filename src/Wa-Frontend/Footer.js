@@ -38,7 +38,7 @@ const Footer = () => {
                                 <div className="col-md-12" id="waste-white">                                
                                     {/* <img src={`http://wa_front.localhost.com/uploads/dynamic_post_store/${footerdata.Footerlogo}`} alt="" id="waste-white" /> */}
                                     <Link to={footerdata.Footerlogolink}>
-                                    <img src={footerdata.Footerlogo} alt="" id="waste-white" /></Link>
+                                    <img src={footerdata.Footerlogo} alt="" id="waste-white" className="footer-logo" /></Link>
                                 </div>
                             </div>
                             <div className="row">

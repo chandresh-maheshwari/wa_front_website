@@ -853,6 +853,7 @@ footer #footer {
 #waste-white {
     display: flex;
     justify-content: center;
+
 }
 
 #waste-white>img {
@@ -1345,7 +1346,7 @@ body {
   }
   
   body::-webkit-scrollbar { 
-    width: 20px; 
+    width: 30px; 
   }
   /*  */
   body::-webkit-scrollbar-track { 
@@ -1354,17 +1355,22 @@ body {
     background: none;
   }
   
-  body::-webkit-scrollbar-thumb {
-    /* background-image: url("https://img.icons8.com/?size=100&id=85612&format=png&color=000000"); */
-    background-image: url('../Images/scroll.png');
+/* src/Wa-Frontend/Wa-Frontend.css */
+
+body.scrolled-top::-webkit-scrollbar-thumb {
+    background-image: url('../Images/scroll-top.png'); /* Image for top */
     background-size: cover;
     background-position: top;
-    border-radius: 10px; /* Optional, for rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Adding shadow for 3D effect */
-    transform: perspective(500px) rotateX(10deg) rotateY(5deg); /* 3D rotation */
-  }
-  
-  
+    height: 99PX;
+}
+
+body.scrolled-down::-webkit-scrollbar-thumb {
+    background-image: url('../Images/scroll-down.png'); /* Image for scrolled down */
+    background-size: cover;
+    background-position: top;
+    height: 99px;
+}
+
 /* Code for main scroller css end */
 
 
@@ -1406,3 +1412,9 @@ body {
 /* css for steps for payment integration END */
 
 
+
+
+.footer-logo{
+    max-width: 300px;
+    padding-bottom: 10%;
+}

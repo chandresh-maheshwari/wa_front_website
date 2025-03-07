@@ -42,32 +42,26 @@
 
 
 
-import React, { useEffect } from "react";
-// import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import ls from "local-storage";
 import './Wa-Frontend/Wa-Frontend.css';
 import './Wa-Frontend/Wa-MediaQuerys.css';
 import Home from "./Wa-Frontend/Home";
-import Navlayout from "./Wa-Frontend/NavLayout";
+// import Navlayout from "./Wa-Frontend/NavLayout";
 import TopNav from "./Wa-Frontend/TopNav";
 import Footer from "./Wa-Frontend/Footer";
-// import CheckoutForm from './components/CheckoutForm';
 import MenuPage from './components/MenuPage';
 import NoPage from './NoPage';
-import { loadStripe } from '@stripe/stripe-js';
-import { Elements } from '@stripe/react-stripe-js';
-// import PaymentComponent from "./components/PaymentComponent";
-// import SupplierPayments from "./components/SupplierPayments";
+// import { loadStripe } from '@stripe/stripe-js';
+// import { Elements } from '@stripe/react-stripe-js';
 import Company from "./components/companypage/Company";
 import Contract from "./components/companypage/Contract";
 import Depot from "./components/companypage/Depot";
 import Vehicle from "./components/companypage/Vehicle";  
 import Success from "./components/companypage/Success";
-// import { StartTokenExpiryCheck } from './components/CheckTokenExpier';
-// import Navlayout from "./Wa-Frontend/NavLayout";
-// Stripe key
-const stripePromise = loadStripe('pk_test_51P4GXaAvL6Jnl0r3yHDSV2zN0JrGRt2UFxn217kqw9JFFBXe4K1n5xZHGfsKaIicVfUBAP5ch0TBIO8C8cI3ijQv00bNWJynzK');
+
+// const stripePromise = loadStripe('pk_test_51P4GXaAvL6Jnl0r3yHDSV2zN0JrGRt2UFxn217kqw9JFFBXe4K1n5xZHGfsKaIicVfUBAP5ch0TBIO8C8cI3ijQv00bNWJynzK');
 
 function ProtectedRoute({ children }) {
   const isLoggedIn = ls('userData') !== null; 
@@ -77,46 +71,43 @@ function ProtectedRoute({ children }) {
   return children;
 }
 
-
 function App() {
- 
+  const [lastScrollTop, setLastScrollTop] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollTop = window.scrollY;
+      if (currentScrollTop > lastScrollTop) {
+        // Scrolling down
+        document.body.classList.add('scrolled-down');
+        document.body.classList.remove('scrolled-top');
+      } else {
+        // Scrolling up
+        document.body.classList.add('scrolled-top');
+        document.body.classList.remove('scrolled-down');
+      }
+      setLastScrollTop(currentScrollTop);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [lastScrollTop]);
+
   return (
     <div className="App">
       <BrowserRouter>
         <TopNav />
-        {/* {/ <Navlayout/> /} */}
         <Routes>
-            {/* {/ <Route path="/" element={ls('userData') ? <Navigate to="/Company" /> :<Home/> } /> /} */}
-           {/* {/ <Route element={<Navlayout />}/> /} */}
-            <Route path="/" element={<Home />} />
-            <Route path="/menu/:menuName" element={<MenuPage />} />
-            <Route path="/company" element={<ProtectedRoute><Company /></ProtectedRoute>} />
-            {/* {/ <ProtectedRoute><Dashboard /></ProtectedRoute> /} */}
-            <Route path="/contract" element={<ProtectedRoute><Contract /></ProtectedRoute>} />
-            <Route path="/depot" element={<ProtectedRoute><Depot /></ProtectedRoute>} />
-            <Route path="/vehicle" element={<ProtectedRoute><Vehicle /></ProtectedRoute>} />
-            <Route path="/success" element={<ProtectedRoute><Success /></ProtectedRoute>} />
-          {/* {/ </Route> /} */}
-          
-          {/* {/ {/ Payment Routes /} /} */}
-          {/* <Route 
-            path="/checkout" 
-            element={
-              <Elements stripe={stripePromise}>
-                <CheckoutForm />
-              </Elements>
-            } 
-          /> */}
-          {/* <Route 
-            path="/admin/stripe/checkout/success" 
-            element={
-              <Elements stripe={stripePromise}>
-                <PaymentComponent />
-              </Elements>
-            } 
-          /> */}
-
-          {/* {/ {/ 404 Route /} /} */}
+          <Route path="/" element={<Home />} />
+          <Route path="/menu/:menuName" element={<MenuPage />} />
+          <Route path="/company" element={<ProtectedRoute><Company /></ProtectedRoute>} />
+          <Route path="/contract" element={<ProtectedRoute><Contract /></ProtectedRoute>} />
+          <Route path="/depot" element={<ProtectedRoute><Depot /></ProtectedRoute>} />
+          <Route path="/vehicle" element={<ProtectedRoute><Vehicle /></ProtectedRoute>} />
+          <Route path="/success" element={<ProtectedRoute><Success /></ProtectedRoute>} />
           <Route path="*" element={<NoPage />} />
         </Routes>
         <Footer />

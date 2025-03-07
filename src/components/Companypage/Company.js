@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 import ls from "local-storage";
 import "./Company.css";
-import "./CompanyExtra.css";
+// import "./CompanyExtra.css";
 import Authapi from "../../Authapi";
 // import { StartTokenExpiryCheck } from './components/CheckTokenExpier';
 // /import {Expired} from '../CheckTokenExpier';

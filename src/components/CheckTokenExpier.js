@@ -192,7 +192,7 @@ const Expired = () => {
       const currentTime = Date.now() / 1000; // Current time in seconds
 
       // Assuming the token's `iat` (issued at) is in seconds
-      const tokenExpiryTime = decodedToken.iat + 20; // 120 seconds = 2 minutes
+      const tokenExpiryTime = decodedToken.iat + 1800; // 120 seconds = 2 minutes
 
       if (currentTime >= tokenExpiryTime) {
         setIsTokenExpired(true);
