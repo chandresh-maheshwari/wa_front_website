@@ -1,4 +1,4 @@
-import { useLocation, useParams, Link,Outlet } from 'react-router-dom';
+import { useLocation, useParams, Link, Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Authapi from '../Authapi';
 import righticon from './img/righticon.png';
@@ -85,10 +85,10 @@ const MenuPage = () => {
             console.error("Error in getUserEmail:", error);
         }
     };
-    const toggleLoginPopup = () => {  
+    const toggleLoginPopup = () => {
         setShowLoginPopup(!showLoginPopup);
-      };
-    
+    };
+
     const handlePurchaseSubmit = async (productName, amount, stripid) => {
         const token = localStorage.getItem("WAauthToken");
         if (!token) {
@@ -103,7 +103,7 @@ const MenuPage = () => {
                 if (result.isConfirmed) {
                     // Show the login popup when "OK" is clicked
                     toggleLoginPopup();
-                  }
+                }
             });
             return;
         }
@@ -161,8 +161,8 @@ const MenuPage = () => {
         localStorage.setItem('userData', JSON.stringify(data));
         setShowLoginPopup(false);
         // console.log('Login successful:', data);
-      };
-    
+    };
+
 
     useEffect(() => {
         const menuTitle = location.state?.menuName ||
@@ -505,124 +505,124 @@ const MenuPage = () => {
     const renderCards = () => {
         // console.log(statu.our_products?.post_store);
         return statu.post_store.map((card, index) => {
-          // Destructure and extract relevant fields from the Data object
-          const feesSection = card.data.Fees_section || {};
-          const infoSection1 = card.data.Package_info || {};
-          const serviceSection = card.data.Package_services || {};
-          const feessection = card.data.Fees_section || {};
-          const purchaseButtonSection = card.data.Purchase_button || {};
-    
-          // Check if there's any content to display (excluding the Field_slug values)
-          const hasContent =
-            infoSection1.Information1 ||
-            infoSection1.Information2 ||
-            infoSection1.Information3 ||
-            infoSection1.Information4 ||
-            infoSection1.Information5 ||
-            serviceSection.Service1 ||
-            serviceSection.Service2 ||
-            feesSection.Monthlyfee ||
-            feessection.Montlyfeecardtext1 ||
-            feessection.Montlyfeecardtext1 ||
-            purchaseButtonSection.Amount ||
-            purchaseButtonSection.Buttonbackgroundcolor ||
-            purchaseButtonSection.Buttoncolor ||
-            purchaseButtonSection.Buttontext;
-    
-          if (!hasContent) return null;
-    
-          return (
-            <div className={`col-lg-4`} id={`card${index + 1}`} key={card.Id}>
-              <div className={`card-liner-card-${index + 1}`} id="card-liner-card"></div>
-              <div className={`card${index + 1} card`}>
-                <span className="medaltype">{card['data'].Packagename}</span>
-                <div className={`card${index + 1}-text`}>
-                  {/* Render Information Section */}
-                  {[infoSection1.Information1, infoSection1.Information2, infoSection1.Information3, infoSection1.Information4, infoSection1.Information5].map((text, i) => (
-                    text && (
-                      <p style={cardTextStyle} key={i} className='cardtext'>
-                        <img src={righticon} className={`card${index + 1}righticon`} alt={`Icon ${i + 1}`} style={cardTextImageStyle} />
-                        {text}
-                      </p>
-                    )
-                  ))}
-                  {Object.values(infoSection1).some((text) => text) && (
-                    <div className="card-liner-inside"></div>
-                  )}
+            // Destructure and extract relevant fields from the Data object
+            const feesSection = card.data.Fees_section || {};
+            const infoSection1 = card.data.Package_info || {};
+            const serviceSection = card.data.Package_services || {};
+            const feessection = card.data.Fees_section || {};
+            const purchaseButtonSection = card.data.Purchase_button || {};
+
+            // Check if there's any content to display (excluding the Field_slug values)
+            const hasContent =
+                infoSection1.Information1 ||
+                infoSection1.Information2 ||
+                infoSection1.Information3 ||
+                infoSection1.Information4 ||
+                infoSection1.Information5 ||
+                serviceSection.Service1 ||
+                serviceSection.Service2 ||
+                feesSection.Monthlyfee ||
+                feessection.Montlyfeecardtext1 ||
+                feessection.Montlyfeecardtext1 ||
+                purchaseButtonSection.Amount ||
+                purchaseButtonSection.Buttonbackgroundcolor ||
+                purchaseButtonSection.Buttoncolor ||
+                purchaseButtonSection.Buttontext;
+
+            if (!hasContent) return null;
+
+            return (
+                <div className={`col-lg-4`} id={`card${index + 1}`} key={card.Id}>
+                    <div className={`card-liner-card-${index + 1}`} id="card-liner-card"></div>
+                    <div className={`card${index + 1} card`}>
+                        <span className="medaltype">{card['data'].Packagename}</span>
+                        <div className={`card${index + 1}-text`}>
+                            {/* Render Information Section */}
+                            {[infoSection1.Information1, infoSection1.Information2, infoSection1.Information3, infoSection1.Information4, infoSection1.Information5].map((text, i) => (
+                                text && (
+                                    <p style={cardTextStyle} key={i} className='cardtext'>
+                                        <img src={righticon} className={`card${index + 1}righticon`} alt={`Icon ${i + 1}`} style={cardTextImageStyle} />
+                                        {text}
+                                    </p>
+                                )
+                            ))}
+                            {Object.values(infoSection1).some((text) => text) && (
+                                <div className="card-liner-inside"></div>
+                            )}
+                        </div>
+
+                        <div className={`card${index + 1}-sec-2-text`}>
+                            {/* Render Service Section */}
+                            {serviceSection.Service1 && (
+                                <p style={cardTextStyle}>
+                                    <img
+                                        src={plushicon}
+                                        className={`card${index + 1}plushicon`}
+                                        alt="Add On Icon"
+                                        style={cardTextImageStyle}
+                                    />
+                                    {serviceSection.Service1}
+                                </p>
+                            )}
+                            {serviceSection.Service1 && <div className="card-liner-inside-2"></div>}
+
+                            <div className={`card-${index + 1}-sec-3`}>
+                                {/* Render Monthly Fee */}
+                                {feesSection.Monthlyfee && (
+                                    <p className={`card${index + 1}-sec-3-text1`}>
+                                        {feesSection.Monthlyfee}
+                                    </p>
+                                )}
+                                {[feessection.Montlyfeecardtext1, feessection.Montlyfeecardtext2].map((text, i) => (
+                                    text && (
+                                        <p style={cardTextStyle} key={i} className='cardtext'>
+                                            <img
+                                                src={plushicon}
+                                                className={`card${index + 1}plushicon`}
+                                                alt="Add On Icon"
+                                                style={cardTextImageStyle}
+                                            />
+                                            {text}
+                                        </p>
+                                    )
+                                ))}
+
+                                {/* Render Service 2 */}
+                                {serviceSection.Service2 && (
+                                    <p className={`card${index + 1}-sec-3-text`}>
+                                        <img
+                                            src={plushicon}
+                                            className={`card${index + 1}plushicon`}
+                                            alt="Add On Icon"
+                                            style={cardTextImageStyle}
+                                        />
+                                        {serviceSection.Service2}
+                                    </p>
+                                )}
+                            </div>
+
+                        </div>
+                        {purchaseButtonSection.Buttontext && (
+                            <div className="text-center purchase-btn">
+                                <button
+                                    role="link"
+                                    className="btn w-50"
+                                    style={{
+                                        backgroundColor: purchaseButtonSection.Buttonbackgroundcolor || '#40bedd',
+                                        color: purchaseButtonSection.Buttoncolor || '#ffffff',
+                                    }}
+                                    onClick={() => handlePurchaseSubmit(card['data'].Packagename, purchaseButtonSection.Amount, purchaseButtonSection.Stripid)}
+                                >
+                                    {`${purchaseButtonSection.Buttontext} - $${purchaseButtonSection.Amount}`}
+                                </button>
+
+                            </div>
+                        )}
+                    </div>
                 </div>
-    
-                <div className={`card${index + 1}-sec-2-text`}>
-                  {/* Render Service Section */}
-                  {serviceSection.Service1 && (
-                    <p style={cardTextStyle}>
-                      <img
-                        src={plushicon}
-                        className={`card${index + 1}plushicon`}
-                        alt="Add On Icon"
-                        style={cardTextImageStyle}
-                      />
-                      {serviceSection.Service1}
-                    </p>
-                  )}
-                  {serviceSection.Service1 && <div className="card-liner-inside-2"></div>}
-    
-                  <div className={`card-${index + 1}-sec-3`}>
-                    {/* Render Monthly Fee */}
-                    {feesSection.Monthlyfee && (
-                      <p className={`card${index + 1}-sec-3-text1`}>
-                        {feesSection.Monthlyfee}
-                      </p>
-                    )}
-                    {[feessection.Montlyfeecardtext1, feessection.Montlyfeecardtext2].map((text, i) => (
-                      text && (
-                        <p style={cardTextStyle} key={i} className='cardtext'>
-                          <img
-                            src={plushicon}
-                            className={`card${index + 1}plushicon`}
-                            alt="Add On Icon"
-                            style={cardTextImageStyle}
-                          />
-                          {text}
-                        </p>
-                      )
-                    ))}
-    
-                    {/* Render Service 2 */}
-                    {serviceSection.Service2 && (
-                      <p className={`card${index + 1}-sec-3-text`}>
-                        <img
-                          src={plushicon}
-                          className={`card${index + 1}plushicon`}
-                          alt="Add On Icon"
-                          style={cardTextImageStyle}
-                        />
-                        {serviceSection.Service2}
-                      </p>
-                    )}
-                  </div>
-    
-                </div>
-                {purchaseButtonSection.Buttontext && (
-                  <div className="text-center purchase-btn">
-                    <button
-                      role="link"
-                      className="btn w-50"
-                      style={{
-                        backgroundColor: purchaseButtonSection.Buttonbackgroundcolor || '#40bedd',
-                        color: purchaseButtonSection.Buttoncolor || '#ffffff',
-                      }}    
-                      onClick={() => handlePurchaseSubmit(card['data'].Packagename, purchaseButtonSection.Amount, purchaseButtonSection.Stripid)}
-                    >
-                      {`${purchaseButtonSection.Buttontext} - $${purchaseButtonSection.Amount}`}
-                    </button>
-    
-                  </div>
-                )}
-              </div>
-            </div>
-          );
+            );
         });
-      };
+    };
     const handleSubmit = async (event) => {
         event.preventDefault();
         const newErrors = {};
@@ -879,7 +879,7 @@ const MenuPage = () => {
             }
 
             {/* {console.log(currentMenu)} */}
-            {currentMenu === 'Who Use WA' && statu.page_status === 1 ? (
+            {/* {currentMenu === 'Who Use WA' && statu.page_status === 1 ? (
                 <section className="clients-section" id="clients_section">
                     <div className="container sliderconatainer">
                     <h2 className="font-weight-light slider-heading text-center">
@@ -887,7 +887,6 @@ const MenuPage = () => {
                         <div className="clients-grid">
                             {statu.post_store.map((item, index) => (
                                 <div key={item.Id} className="client-logo">
-                                    {/* {console.log(item.data)} */}
                                     {item.data && item.data.Link ? (
                                         <Link to={item.data.Link}>
                                             <img
@@ -908,7 +907,40 @@ const MenuPage = () => {
                         </div>
                     </div>
                 </section>
-            ) : null} 
+            ) : null}  */}
+
+
+            {currentMenu === 'Who Use WA' && statu.page_status === 1 ? (
+                <section className="clients-section" id="clients_section">
+                    <div className="container slidercontainer">
+                        <h2 className="font-weight-light slider-heading text-center">
+                            {statu.page_description}
+                        </h2>
+                        <div className="clients-grid">
+                            {statu.post_store.map((item, index) => (
+                                <div key={item.Id} className="client-logo">
+                                    {item.data && item.data.Link ? (
+                                        <Link to={item.data.Link}>
+                                            <img
+                                                src={item.data.Image}
+                                                alt={`Client ${index + 1}`}
+                                                className="client-image sliderimages"
+                                            />
+                                        </Link>
+                                    ) : item.data ? (
+                                        <img
+                                            src={item.data.Image}
+                                            alt={`Client ${index + 1}`}
+                                            className="client-image sliderimages"
+                                        />
+                                    ) : null}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            ) : null}
+
 
             {/* {currentMenu === 'Page Section' && statu.page_status === 1 && topbardata.length > 0 ? (
 
@@ -966,10 +998,10 @@ const MenuPage = () => {
                 </section>
             ) : null
             } */}
- {showLoginPopup && (
-                  <Popup isOpen={showLoginPopup} onClose={toggleLoginPopup} onLoginSuccess={handleLoginSuccess} />
-              )}
-              <Outlet />
+            {showLoginPopup && (
+                <Popup isOpen={showLoginPopup} onClose={toggleLoginPopup} onLoginSuccess={handleLoginSuccess} />
+            )}
+            <Outlet />
 
         </>
     );
@@ -978,7 +1010,7 @@ const MenuPage = () => {
 
 const Popup = ({ isOpen, onClose, onLoginSuccess }) => {
     if (!isOpen) return null;
-  console.log("Popup is call")
+    console.log("Popup is call")
     return (
         <div className="popup-overlay" style={popupOverlayStyles}>
             <div className="popup-content" style={popupContentStyles}>
@@ -986,9 +1018,9 @@ const Popup = ({ isOpen, onClose, onLoginSuccess }) => {
             </div>
         </div>
     );
-  };
-  
-  const popupOverlayStyles = {
+};
+
+const popupOverlayStyles = {
     position: 'fixed',
     top: 0,
     left: 0,
@@ -1000,12 +1032,12 @@ const Popup = ({ isOpen, onClose, onLoginSuccess }) => {
     alignItems: 'center',
     zIndex: 1000,
     overflowY: 'auto',
-  };
-  
-  const popupContentStyles = {
-    backgroundColor: 'white',   
-    borderRadius: '5px',   
+};
+
+const popupContentStyles = {
+    backgroundColor: 'white',
+    borderRadius: '5px',
     boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-  };
-  
+};
+
 export default MenuPage;

@@ -1418,3 +1418,29 @@ body.scrolled-down::-webkit-scrollbar-thumb {
     max-width: 300px;
     padding-bottom: 10%;
 }
+
+
+.clients-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns by default */
+    gap: 50px; /* space between images */
+}
+
+.client-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.client-image {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Ensure that extra items like 2 or fewer in the second row align properly */
+.clients-grid > .client-logo:nth-child(4),
+.clients-grid > .client-logo:nth-child(5) {
+    /* Only target the 4th and 5th items (for example) */
+    grid-column: span 1; /* Ensure they take one space in the grid */
+}
