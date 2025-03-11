@@ -15,13 +15,15 @@ import plushicon from "./Ourproductimages/plush.png";
 import righticon from "./Ourproductimages/righticon.png";
 import Swal from "sweetalert2";
 import ls from "local-storage";
-import { loadStripe } from '@stripe/stripe-js';
-import Login from '../components/Login/Login';
+import { loadStripe } from "@stripe/stripe-js";
+import Login from "../components/Login/Login";
 import { Outlet } from "react-router-dom";
 import Navlayout from "./NavLayout";
 import Expired from "../components/CheckTokenExpier";
 
-const stripePromise = loadStripe('pk_test_51P4GXaAvL6Jnl0r3yHDSV2zN0JrGRt2UFxn217kqw9JFFBXe4K1n5xZHGfsKaIicVfUBAP5ch0TBIO8C8cI3ijQv00bNWJynzK');
+const stripePromise = loadStripe(
+  "pk_test_51P4GXaAvL6Jnl0r3yHDSV2zN0JrGRt2UFxn217kqw9JFFBXe4K1n5xZHGfsKaIicVfUBAP5ch0TBIO8C8cI3ijQv00bNWJynzK"
+);
 
 const Home = () => {
   const cardTextStyle = {
@@ -47,6 +49,7 @@ const Home = () => {
   const [userEmail, setUserEmail] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (sliderRef) {
@@ -73,8 +76,10 @@ const Home = () => {
 
         // console.log(response.results.transforming_waste_industry.post_store[0]['Data'].Pagesectiontitle1)
         setStatus(response.results);
-        setHomesection(response.results.home_section.post_store[0]['Data']);
-        setTransforming(response.results.transforming_waste_industry.post_store);
+        setHomesection(response.results.home_section.post_store[0]["Data"]);
+        setTransforming(
+          response.results.transforming_waste_industry.post_store
+        );
         // console.log(Transforming);
         // const dynamicTitles = response.results.about_us.post_store.flatMap(
         //   (post) =>
@@ -96,23 +101,24 @@ const Home = () => {
         // Extract Titles
         const dynamicTitles = response.results.about_us.post_store.flatMap(
           (post) =>
-            Object.keys(post.Data)  // Access 'Data' property directly
-              .filter((key) => key.startsWith("Title"))  // Filter by keys that start with 'Title'
-              .map((key) => post.Data[key])  // Get the corresponding value for each 'Title'
+            Object.keys(post.Data) // Access 'Data' property directly
+              .filter((key) => key.startsWith("Title")) // Filter by keys that start with 'Title'
+              .map((key) => post.Data[key]) // Get the corresponding value for each 'Title'
         );
 
         // console.log(dynamicTitles);
         setTitles(dynamicTitles);
 
         // Extract Descriptions
-        const dynamicDescriptions = response.results.about_us.post_store.flatMap((post) =>
-          Object.keys(post.Data)  // Access 'Data' property directly
-            .filter((key) => key.startsWith("Description"))  // Filter by keys that start with 'Description'
-            .map((key) => post.Data[key])  // Get the corresponding value for each 'Description'
-        );
+        const dynamicDescriptions =
+          response.results.about_us.post_store.flatMap(
+            (post) =>
+              Object.keys(post.Data) // Access 'Data' property directly
+                .filter((key) => key.startsWith("Description")) // Filter by keys that start with 'Description'
+                .map((key) => post.Data[key]) // Get the corresponding value for each 'Description'
+          );
 
         setDescription(dynamicDescriptions);
-
       } else {
         console.error("Invalid response structure:", response);
       }
@@ -175,25 +181,35 @@ const Home = () => {
   };
 
   const handleInputChange = (event, index) => {
-    const { value, name } = event.target;
+    let { value, name, type } = event.target;
     const newErrors = { ...errors };
-    // console.log(event.target.type === "tel");
-    if (event.target.type === "tel" && name.includes("field")) {
+
+    if (type === "tel" && name.includes("field")) {
+      // Remove non-numeric characters
       let cleanedValue = value.replace(/\D/g, "");
+
+      // Limit to 10 digits
       if (cleanedValue.length > 10) {
         cleanedValue = cleanedValue.slice(0, 10);
       }
 
-      event.target.value = cleanedValue;
-      if (cleanedValue.length === 10) {
-        newErrors[`label${index}`] = "";
+      event.target.value = cleanedValue; // Update the input field
+
+      // Validate phone number length
+      if (cleanedValue.length === 0) {
+        newErrors[`label${index}`] = "This field is required";
+      } else if (cleanedValue.length !== 10) {
+        newErrors[`label${index}`] = "Phone number must be 10 digits";
       } else {
-        newErrors[`label${index}`] = "";
+        newErrors[`label${index}`] = ""; // No error
       }
+    } else if (type === "email") {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      newErrors[`label${index}`] = emailPattern.test(value)
+        ? ""
+        : "Please enter a valid email address";
     } else {
-      if (value) {
-        newErrors[`label${index}`] = "";
-      }
+      newErrors[`label${index}`] = value.trim() ? "" : "This field is required";
     }
 
     setErrors(newErrors);
@@ -205,82 +221,76 @@ const Home = () => {
     const formData = {};
 
     statu.contact_us?.post_store.forEach((item, index) => {
-      const value = document.querySelector(`[name="field${index}"]`).value;
+      const value = document
+        .querySelector(`[name="field${index}"]`)
+        .value.trim();
       formData[`field${index}`] = value;
-      if (item.Type === "tel") {
-        const cleanedValue = value.replace(/\D/g, "");
-        if (!value) {
-          // newErrors[`label${index}`] = "Phone number must be 10 digits";
-          newErrors[`label${index}`] = "This field is required";
-        } else if (cleanedValue.length !== 10) {
-          // newErrors[`label${index}`] = "";
-          newErrors[`label${index}`] = "Phone number must be 10 digits";
-        } else {
-          newErrors[`label${index}`] = "";
-        }
-      } else if (item.Type === "email") {
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!value) {
-          newErrors[`label${index}`] = "This field is required";
-        } else if (!emailPattern.test(value)) {
-          newErrors[`label${index}`] = "Please enter a valid email address";
-        } else {
-          newErrors[`label${index}`] = "";
-        }
-      } else if (!value) {
+
+      if (!value) {
         newErrors[`label${index}`] = "This field is required";
-      } else {
-        newErrors[`label${index}`] = "";
+      } else if (item.Data.Type === "tel") {
+        // Fix: Use item.Data.Type
+        const cleanedValue = value.replace(/\D/g, "");
+        if (cleanedValue.length !== 10) {
+          newErrors[`label${index}`] = "Phone number must be 10 digits";
+        }
+      } else if (item.Data.Type === "email") {
+        // Fix: Use item.Data.Type
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(value)) {
+          newErrors[`label${index}`] = "Please enter a valid email address";
+        }
       }
     });
 
+    // If errors exist, update state
     if (Object.values(newErrors).some((error) => error)) {
       setErrors(newErrors);
-    } else {
-      Swal.fire({
-        title: "Submitting...",
-        html: "Please wait while we process your request.",
-        allowOutsideClick: false,
-        onBeforeOpen: () => {
-          Swal.showLoading();
-        },
-      });
-      try {
-        const response = await Authapi.contactdatapost(formData);
-        if (response && response.status === true) {
-          Swal.fire({
-            icon: "success",
-            title: "Success!",
-            text: "Form submitted successfully!",
-            background: "#f8f9fa",
-            showConfirmButton: true,
-            confirmButtonText: "OK",
-          }).then(() => {
-            const form = document.getElementById("contactForm");
-            if (form) {
-              form.reset();
-            }
-          });
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Failed to submit form. Please try again!",
-            background: "#f8f9fa",
-            showConfirmButton: true,
-            confirmButtonText: "OK",
-          });
-        }
-      } catch (error) {
+      return;
+    }
+
+    // If no errors, submit the form
+    Swal.fire({
+      title: "Submitting...",
+      html: "Please wait while we process your request.",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    try {
+      const response = await Authapi.contactdatapost(formData);
+      if (response && response.status === true) {
+        Swal.fire({
+          icon: "success",
+          title: "Success!",
+          text: "Form submitted successfully!",
+          background: "#f8f9fa",
+          showConfirmButton: true,
+          confirmButtonText: "OK",
+        }).then(() => {
+          document.getElementById("contactForm").reset();
+        });
+      } else {
         Swal.fire({
           icon: "error",
-          title: "Error",
-          text: "An error occurred while submitting the form.",
+          title: "Oops...",
+          text: "Failed to submit form. Please try again!",
           background: "#f8f9fa",
           showConfirmButton: true,
           confirmButtonText: "OK",
         });
       }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "An error occurred while submitting the form.",
+        background: "#f8f9fa",
+        showConfirmButton: true,
+        confirmButtonText: "OK",
+      });
     }
   };
 
@@ -383,7 +393,7 @@ const Home = () => {
   function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
+    if (parts.length === 2) return parts.pop().split(";").shift();
   }
 
   const getUserEmail = async () => {
@@ -397,17 +407,16 @@ const Home = () => {
 
       const response = await Authapi.getUser({
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
         },
       });
 
       console.log("API Response:", response);
 
-      const email = response?.data?.user?.email ||
-        response?.user?.email ||
-        response?.email;
+      const email =
+        response?.data?.user?.email || response?.user?.email || response?.email;
 
       console.log("Extracted Email:", email);
 
@@ -418,7 +427,6 @@ const Home = () => {
         console.log("Email not found in response structure");
         console.log("Response structure:", JSON.stringify(response, null, 2));
       }
-
     } catch (error) {
       console.error("Error in getUserEmail:", error);
     }
@@ -428,8 +436,6 @@ const Home = () => {
     setShowLoginPopup(!showLoginPopup);
   };
 
-
-
   const handlePurchaseSubmit = async (productName, amount, price_id) => {
     // console.log(productName);
     // console.log(amount);
@@ -437,12 +443,12 @@ const Home = () => {
     const token = localStorage.getItem("WAauthToken");
     if (!token) {
       Swal.fire({
-        icon: 'warning',
-        title: 'Please Log In',
-        text: 'You need to be logged in to make a purchase.',
+        icon: "warning",
+        title: "Please Log In",
+        text: "You need to be logged in to make a purchase.",
         showConfirmButton: true,
         showCancelButton: true,
-        cancelButtonText: 'Cancel'
+        cancelButtonText: "Cancel",
       }).then((result) => {
         if (result.isConfirmed) {
           // Show the login popup when "OK" is clicked
@@ -451,7 +457,7 @@ const Home = () => {
       });
       return;
     }
-
+    setLoading(true);
     try {
       // Get user email first
       let email = userEmail;
@@ -459,42 +465,53 @@ const Home = () => {
         email = await getUserEmail();
         if (!email) {
           Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Could not retrieve user email. Please try again.',
+            icon: "error",
+            title: "Error",
+            text: "Could not retrieve user email. Please try again.",
           });
           return;
         }
       }
       Swal.fire({
-        title: 'Processing...',
-        text: 'Please wait while we set up your payment.',
+        title: "Processing...",
+        text: "Please wait while we set up your payment.",
         allowOutsideClick: false,
         showConfirmButton: false,
         didOpen: () => {
           Swal.showLoading();
-        }
+        },
       });
 
       // Replace the fetch call with the Authapi function
-      const response = await Authapi.createCheckoutSession(productName, amount, email, price_id);
+      const response = await Authapi.createCheckoutSession(
+        productName,
+        amount,
+        email,
+        price_id
+      );
 
       if (!response.status) {
-        throw new Error(response.message || 'Failed to create checkout session');
+        throw new Error(
+          response.message || "Failed to create checkout session"
+        );
       }
 
       window.location.href = response.url;
-
     } catch (error) {
       console.error("Purchase Error:", error);
       Swal.fire({
-        icon: 'error',
-        title: 'Payment Error',
-        text: error.message || 'There was an error processing your payment. Please try again.',
-        background: '#f8f9fa',
+        icon: "error",
+        title: "Payment Error",
+        text:
+          error.message ||
+          "There was an error processing your payment. Please try again.",
+        background: "#f8f9fa",
         showConfirmButton: true,
-        confirmButtonText: 'OK'
+        confirmButtonText: "OK",
       });
+      // }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -502,15 +519,11 @@ const Home = () => {
     // setUserData(data);
     setIsLoggedIn(true);
     // setIsDropdownOpen(true);
-    localStorage.setItem('isLoggedIn', 'true');
-    localStorage.setItem('userData', JSON.stringify(data));
+    localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("userData", JSON.stringify(data));
     setShowLoginPopup(false);
     // console.log('Login successful:', data);
   };
-
-
-
-
 
   const renderCards = () => {
     // console.log(statu.our_products?.post_store);
@@ -543,21 +556,36 @@ const Home = () => {
 
       return (
         <div className={`col-lg-4`} id={`card${index + 1}`} key={card.Id}>
-          <div className={`card-liner-card-${index + 1}`} id="card-liner-card"></div>
+          <div
+            className={`card-liner-card-${index + 1}`}
+            id="card-liner-card"
+          ></div>
           <div className={`card${index + 1} card`}>
             {/* {console.log(card['Data'].Modelsectionpackagesection)} */}
             {/* <span className="medaltype">{card.Post_name}</span> */}
-            <span className="medaltype">{card['Data'].Packagename}</span>
+            <span className="medaltype">{card["Data"].Packagename}</span>
             <div className={`card${index + 1}-text`}>
               {/* Render Information Section */}
-              {[infoSection1.Information1, infoSection1.Information2, infoSection1.Information3, infoSection1.Information4, infoSection1.Information5].map((text, i) => (
-                text && (
-                  <p style={cardTextStyle} key={i} className='cardtext'>
-                    <img src={righticon} className={`card${index + 1}righticon`} alt={`Icon ${i + 1}`} style={cardTextImageStyle} />
-                    {text}
-                  </p>
-                )
-              ))}
+              {[
+                infoSection1.Information1,
+                infoSection1.Information2,
+                infoSection1.Information3,
+                infoSection1.Information4,
+                infoSection1.Information5,
+              ].map(
+                (text, i) =>
+                  text && (
+                    <p style={cardTextStyle} key={i} className="cardtext">
+                      <img
+                        src={righticon}
+                        className={`card${index + 1}righticon`}
+                        alt={`Icon ${i + 1}`}
+                        style={cardTextImageStyle}
+                      />
+                      {text}
+                    </p>
+                  )
+              )}
               {/* {infoSection1.Information1 || infoSection1.Information2 || infoSection1.Information3 || infoSection1.Information4 || infoSection1.Information5 ? <div className="card-liner-inside"></div> : null} */}
 
               {/* {infoSection1.Information1 && (
@@ -633,7 +661,9 @@ const Home = () => {
                   {serviceSection.Service1}
                 </p>
               )}
-              {serviceSection.Service1 && <div className="card-liner-inside-2"></div>}
+              {serviceSection.Service1 && (
+                <div className="card-liner-inside-2"></div>
+              )}
 
               <div className={`card-${index + 1}-sec-3`}>
                 {/* Render Monthly Fee */}
@@ -642,19 +672,23 @@ const Home = () => {
                     {feesSection.Monthlyfee}
                   </p>
                 )}
-                {[feessection.Montlyfeecardtext1, feessection.Montlyfeecardtext2].map((text, i) => (
-                  text && (
-                    <p style={cardTextStyle} key={i} className='cardtext'>
-                      <img
-                        src={plushicon}
-                        className={`card${index + 1}plushicon`}
-                        alt="Add On Icon"
-                        style={cardTextImageStyle}
-                      />
-                      {text}
-                    </p>
-                  )
-                ))}
+                {[
+                  feessection.Montlyfeecardtext1,
+                  feessection.Montlyfeecardtext2,
+                ].map(
+                  (text, i) =>
+                    text && (
+                      <p style={cardTextStyle} key={i} className="cardtext">
+                        <img
+                          src={plushicon}
+                          className={`card${index + 1}plushicon`}
+                          alt="Add On Icon"
+                          style={cardTextImageStyle}
+                        />
+                        {text}
+                      </p>
+                    )
+                )}
 
                 {/* Render Service 2 */}
                 {serviceSection.Service2 && (
@@ -669,7 +703,6 @@ const Home = () => {
                   </p>
                 )}
               </div>
-
             </div>
             {/* style={{ position: 'absolute', bottom: '13px', left: '0', right: '0' }} */}
             {purchaseButtonSection.Buttontext && (
@@ -696,8 +729,9 @@ const Home = () => {
                   role="link"
                   className="btn w-50"
                   style={{
-                    backgroundColor: purchaseButtonSection.Buttonbackgroundcolor || '#40bedd',
-                    color: purchaseButtonSection.Buttoncolor || '#ffffff',
+                    backgroundColor:
+                      purchaseButtonSection.Buttonbackgroundcolor || "#40bedd",
+                    color: purchaseButtonSection.Buttoncolor || "#ffffff",
                   }}
                   // onMouseOver={(e) => {
                   //   e.target.style.backgroundColor = card.Buttonhovercolor || '#17bee8';
@@ -706,11 +740,17 @@ const Home = () => {
                   //   e.target.style.backgroundColor = card.Buttonbackgroundcolor || '#40bedd';
                   // }}
 
-                  onClick={() => handlePurchaseSubmit(card['Data'].Packagename, purchaseButtonSection.Amount, purchaseButtonSection.Stripid)}
+                  // {loading && <div className="loader"></div>}
+                  onClick={() =>
+                    handlePurchaseSubmit(
+                      card["Data"].Packagename,
+                      purchaseButtonSection.Amount,
+                      purchaseButtonSection.Stripid
+                    )
+                  }
                 >
                   {`${purchaseButtonSection.Buttontext} - $${purchaseButtonSection.Amount}`}
                 </button>
-
               </div>
             )}
           </div>
@@ -719,9 +759,7 @@ const Home = () => {
     });
   };
 
-
   const renderSections = () => {
-
     const sections = [
       {
         condition: statu.home_section?.status === 1,
@@ -754,12 +792,23 @@ const Home = () => {
                     >
                       {homesection?.Homesectiondescription}
                     </p>
-                    <button type="button" className="btn" id="tellmemore"
+                    <button
+                      type="button"
+                      className="btn"
+                      id="tellmemore"
                       style={{
-                        backgroundColor: homesection.Tell_me_more_button_section?.Homesectionbuttonbackgroundcolor || '',
-                        color: homesection.Tell_me_more_button_section?.Homesectionbuttontextcolor || '',
-                      }}>
-                      {homesection.Tell_me_more_button_section?.Homesectionbuttontitle}
+                        backgroundColor:
+                          homesection.Tell_me_more_button_section
+                            ?.Homesectionbuttonbackgroundcolor || "",
+                        color:
+                          homesection.Tell_me_more_button_section
+                            ?.Homesectionbuttontextcolor || "",
+                      }}
+                    >
+                      {
+                        homesection.Tell_me_more_button_section
+                          ?.Homesectionbuttontitle
+                      }
                     </button>
                     {/* {console.log(homesection.HomeSectionTitle)} */}
                   </div>
@@ -778,7 +827,6 @@ const Home = () => {
               <div className="row">
                 <div className="col-md-12">
                   <div className="transfo">
-
                     <h5 className="text-center transforming ">
                       {statu.transforming_waste_industry?.page_description}
                     </h5>
@@ -860,7 +908,8 @@ const Home = () => {
                       //   statu.qute_section_1?.post_store[0]?.Qutesectionimage
                       // }
                       src={
-                        statu.quote_section_1?.post_store[0]['Data'].Quotesectionimage
+                        statu.quote_section_1?.post_store[0]["Data"]
+                          .Quotesectionimage
                       }
                       className="quoteimage1"
                       alt="quoteimage1"
@@ -868,14 +917,17 @@ const Home = () => {
                   </div>
                   <div className="sec-3-text2">
                     <p className="text-light">
-                      {statu.quote_section_1?.post_store[0]['Data']?.Quotesectiontitle}{" "}
+                      {
+                        statu.quote_section_1?.post_store[0]["Data"]
+                          ?.Quotesectiontitle
+                      }{" "}
                       <br />
                       <span
                         className="text-secondary"
                         style={{ fontSize: "medium" }}
                       >
                         {
-                          statu.quote_section_1?.post_store[0]['Data']
+                          statu.quote_section_1?.post_store[0]["Data"]
                             ?.Quotesectiondescription
                         }
                       </span>
@@ -898,7 +950,8 @@ const Home = () => {
                   <div className="sec-3-text">
                     <img
                       src={
-                        statu.quote_section_2?.post_store[0]['Data']?.Quotesectionimage
+                        statu.quote_section_2?.post_store[0]["Data"]
+                          ?.Quotesectionimage
                       }
                       className="quoteimage1"
                       alt="quoteimage1"
@@ -906,14 +959,17 @@ const Home = () => {
                   </div>
                   <div className="sec-3-text2">
                     <p className="text-light">
-                      {statu.quote_section_2?.post_store[0]['Data']?.Quotesectiontitle}{" "}
+                      {
+                        statu.quote_section_2?.post_store[0]["Data"]
+                          ?.Quotesectiontitle
+                      }{" "}
                       <br />
                       <span
                         className="text-secondary"
                         style={{ fontSize: "medium" }}
                       >
                         {
-                          statu.quote_section_2?.post_store[0]['Data']
+                          statu.quote_section_2?.post_store[0]["Data"]
                             ?.Quotesectiondescription
                         }
                       </span>
@@ -979,24 +1035,41 @@ const Home = () => {
 
                   return (
                     <div
-                      className={`col ${isSinglePost ? "col-12" : "col-md-6 col-sm-6 col-xs-3"} 
-                                  ${isSinglePost ? "center-text no-border" : ""} 
+                      className={`col ${
+                        isSinglePost ? "col-12" : "col-md-6 col-sm-6 col-xs-3"
+                      } 
+                                  ${
+                                    isSinglePost ? "center-text no-border" : ""
+                                  } 
                                   ${isTwoPosts ? "no-bottom-border" : ""} 
                                   ${isThreePosts ? "no-top-right-border" : ""} 
-                                  ${isThreePosts && index === 2 ? "mx-auto" : ""} 
-                                  ${index % 2 === 0 ? "text-end" : "text-start"}`}
+                                  ${
+                                    isThreePosts && index === 2 ? "mx-auto" : ""
+                                  } 
+                                  ${
+                                    index % 2 === 0 ? "text-end" : "text-start"
+                                  }`}
                       key={item.id}
                     >
-                      <h5 className={`for-waste ${isTwoPosts ? "margin-top-5" : ""} ${isSinglePost ? "center-text" : ""}`}>
-                        {item['Data'].Title}
+                      <h5
+                        className={`for-waste ${
+                          isTwoPosts ? "margin-top-5" : ""
+                        } ${isSinglePost ? "center-text" : ""}`}
+                      >
+                        {item["Data"].Title}
                       </h5>
-                      <p style={{ marginTop: "25px" }} className={isSinglePost ? "center-text" : ""}>
-                        {item['Data'].Description.split("\r\n").map((line, i) => (
-                          <React.Fragment key={i}>
-                            {line}
-                            <br />
-                          </React.Fragment>
-                        ))}
+                      <p
+                        style={{ marginTop: "25px" }}
+                        className={isSinglePost ? "center-text" : ""}
+                      >
+                        {item["Data"].Description.split("\r\n").map(
+                          (line, i) => (
+                            <React.Fragment key={i}>
+                              {line}
+                              <br />
+                            </React.Fragment>
+                          )
+                        )}
                       </p>
                     </div>
                   );
@@ -1029,9 +1102,9 @@ const Home = () => {
                       {statu.who_use_wa?.post_store.map((item, index) => (
                         <div key={item.id}>
                           {/* {console.log(item['Data'].Image)} */}
-                          <Link to={item['Data'].Link}>
+                          <Link to={item["Data"].Link}>
                             <img
-                              src={item['Data'].Image}
+                              src={item["Data"].Image}
                               className="sliderimages"
                               alt={`Logo ${index + 1}`}
                             />
@@ -1061,7 +1134,7 @@ const Home = () => {
             <div className="container">
               <h4 className="tellmemoretitle">
                 {/* {console.log(statu.tell_me_more_section.post_store[0]['Data'].Button_setting.Buttontext)} */}
-                {statu.tell_me_more_section?.post_store[0]['Data']?.Title}
+                {statu.tell_me_more_section?.post_store[0]["Data"]?.Title}
               </h4>
               <div className="row">
                 <div className="col-12">
@@ -1082,10 +1155,18 @@ const Home = () => {
                     type="submit"
                     className="btn w-auto sky-blue-btn-tellmemore"
                     style={{
-                      backgroundColor: statu.tell_me_more_section?.post_store[0]['Data']?.Button_setting.Buttonbackgroundcolor || '#40bedd',
-                      color: statu.tell_me_more_section?.post_store[0]['Data']?.Button_setting.Buttontextcolor || '#ffffff',
-                    }}>
-                    {statu.tell_me_more_section?.post_store[0]['Data']?.Button_setting.Buttontext}
+                      backgroundColor:
+                        statu.tell_me_more_section?.post_store[0]["Data"]
+                          ?.Button_setting.Buttonbackgroundcolor || "#40bedd",
+                      color:
+                        statu.tell_me_more_section?.post_store[0]["Data"]
+                          ?.Button_setting.Buttontextcolor || "#ffffff",
+                    }}
+                  >
+                    {
+                      statu.tell_me_more_section?.post_store[0]["Data"]
+                        ?.Button_setting.Buttontext
+                    }
                   </button>
                   {/* New Code new */}
                 </div>
@@ -1103,9 +1184,7 @@ const Home = () => {
               <div className="row">
                 <div className="col-12">
                   <div className="sec-8-heading">
-                    <h1 id="About-us">
-                      {statu.about_us?.page_name}
-                    </h1>
+                    <h1 id="About-us">{statu.about_us?.page_name}</h1>
                   </div>
                 </div>
               </div>
@@ -1151,11 +1230,11 @@ const Home = () => {
                   <div
                     className="parallax-img"
                     style={{
-                      backgroundImage: `url(${statu.page_image_section?.image})`, // GET IMAGE FORM PAGE 
+                      backgroundImage: `url(${statu.page_image_section?.image})`, // GET IMAGE FORM PAGE
                       // backgroundImage: `url(${statu.page_image_section?.post_store?.[0]?.['Data'].Image})`, // GET IMAGE FROM POST
                     }}
                   >
-                    {console.log('Image URL:', statu.page_image_section?.image)}
+                    {console.log("Image URL:", statu.page_image_section?.image)}
                   </div>
                 </div>
               </div>
@@ -1175,47 +1254,78 @@ const Home = () => {
                     <div className="col-12">
                       <h4 className="letstallktitle">
                         {/* {statu.contact_us?.post_store[0]?.Title} */}
-                        {statu.contact_us?.post_store[0]['Data']?.Title}
+                        {statu.contact_us?.post_store[0]["Data"]?.Title}
                       </h4>
                       <div className="inputgroup">
-                        {statu.contact_us?.post_store[0]['Data']?.Description}
+                        {statu.contact_us?.post_store[0]["Data"]?.Description}
                       </div>
                     </div>
                   </div>
 
-                  <div className="row">
+                  {/* <div className="row">
                     {statu.contact_us?.post_store.map((item, index) => (
                       <div className="col-md-6" key={index}>
                         <div className="inputgroup">
-                          <label>{item['Data'].Label}</label>
-                          {/* {item.Label === "Tell us what you need" ? ( */}
-                          {item['Data'].Label === "Tell us what you need" ? (
+                          <label>{item.Data.Label}</label>
+
+                          {item.Data.Label === "Tell us what you need" ? (
                             <textarea
-                              className='form-control'
+                              className="form-control"
                               name={`field${index}`}
                               rows="4"
                               onChange={(e) => handleInputChange(e, index)}
                             />
-                          ) : item.type === "tel" ? (
+                          ) : (
                             <input
-                              className='form-control'
+                              className="form-control"
                               name={`field${index}`}
-                              type="tel"
+                              type={item.Data.Type} // ✅ Keep the original input type
+                              onChange={(e) => handleInputChange(e, index)}
+                            />
+                          )}
+
+                          {errors[`label${index}`] && (
+                            <span style={{ color: "red" }}>
+                              {errors[`label${index}`]}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div> */}
+                  <div className="row">
+                    {statu.contact_us?.post_store.map((item, index) => (
+                      <div className="col-md-6" key={index}>
+                        <div className="inputgroup">
+                          <label>{item.Data.Label}</label>
+                          {console.log(item.Data.Label, item.Data.Type)}
+
+                          {item.Data.Label === "Tell us what you need" ? (
+                            <textarea
+                              className="form-control"
+                              name={`field${index}`}
+                              rows="4"
                               onChange={(e) => handleInputChange(e, index)}
                             />
                           ) : (
                             <input
-                              className='form-control'
+                              className="form-control"
                               name={`field${index}`}
-                              type={item.Type}
+                              type={item.Data.Type} 
                               onChange={(e) => handleInputChange(e, index)}
                             />
                           )}
-                          {errors[`label${index}`] && <span style={{ color: 'red' }}>{errors[`label${index}`]}</span>}
+
+                          {errors[`label${index}`] && (
+                            <span style={{ color: "red" }}>
+                              {errors[`label${index}`]}
+                            </span>
+                          )}
                         </div>
                       </div>
                     ))}
                   </div>
+
                   {/* <div className="row">
                     {statu.contact_us?.post_store.map((item, index) => (
                       <div className="col-md-6" key={index}>
@@ -1254,8 +1364,6 @@ const Home = () => {
                   </div> */}
                 </form>
 
-
-
                 <div className="row mt-3 ">
                   <div className="col-12">
                     <button
@@ -1283,22 +1391,27 @@ const Home = () => {
     ));
   };
 
-  return <>
-    <Navlayout />
-    <Expired />
+  return (
+    <>
+      <Navlayout />
+      <Expired />
 
-    {renderSections()}
-    {showLoginPopup && (
-      <Popup isOpen={showLoginPopup} onClose={toggleLoginPopup} onLoginSuccess={handleLoginSuccess} />
-    )}
-    <Outlet />
-
-  </>;
+      {renderSections()}
+      {showLoginPopup && (
+        <Popup
+          isOpen={showLoginPopup}
+          onClose={toggleLoginPopup}
+          onLoginSuccess={handleLoginSuccess}
+        />
+      )}
+      <Outlet />
+    </>
+  );
 };
 
 const Popup = ({ isOpen, onClose, onLoginSuccess }) => {
   if (!isOpen) return null;
-  console.log("Popup is call")
+  console.log("Popup is call");
   return (
     <div className="popup-overlay  " style={popupOverlayStyles}>
       <div className="popup-content" style={popupContentStyles}>
@@ -1309,24 +1422,23 @@ const Popup = ({ isOpen, onClose, onLoginSuccess }) => {
 };
 
 const popupOverlayStyles = {
-  position: 'fixed',
+  position: "fixed",
   top: 0,
   left: 0,
   right: 0,
   bottom: 0,
-  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
+  backgroundColor: "rgba(0, 0, 0, 0.5)",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
   zIndex: 1000,
-  overflowY: 'auto',
+  overflowY: "auto",
 };
 
 const popupContentStyles = {
-  backgroundColor: 'white',
-  borderRadius: '5px',
-  boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+  backgroundColor: "white",
+  borderRadius: "5px",
+  boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
 };
 
 export default Home;
-
