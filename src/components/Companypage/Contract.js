@@ -8,6 +8,9 @@ import "./Contract.css";
 import Stepper from 'react-stepper-horizontal';
 import Expired from '../CheckTokenExpier';
 import Navlayout from "../../Wa-Frontend/NavLayout";
+import Tooltip from '@mui/material/Tooltip';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 
 const Contract = () => {
@@ -338,13 +341,13 @@ const Contract = () => {
         circleFontColor="#fff"
         completeBarColor="#1e991c"
         activeStepClassName="active-step"
-        
-        />
+
+      />
     );
   }
   return (
     <>
-    <Navlayout />
+      <Navlayout />
       <Expired />
 
       <h2 className="header">Contract</h2>
@@ -384,7 +387,7 @@ const Contract = () => {
 
 
 
-          {/* <Stepper steps={ [{title: 'Step One'}, {title: 'Step Two'}, {title: 'Step Three'}, {title: 'Step Four'}] } activeStep={ 1 } /> */}
+        {/* <Stepper steps={ [{title: 'Step One'}, {title: 'Step Two'}, {title: 'Step Three'}, {title: 'Step Four'}] } activeStep={ 1 } /> */}
 
         <div className="pro-under-border"></div>
 
@@ -398,16 +401,24 @@ const Contract = () => {
               <label className="label" htmlFor="companyName">
                 Company
               </label>
-              <input
-                type="text"
-                className={`form-control company ${formErrors.companyName ? "is-invalid" : ""}`}
-                id="companyName"
-                name="companyName"
-                value={formData.companyName}
-                onChange={handleInputChange}
-                disabled
-                placeholder="Company"
-              />
+              <div className="input-with-icon">
+                <Tooltip title="Select your company from the drop down menu" arrow>
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    className="info-icon"
+                  />
+                </Tooltip>
+                <input
+                  type="text"
+                  className={`form-control company ${formErrors.companyName ? "is-invalid" : ""}`}
+                  id="companyName"
+                  name="companyName"
+                  value={formData.companyName}
+                  onChange={handleInputChange}
+                  disabled
+                  placeholder="Company"
+                />
+              </div>
               {formErrors.companyName && (
                 <div className="invalid-feedback">{formErrors.companyName}</div>
               )}
@@ -416,15 +427,23 @@ const Contract = () => {
               <label className="label" htmlFor="contractName">
                 Contract Name
               </label>
-              <input
-                type="text"
-                className={`form-control company ${formErrors.contractName ? "is-invalid" : ""}`}
-                id="contractName"
-                name="contractName"
-                value={formData.contractName}
-                onChange={handleInputChange}
-                placeholder="Contract Name"
-              />
+              <div className="input-with-icon">
+                <Tooltip title="Add the name of the contract that you are adding data to" arrow>
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    className="info-icon"
+                  />
+                </Tooltip>
+                <input
+                  type="text"
+                  className={`form-control company ${formErrors.contractName ? "is-invalid" : ""}`}
+                  id="contractName"
+                  name="contractName"
+                  value={formData.contractName}
+                  onChange={handleInputChange}
+                  placeholder="Contract Name"
+                />
+              </div>
               {formErrors.contractName && (
                 <div className="invalid-feedback">{formErrors.contractName}</div>
               )}
@@ -467,9 +486,9 @@ const Contract = () => {
           type="button"
           onClick={handleSubmit}
           className="btn next btn-primary"
-        >
+        ><Tooltip title="Click 'Submit' to save your contract details." arrow>
           Next Step
-        </button>
+          </Tooltip></button>
       </div>
 
     </>

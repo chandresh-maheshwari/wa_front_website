@@ -73,27 +73,81 @@ function ProtectedRoute({ children }) {
 
 function App() {
   const [lastScrollTop, setLastScrollTop] = useState(0);
+// function updateScrollbarThumb() {
+//     let body = document.body;
+//     let html = document.documentElement;
+    
+//     // Calculate scrollable height
+//     let scrollHeight = Math.max(body.scrollHeight, html.scrollHeight);
+//     let clientHeight = Math.max(body.clientHeight, html.clientHeight);
+    
+//     // Calculate thumb height based on page size
+//     let thumbHeight = Math.max(50, (clientHeight / scrollHeight) * clientHeight);
+    
+//     // Set thumb height dynamically
+//     document.documentElement.style.setProperty('--thumb-height', `${thumbHeight}px`);
+// }
+
+// // Run on page load & resize
+// window.addEventListener('load', updateScrollbarThumb);
+// window.addEventListener('resize', updateScrollbarThumb);
+
+// function updateScrollbarThumb() {
+//   let body = document.body;
+//   let html = document.documentElement;
+
+//   // Calculate scrollable height
+//   let scrollHeight = Math.max(body.scrollHeight, html.scrollHeight);
+//   let clientHeight = Math.max(body.clientHeight, html.clientHeight);
+
+//   // Calculate thumb height based on page size
+//   let thumbHeight = Math.max(50, (clientHeight / scrollHeight) * clientHeight);
+  
+//   // Set thumb height dynamically
+//   document.documentElement.style.setProperty('--thumb-height', `${thumbHeight}px`);
+
+//   // Calculate the thumb position based on scroll
+//   let scrollPosition = window.scrollY;
+//   let thumbTop = (scrollPosition / (scrollHeight - clientHeight)) * (clientHeight - thumbHeight);
+  
+//   // Set the thumb's position dynamically
+//   document.documentElement.style.setProperty('--thumb-top', `${thumbTop}px`);
+
+//   // Adjust background position dynamically for scrolling effect
+//   let thumbScrollPosition = (scrollPosition / (scrollHeight - clientHeight)) * 100;
+//   document.documentElement.style.setProperty('--thumb-bg-position', `${thumbScrollPosition}%`);
+// }
+
+// // Call update function on scroll, resize, and load
+// window.addEventListener('load', updateScrollbarThumb);
+// window.addEventListener('resize', updateScrollbarThumb);
+// window.addEventListener('scroll', updateScrollbarThumb);
+
+
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollTop = window.scrollY;
-      if (currentScrollTop > lastScrollTop) {
-        // Scrolling down
-        document.body.classList.add('scrolled-down');
-        document.body.classList.remove('scrolled-top');
-      } else {
-        // Scrolling up
-        document.body.classList.add('scrolled-top');
-        document.body.classList.remove('scrolled-down');
-      }
-      setLastScrollTop(currentScrollTop);
+        const currentScrollTop = window.scrollY;
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        
+        // Add scroll direction classes
+        if (currentScrollTop > lastScrollTop) {
+            document.body.classList.add('scrolled-down');
+            document.body.classList.remove('scrolled-top');
+        } else {
+            document.body.classList.add('scrolled-top');
+            document.body.classList.remove('scrolled-down');
+        }
+        
+        // Update scroll thumb position
+        const scrollPercent = (currentScrollTop / maxScroll) * 100;
+        document.documentElement.style.setProperty('--scroll-percent', `${scrollPercent}%`);
+        
+        setLastScrollTop(currentScrollTop);
     };
 
     window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollTop]);
 
   return (

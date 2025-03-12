@@ -8,6 +8,9 @@ import Stepper from 'react-stepper-horizontal';
 import "./Company.css";
 import Expired from '../CheckTokenExpier';
 import Navlayout from "../../Wa-Frontend/NavLayout";
+import Tooltip from '@mui/material/Tooltip';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 const VehicleForm = () => {
   const [formData, setFormData] = useState({
@@ -395,28 +398,28 @@ const VehicleForm = () => {
           <form onSubmit={handleSubmit}>
             <div className="form-row">
               <div className="form-group col-md-6">
-                {/* <label>Vehicle Type</label>
-                <input
-                  className="form-control company"
-                  type="text"
-                  name="vehicle_type_id"
-                  onChange={handleChange}
-                /> */}
                 <label>Vehicle Type</label>
-                <select
-                  className="form-control company"
-                  name="vehicle_type_id"
-                  value={formData.vehicle_type_id}
-                  onChange={handleChange}
-                >
-                  <option value="">Select Vehicle Type</option>
-                  {vehicletype.map((vehicle) => (
-                    <option key={vehicle.id} value={vehicle.id}>
-                      {vehicle.vehicle_type_name}
-                    </option>
-                  ))}
-                </select>
-
+                <div className="input-with-icon">
+                  <Tooltip title="Select the Vehicle Type from the drop-down menu" arrow>
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      className="info-icon"
+                    />
+                  </Tooltip>
+                  <select
+                    className="form-control company"
+                    name="vehicle_type_id"
+                    value={formData.vehicle_type_id}
+                    onChange={handleChange}
+                  >
+                    <option value="">Select Vehicle Type</option>
+                    {vehicletype.map((vehicle) => (
+                      <option key={vehicle.id} value={vehicle.id}>
+                        {vehicle.vehicle_type_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 {errors.vehicle_type_id && (
                   <small className="text-danger">
                     {errors.vehicle_type_id}
@@ -426,13 +429,21 @@ const VehicleForm = () => {
 
               <div className="form-group col-md-6">
                 <label>Vehicle Description</label>
-                <input
-                  value={formData.vehicle_description}
-                  type="text"
-                  className="form-control company"
-                  name="vehicle_description"
-                  onChange={handleChange}
-                />
+                <div className="input-with-icon">
+                  <Tooltip title="Enter a description for the vehicle" arrow>
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      className="info-icon"
+                    />
+                  </Tooltip>
+                  <input
+                    value={formData.vehicle_description}
+                    type="text"
+                    className="form-control company"
+                    name="vehicle_description"
+                    onChange={handleChange}
+                  />
+                </div>
                 {errors.vehicle_description && (
                   <small className="text-danger">
                     {errors.vehicle_description}
@@ -444,13 +455,21 @@ const VehicleForm = () => {
             <div className="form-row">
               <div className="form-group col-md-6">
                 <label>Vehicle Driver Name</label>
-                <input
-                  value={formData.driver_name}
-                  className="form-control company"
-                  type="text"
-                  name="driver_name"
-                  onChange={handleChange}
-                />
+                <div className="input-with-icon">
+                  <Tooltip title="Add the vehicle driver name if known" arrow>
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      className="info-icon"
+                    />
+                  </Tooltip>
+                  <input
+                    value={formData.driver_name}
+                    className="form-control company"
+                    type="text"
+                    name="driver_name"
+                    onChange={handleChange}
+                  />
+                </div>
                 {errors.driver_name && (
                   <small className="text-danger">{errors.driver_name}</small>
                 )}
@@ -458,13 +477,21 @@ const VehicleForm = () => {
 
               <div className="form-group col-md-6">
                 <label>Carriers Name</label>
-                <input
-                  value={formData.vehicle_name}
-                  className="form-control company"
-                  type="text"
-                  name="vehicle_name"
-                  onChange={handleChange}
-                />
+                <div className="input-with-icon">
+                  <Tooltip title="Add the name of the Carrier" arrow>
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      className="info-icon"
+                    />
+                  </Tooltip>
+                  <input
+                    value={formData.vehicle_name}
+                    className="form-control company"
+                    type="text"
+                    name="vehicle_name"
+                    onChange={handleChange}
+                  />
+                </div>
                 {errors.vehicle_name && (
                   <small className="text-danger">{errors.vehicle_name}</small>
                 )}
@@ -474,26 +501,42 @@ const VehicleForm = () => {
             <div className="form-row">
               <div className="form-group col-md-6">
                 <label>Phone No</label>
-                <input
-                  value={formData.phone_no}
-                  className="form-control company"
-                  type="text"
-                  name="phone_no"
-                  onChange={handleChange}
-                />
+                <div className="input-with-icon">
+                  <Tooltip title="Add the Carrier company's phone number" arrow>
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      className="info-icon"
+                    />
+                  </Tooltip>
+                  <input
+                    value={formData.phone_no}
+                    className="form-control company"
+                    type="text"
+                    name="phone_no"
+                    onChange={handleChange}
+                  />
+                </div>
                 {errors.phone_no && (
                   <small className="text-danger">{errors.phone_no}</small>
                 )}
               </div>
               <div className="form-group col-md-6">
                 <label>Carrier's License Expiry Date</label>
-                <input
-                  value={formData.vehicle_license_expire_date}
-                  type="date"
-                  className="form-control company"
-                  name="vehicle_license_expire_date"
-                  onChange={handleChange}
-                />
+                <div className="input-with-icon">
+                  <Tooltip title="Add the expiry date of the licence. This can be found on the above website." arrow>
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      className="info-icon"
+                    />
+                  </Tooltip>
+                  <input
+                    value={formData.vehicle_license_expire_date}
+                    type="date"
+                    className="form-control company"
+                    name="vehicle_license_expire_date"
+                    onChange={handleChange}
+                  />
+                </div>
                 {errors.vehicle_license_expire_date && (
                   <small className="text-danger">
                     {errors.vehicle_license_expire_date}
@@ -505,19 +548,27 @@ const VehicleForm = () => {
             <div className="form-row">
               <div className="form-group col-md-6">
                 <label>Vehicle Fuel Type</label>
-                <select
-                  value={formData.fuel_type_id}
-                  className="form-control company"
-                  name="fuel_type_id"
-                  onChange={handleChange}
-                >
-                  <option value="">Select Fuel Type</option>
-                  {fuelTypes.map((fuelType) => (
-                    <option key={fuelType.id} value={fuelType.id}>
-                      {fuelType.fuel_type_name}
-                    </option>
-                  ))}
-                </select>
+                <div className="input-with-icon">
+                  <Tooltip title="Select the Vehicle Type from the drop-down menu" arrow>
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      className="info-icon"
+                    />
+                  </Tooltip>
+                  <select
+                    value={formData.fuel_type_id}
+                    className="form-control company"
+                    name="fuel_type_id"
+                    onChange={handleChange}
+                  >
+                    <option value="">Select Fuel Type</option>
+                    {fuelTypes.map((fuelType) => (
+                      <option key={fuelType.id} value={fuelType.id}>
+                        {fuelType.fuel_type_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 {errors.fuel_type_id && (
                   <small className="text-danger">{errors.fuel_type_id}</small>
                 )}
@@ -525,13 +576,21 @@ const VehicleForm = () => {
 
               <div className="form-group col-md-6">
                 <label>Vehicle Tare Weight</label>
-                <input
-                  value={formData.vehicle_tare_weight}
-                  className="form-control company"
-                  type="text"
-                  name="vehicle_tare_weight"
-                  onChange={handleChange}
-                />
+                <div className="input-with-icon">
+                  <Tooltip title="Enter the tare weight of the vehicle" arrow>
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      className="info-icon"
+                    />
+                  </Tooltip>
+                  <input
+                    value={formData.vehicle_tare_weight}
+                    className="form-control company"
+                    type="text"
+                    name="vehicle_tare_weight"
+                    onChange={handleChange}
+                  />
+                </div>
                 {errors.vehicle_tare_weight && (
                   <small className="text-danger">
                     {errors.vehicle_tare_weight}
@@ -541,99 +600,57 @@ const VehicleForm = () => {
             </div>
 
             <div className="form-row">
-              {/* <div className="form-group col-md-6">
-                <label>Vehicle Owner</label>
-               
-                <select
-                  value={formData.vehicle_owner}
-                  className="form-control company"
-                  name="vehicle_owner"
-                  onChange={handleChange}
-                >
-                  <option value="">Select Owner</option>
-                  <option value="contract_name">Contract Name</option>
-                  <option value="third_party_carrier">
-                    Third Party Carrier
-                  </option>
-                </select>
-                {errors.vehicle_owner && (
-                  <small className="text-danger">{errors.vehicle_owner}</small>
-                )}
-
-              </div> */}
               <div className="form-group col-md-6">
                 <label>Vehicle Owner</label>
-                {/* {console.log(formData.vehicle_owner)} */}
-                <select
-                  value={formData.vehicle_owner || ""}
-                  className="form-control company"
-                  name="vehicle_owner"
-                  onChange={handleChange}
-                >
-                  <option value="">Select Owner</option>
-                  <option value="contract_name">Contract Name</option>
-                  <option value="third_party_carrier">Third Party Carrier</option>
-                </select>
+                <div className="input-with-icon">
+                  <Tooltip title="Select the owner of the vehicle" arrow>
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      className="info-icon"
+                    />
+                  </Tooltip>
+                  <select
+                    value={formData.vehicle_owner || ""}
+                    className="form-control company"
+                    name="vehicle_owner"
+                    onChange={handleChange}
+                  >
+                    <option value="">Select Owner</option>
+                    <option value="contract_name">Contract Name</option>
+                    <option value="third_party_carrier">Third Party Carrier</option>
+                  </select>
+                </div>
                 {errors.vehicle_owner && (
                   <small className="text-danger">{errors.vehicle_owner}</small>
                 )}
               </div>
-
-              {/* <div className="form-group col-md-6">
-                <label>Contract ID</label>
-                <input
-                  className="form-control company"
-                  type="text"
-                  name="contract_id"
-                  onChange={handleChange}
-                />
-              </div> */}
-
 
               <div className="form-group col-md-6">
                 <label className="label" htmlFor="contractName">
                   Contract Name
                 </label>
-                <input
-                  type="text"
-                  className="form-control company"
-                  id="contractName"
-                  name="contractName"
-                  value={formData.contractName || ""}
-                  placeholder="Contract Name"
-                  disabled
-                />
+                <div className="input-with-icon">
+                  <Tooltip title="Select the contract that is using the Vehicle/Carrier" arrow>
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      className="info-icon"
+                    />
+                  </Tooltip>
+                  <input
+                    type="text"
+                    className="form-control company"
+                    id="contractName"
+                    name="contractName"
+                    value={formData.contractName || ""}
+                    placeholder="Contract Name"
+                    disabled
+                  />
+                </div>
               </div>
             </div>
-            {/* <div className="form-actions">
-              <button type="button">Previous step</button>
-              <button type="submit">Submit</button>
-            </div> */}
           </form>
         </div>
       </div>
-      {/* <div className="container">
-        <div className="row">
-          <div className="col-6">
-            <button
-              type="button"
-              className="btn btn-secondary prevbtn vhicalbuttons "
-              onClick={handlePreviousClick}
-            >
-              Previous step
-            </button>
-          </div>
-          <div className="col-6">
-            <button
-              type="button"
-              className="btn next btn-primary prevbtn next1 vhicalbuttons submit"
-              onClick={handleSubmit}
-            >
-              submit
-            </button>
-          </div>
-        </div>
-      </div> */}
       <div className=" company-setup-container mt-0 ">
         <button
           type="button"
@@ -647,9 +664,9 @@ const VehicleForm = () => {
           type="button"
           onClick={handleSubmit}
           className="btn next btn-primary final-submit"
-        >
+        ><Tooltip title="Click 'Submit' to save the forwarding facility details." arrow>
           submit
-        </button>
+          </Tooltip></button>
       </div>
     </>
   );
