@@ -1,7 +1,7 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
+    /* background-color: #f5f5f5; */
   }
   
   .signin-wrapper {
@@ -17,8 +17,8 @@ body {
     max-width: 400px;   
     padding-left: 40px;
     padding-right: 40px;
-    padding-bottom: 40px;
-    background-color: white;
+    padding-top: 40px;
+    /* background-color: white; */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
     border: 1px solid #ced4da;
@@ -168,7 +168,7 @@ body {
   .text-info {
     color: #00c6ff;
   }
-
+ 
 
  .close-button{
   border: none;
@@ -177,4 +177,87 @@ body {
   background-color: transparent !important;
   
  
+ }
+
+
+ .flip-container {
+  perspective: 1000px;
+}
+
+.flipper {
+  width: 400px;
+  height: 450px;
+  
+  background: #f5f5f5;
+
+  border-radius: 10px;
+  transition: 0.6s;
+  transform-style: preserve-3d;
+}
+
+.front, .back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  backface-visibility: hidden;
+  padding: 40px;
+}
+
+.front {
+  z-index: 2;
+  transform: rotateY(0deg);
+}
+
+.back {
+  transform: rotateY(180deg);
+}
+
+.flip {
+  transform: rotateY(180deg);
+ 
+}
+
+/* Existing styles */
+.signin-box {
+  width: 100%;
+  max-width: 400px;
+  background-color: white;
+  text-align: center;
+  border: 1px solid #ced4da;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn-signin {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(to right, #00c6ff, #0072ff);
+  border: none;
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.btn-signin:hover {
+  background: linear-gradient(to right, #0072ff, #00c6ff);
+}
+
+.text-info {
+  color: #00c6ff;
+  cursor: pointer;
+}
+
+.close-button {
+  border: none;
+  background-color: transparent;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+/* ====================
+ */
+ .popup-content{
+  background-color: unset !important;
  }

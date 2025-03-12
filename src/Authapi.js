@@ -109,7 +109,74 @@ export default new (class AuthApi {
         }
     }
 
+// ==================Login ragistration and logout api================
+// async useregister(ragisteruserData) {
+//     try {
+//         const url = Config.waapiurl + Config.authApis.useregister;
+//         this.setHeaders("post");
+//         const response = await axios.post(url, ragisteruserData);
+//         // console.log("API response:", response.data);
 
+//         return response.data;
+//     } catch (error) {
+//         console.error("API Error:", error);
+//         if (error.response) {
+//             return error.response.data.message;
+//         } else {
+//             return "An error occurred, Please try again later!";
+//         }
+//     }
+// }
+
+async useregister(registerUserData) {
+    try {
+        console.log("📢 Calling API with:", registerUserData);
+
+        const url = Config.waapiurl + Config.authApis.useregister;
+        this.setHeaders("post");  // Ensure headers are set correctly
+        console.log("🛠️ API URL:", url);
+
+        const response = await axios.post(url, registerUserData);
+        console.log("✅ Raw API Response:", response);
+
+        // ✅ Ensure response and response.data are valid
+        if (!response || !response.data) {
+            throw new Error("Invalid API response: No data received");
+        }
+
+        return response.data;
+          
+    } catch (error) {
+        console.error("❌ API Error:", error);
+
+        if (error.response) {
+            console.error("⚠️ Server Response Data:", error.response.data);
+            return error.response.data.message || "API error occurred!";
+        } else {
+            return "An error occurred, Please try again later!";
+        }
+    }
+}
+
+
+
+    // async login(userData) {
+    //     try {
+    //         const url = Config.waapiurl + Config.authApis.login;
+    //         this.setHeaders("post");
+    //         const response = await axios.post(url, userData);
+    //         console.log("API response:", response.data);
+
+    //         return response.data;
+    //     } catch (error) {
+    //         console.error("API Error:", error);
+    //         if (error.response) {
+    //             return error.response.data.message;
+    //         } else {
+    //             return "An error occurred, Please try again later!";
+    //         }
+    //     }
+    // }
     async login(userData) {
         try {
             const url = Config.waapiurl + Config.authApis.login;
@@ -127,7 +194,6 @@ export default new (class AuthApi {
             }
         }
     }
-
     async logout(userData) {
         try {
             const url = Config.waapiurl + Config.authApis.logout;
@@ -154,6 +220,11 @@ export default new (class AuthApi {
             }
         }
     }
+
+
+// =======================================
+
+
 
 
 
@@ -224,6 +295,7 @@ export default new (class AuthApi {
             }
         }
     }
+// ==============All Company details data submit  Api=================================================
 
     async submitCompanyDetails(formData) {
         try {
@@ -255,26 +327,7 @@ export default new (class AuthApi {
             }
         }
     }
-    async getLatestCompanyDetails() {
-        try {
-          const url = `${Config.waapiurl}${Config.authApis.getLatestCompanyDetails}`;
-          this.setHeaders("get");
-    
-          const authToken = ls.get("WAauthToken") || ""; // Retrieve the auth token
-          console.log("Auth Token:", authToken);
-    
-          const response = await axios.get(url, {
-            headers: {
-              Authorization: `Bearer ${authToken}`, // Add the token to the headers
-              "Content-Type": "application/json",
-            },
-          });
-          return response.data;
-        } catch (error) {
-          console.error("API Error:", error);
-          throw error;
-        }
-      }
+
 
     async submitContractDetails(formData) {
         try {
@@ -304,28 +357,6 @@ export default new (class AuthApi {
                     "An error occurred while submitting company details. Please try again later!"
                 );
             }
-        }
-    }
-
-
-    async getLatestContractDetails() {
-        try {
-            const url = `${Config.waapiurl}${Config.authApis.getLatestContractDetails}`;
-            this.setHeaders("get");
-
-            const authToken = ls.get("WAauthToken") || ""; // Retrieve the auth token
-            console.log("Auth Token:", authToken);
-
-            const response = await axios.get(url, {
-                headers: {
-                    Authorization: `Bearer ${authToken}`, // Add the token to the headers
-                    "Content-Type": "application/json",
-                },
-            });
-            return response.data;
-        } catch (error) {
-            console.error("API Error:", error);
-            throw error;
         }
     }
 
@@ -393,6 +424,58 @@ export default new (class AuthApi {
     }
 
 
+
+
+
+
+    async getLatestCompanyDetails() {
+        try {
+          const url = `${Config.waapiurl}${Config.authApis.getLatestCompanyDetails}`;
+          this.setHeaders("get");
+    
+          const authToken = ls.get("WAauthToken") || ""; // Retrieve the auth token
+          console.log("Auth Token:", authToken);
+    
+          const response = await axios.get(url, {
+            headers: {
+              Authorization: `Bearer ${authToken}`, // Add the token to the headers
+              "Content-Type": "application/json",
+            },
+          });
+          return response.data;
+        } catch (error) {
+          console.error("API Error:", error);
+          throw error;
+        }
+      }
+
+   
+
+
+    async getLatestContractDetails() {
+        try {
+            const url = `${Config.waapiurl}${Config.authApis.getLatestContractDetails}`;
+            this.setHeaders("get");
+
+            const authToken = ls.get("WAauthToken") || ""; // Retrieve the auth token
+            console.log("Auth Token:", authToken);
+
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`, // Add the token to the headers
+                    "Content-Type": "application/json",
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            throw error;
+        }
+    }
+
+   
+
+  
     async getfualtypesdata() {
         try {
             const url = `${Config.waapiurl}${Config.authApis.getfualtypesdata}`;
