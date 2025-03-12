@@ -9,8 +9,9 @@ import Authapi from "../../Authapi";
 // /import {Expired} from '../CheckTokenExpier';
 import Expired from '../CheckTokenExpier';
 import Navlayout from "../../Wa-Frontend/NavLayout";
-
-
+import Tooltip from '@mui/material/Tooltip';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 // import { Stepper, Step } from "react-form-stepper";
 import Stepper from 'react-stepper-horizontal';
@@ -128,7 +129,7 @@ const Company = () => {
             email: company.company_email || "",
           });
         }
-        else{
+        else {
           console.log(response.message);
         }
       } catch (error) {
@@ -342,7 +343,7 @@ const Company = () => {
   return (
 
     <>
-    <Navlayout />
+      <Navlayout />
       <Expired />
       <h1 className="header">Company</h1>
       <p className="firstcontent">
@@ -381,7 +382,7 @@ const Company = () => {
         } */}
         </div>
         {/* </div> */}
-        
+
 
         {/* <div class="container-fluid">
           <br /><br />
@@ -406,7 +407,7 @@ const Company = () => {
         </div> */}
 
 
-          <br />
+        <br />
         <div className="pro-under-border"></div>
 
         <div className="steps-content mt-3">
@@ -422,16 +423,24 @@ const Company = () => {
                     <label className="label" htmlFor="companyName">
                       Company Name
                     </label>
-                    <input
-                      type="text"
-                      className={`form-control company ${formErrors.companyName ? "is-invalid" : ""}`}
-                      id="companyName"
-                      name="companyName"
-                      value={formData.companyName}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Company Name"
-                    />
+                    <div className="input-with-icon">
+                      <Tooltip title="Add your company name" arrow>
+                        <FontAwesomeIcon
+                          icon={faInfoCircle}
+                          className="info-icon"
+                        />
+                      </Tooltip>
+                      <input
+                        type="text"
+                        className={`form-control company ${formErrors.companyName ? "is-invalid" : ""}`}
+                        id="companyName"
+                        name="companyName"
+                        value={formData.companyName}
+                        onChange={handleInputChange}
+                        required
+                        placeholder="Company Name"
+                      />
+                    </div>
                     {formErrors.companyName && (
                       <div className="invalid-feedback">{formErrors.companyName}</div>
                     )}
@@ -440,16 +449,24 @@ const Company = () => {
                     <label className="label" htmlFor="email">
                       Company Email
                     </label>
-                    <input
-                      type="email"
-                      className={`form-control company ${formErrors.email ? "is-invalid" : ""}`}
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Company Email"
-                    />
+                    <div className="input-with-icon">
+                      <Tooltip title="Add the email address of the main contact in your company." arrow>
+                        <FontAwesomeIcon
+                          icon={faInfoCircle}
+                          className="info-icon"
+                        />
+                      </Tooltip>
+                      <input
+                        type="email"
+                        className={`form-control company ${formErrors.email ? "is-invalid" : ""}`}
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required
+                        placeholder="Company Email"
+                      />
+                    </div>
                     {formErrors.email && (
                       <div className="invalid-feedback">{formErrors.email}</div>
                     )}
@@ -461,16 +478,24 @@ const Company = () => {
                     <label className="label" htmlFor="contactNumber">
                       Company Telephone
                     </label>
-                    <input
-                      type="tel"
-                      className={`form-control company ${formErrors.contactNumber ? "is-invalid" : ""}`}
-                      id="contactNumber"
-                      name="contactNumber"
-                      value={formData.contactNumber}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Company Telephone"
-                    />
+                    <div className="input-with-icon">
+                      <Tooltip title="Add the number of the main contact in your company." arrow>
+                        <FontAwesomeIcon
+                          icon={faInfoCircle}
+                          className="info-icon"
+                        />
+                      </Tooltip>
+                      <input
+                        type="tel"
+                        className={`form-control company ${formErrors.contactNumber ? "is-invalid" : ""}`}
+                        id="contactNumber"
+                        name="contactNumber"
+                        value={formData.contactNumber}
+                        onChange={handleInputChange}
+                        required
+                        placeholder="Company Telephone"
+                      />
+                    </div>
                     {formErrors.contactNumber && (
                       <div className="invalid-feedback">{formErrors.contactNumber}</div>
                     )}
@@ -479,16 +504,24 @@ const Company = () => {
                     <label className="label" htmlFor="contactName">
                       Company Contact Name
                     </label>
-                    <input
-                      type="text"
-                      className={`form-control company ${formErrors.contactName ? "is-invalid" : ""}`}
-                      id="contactName"
-                      name="contactName"
-                      value={formData.contactName}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Company Contact Name"
-                    />
+                    <div className="input-with-icon">
+                      <Tooltip title="Add the name of the main contact" arrow>
+                        <FontAwesomeIcon
+                          icon={faInfoCircle}
+                          className="info-icon"
+                        />
+                      </Tooltip>
+                      <input
+                        type="text"
+                        className={`form-control company ${formErrors.contactName ? "is-invalid" : ""}`}
+                        id="contactName"
+                        name="contactName"
+                        value={formData.contactName}
+                        onChange={handleInputChange}
+                        required
+                        placeholder="Company Contact Name"
+                      />
+                    </div>
                     {formErrors.contactName && (
                       <div className="invalid-feedback">{formErrors.contactName}</div>
                     )}
@@ -518,10 +551,11 @@ const Company = () => {
           type="button"
           onClick={handleSubmit}
           className="btn next btn-primary"
-        >
-          Next Step
-        </button>
+        ><Tooltip title="Click 'Submit' to save your company details." arrow>
+            Next Step
+          </Tooltip> </button>
       </div>
+      <Tooltip place="top" type="dark" effect="solid" event="click" />
     </>
   );
 };
