@@ -55,7 +55,10 @@ export default {
     getcountyname : "api/user_getCountyName",
     userVehicleTypes : "api/user_getVehicleTypeDetails",
     getUservehicledetail : "api/user_vehicle_details_get",
-    createCheckoutSession : "api/create-checkout-session"
+    createCheckoutSession : "api/create-checkout-session",
+    mainIndustry : "api/mainIndustry",
+    getMainActivity: "api/getMainActivity",
+    getSubActivity: "api/getSubActivity"
 
   },
 };

@@ -3,32 +3,58 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 import ls from "local-storage";
 import "./Company.css";
-// import "./CompanyExtra.css";
+
+import customSelectStyles from "../../CustomSelectStyles";
 import Authapi from "../../Authapi";
-// import { StartTokenExpiryCheck } from './components/CheckTokenExpier';
-// /import {Expired} from '../CheckTokenExpier';
-import Expired from '../CheckTokenExpier';
+
+import Expired from "../CheckTokenExpier";
 import Navlayout from "../../Wa-Frontend/NavLayout";
+import Select from "react-select";
 
+import Stepper from "react-stepper-horizontal";
 
-
-// import { Stepper, Step } from "react-form-stepper";
-import Stepper from 'react-stepper-horizontal';
-
+// Custom styles for the Select component
+const customStyles = {
+  control: (provided) => ({
+    ...provided,
+    borderRadius: "20px", // Outer border radius
+    border: "2px solid #00c389", // Outer border color
+    boxShadow: "none", // Remove box shadow
+    "&:hover": {
+      borderColor: "#00c389", // Border color on hover
+    },
+  }),
+  placeholder: (provided) => ({
+    ...provided,
+    color: "#333", // Placeholder text color
+  }),
+};
 
 const Company = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [successMessage, setSuccessMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState("");
   const [showForm, setShowForm] = useState(true);
   const [formData, setFormData] = useState({
     companyName: "",
     contactName: "",
     contactNumber: "",
     email: "",
+    postcode: "",
+    mainIndustry: null,
+    mainActivity: null,
+    subActivity: null,
+    sicCode: "",
+    addressLine1: "",
+    addressLine2: "",
+    addressLine3: "",
+    addressLine4: "",
   });
   const [activeStep, setActiveStep] = useState(0);
   const [hasSetupCompleted, setHasSetupCompleted] = useState(false);
+  const [mainIndustryOptions, setMainIndustryOptions] = useState([]);
+  const [mainActivityOptions, setMainActivityOptions] = useState([]);
+  const [subActivityOptions, setSubActivityOptions] = useState([]);
 
   // CODE FOR VALIDATION 26-02-25 START
   const [formErrors, setFormErrors] = useState({
@@ -36,6 +62,11 @@ const Company = () => {
     contactName: "",
     contactNumber: "",
     email: "",
+    postcode: "",
+    addressLine1: "",
+    addressLine2: "",
+    addressLine3: "",
+    addressLine4: "",
   });
   // CODE FOR VALIDATION 26-02-25 END
   const handleStripeCheckoutSuccess = async (sessionId) => {
@@ -46,11 +77,16 @@ const Company = () => {
       if (response.status === true) {
         console.log("Session ID stored successfully:", response);
       } else {
-        console.error("Failed to store session ID:", response.message || "Unknown error");
+        console.error(
+          "Failed to store session ID:",
+          response.message || "Unknown error"
+        );
         Swal.fire({
           icon: "error",
           title: "Payment Session Error",
-          text: `Failed to store session ID: ${response.message || "Unknown error"}`,
+          text: `Failed to store session ID: ${
+            response.message || "Unknown error"
+          }`,
           confirmButtonText: "OK",
         });
       }
@@ -66,17 +102,6 @@ const Company = () => {
   };
   useEffect(() => {
     const authToken = ls.get("WAauthToken");
-    // if (!authToken) {
-    //   Swal.fire({
-    //     icon: "error",
-    //     title: "Authentication Required",
-    //     text: "Please login to continue.",
-    //     confirmButtonText: "OK",
-    //   }).then(() => {
-    //     // navigate("/login");
-    //   });
-    //   return;
-    // }
 
     const queryParams = new URLSearchParams(location.search);
     const success = queryParams.get("success");
@@ -126,46 +151,122 @@ const Company = () => {
             contactName: company.company_contact_name || "",
             contactNumber: company.company_tel || "",
             email: company.company_email || "",
+            postcode: company.company_postcode || "",
+            companyActive: company.company_active || "",
           });
-        }
-        else{
+        } else {
           console.log(response.message);
         }
       } catch (error) {
         console.error("Error fetching company details:", error);
-        // console.error("aaaaaaaaaaaaaaaaaa", error.response.data.message);
       }
     };
 
     fetchDataForCompanyDetail();
   }, []);
 
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     [name]: value,
-  //   }));
-  // };
+  useEffect(() => {
+    // Check if formData is passed in location.state
+    if (location.state && location.state.formData) {
+      setFormData((prevData) => ({
+        ...prevData,
+        ...location.state.formData, // Update formData with values from navigation state
+      }));
+    }
+  }, [location.state]);
 
+  useEffect(() => {
+    const fetchMainIndustryOptions = async () => {
+      try {
+        const data = await Authapi.mainIndustry();
+        const options = data.map((industry) => ({
+          value: industry.id,
+          label: industry.name,
+        }));
+        setMainIndustryOptions(options);
+      } catch (error) {
+        console.error("Error fetching main industry options:", error);
+      }
+    };
+
+    fetchMainIndustryOptions();
+  }, []);
+
+  const handleMainIndustryChange = async (selected) => {
+    setFormData({
+      ...formData,
+      mainIndustry: selected,
+      mainActivity: null,
+      subActivity: null,
+    });
+    setMainActivityOptions([]);
+    setSubActivityOptions([]);
+
+    try {
+      const data = await Authapi.getMainActivity(selected.value);
+      const options = data.map((activity) => ({
+        value: activity.id,
+        label: activity.name,
+      }));
+      setMainActivityOptions(options);
+    } catch (error) {
+      console.error("Error fetching main activities:", error);
+    }
+  };
+
+  const handleMainActivityChange = async (selected) => {
+    setFormData({ ...formData, mainActivity: selected, subActivity: null });
+    setSubActivityOptions([]);
+
+    try {
+      const data = await Authapi.getSubActivity(selected.value);
+      const options = data.map((subActivity) => ({
+        value: subActivity.id,
+        label: subActivity.name,
+        sic_code: subActivity.sic_code,
+      }));
+      setSubActivityOptions(options);
+    } catch (error) {
+      console.error("Error fetching sub activities:", error);
+    }
+  };
+
+  const handleSubActivityChange = (selected) => {
+    setFormData({
+      ...formData,
+      subActivity: selected,
+      sicCode: selected ? selected.sic_code : "",
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
+      console.log("FormData before navigation:", formData); // Debugging log
       try {
         const response = await Authapi.submitCompanyDetails({
           company_name: formData.companyName,
           company_contact_name: formData.contactName,
           company_email: formData.email,
           company_tel: formData.contactNumber,
+          company_postcode: formData.postcode,
+          company_active: formData.companyActive ? 1 : 0,
+          sic_code: formData.sicCode,
+          company_address_1: formData.addressLine1,
+          company_address_2: formData.addressLine2,
+          company_address_3: formData.addressLine3,
+          company_address_4: formData.addressLine4,
         });
 
         if (response.status === 200) {
-          // Save success message to sessionStorage
-          sessionStorage.setItem("successMessage", "Company Setup Complete! Your company has been successfully registered.");
+          sessionStorage.setItem(
+            "successMessage",
+            "Company Setup Complete! Your company has been successfully registered."
+          );
 
-          // Redirect to another page
-          navigate("/contract");
+          navigate("/contract", {
+            state: { formData },
+          });
         } else {
           throw new Error(response.message || "Failed to setup company");
         }
@@ -179,69 +280,34 @@ const Company = () => {
         });
       }
     }
-
-
-
-
-    // NEXT STEP CODE
-    // let step = 'step1';
-
-    // const step1 = document.getElementById('step-1');
-    // const step2 = document.getElementById('step-2');
-    // const step3 = document.getElementById('step-3');
-    // const step4 = document.getElementById('step-4');
-
-    // const step1p = document.getElementById('step1_progress');
-    // const step2p = document.getElementById('step2_progress');
-    // const step3p = document.getElementById('step3_progress');
-
-    //function next() {
-    // if (step === 'step1') {
-    //   step = 'step2';
-    //   step1.classList.remove("is-active");
-    //   step1p.css('transform', 'translateX(100%)');
-    //   step1p.css('-webkit-transform', 'translateX(100%)');
-    //   step1p.classList.add("is-active");
-    // } else if (step === 'step2') {
-    //   step = 'step3';
-    //   step2.classList.remove("is-active");
-    //   step2p.css('transform', 'translateX(100%)');
-    //   step2p.css('-webkit-transform', 'translateX(100%)');
-    //   step3.classList.add("is-active");
-    // } else if (step === 'step3') {
-    //   step = 'step4';
-    //   step3.classList.remove("is-active");
-    //   step3p.css('-webkit-transform', 'translateX(100%)');
-    //   step4.classList.add("is-active");
-    // } else if (step === 'step4') {
-    //   step = 'complete';
-    //   step4.classList.remove("is-active");
-    // }
-    // }
-
   };
 
   const handleStepChange = (step) => {
     setActiveStep(step);
   };
 
-
   // CODE FOR VALIDATION 26-02-25 START
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-
     setFormErrors({ ...formErrors, [name]: "" });
-
 
     if (name === "contactNumber") {
       if (/^\d{0,10}$/.test(value)) {
         setFormData({ ...formData, [name]: value });
 
         if (value.length === 0) {
-          setFormErrors({ ...formErrors, contactNumber: "" });
+          setFormErrors({
+            ...formErrors,
+            contactNumber: "Phone Number is required",
+          });
+        } else if (value.length !== 10) {
+          setFormErrors({
+            ...formErrors,
+            contactNumber: "Phone Number must be exactly 10 digits",
+          });
         } else {
-          validateForm();
+          setFormErrors({ ...formErrors, contactNumber: "" });
         }
       }
     } else {
@@ -257,15 +323,27 @@ const Company = () => {
       errors.companyName = "Company Name is required";
       isValid = false;
     }
-
+    // if (!formData.companyActive) {
+    //   errors.companyActive = "You must confirm the company is active";
+    //   isValid = false;
+    // }
     if (!formData.contactNumber) {
       errors.contactNumber = "Phone Number is required";
       isValid = false;
-    } else if (!/^\d{10}$/.test(formData.contactNumber)) {
-      errors.contactNumber = "Phone Number must be exactly 10 digits and only contain numbers";
+    } else if (!/^\d{0,10}$/.test(formData.contactNumber)) {
+      errors.contactNumber =
+        "Phone Number must be exactly 10 digits and only contain numbers";
       isValid = false;
     }
+    console.log("Postcode during validation:", formData.postcode);
 
+    // if (!formData.postcode) {
+    //   errors.postcode = "Postcode is required";
+    //   isValid = false;
+    // } else if (!/^.{1,6}$/.test(formData.postcode)) {
+    //   errors.postcode = "Postcode must be up to 6 characters";
+    //   isValid = false;
+    // }
     if (!formData.email) {
       errors.email = "Email is required";
       isValid = false;
@@ -279,49 +357,20 @@ const Company = () => {
       isValid = false;
     }
 
+    if (!formData.companyActive) {
+      errors.companyActive = "You must confirm the company is active";
+      isValid = false;
+    }
+
     setFormErrors(errors);
     return isValid;
   };
-  // CODE FOR VALIDATION 26-02-25 END
-  // let step = 'step1';
 
-  // const step1 = document.getElementById('step-1');
-  // const step2 = document.getElementById('step-2');
-  // const step3 = document.getElementById('step-3');
-  // const step4 = document.getElementById('step-4');
-
-  // function next() {
-  // if (step === 'step1') {
-  //   step = 'step2';
-  //   step1.classList.remove("is-active");
-  //   $(step1).find('.progress-bar__bar').css('transform','translateX(100%)'); 
-  // $(step1).find('.progress-bar__bar').css('-webkit-transform','translateX(100%)');
-  //   step2.classList.add("is-active");
-  // } else if (step === 'step2') {
-  //   step = 'step3';
-  //   step2.classList.remove("is-active");
-  //   $(step2).find('.progress-bar__bar').css('transform','translateX(100%)');
-  //   $(step2).find('.progress-bar__bar').css('-webkit-transform','translateX(100%)');
-  //   step3.classList.add("is-active"); 
-  // } else if (step === 'step3') {
-  //   step = 'step4';
-  //   step3.classList.remove("is-active");
-  //   $(step3).find('.progress-bar__bar').css('-webkit-transform','translateX(100%)');
-  //   step4.classList.add("is-active");
-  // } else if (step === 'step4') {
-  //   step = 'complete';
-  //   step4.classList.remove("is-active");
-  // }
-  // }
-
-
-
-  // function App() {
   const steps = [
-    { title: 'Company' },
-    { title: 'Contract' },
-    { title: 'Depot' },
-    { title: 'Vehicle' },
+    { title: "Company" },
+    { title: "Contract" },
+    { title: "Depot" },
+    { title: "Vehicle" },
   ];
   const activeStep1 = 0;
 
@@ -336,13 +385,17 @@ const Company = () => {
         completeTitleColor="#1e991c"
         defaultTitleColor="#bbb"
         circleFontColor="#fff"
-        completeBarColor="#1e991c" />
+        completeBarColor="#1e991c"
+      />
     );
   }
-  return (
 
+  const isSicCodeVisible =
+    formData.mainIndustry && formData.mainActivity && formData.subActivity;
+
+  return (
     <>
-    <Navlayout />
+      <Navlayout />
       <Expired />
       <h1 className="header">Company</h1>
       <p className="firstcontent">
@@ -350,63 +403,11 @@ const Company = () => {
         required and proceed.
       </p>
       <div className="company-setup-container abcd mb-0">
-
-        {/* Stepper component */}
-        {/* <Stepper activeStep={activeStep} onStepClick={handleStepChange}>
-          <Step label="Company" />
-          <Step label="Contract" />
-          <Step label="Depot" />
-          <Step label="Vehicle" />
-        </Stepper> */}
-
-        {/* <div className="stepper">
-            <Stepper
-              steps={steps}
-              activeStep={activeStep1} />
-          </div> */}
-
-
         <div className="container stepper-connector">
-          <CustomStepper
-            steps={steps}
-            activeStep={activeStep}
-          />
-          {/* <div style={{padding: '20px'}}>
-        { getSectionComponent()  }
-        { (activeStep !== 0 && activeStep !== steps.length - 1)
-            && <button onClick={ () => setActiveStep(activeStep - 1) }>Previous</button>
-        }
-        { activeStep !== steps.length - 1
-          && <button onClick={ () => setActiveStep(activeStep + 1) }>Next</button>
-        } */}
+          <CustomStepper steps={steps} activeStep={activeStep} />
         </div>
-        {/* </div> */}
-        
 
-        {/* <div class="container-fluid">
-          <br /><br />
-          <ul class="list-unstyled multi-steps">
-            <li id="step-1" class="is-active">
-              <div class="progress-bar progress-bar--success">
-                <div className="progress-bar__bar" id="step1_progress"></div>
-              </div>
-            </li>
-            <li id="step-2">First Step
-              <div class="progress-bar progress-bar--success">
-                <div class="progress-bar__bar" id="step2_progress"></div>
-              </div>
-            </li>
-            <li id="step-3">Middle Stage
-              <div class="progress-bar progress-bar--success">
-                <div class="progress-bar__bar" id="step3_progress"></div>
-              </div>
-            </li>
-            <li id="step-4">Finish</li>
-          </ul>
-        </div> */}
-
-
-          <br />
+        <br />
         <div className="pro-under-border"></div>
 
         <div className="steps-content mt-3">
@@ -416,6 +417,7 @@ const Company = () => {
               <p className="description">
                 Please fill your information so we can get in touch with you.
               </p>
+
               <form onSubmit={handleSubmit} className="company-form">
                 <div className="form-row">
                   <div className="form-group col-md-6">
@@ -424,7 +426,9 @@ const Company = () => {
                     </label>
                     <input
                       type="text"
-                      className={`form-control company ${formErrors.companyName ? "is-invalid" : ""}`}
+                      className={`form-control company ${
+                        formErrors.companyName ? "is-invalid" : ""
+                      }`}
                       id="companyName"
                       name="companyName"
                       value={formData.companyName}
@@ -433,16 +437,216 @@ const Company = () => {
                       placeholder="Company Name"
                     />
                     {formErrors.companyName && (
-                      <div className="invalid-feedback">{formErrors.companyName}</div>
+                      <div className="invalid-feedback">
+                        {formErrors.companyName}
+                      </div>
                     )}
                   </div>
+                  <div className="form-group col-md-6">
+                    <label className="label" htmlFor="mainIndustry">
+                      Company's Main Industry :
+                    </label>
+                    <Select
+                     
+                      options={mainIndustryOptions}
+                      value={formData.mainIndustry}
+                      onChange={handleMainIndustryChange}
+                      placeholder="Select Main Industry"
+                      isSearchable
+                      styles={customSelectStyles} 
+                    />
+                  </div>
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label className="label" htmlFor="mainActivity">
+                      Company's Main Activity
+                    </label>
+                    <Select
+                      // className="form-control company"
+                      options={mainActivityOptions}
+                      value={formData.mainActivity}
+                      onChange={handleMainActivityChange}
+                      placeholder="Select Main Activity"
+                      isSearchable
+                      isDisabled={!formData.mainIndustry}
+                      styles={customSelectStyles} 
+                    />
+                  </div>
+                  <div className="form-group col-md-6">
+                    <label className="label" htmlFor="subActivity">
+                      Company's Sub Activity
+                    </label>
+                    {/* <Select
+                      className="form-control company"
+                      options={subActivityOptions}
+                      value={formData.subActivity}
+                      onChange={handleSubActivityChange}
+                      placeholder="Select Sub Activity"
+                      isSearchable
+                      isDisabled={!formData.mainActivity}
+                     
+                    /> */}
+                    <Select
+                      options={subActivityOptions}
+                      value={formData.subActivity}
+                      onChange={handleSubActivityChange}
+                      placeholder="Select Sub Activity"
+                      isSearchable
+                      isDisabled={!formData.mainActivity}
+                      styles={customSelectStyles} // Apply styles
+                    />
+                  </div>
+                </div>
+
+                {isSicCodeVisible && (
+                  <div className="form-group col-md-6">
+                    <label className="label">Company's SIC Code :</label>
+                    <input
+                      type="text"
+                      className="form-control company"
+                      id="sicCode"
+                      name="sicCode"
+                      value={formData.sicCode}
+                      disabled
+                      placeholder="Company's SIC Code"
+                    />
+                  </div>
+                )}
+
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label className="label" htmlFor="contactName">
+                      Company Contact Name
+                    </label>
+                    <input
+                      type="text"
+                      className={`form-control company ${
+                        formErrors.contactName ? "is-invalid" : ""
+                      }`}
+                      id="contactName"
+                      name="contactName"
+                      value={formData.contactName}
+                      onChange={handleInputChange}
+                      required
+                      placeholder="Company Contact Name"
+                    />
+                    {formErrors.contactName && (
+                      <div className="invalid-feedback">
+                        {formErrors.contactName}
+                      </div>
+                    )}
+                  </div>
+                  <div className="form-group col-md-6">
+                    <label className="label">Company Postcode</label>
+                    <input
+                      type="text"
+                      className={`form-control company ${
+                        formErrors.postcode ? "is-invalid" : ""
+                      }`}
+                      name="postcode"
+                      value={formData.postcode}
+                      onChange={handleInputChange}
+                      required
+                      placeholder="Company Postcode"
+                    />
+                    {formErrors.postcode && (
+                      <div className="invalid-feedback">
+                        {formErrors.postcode}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label className="label">Address Line 1</label>
+                    <input
+                      type="text"
+                      className="form-control company"
+                      name="addressLine1"
+                      value={formData.addressLine1}
+                      onChange={handleInputChange}
+                      required
+                      placeholder="Address Line 1"
+                    />
+                  </div>
+
+                  <div className="form-group col-md-6">
+                    <label className="label">Address Line 2</label>
+                    <input
+                      type="text"
+                      className="form-control company"
+                      name="addressLine2"
+                      value={formData.addressLine2}
+                      onChange={handleInputChange}
+                      required
+                      placeholder="Address Line 2"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label className="label">Address Line 3</label>
+                    <input
+                      type="text"
+                      className="form-control company"
+                      name="addressLine3"
+                      value={formData.addressLine3}
+                      onChange={handleInputChange}
+                      required
+                      placeholder="Address Line 3"
+                    />
+                  </div>
+                  <div className="form-group col-md-6">
+                    <label className="label">Address Line 4</label>
+                    <input
+                      type="text"
+                      className="form-control company"
+                      name="addressLine4"
+                      value={formData.addressLine4}
+                      onChange={handleInputChange}
+                      required
+                      placeholder="Address Line 4"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label className="label" htmlFor="contactNumber">
+                      Company Telephone
+                    </label>
+                    <input
+                      type="tel"
+                      className={`form-control company ${
+                        formErrors.contactNumber ? "is-invalid" : ""
+                      }`}
+                      id="contactNumber"
+                      name="contactNumber"
+                      value={formData.contactNumber}
+                      onChange={handleInputChange}
+                      required
+                      placeholder="Company Telephone"
+                    />
+                    {formErrors.contactNumber && (
+                      <div className="invalid-feedback">
+                        {formErrors.contactNumber}
+                      </div>
+                    )}
+                  </div>
+
                   <div className="form-group col-md-6">
                     <label className="label" htmlFor="email">
                       Company Email
                     </label>
                     <input
                       type="email"
-                      className={`form-control company ${formErrors.email ? "is-invalid" : ""}`}
+                      className={`form-control company ${
+                        formErrors.email ? "is-invalid" : ""
+                      }`}
                       id="email"
                       name="email"
                       value={formData.email}
@@ -456,43 +660,38 @@ const Company = () => {
                   </div>
                 </div>
 
-                <div className="form-row">
-                  <div className="form-group col-md-6">
-                    <label className="label" htmlFor="contactNumber">
-                      Company Telephone
-                    </label>
+                <div className="form-group col-md-6">
+                  <label className="label">Company Active</label>
+                  <div className="form-check">
                     <input
-                      type="tel"
-                      className={`form-control company ${formErrors.contactNumber ? "is-invalid" : ""}`}
-                      id="contactNumber"
-                      name="contactNumber"
-                      value={formData.contactNumber}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Company Telephone"
+                      type="checkbox"
+                      className={`form-check-input ${
+                        formErrors.companyActive ? "is-invalid" : ""
+                      }`}
+                      id="companyActive"
+                      name="companyActive"
+                      checked={formData.companyActive}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          companyActive: e.target.checked,
+                        })
+                      }
                     />
-                    {formErrors.contactNumber && (
-                      <div className="invalid-feedback">{formErrors.contactNumber}</div>
-                    )}
-                  </div>
-                  <div className="form-group col-md-6">
-                    <label className="label" htmlFor="contactName">
-                      Company Contact Name
+                    <label
+                      // className={`form-check-label ${
+                      //   formErrors.companyActive ? "text-danger" : ""
+                      // }`}
+                      htmlFor="companyActive"
+                    >
+                      Confirm Company is Active
                     </label>
-                    <input
-                      type="text"
-                      className={`form-control company ${formErrors.contactName ? "is-invalid" : ""}`}
-                      id="contactName"
-                      name="contactName"
-                      value={formData.contactName}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Company Contact Name"
-                    />
-                    {formErrors.contactName && (
-                      <div className="invalid-feedback">{formErrors.contactName}</div>
-                    )}
                   </div>
+                  {formErrors.companyActive && (
+                    <div className="invalid-feedback">
+                      {formErrors.companyActive}
+                    </div>
+                  )}
                 </div>
               </form>
             </div>
@@ -506,13 +705,6 @@ const Company = () => {
         </div>
       </div>
 
-      {/* <button
-        type="button"
-        onClick={handleSubmit}
-        className="btn next btn-primary"
-      >
-        Next Step
-      </button> */}
       <div className=" company-setup-container mt-1">
         <button
           type="button"

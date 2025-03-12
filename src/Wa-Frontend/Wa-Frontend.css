@@ -1444,3 +1444,45 @@ body.scrolled-down::-webkit-scrollbar-thumb {
     /* Only target the 4th and 5th items (for example) */
     grid-column: span 1; /* Ensure they take one space in the grid */
 }
+
+
+
+
+
+
+/* .select2-container--default .select2-selection--single {
+    border: none !important;
+    border-radius: 50px !important;
+    background-color: #f8f9fa !important;
+    height: 66px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding-left: 15px !important;
+    border: 1px solid #ddd !important;
+  }
+  
+  .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #495057 !important;
+    line-height: 1.5 !important;
+  }
+  
+  .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 40px !important;
+    right: 10px !important;
+    top: 10px !important;   
+  }
+  
+  .select2-dropdown {
+    border-radius: 0 !important;
+    border: 1px solid #ced4da !important;
+  }
+  
+  .select2-results__option {
+    padding: 8px 15px !important;
+  }
+    
+  */
+  /* .css-13cymwt-control{
+    border: none !important; 
+    outline: 0 !important;
+  } */
