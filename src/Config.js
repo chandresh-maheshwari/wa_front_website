@@ -39,6 +39,7 @@ export default {
     login: "api/apilogin",
     logout: "api/userlogout",
     getUser : "api/user",
+    useregister : "api/useregister",
     stripeCheckoutSuccess : "api/stripe/checkout/success",
     userCompanyDetails: "api/user-company-details" ,
     userContractDetails: "api/user-contract-details",
