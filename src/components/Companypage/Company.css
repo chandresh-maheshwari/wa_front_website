@@ -212,7 +212,7 @@
   } */
   
   .abcd {
-    background: white;
+    background: rgb(255, 255, 255);
     border-radius: 16px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     padding: 2rem;
@@ -527,3 +527,32 @@ background-color:#0d3b66;
   left: 50%;
   margin-left: 20px;
 } */
+.css-yk16xz-control, .css-1pahdxg-control {
+  border-radius: 46px !important; /* Match the border radius */
+  border: 1px solid #E5E7EB !important; /* Match the border color */
+  background-color: #F9FAFB !important; /* Match the background color */
+  box-shadow: none !important; /* Remove box shadow */
+  height: 66px !important; /* Match the height */
+}
+
+.css-1wa3eu0-placeholder {
+  color: #333 !important; /* Placeholder text color */
+}
+
+.css-1uccc91-singleValue {
+  color: #333 !important; /* Text color */
+}
+
+.css-1okebmr-indicatorSeparator {
+  display: none !important; /* Remove the separator */
+}
+
+.css-1hb7zxy-IndicatorsContainer {
+  color: #333 !important; /* Indicator color */
+}
+.css-cc9p47-control{
+border: none !important;
+}
+.css-1pahdxg-control{
+  border: none !important;
+}

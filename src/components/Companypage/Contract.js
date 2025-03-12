@@ -263,12 +263,50 @@ const Contract = () => {
 
 
 
+  // const handlePreviousClick = async () => {
+  //   try {
+  //     const response = await Authapi.getusercompanydetail();
+
+  //     if (response.status === 200 && response.company) {
+  //       console.log(response.company.company_contact_name);
+
+  //       navigate("/company", {
+  //         state: {
+  //           formData: {
+  //             companyName: response.company.company_name || "",
+  //             contactName: response.company.company_contact_name || "",
+  //             contactNumber: response.company.company_tel || "",
+  //             email: response.company.company_email || "",
+  //             // postcode:response.company.company_postcode || "", 
+  //             postcode: response.company.company_postcode || "",
+  //           },
+  //         },
+  //       });
+  //     } else {
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Error",
+  //         text: response.message || "Failed to fetch company data. Please try again.",
+  //         confirmButtonText: "OK",
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching company data:", error);
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Error",
+  //       text: "An error occurred while fetching company data.",
+  //       confirmButtonText: "OK",
+  //     });
+  //   }
+  // };
+
   const handlePreviousClick = async () => {
     try {
       const response = await Authapi.getusercompanydetail();
 
       if (response.status === 200 && response.company) {
-        console.log(response.company.company_contact_name);
+        console.log("API Response:", response.company); // Debugging log
 
         navigate("/company", {
           state: {
@@ -277,6 +315,12 @@ const Contract = () => {
               contactName: response.company.company_contact_name || "",
               contactNumber: response.company.company_tel || "",
               email: response.company.company_email || "",
+              postcode: response.company.company_postcode || "", // Ensure this is correct
+              sicCode: response.company.sic_code || "",
+              addressLine1: response.company.company_address_1 || "",
+              addressLine2: response.company.company_address_2 || "",
+              addressLine3: response.company.company_address_3 || "",
+              addressLine4: response.company.company_address_4 || "",
             },
           },
         });
@@ -298,8 +342,6 @@ const Contract = () => {
       });
     }
   };
-
-
 
   // const handleNextClick = async () => {
   //   try {

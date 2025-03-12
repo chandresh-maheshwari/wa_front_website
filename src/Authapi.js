@@ -329,6 +329,78 @@ async useregister(registerUserData) {
     }
 
 
+    async mainIndustry() {
+        try {
+            const url = `${Config.waapiurl}${Config.authApis.mainIndustry}`;
+            this.setHeaders("get");
+
+            const authToken = ls.get("WAauthToken") || "";
+            console.log("Auth Token:", authToken);
+
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            throw error;
+        }
+    }
+
+    async getMainActivity(smi_id) {
+        try {
+            const url = `${Config.waapiurl}${Config.authApis.getMainActivity}?smi_id=${smi_id}`;
+            this.setHeaders("get");
+
+            const authToken = ls.get("WAauthToken") || "";
+            console.log("Auth Token:", authToken);
+
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            throw error;
+        }
+    }
+
+    async getSubActivity(smi_id) {
+        try {
+            const url = `${Config.waapiurl}${Config.authApis.getSubActivity}?smi_id=${smi_id}`;
+            this.setHeaders("get");
+
+            const authToken = ls.get("WAauthToken") || "";
+            console.log("Auth Token:", authToken);
+
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            throw error;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
     async submitContractDetails(formData) {
         try {
             const url = `${Config.waapiurl}${Config.authApis.userContractDetails}`;
@@ -790,5 +862,5 @@ async useregister(registerUserData) {
         }
     }
 
-
+    
 })();
