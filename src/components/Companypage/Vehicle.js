@@ -4,33 +4,51 @@ import Authapi from "../../Authapi";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 // import { Stepper, Step } from "react-form-stepper";
-import Stepper from 'react-stepper-horizontal';
+import Stepper from "react-stepper-horizontal";
 import "./Company.css";
-import Expired from '../CheckTokenExpier';
+import Expired from "../CheckTokenExpier";
 import Navlayout from "../../Wa-Frontend/NavLayout";
-import Tooltip from '@mui/material/Tooltip';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import Tooltip from "@mui/material/Tooltip";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
 const VehicleForm = () => {
+  // const [formData, setFormData] = useState({
+  //   vehicle_type_id: "",
+  //   vehicle_description: "",
+  //   driver_name: "",
+  //   vehicle_name: "",
+  //   phone_no: "",
+  //   vehicle_license_expire_date: "",
+  //   fuel_type_id: "",
+  //   vehicle_tare_weight: "",
+  //   vehicle_owner: "",
+  //   contract_id: "",
+  //   contractName: "",
+  // });
   const [formData, setFormData] = useState({
     vehicle_type_id: "",
     vehicle_description: "",
+    vehicle_reg: "",
     driver_name: "",
     vehicle_name: "",
     phone_no: "",
+    vehicle_license: "",
     vehicle_license_expire_date: "",
+    vehicle_address_1: "",
+    vehicle_address_2: "",
+    vehicle_address_3: "",
+    vehicle_address_4: "",
+    vehicle_postcode: "",
     fuel_type_id: "",
     vehicle_tare_weight: "",
     vehicle_owner: "",
-    contract_id: "",
-    contractName: "",
   });
   const [fuelTypes, setFuelTypes] = useState([]);
   const [activeStep, setActiveStep] = useState(3);
   const [errors, setErrors] = useState({});
   const [vehicletype, setVehicleType] = useState([]);
-  const [successMessage, setSuccessMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState("");
 
   const navigate = useNavigate();
 
@@ -48,9 +66,7 @@ const VehicleForm = () => {
     if (name === "phone_no") {
       validateForm();
     }
-
   };
-
 
   const validateForm = () => {
     const newErrors = {};
@@ -86,8 +102,6 @@ const VehicleForm = () => {
     // Return true if there are no errors
     return Object.keys(newErrors).length === 0;
   };
-
-
 
   // const handlePreviousClick = () => {
   //   navigate("/depot");
@@ -172,10 +186,6 @@ const VehicleForm = () => {
   //   }
   // };
 
-
-
-
-
   useEffect(() => {
     const message = sessionStorage.getItem("successMessage");
     if (message) {
@@ -222,35 +232,75 @@ const VehicleForm = () => {
   }, []);
 
   useEffect(() => {
+    // const getUservehicledetail = async () => {
+    //   try {
+    //     const response = await Authapi.getUservehicledetail();
+    //     if (response.status === 200) {
+    //       const Vehicle = response.Vehicle;
+    //       // console.log(Vehicle.vehicle_owner);
+    //       // console.log(Vehicle.vehicle_owner);
+    //       // console.log(Vehicle.vehicle_owner === '1');
+    //       const vehicleOwnerMapped =
+    //         Vehicle.vehicle_owner == "1"
+    //           ? "contract_name"
+    //           : "third_party_carrier";
+    //       // console.log(vehicleOwnerMapped);
+    //       setFormData({
+    //         vehicle_type_id: Vehicle.vehicle_type_id || "",
+    //         vehicle_description: Vehicle.vehicle_description || "",
+    //         driver_name: Vehicle.driver_name || "",
+    //         vehicle_name: Vehicle.vehicle_name || "",
+    //         phone_no: Vehicle.phone_no || "",
+    //         vehicle_license_expire_date:
+    //           Vehicle.vehicle_license_expire_date || "",
+    //         fuel_type_id: Vehicle.fuel_type_id || "",
+    //         vehicle_tare_weight: Vehicle.vehicle_tare_weight || "",
+    //         vehicle_owner: vehicleOwnerMapped || "",
+    //         contract_id: Vehicle.contract_id || "",
+    //       });
+    //     }
+    //   } catch (error) {
+    //     console.error("Error fetching company details:", error);
+    //   }
+    // };
+
     const getUservehicledetail = async () => {
       try {
         const response = await Authapi.getUservehicledetail();
-        if (response.status === 200) {
-          const Vehicle = response.Vehicle;
-          // console.log(Vehicle.vehicle_owner);
-          // console.log(Vehicle.vehicle_owner); 
-          // console.log(Vehicle.vehicle_owner === '1'); 
-          const vehicleOwnerMapped = Vehicle.vehicle_owner == '1' ? "contract_name" : "third_party_carrier";
-          // console.log(vehicleOwnerMapped);
-          setFormData({
-
-            vehicle_type_id: Vehicle.vehicle_type_id || "",
-            vehicle_description: Vehicle.vehicle_description || "",
-            driver_name: Vehicle.driver_name || "",
-            vehicle_name: Vehicle.vehicle_name || "",
-            phone_no: Vehicle.phone_no || "",
-            vehicle_license_expire_date: Vehicle.vehicle_license_expire_date || "",
-            fuel_type_id: Vehicle.fuel_type_id || "",
-            vehicle_tare_weight: Vehicle.vehicle_tare_weight || "",
-            vehicle_owner: vehicleOwnerMapped || "",
-            contract_id: Vehicle.contract_id || "",
-          });
+        
+        if (response?.status === 200 && response?.vehicle) {
+          const { vehicle } = response;
+    
+          setFormData((prevData) => ({
+            contract_id: vehicle.contract_id || prevData.contract_id || "",
+            vehicle_type_id: vehicle.vehicle_type_id || prevData.vehicle_type_id || "",
+            tip_id: vehicle.tip_id || prevData.tip_id || "",
+            user_tip_id: vehicle.user_tip_id || prevData.user_tip_id || "",
+            vehicle_description: vehicle.vehicle_description || prevData.vehicle_description || "",
+            vehicle_reg: vehicle.vehicle_reg || prevData.vehicle_reg || "",
+            vehicle_name: vehicle.vehicle_name || prevData.vehicle_name || "",
+            phone_no: vehicle.phone_no || prevData.phone_no || "",
+            vehicle_license: vehicle.vehicle_license || prevData.vehicle_license || "",
+            vehicle_license_expire_date: vehicle.vehicle_license_expire_date || prevData.vehicle_license_expire_date || "",
+            vehicle_address_1: vehicle.vehicle_address_1 || prevData.vehicle_address_1 || "",
+            vehicle_address_2: vehicle.vehicle_address_2 || prevData.vehicle_address_2 || "",
+            vehicle_address_3: vehicle.vehicle_address_3 || prevData.vehicle_address_3 || "",
+            vehicle_address_4: vehicle.vehicle_address_4 || prevData.vehicle_address_4 || "",
+            vehicle_postcode: vehicle.vehicle_postcode || prevData.vehicle_postcode || "",
+            vehicle_owner: vehicle.vehicle_owner || prevData.vehicle_owner || "",
+            vehicle_emissions: vehicle.vehicle_emissions || prevData.vehicle_emissions || "",
+            vehicle_ppm: vehicle.vehicle_ppm || prevData.vehicle_ppm || "",
+            vehicle_load: vehicle.vehicle_load || prevData.vehicle_load || "",
+            vehicle_tare_weight: vehicle.vehicle_tare_weight || prevData.vehicle_tare_weight || "",
+            fuel_type_id: vehicle.fuel_type_id || prevData.fuel_type_id || "",
+            driver_name: vehicle.driver_name || prevData.driver_name || "",
+          }));
         }
       } catch (error) {
-        console.error("Error fetching company details:", error);
+        console.error("Error fetching vehicle details:", error);
       }
     };
-
+    
     getUservehicledetail();
   }, []);
 
@@ -278,66 +328,289 @@ const VehicleForm = () => {
     fetchContractDetails();
   }, []);
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  //   if (!validateForm()) return;
+  //   // Map the vehicle_owner to the appropriate database value
+  //   const vehicleOwnerValue =
+  //     formData.vehicle_owner === "contract_name" ? 1 : 2;
 
-    if (!validateForm()) return;
-    // Map the vehicle_owner to the appropriate database value
-    const vehicleOwnerValue =
-      formData.vehicle_owner === "contract_name" ? 1 : 2;
+  //   try {
+  //     const response = await Authapi.userVehicleDetails({
+  //       vehicle_type_id: formData.vehicle_type_id,
+  //       vehicle_description: formData.vehicle_description,
+  //       driver_name: formData.driver_name,
+  //       vehicle_name: formData.vehicle_name,
+  //       phone_no: formData.phone_no,
+  //       vehicle_license_expire_date: formData.vehicle_license_expire_date,
+  //       fuel_type_id: formData.fuel_type_id,
+  //       vehicle_tare_weight: formData.vehicle_tare_weight,
+  //       vehicle_owner: vehicleOwnerValue,
+  //       contract_id: formData.contract_id,
+  //     });
 
-    try {
-      const response = await Authapi.userVehicleDetails({
-        vehicle_type_id: formData.vehicle_type_id,
-        vehicle_description: formData.vehicle_description,
-        driver_name: formData.driver_name,
-        vehicle_name: formData.vehicle_name,
-        phone_no: formData.phone_no,
-        vehicle_license_expire_date: formData.vehicle_license_expire_date,
-        fuel_type_id: formData.fuel_type_id,
-        vehicle_tare_weight: formData.vehicle_tare_weight,
-        vehicle_owner: vehicleOwnerValue,
-        contract_id: formData.contract_id,
-      });
+  //     if (response.status === 200) {
+  //       // Swal.fire({
+  //       //   icon: "success",
+  //       //   title: "Vehicle Details Submitted",
+  //       //   text: "Your vehicle details have been successfully submitted.",
+  //       //   confirmButtonText: "OK",
+  //       // }).then(() => {
+  //       // });
+  //       sessionStorage.setItem(
+  //         "successMessage",
+  //         "Depot Setup Complete! Your Depot has been successfully registered."
+  //       );
 
-      if (response.status === 200) {
-        // Swal.fire({
-        //   icon: "success",
-        //   title: "Vehicle Details Submitted",
-        //   text: "Your vehicle details have been successfully submitted.",
-        //   confirmButtonText: "OK",
-        // }).then(() => {
-        // });
-        sessionStorage.setItem("successMessage", "Depot Setup Complete! Your Depot has been successfully registered.");
+  //       navigate("/success");
+  //     } else {
+  //       throw new Error(response.message || "Failed to submit vehicle details");
+  //     }
+  //   } catch (error) {
+  //     console.error("Vehicle submission error:", error);
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Submission Failed",
+  //       text:
+  //         error.message ||
+  //         "Failed to submit vehicle details. Please try again.",
+  //       confirmButtonText: "OK",
+  //     });
+  //   }
+  // };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
 
-        navigate("/success");
-      } else {
-        throw new Error(response.message || "Failed to submit vehicle details");
-      }
-    } catch (error) {
-      console.error("Vehicle submission error:", error);
+  //   if (!validateForm()) return;
+
+  //   // Map the vehicle_owner to database value (1 = contract_name, 2 = third_party_carrier)
+  //   const vehicleOwnerValue =
+  //     formData.vehicle_owner === "contract_name" ? 1 : 2;
+
+  //   try {
+  //     const response = await Authapi.userVehicleDetails({
+  //       contract_id: formData.contract_id,
+  //       vehicle_type_id: formData.vehicle_type_id,
+  //       tip_id: formData.tip_id,
+  //       user_tip_id: formData.user_tip_id,
+  //       vehicle_description: formData.vehicle_description,
+  //       vehicle_reg: formData.vehicle_reg,
+  //       vehicle_name: formData.vehicle_name,
+  //       phone_no: formData.phone_no,
+  //       vehicle_license: formData.vehicle_license,
+  //       vehicle_license_expire_date: formData.vehicle_license_expire_date,
+  //       vehicle_address_1: formData.vehicle_address_1,
+  //       vehicle_address_2: formData.vehicle_address_2,
+  //       vehicle_address_3: formData.vehicle_address_3,
+  //       vehicle_address_4: formData.vehicle_address_4,
+  //       vehicle_postcode: formData.vehicle_postcode,
+  //       vehicle_owner: vehicleOwnerValue,
+  //       vehicle_emissions: formData.vehicle_emissions,
+  //       vehicle_ppm: formData.vehicle_ppm,
+  //       vehicle_load: formData.vehicle_load,
+  //       vehicle_tare_weight: formData.vehicle_tare_weight,
+  //       fuel_type_id: formData.fuel_type_id,
+  //       driver_name: formData.driver_name,
+  //     });
+
+  //     if (response.status === 200) {
+  //       sessionStorage.setItem(
+  //         "successMessage",
+  //         "Depot Setup Complete! Your Depot has been successfully registered."
+  //       );
+  //       navigate("/success");
+  //     } else {
+  //       throw new Error(
+  //         response.message || "Failed to submit vehicle details."
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.error("Vehicle submission error:", error);
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Submission Failed",
+  //       text:
+  //         error.message ||
+  //         "An unexpected error occurred while submitting vehicle details. Please try again.",
+  //       confirmButtonText: "OK",
+  //     });
+  //   }
+  // };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  
+  //   if (!validateForm()) return;
+  
+  //   // Map vehicle_owner to appropriate database value
+  //   const vehicleOwnerValue = formData.vehicle_owner === "contract_name" ? 1 : 2;
+  
+  //   try {
+  //     const response = await Authapi.userVehicleDetails({
+  //       vehicle_type_id: formData.vehicle_type_id,
+  //       vehicle_description: formData.vehicle_description,
+  //       driver_name: formData.driver_name,
+  //       vehicle_name: formData.vehicle_name,
+  //       phone_no: formData.phone_no,
+  //       vehicle_license_expire_date: formData.vehicle_license_expire_date,
+  //       fuel_type_id: formData.fuel_type_id,
+  //       vehicle_tare_weight: formData.vehicle_tare_weight,
+  //       vehicle_owner: vehicleOwnerValue,
+  //       contract_id: formData.contract_id,
+        
+  //       // ✅ Add Address Fields
+  //       vehicle_address_1: formData.vehicle_address_1,
+  //       vehicle_address_2: formData.vehicle_address_2,
+  //       vehicle_address_3: formData.vehicle_address_3,
+  //       vehicle_address_4: formData.vehicle_address_4,
+  //       vehicle_postcode: formData.vehicle_postcode,
+  //     });
+  
+  //     if (response.status === 200) {
+  //       sessionStorage.setItem(
+  //         "successMessage",
+  //         "Depot Setup Complete! Your Depot has been successfully registered."
+  //       );
+  //       navigate("/success");
+  //     } else {
+  //       throw new Error(response.message || "Failed to submit vehicle details");
+  //     }
+  //   } catch (error) {
+  //     console.error("Vehicle submission error:", error);
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Submission Failed",
+  //       text: error.message || "Failed to submit vehicle details. Please try again.",
+  //       confirmButtonText: "OK",
+  //     });
+  //   }
+  // };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  
+  //   if (!validateForm()) return;
+  
+  //   // Map vehicle_owner to appropriate database value
+  //   const vehicleOwnerValue = formData.vehicle_owner === "contract_name" ? 1 : 2;
+  
+  //   try {
+  //     const response = await Authapi.userVehicleDetails({
+  //       contract_id: formData.contract_id,
+  //       vehicle_type_id: formData.vehicle_type_id,
+  //       tip_id: formData.tip_id,
+  //       user_tip_id: formData.user_tip_id,
+  //       vehicle_description: formData.vehicle_description,
+  //       vehicle_reg: formData.vehicle_reg,
+  //       vehicle_name: formData.vehicle_name,
+  //       phone_no: formData.phone_no,
+  //       vehicle_license: formData.vehicle_license,
+  //       vehicle_license_expire_date: formData.vehicle_license_expire_date,
+  //       vehicle_address_1: formData.vehicle_address_1,
+  //       vehicle_address_2: formData.vehicle_address_2,
+  //       vehicle_address_3: formData.vehicle_address_3,
+  //       vehicle_address_4: formData.vehicle_address_4,
+  //       vehicle_postcode: formData.vehicle_postcode,
+  //       vehicle_owner: vehicleOwnerValue,
+  //       vehicle_emissions: formData.vehicle_emissions,
+  //       vehicle_ppm: formData.vehicle_ppm,
+  //       vehicle_load: formData.vehicle_load,
+  //       vehicle_tare_weight: formData.vehicle_tare_weight,
+  //       fuel_type_id: formData.fuel_type_id,
+  //       driver_name: formData.driver_name,
+  //     });
+  
+  //     if (response.status === 200) {
+  //       sessionStorage.setItem(
+  //         "successMessage",
+  //         "Depot Setup Complete! Your Depot has been successfully registered."
+  //       );
+  //       navigate("/success");
+  //     } else {
+  //       throw new Error(response.message || "Failed to submit vehicle details");
+  //     }
+  //   } catch (error) {
+  //     console.error("Vehicle submission error:", error);
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Submission Failed",
+  //       text: error.message || "Failed to submit vehicle details. Please try again.",
+  //       confirmButtonText: "OK",
+  //     });
+  //   }
+  // };
+   const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!validateForm()) return; // Ensure the form is valid before proceeding
+
+  // Map vehicle_owner to appropriate database value
+  const vehicleOwnerValue = formData.vehicle_owner === "contract_name" ? 1 : 2;
+
+  try {
+    const response = await Authapi.userVehicleDetails({
+      contract_id: formData.contract_id,
+      vehicle_type_id: formData.vehicle_type_id,
+      tip_id: formData.tip_id,
+      user_tip_id: formData.user_tip_id,
+      vehicle_description: formData.vehicle_description,
+      vehicle_reg: formData.vehicle_reg,
+      vehicle_name: formData.vehicle_name,
+      phone_no: formData.phone_no,
+      vehicle_license: formData.vehicle_license,
+      vehicle_license_expire_date: formData.vehicle_license_expire_date,
+      vehicle_address_1: formData.vehicle_address_1,
+      vehicle_address_2: formData.vehicle_address_2,
+      vehicle_address_3: formData.vehicle_address_3,
+      vehicle_address_4: formData.vehicle_address_4,
+      vehicle_postcode: formData.vehicle_postcode,
+      vehicle_owner: vehicleOwnerValue,
+      vehicle_emissions: formData.vehicle_emissions,
+      vehicle_ppm: formData.vehicle_ppm,
+      vehicle_load: formData.vehicle_load,
+      vehicle_tare_weight: formData.vehicle_tare_weight,
+      fuel_type_id: formData.fuel_type_id,
+      driver_name: formData.driver_name,
+    });
+
+    // Check if the request was successful
+    if (response.status === 200 || response?.data?.success) {
       Swal.fire({
-        icon: "error",
-        title: "Submission Failed",
-        text:
-          error.message ||
-          "Failed to submit vehicle details. Please try again.",
+        icon: "success",
+        title: "Depot Setup Complete!",
+        text: "Your Depot has been successfully registered.",
         confirmButtonText: "OK",
+      }).then(() => {
+        sessionStorage.setItem(
+          "successMessage",
+          "Depot Setup Complete! Your Depot has been successfully registered."
+        );
+        navigate("/success");
       });
+    } else {
+      throw new Error(response?.message || "Failed to submit vehicle details");
     }
-  };
+  } catch (error) {
+    console.error("Vehicle submission error:", error);
+
+    Swal.fire({
+      icon: "error",
+      title: "Submission Failed",
+      text: error?.response?.data?.message || error.message || "Failed to submit vehicle details. Please try again.",
+      confirmButtonText: "OK",
+    });
+  }
+};
 
   const handleStepChange = (step) => {
     setActiveStep(step);
   };
 
   const steps = [
-    { title: 'Company' },
-    { title: 'Contract' },
-    { title: 'Depot' },
-    { title: 'Vehicle' },
-    { title: 'Completed' },
+    { title: "Company" },
+    { title: "Contract" },
+    { title: "Depot" },
+    { title: "Vehicle" },
+    { title: "Completed" },
   ];
   const activeStep1 = 3;
   function CustomStepper(props) {
@@ -351,12 +624,13 @@ const VehicleForm = () => {
         completeTitleColor="#1e991c"
         defaultTitleColor="#bbb"
         circleFontColor="#fff"
-        completeBarColor="#1e991c" />
+        completeBarColor="#1e991c"
+      />
     );
   }
   return (
     <>
-    <Navlayout />
+      <Navlayout />
       <Expired />
       <h2 className="header">Vehicle</h2>
       <p className="firstcontent">
@@ -384,23 +658,26 @@ const VehicleForm = () => {
             steps={steps}
             activeStep={activeStep1} /> */}
           <div className="container stepper-connector-fifth-child stepper-connector">
-            <CustomStepper
-              steps={steps}
-              activeStep={activeStep} />
+            <CustomStepper steps={steps} activeStep={activeStep} />
           </div>
-        </div><br />
+        </div>
+        <br />
         <div className="pro-under-border"></div>
         <div className="p-4 content">
           <h5 className="title">Vehicle details</h5>
           <p className="description">
             Please fill your information so we can get in touch with you.
           </p>
+
           <form onSubmit={handleSubmit}>
             <div className="form-row">
               <div className="form-group col-md-6">
                 <label>Vehicle Type</label>
                 <div className="input-with-icon">
-                  <Tooltip title="Select the Vehicle Type from the drop-down menu" arrow>
+                  <Tooltip
+                    title="Select the Vehicle Type from the drop-down menu"
+                    arrow
+                  >
                     <FontAwesomeIcon
                       icon={faInfoCircle}
                       className="info-icon"
@@ -444,15 +721,40 @@ const VehicleForm = () => {
                     onChange={handleChange}
                   />
                 </div>
-                {errors.vehicle_description && (
+                {/* {errors.vehicle_description && (
                   <small className="text-danger">
                     {errors.vehicle_description}
                   </small>
-                )}
+                )} */}
               </div>
             </div>
-
             <div className="form-row">
+              <div className="form-group col-md-6">
+                <label>Vehicle Registration No :</label>
+                <div className="input-with-icon">
+                  <Tooltip title="Add the vehicle driver name if known" arrow>
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      className="info-icon"
+                    />
+                  </Tooltip>
+                  <input
+                    value={formData.vehicle_reg} // ✅ Corrected value
+                    className="form-control company"
+                    type="text"
+                    name="vehicle_reg"
+                    onChange={handleChange}
+                  />
+                  {/* <input
+                    value={formData.vehicle_description}
+                    type="text"
+                    className="form-control"
+                    name="vehicle_description"
+                    onChange={handleChange}
+                  /> */}
+                </div>
+              </div>
+
               <div className="form-group col-md-6">
                 <label>Vehicle Driver Name</label>
                 <div className="input-with-icon">
@@ -470,11 +772,12 @@ const VehicleForm = () => {
                     onChange={handleChange}
                   />
                 </div>
-                {errors.driver_name && (
+                {/* {errors.driver_name && (
                   <small className="text-danger">{errors.driver_name}</small>
-                )}
+                )} */}
               </div>
-
+            </div>
+            <div className="form-row">
               <div className="form-group col-md-6">
                 <label>Carriers Name</label>
                 <div className="input-with-icon">
@@ -496,9 +799,6 @@ const VehicleForm = () => {
                   <small className="text-danger">{errors.vehicle_name}</small>
                 )}
               </div>
-            </div>
-
-            <div className="form-row">
               <div className="form-group col-md-6">
                 <label>Phone No</label>
                 <div className="input-with-icon">
@@ -520,10 +820,36 @@ const VehicleForm = () => {
                   <small className="text-danger">{errors.phone_no}</small>
                 )}
               </div>
+            </div>
+            <div className="form-row">
+              <div className="form-group col-md-6">
+                <label>Carrier License No</label>
+                <div className="input-with-icon">
+                  <Tooltip title="Add the Carrier company's phone number" arrow>
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      className="info-icon"
+                    />
+                  </Tooltip>
+                  <input
+                    value={formData.vehicle_license}
+                    className="form-control company"
+                    type="text"
+                    name="vehicle_license"
+                    onChange={handleChange}
+                  />
+                </div>
+                {/* {errors.phone_no && (
+                  <small className="text-danger">{errors.phone_no}</small>
+                )} */}
+              </div>
               <div className="form-group col-md-6">
                 <label>Carrier's License Expiry Date</label>
                 <div className="input-with-icon">
-                  <Tooltip title="Add the expiry date of the licence. This can be found on the above website." arrow>
+                  <Tooltip
+                    title="Add the expiry date of the licence. This can be found on the above website."
+                    arrow
+                  >
                     <FontAwesomeIcon
                       icon={faInfoCircle}
                       className="info-icon"
@@ -544,12 +870,131 @@ const VehicleForm = () => {
                 )}
               </div>
             </div>
+            <div className="form-row">
+              <div className="form-group col-md-6">
+                <label>Carriers Address 1:</label>
+                <div className="input-with-icon">
+                  <Tooltip title="Add the Carrier company's phone number" arrow>
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      className="info-icon"
+                    />
+                  </Tooltip>
+                  <input
+                    value={formData.vehicle_address_1}
+                    className="form-control company"
+                    type="text"
+                    name="vehicle_address_1"
+                    onChange={handleChange}
+                  />
+                </div>
+               
+              </div>
+              <div className="form-group col-md-6">
+                <label>Carriers Address 2:</label>
+                <div className="input-with-icon">
+                  <Tooltip
+                    title="Add the expiry date of the licence. This can be found on the above website."
+                    arrow
+                  >
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      className="info-icon"
+                    />
+                  </Tooltip>
+                  <input
+                    value={formData.vehicle_address_2}
+                    className="form-control company"
+                    type="text"
+                    name="vehicle_address_2"
+                    onChange={handleChange}
+                  />
+                </div>
+               
+              </div>
+            </div>
+            <div className="form-row">
+              <div className="form-group col-md-6">
+                <label>Carriers Address 3:</label>
+                <div className="input-with-icon">
+                  <Tooltip title="Add the Carrier company's phone number" arrow>
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      className="info-icon"
+                    />
+                  </Tooltip>
+                  <input
+                    value={formData.vehicle_address_3}
+                    className="form-control company"
+                    type="text"
+                    name="vehicle_address_3"
+                    onChange={handleChange}
+                  />
+                </div>
+               
+              </div>
+
+              <div className="form-group col-md-6">
+                <label>Carriers Address 4:</label>
+                <div className="input-with-icon">
+                  <Tooltip
+                    title="Add the expiry date of the licence. This can be found on the above website."
+                    arrow
+                  >
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      className="info-icon"
+                    />
+                  </Tooltip>
+                  <input
+                    value={formData.vehicle_address_4}
+                    className="form-control company"
+                    type="text"
+                    name="vehicle_address_4"
+                    onChange={handleChange}
+                  />
+                </div>
+               
+                 
+                
+              </div>
+            </div>
 
             <div className="form-row">
               <div className="form-group col-md-6">
+                <label>Carriers Postcode :</label>
+                <div className="input-with-icon">
+                  <Tooltip title="Add the Carrier company's phone number" arrow>
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      className="info-icon"
+                    />
+                  </Tooltip>
+                  {/* <input
+                    // value={formData.}
+                    className="form-control company"
+                    type="text"
+                    name=""
+                    onChange={handleChange}
+                  /> */}
+                  <input
+  value={formData.vehicle_postcode}
+  className="form-control company"
+  type="text"
+  name="vehicle_postcode"
+  onChange={handleChange}
+/>
+                </div>
+              
+              </div>
+
+              <div className="form-group col-md-6">
                 <label>Vehicle Fuel Type</label>
                 <div className="input-with-icon">
-                  <Tooltip title="Select the Vehicle Type from the drop-down menu" arrow>
+                  <Tooltip
+                    title="Select the Vehicle Type from the drop-down menu"
+                    arrow
+                  >
                     <FontAwesomeIcon
                       icon={faInfoCircle}
                       className="info-icon"
@@ -573,7 +1018,8 @@ const VehicleForm = () => {
                   <small className="text-danger">{errors.fuel_type_id}</small>
                 )}
               </div>
-
+            </div>
+            <div className="form-row">
               <div className="form-group col-md-6">
                 <label>Vehicle Tare Weight</label>
                 <div className="input-with-icon">
@@ -597,9 +1043,7 @@ const VehicleForm = () => {
                   </small>
                 )}
               </div>
-            </div>
 
-            <div className="form-row">
               <div className="form-group col-md-6">
                 <label>Vehicle Owner</label>
                 <div className="input-with-icon">
@@ -617,35 +1061,14 @@ const VehicleForm = () => {
                   >
                     <option value="">Select Owner</option>
                     <option value="contract_name">Contract Name</option>
-                    <option value="third_party_carrier">Third Party Carrier</option>
+                    <option value="third_party_carrier">
+                      Third Party Carrier
+                    </option>
                   </select>
                 </div>
                 {errors.vehicle_owner && (
                   <small className="text-danger">{errors.vehicle_owner}</small>
                 )}
-              </div>
-
-              <div className="form-group col-md-6">
-                <label className="label" htmlFor="contractName">
-                  Contract Name
-                </label>
-                <div className="input-with-icon">
-                  <Tooltip title="Select the contract that is using the Vehicle/Carrier" arrow>
-                    <FontAwesomeIcon
-                      icon={faInfoCircle}
-                      className="info-icon"
-                    />
-                  </Tooltip>
-                  <input
-                    type="text"
-                    className="form-control company"
-                    id="contractName"
-                    name="contractName"
-                    value={formData.contractName || ""}
-                    placeholder="Contract Name"
-                    disabled
-                  />
-                </div>
               </div>
             </div>
           </form>
@@ -664,9 +1087,14 @@ const VehicleForm = () => {
           type="button"
           onClick={handleSubmit}
           className="btn next btn-primary final-submit"
-        ><Tooltip title="Click 'Submit' to save the forwarding facility details." arrow>
-          submit
-          </Tooltip></button>
+        >
+          <Tooltip
+            title="Click 'Submit' to save the forwarding facility details."
+            arrow
+          >
+            submit
+          </Tooltip>
+        </button>
       </div>
     </>
   );

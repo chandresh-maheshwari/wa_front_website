@@ -3,13 +3,15 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 import ls from "local-storage";
 import "./Company.css";
+import Tooltip from '@mui/material/Tooltip';
 
 import customSelectStyles from "../../CustomSelectStyles";
 import Authapi from "../../Authapi";
 
 import Expired from "../CheckTokenExpier";
 import Navlayout from "../../Wa-Frontend/NavLayout";
-import Tooltip from "@mui/material/Tooltip";
+// import Tooltip from "@mui/material/Tooltip";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
