@@ -14,18 +14,18 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import "./Depot.css";
 
 const DepotForm = () => {
-//   const [formData, setFormData] = useState({
-//     depotTypeId: "",
-//     depotName: "",
-//     contractId: "",
-//     countyId: "",
-//     startDate: "",
-//     endDate: "",
-//     depotPostcode: "",
-//     depotTelephone: "",
-//     contractName: "",
-//     dateAddress: ""
-//   });
+  //   const [formData, setFormData] = useState({
+  //     depotTypeId: "",
+  //     depotName: "",
+  //     contractId: "",
+  //     countyId: "",
+  //     startDate: "",
+  //     endDate: "",
+  //     depotPostcode: "",
+  //     depotTelephone: "",
+  //     contractName: "",
+  //     dateAddress: ""
+  //   });
 
 
   const [formData, setFormData] = useState({
@@ -150,9 +150,9 @@ const DepotForm = () => {
     const newErrors = {};
 
     // Validate Depot Type
-    if (!formData.depotTypeId) {
-      newErrors.depotTypeId = "Depot Type is required.";
-    }
+    // if (!formData.depotTypeId) {
+    //   newErrors.depotTypeId = "Depot Type is required.";
+    // }
 
     // Validate Depot Name
     if (!formData.depotName) {
@@ -160,19 +160,19 @@ const DepotForm = () => {
     }
 
     // Validate County
-    if (!formData.countyId) {
-      newErrors.countyId = "County is required.";
-    }
+    // if (!formData.countyId) {
+    //   newErrors.countyId = "County is required.";
+    // }
 
     // Validate Start Date
-    if (!formData.startDate) {
-      newErrors.startDate = "Start Date is required.";
-    }
+    // if (!formData.startDate) {
+    //   newErrors.startDate = "Start Date is required.";
+    // }
 
-    // Validate End Date
-    if (!formData.endDate) {
-      newErrors.endDate = "End Date is required.";
-    }
+    // // Validate End Date
+    // if (!formData.endDate) {
+    //   newErrors.endDate = "End Date is required.";
+    // }
 
     // Validate Depot Postcode
     if (!formData.depotPostcode) {
@@ -187,9 +187,9 @@ const DepotForm = () => {
     }
 
     // Validate Depot Address
-    if (!formData.dateAddress) {
-      newErrors.dateAddress = "Depot Address is required.";
-    }
+    // if (!formData.dateAddress) {
+    //   newErrors.dateAddress = "Depot Address is required.";
+    // }
 
     setErrors(newErrors); // Set all errors
     return Object.keys(newErrors).length === 0; // Return true if no errors
@@ -200,7 +200,7 @@ const DepotForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // alert("sdfsdf");
-    // if (!validateForm()) return;
+    if (!validateForm()) return;
     // console.log(formData);
     // console.log(formData.contractId);
     try {
@@ -256,46 +256,46 @@ const DepotForm = () => {
       //   });
       // } else {
 
-        const response = await Authapi.getUserDepotdetail();
-        if (response.status === 200) {
-          // console.log("TESTING");
-          // console.log();
-          setFormData({
-            depotTypeId: response.depots.depot_type_id || "",
-            contractId: response.depots.contract_id || "",
-            depotName: response.depots.depot_name || "",
-            depotPermitNo: response.depots.depot_permit_no || "",
-            depotAddress1: response.depots.depot_address_1 || "",
-            depotAddress2: response.depots.depot_address_2 || "",
-            depotAddress3: response.depots.depot_address_3 || "",
-            depotAddress4: response.depots.depot_address_4 || "",
-            depotPostcode: response.depots.depot_postcode || "",
-            countyId: response.depots.county_id || "",
-            depotTelephone: response.depots.depot_telephone || "",
-            depotPermitTonnageLimit: response.depots.depot_permit_tonnage_limit || "",
-            includeTonnageLimitOnDashboard: response.include_tonnage_limit_on_dashboard || "",
-            startDate: response.depots.start_date_tonnage_material || "",
-            endDate: response.depots.end_date_tonnage_material || "",
-            // dateAddress: response.depots.depot_address_1 || "",
-          });
+      const response = await Authapi.getUserDepotdetail();
+      if (response.status === 200) {
+        // console.log("TESTING");
+        // console.log();
+        setFormData({
+          depotTypeId: response.depots.depot_type_id || "",
+          contractId: response.depots.contract_id || "",
+          depotName: response.depots.depot_name || "",
+          depotPermitNo: response.depots.depot_permit_no || "",
+          depotAddress1: response.depots.depot_address_1 || "",
+          depotAddress2: response.depots.depot_address_2 || "",
+          depotAddress3: response.depots.depot_address_3 || "",
+          depotAddress4: response.depots.depot_address_4 || "",
+          depotPostcode: response.depots.depot_postcode || "",
+          countyId: response.depots.county_id || "",
+          depotTelephone: response.depots.depot_telephone || "",
+          depotPermitTonnageLimit: response.depots.depot_permit_tonnage_limit || "",
+          includeTonnageLimitOnDashboard: response.depots.include_tonnage_limit_on_dashboard || "",
+          startDate: response.depots.start_date_tonnage_material || "",
+          endDate: response.depots.end_date_tonnage_material || "",
+          // dateAddress: response.depots.depot_address_1 || "",
+        });
         // }
       }
     };
 
     fetchData();
-  // }, [location.state]);
-}, []);
+    // }, [location.state]);
+  }, []);
 
 
-   useEffect(() => {
-      // Check if formData is passed in location.state
-      if (location.state && location.state.formData) {
-        setFormData((prevData) => ({
-          ...prevData,
-          ...location.state.formData, // Update formData with values from navigation state
-        }));
-      }
-    }, [location.state]);
+  useEffect(() => {
+    // Check if formData is passed in location.state
+    if (location.state && location.state.formData) {
+      setFormData((prevData) => ({
+        ...prevData,
+        ...location.state.formData, // Update formData with values from navigation state
+      }));
+    }
+  }, [location.state]);
 
 
   const handleStepChange = (step) => {
@@ -508,15 +508,17 @@ const DepotForm = () => {
                           className="info-icon"
                         />
                       </Tooltip>
-                      <input
-                        className="form-control company"
-                        type="text"
-                        name="depotName"
-                        value={formData.depotName}
-                        onChange={handleChange}
-                      />
+                      <div className="field">
+                        <input
+                          className="form-control company"
+                          type="text"
+                          name="depotName"
+                          value={formData.depotName}
+                          onChange={handleChange}
+                        />
+                        {errors.depotName && <small className="text-danger">{errors.depotName}</small>}
+                      </div>
                     </div>
-                    {errors.depotName && <small className="text-danger">{errors.depotName}</small>}
                   </div>
 
                   <div className="form-group col-md-6">
@@ -550,7 +552,7 @@ const DepotForm = () => {
                           className="info-icon"
                         />
                       </Tooltip>
-                       {console.log(formData)} 
+                      {console.log(formData)}
                       <input
                         value={formData.depotAddress1}
                         className="form-control company"
@@ -634,15 +636,17 @@ const DepotForm = () => {
                           className="info-icon"
                         />
                       </Tooltip>
-                      <input
-                        className="form-control company"
-                        type="text"
-                        name="depotPostcode"
-                        value={formData.depotPostcode}
-                        onChange={handleChange}
-                      />
+                      <div className="field">
+                        <input
+                          className="form-control company"
+                          type="text"
+                          name="depotPostcode"
+                          value={formData.depotPostcode}
+                          onChange={handleChange}
+                        />
+                        {errors.depotPostcode && <small className="text-danger">{errors.depotPostcode}</small>}
+                      </div>
                     </div>
-                    {errors.depotPostcode && <small className="text-danger">{errors.depotPostcode}</small>}
                   </div>
 
                   <div className="form-group col-md-6">
@@ -682,15 +686,17 @@ const DepotForm = () => {
                           className="info-icon"
                         />
                       </Tooltip>
-                      <input
-                        className="form-control company"
-                        type="tel"
-                        name="depotTelephone"
-                        value={formData.depotTelephone}
-                        onChange={handleChange}
-                      />
+                      <div className="field">
+                        <input
+                          className="form-control company"
+                          type="tel"
+                          name="depotTelephone"
+                          value={formData.depotTelephone}
+                          onChange={handleChange}
+                        />
+                        {errors.depotTelephone && <small className="text-danger">{errors.depotTelephone}</small>}
+                      </div>
                     </div>
-                    {errors.depotTelephone && <small className="text-danger">{errors.depotTelephone}</small>}
                   </div>
 
 
@@ -718,7 +724,7 @@ const DepotForm = () => {
                 </div>
                 <div className="form-row">
                   <div className="form-group col-md-6">
-                    <label>Include Tonnage Limit on Dashboard</label>
+                    <label class="label">Include Tonnage Limit on Dashboard</label>
                     <div className="input-with-icon">
                       <Tooltip title="Tick if you wish to see tonnage limit in the dashboard." arrow>
                         <FontAwesomeIcon
@@ -734,33 +740,33 @@ const DepotForm = () => {
                         onChange={handleChange}
                       /> */}
                       <div className="form-check">
-                      <input
-                        type="checkbox"
-                        // className={`form-check-input ${formErrors.companyActive ? "is-invalid" : ""
-                        //   }`}
-                        className='form-check-input' 
-                        id="includeTonnageLimitOnDashboard"
-                        name="includeTonnageLimitOnDashboard"
-                        checked={formData.includeTonnageLimitOnDashboard}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            includeTonnageLimitOnDashboard: e.target.checked,
-                          })
-                        }
-                      />
-                      <label
-                        htmlFor="includeTonnageLimitOnDashboard"
-                      >
-                        Confirm Company is Active
-                      </label>
+                        <input
+                          type="checkbox"
+                          // className={`form-check-input ${formErrors.companyActive ? "is-invalid" : ""
+                          //   }`}
+                          className='form-check-input'
+                          id="includeTonnageLimitOnDashboard"
+                          name="includeTonnageLimitOnDashboard"
+                          checked={formData.includeTonnageLimitOnDashboard}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              includeTonnageLimitOnDashboard: e.target.checked,
+                            })
+                          }
+                        />
+                        <label
+                          htmlFor="includeTonnageLimitOnDashboard"
+                        >
+                          Confirm Include Tonnage Limit on Dashboard is Active
+                        </label>
 
-                      {/* {formErrors.includeTonnageLimitOnDashboard && ( */}
+                        {/* {formErrors.includeTonnageLimitOnDashboard && ( */}
                         <div className="invalid-feedback">
                           {/* {formErrors.includeTonnageLimitOnDashboard} */}
                         </div>
-                      {/* )} */}
-                    </div>
+                        {/* )} */}
+                      </div>
                     </div>
                     {/* {errors.includeTonnageLimitonDashboard && <small className="text-danger">{errors.includeTonnageLimitonDashboard}</small>} */}
                   </div>

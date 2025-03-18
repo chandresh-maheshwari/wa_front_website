@@ -139,13 +139,14 @@ const Contract = () => {
       case "companyName":
         errors.companyName = value ? "" : "Company name is required";
         break;
-      case "contractName":
-        errors.contractName = value ? "" : "Contract name is required";
+        case "contractName":
+          errors.contractName = value ? "" : "Contract name is required";
         break;
-      default:
-        break;
-    }
-    setFormErrors(errors);
+        default:
+          break;
+        }
+        // {console.log(errors)}
+        setFormErrors(errors);
     // checkFormValidity();
   };
 
@@ -450,20 +451,22 @@ const Contract = () => {
                     className="info-icon"
                   />
                 </Tooltip>
-                <input
-                  type="text"
-                  className={`form-control company ${formErrors.companyName ? "is-invalid" : ""}`}
-                  id="companyName"
-                  name="companyName"
-                  value={formData.companyName}
-                  onChange={handleInputChange}
-                  disabled
-                  placeholder="Company"
-                />
+                <div className="field">
+                  <input
+                    type="text"
+                    className={`form-control company ${formErrors.companyName ? "is-invalid" : ""}`}
+                    id="companyName"
+                    name="companyName"
+                    value={formData.companyName}
+                    onChange={handleInputChange}
+                    disabled
+                    placeholder="Company"
+                  />
+                  {formErrors.companyName && (
+                    <div className="invalid-feedback">{formErrors.companyName}</div>
+                  )}
+                </div>
               </div>
-              {formErrors.companyName && (
-                <div className="invalid-feedback">{formErrors.companyName}</div>
-              )}
             </div>
             <div className="form-group col-md-6">
               <label className="label" htmlFor="contractName">
@@ -476,19 +479,21 @@ const Contract = () => {
                     className="info-icon"
                   />
                 </Tooltip>
-                <input
-                  type="text"
-                  className={`form-control company ${formErrors.contractName ? "is-invalid" : ""}`}
-                  id="contractName"
-                  name="contractName"
-                  value={formData.contractName}
-                  onChange={handleInputChange}
-                  placeholder="Contract Name"
-                />
+                <div className="field">
+                  <input
+                    type="text"
+                    className={`form-control company ${formErrors.contractName ? "is-invalid" : ""}`}
+                    id="contractName"
+                    name="contractName"
+                    value={formData.contractName}
+                    onChange={handleInputChange}
+                    placeholder="Contract Name"
+                  />
+                {formErrors.contractName && (
+                  <div className="invalid-feedback">{formErrors.contractName}</div>
+                )}
+                </div>
               </div>
-              {formErrors.contractName && (
-                <div className="invalid-feedback">{formErrors.contractName}</div>
-              )}
             </div>
           </form>
         </div>
@@ -529,7 +534,7 @@ const Contract = () => {
           onClick={handleSubmit}
           className="btn next btn-primary"
         ><Tooltip title="Click 'Submit' to save your contract details." arrow>
-          Next Step
+            Next Step
           </Tooltip></button>
       </div>
 
