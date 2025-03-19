@@ -563,8 +563,8 @@ const DepotForm = () => {
                           type="text"
                           name="contractName"
                           value={formData.contractName}
-                          disabled
-                        />
+                          onChange={handleDepotTypeChange}
+                          disabled                        />
                         {errors.contractName && <small className="text-danger">{errors.contractName}</small>}
                       </div>
                     </div>
