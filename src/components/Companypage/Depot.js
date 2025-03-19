@@ -263,6 +263,7 @@ const DepotForm = () => {
       const response = await Authapi.submitDepotDetails({
         depot_type_id: formData.depotTypeId,
         contract_id: formData.contractId,
+        contract_name: formData.contractName,
         depot_name: formData.depotName,
         depot_permit_no: formData.depotPermitNo,
         depot_address_1: formData.depotAddress1,
