@@ -656,7 +656,7 @@ const VehicleForm = () => {
     } catch (error) {
       // console.error("Vehicle submission error:", error);
 
-      { console.log(error.message) }
+      // { console.log(error.message) }
       Swal.fire({
         icon: "error",
         title: "Submission Failed",
@@ -791,13 +791,15 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
-                  <input
-                    value={formData.vehicle_description}
-                    type="text"
-                    className="form-control company"
-                    name="vehicle_description"
-                    onChange={handleChange}
-                  />
+                  <div className="field">
+                    <input
+                      value={formData.vehicle_description}
+                      type="text"
+                      className="form-control company"
+                      name="vehicle_description"
+                      onChange={handleChange}
+                    />
+                  </div>
                 </div>
                 {/* {errors.vehicle_description && (
                   <small className="text-danger">
@@ -816,20 +818,22 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
-                  <input
-                    value={formData.vehicle_reg} // ✅ Corrected value
-                    className="form-control company"
-                    type="text"
-                    name="vehicle_reg"
-                    onChange={handleChange}
-                  />
-                  {/* <input
+                  <div className="field">
+                    <input
+                      value={formData.vehicle_reg} // ✅ Corrected value
+                      className="form-control company"
+                      type="text"
+                      name="vehicle_reg"
+                      onChange={handleChange}
+                    />
+                    {/* <input
                     value={formData.vehicle_description}
                     type="text"
                     className="form-control"
                     name="vehicle_description"
                     onChange={handleChange}
                   /> */}
+                  </div>
                 </div>
               </div>
 
@@ -842,17 +846,19 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
-                  <input
-                    value={formData.driver_name}
-                    className="form-control company"
-                    type="text"
-                    name="driver_name"
-                    onChange={handleChange}
-                  />
-                </div>
-                {/* {errors.driver_name && (
+                  <div className="field">
+                    <input
+                      value={formData.driver_name}
+                      className="form-control company"
+                      type="text"
+                      name="driver_name"
+                      onChange={handleChange}
+                    />
+                    {/* {errors.driver_name && (
                   <small className="text-danger">{errors.driver_name}</small>
-                )} */}
+                  )} */}
+                  </div>
+                </div>
               </div>
             </div>
             <div className="form-row">
@@ -865,17 +871,19 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
-                  <input
-                    value={formData.vehicle_name}
-                    className="form-control company"
-                    type="text"
-                    name="vehicle_name"
-                    onChange={handleChange}
-                  />
+                  <div className="field">
+                    <input
+                      value={formData.vehicle_name}
+                      className="form-control company"
+                      type="text"
+                      name="vehicle_name"
+                      onChange={handleChange}
+                    />
+                    {errors.vehicle_name && (
+                      <small className="text-danger">{errors.vehicle_name}</small>
+                    )}
+                  </div>
                 </div>
-                {errors.vehicle_name && (
-                  <small className="text-danger">{errors.vehicle_name}</small>
-                )}
               </div>
               <div className="form-group col-md-6">
                 <label>Phone No</label>
@@ -886,17 +894,19 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
-                  <input
-                    value={formData.phone_no}
-                    className="form-control company"
-                    type="text"
-                    name="phone_no"
-                    onChange={handleChange}
-                  />
+                  <div className="field">
+                    <input
+                      value={formData.phone_no}
+                      className="form-control company"
+                      type="text"
+                      name="phone_no"
+                      onChange={handleChange}
+                    />
+                    {errors.phone_no && (
+                      <small className="text-danger">{errors.phone_no}</small>
+                    )}
+                  </div>
                 </div>
-                {errors.phone_no && (
-                  <small className="text-danger">{errors.phone_no}</small>
-                )}
               </div>
             </div>
             <div className="form-row">
@@ -909,17 +919,20 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
-                  <input
-                    value={formData.vehicle_license}
-                    className="form-control company"
-                    type="text"
-                    name="vehicle_license"
-                    onChange={handleChange}
-                  />
+
+                  <div className="field">
+                    <input
+                      value={formData.vehicle_license}
+                      className="form-control company"
+                      type="text"
+                      name="vehicle_license"
+                      onChange={handleChange}
+                    />
+                    {errors.vehicle_license && (
+                      <small className="text-danger">{errors.vehicle_license}</small>
+                    )}
+                  </div>
                 </div>
-                {errors.vehicle_license && (
-                  <small className="text-danger">{errors.vehicle_license}</small>
-                )}
               </div>
               <div className="form-group col-md-6">
                 <label>Carrier's License Expiry Date</label>
@@ -933,19 +946,21 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
-                  <input
-                    value={formData.vehicle_license_expire_date}
-                    type="date"
-                    className="form-control company"
-                    name="vehicle_license_expire_date"
-                    onChange={handleChange}
-                  />
+                  <div className="field">
+                    <input
+                      value={formData.vehicle_license_expire_date}
+                      type="date"
+                      className="form-control company"
+                      name="vehicle_license_expire_date"
+                      onChange={handleChange}
+                    />
+                    {errors.vehicle_license_expire_date && (
+                      <small className="text-danger">
+                        {errors.vehicle_license_expire_date}
+                      </small>
+                    )}
+                  </div>
                 </div>
-                {errors.vehicle_license_expire_date && (
-                  <small className="text-danger">
-                    {errors.vehicle_license_expire_date}
-                  </small>
-                )}
               </div>
             </div>
             <div className="form-row">
@@ -958,15 +973,16 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
-                  <input
-                    value={formData.vehicle_address_1}
-                    className="form-control company"
-                    type="text"
-                    name="vehicle_address_1"
-                    onChange={handleChange}
-                  />
+                  <div className="field">
+                    <input
+                      value={formData.vehicle_address_1}
+                      className="form-control company"
+                      type="text"
+                      name="vehicle_address_1"
+                      onChange={handleChange}
+                    />
+                  </div>
                 </div>
-
               </div>
               <div className="form-group col-md-6">
                 <label>Carriers Address 2</label>
@@ -980,15 +996,16 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
-                  <input
-                    value={formData.vehicle_address_2}
-                    className="form-control company"
-                    type="text"
-                    name="vehicle_address_2"
-                    onChange={handleChange}
-                  />
+                  <div className="field">
+                    <input
+                      value={formData.vehicle_address_2}
+                      className="form-control company"
+                      type="text"
+                      name="vehicle_address_2"
+                      onChange={handleChange}
+                    />
+                  </div>
                 </div>
-
               </div>
             </div>
             <div className="form-row">
@@ -1001,13 +1018,15 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
-                  <input
-                    value={formData.vehicle_address_3}
-                    className="form-control company"
-                    type="text"
-                    name="vehicle_address_3"
-                    onChange={handleChange}
-                  />
+                  <div className="field">
+                    <input
+                      value={formData.vehicle_address_3}
+                      className="form-control company"
+                      type="text"
+                      name="vehicle_address_3"
+                      onChange={handleChange}
+                    />
+                  </div>
                 </div>
 
               </div>
@@ -1024,17 +1043,16 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
-                  <input
-                    value={formData.vehicle_address_4}
-                    className="form-control company"
-                    type="text"
-                    name="vehicle_address_4"
-                    onChange={handleChange}
-                  />
+                  <div className="field">
+                    <input
+                      value={formData.vehicle_address_4}
+                      className="form-control company"
+                      type="text"
+                      name="vehicle_address_4"
+                      onChange={handleChange}
+                    />
+                  </div>
                 </div>
-
-
-
               </div>
             </div>
 
@@ -1055,13 +1073,15 @@ const VehicleForm = () => {
                     name=""
                     onChange={handleChange}
                   /> */}
-                  <input
-                    value={formData.vehicle_postcode}
-                    className="form-control company"
-                    type="text"
-                    name="vehicle_postcode"
-                    onChange={handleChange}
-                  />
+                  <div className="field">
+                    <input
+                      value={formData.vehicle_postcode}
+                      className="form-control company"
+                      type="text"
+                      name="vehicle_postcode"
+                      onChange={handleChange}
+                    />
+                  </div>
                 </div>
 
               </div>
@@ -1092,7 +1112,6 @@ const VehicleForm = () => {
                     ))}
                   </select> */}
                   <div className="field">
-
                     <Select
                       className="searchable_dropdown"
                       options={fuelTypes}
@@ -1120,19 +1139,22 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
-                  <input
-                    value={formData.vehicle_tare_weight}
-                    className="form-control company"
-                    type="text"
-                    name="vehicle_tare_weight"
-                    onChange={handleChange}
-                  />
+                  <div className="field">
+                    <input
+                      value={formData.vehicle_tare_weight}
+                      className="form-control company"
+                      type="text"
+                      name="vehicle_tare_weight"
+                      onChange={handleChange}
+                    />
+
+                    {errors.vehicle_tare_weight && (
+                      <small className="text-danger">
+                        {errors.vehicle_tare_weight}
+                      </small>
+                    )}
+                  </div>
                 </div>
-                {errors.vehicle_tare_weight && (
-                  <small className="text-danger">
-                    {errors.vehicle_tare_weight}
-                  </small>
-                )}
               </div>
 
               <div className="form-group col-md-6">
@@ -1144,7 +1166,7 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
-                  {console.log(formData.vehicle_owner)}
+                  {/* {console.log(formData.vehicle_owner)} */}
                   {/* <select
                     value={formData.vehicle_owner || ""}
                     className="form-control company"
@@ -1187,15 +1209,17 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
-                  <input
-                    type="text"
-                    className="form-control company"
-                    id="contractName"
-                    name="contractName"
-                    value={formData.contractName || ""}
-                    placeholder="Contract Name"
-                    disabled
-                  />
+                  <div className="field">
+                    <input
+                      type="text"
+                      className="form-control company"
+                      id="contractName"
+                      name="contractName"
+                      value={formData.contractName || ""}
+                      placeholder="Contract Name"
+                      disabled
+                    />
+                  </div>
                 </div>
               </div>
               <div className="form-group col-md-6">
@@ -1210,7 +1234,7 @@ const VehicleForm = () => {
           className="btn btn-secondary prevbtn"
           onClick={handlePreviousClick}
         ><Tooltip title="Click 'Previous' to go back and Update your Depot details." arrow>
-            Previous step
+            Previous Step
           </Tooltip>
         </button>
 
@@ -1223,7 +1247,7 @@ const VehicleForm = () => {
             title="Click 'Submit' to save the forwarding facility details."
             arrow
           >
-            submit
+            Submit
           </Tooltip>
         </button>
       </div>

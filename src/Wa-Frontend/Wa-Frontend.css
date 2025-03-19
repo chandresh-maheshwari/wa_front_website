@@ -1489,7 +1489,7 @@ body.scrolled-down::-webkit-scrollbar-thumb {
   .info-icon {
     margin-right: 8px; /* Adjust spacing as needed */
     color: #555; /* Adjust color as needed */
-    margin-bottom: 10px;
+    margin-bottom: 20px;
   }
 
   .select2-container--default .select2-selection--single {

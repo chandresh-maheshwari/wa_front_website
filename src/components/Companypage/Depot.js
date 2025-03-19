@@ -62,13 +62,13 @@ const DepotForm = () => {
     // setFormData({ ...formData, depotTypeId: selected });
     try {
       const data = await Authapi.getUserDepotTypeName();
-      if (data && data.length > 0) {   
-      const options = data.map((depotType) => ({
-        value: depotType.id,
-        label: depotType.depot_type_name,
-      }));
-      setDepotTypes(options);
-       } else {
+      if (data && data.length > 0) {
+        const options = data.map((depotType) => ({
+          value: depotType.id,
+          label: depotType.depot_type_name,
+        }));
+        setDepotTypes(options);
+      } else {
         console.warn("No fuel types data received");
       }
     } catch (error) {
@@ -206,10 +206,10 @@ const DepotForm = () => {
     //   newErrors.depotTypeId = "Depot Type is required.";
     // }
 
-     if (!formData.contractName) {
+    if (!formData.contractName) {
       newErrors.contractName = "Contract Name is required.";
     }
-    
+
     // Validate Depot Name
     if (!formData.depotName) {
       newErrors.depotName = "Depot Name is required.";
@@ -363,10 +363,10 @@ const DepotForm = () => {
     try {
       const response = await Authapi.getUserContractdetail();
 
-      console.log(response);
+      // console.log(response);
 
       if (response.status === 200 && response.contract) {
-        console.log("Contract Name:", response.contract.contract_name);
+        // console.log("Contract Name:", response.contract.contract_name);
 
 
         navigate("/contract", {
@@ -379,7 +379,7 @@ const DepotForm = () => {
         });
 
 
-        console.log("Redirecting to /contract");
+        // console.log("Redirecting to /contract");
       } else {
         console.log("Error message:", response.message);
 
@@ -557,15 +557,15 @@ const DepotForm = () => {
                         />
                       </Tooltip>
                       <div className="field">
-                      <input
-                        className="form-control company"
-                        type="text"
-                        name="contractName"
-                        value={formData.contractName}
-                        disabled
-                      />
+                        <input
+                          className="form-control company"
+                          type="text"
+                          name="contractName"
+                          value={formData.contractName}
+                          disabled
+                        />
                         {errors.contractName && <small className="text-danger">{errors.contractName}</small>}
-                    </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -601,15 +601,17 @@ const DepotForm = () => {
                           className="info-icon"
                         />
                       </Tooltip>
-                      <input
-                        className="form-control company"
-                        type="text"
-                        name="depotPermitNo"
-                        value={formData.depotPermitNo}
-                        onChange={handleChange}
-                      />
+                      <div className="field">
+                        <input
+                          className="form-control company"
+                          type="text"
+                          name="depotPermitNo"
+                          value={formData.depotPermitNo}
+                          onChange={handleChange}
+                        />
+                        {errors.depotPermitNo && <small className="text-danger">{errors.depotPermitNo}</small>}
+                      </div>
                     </div>
-                    {errors.depotPermitNo && <small className="text-danger">{errors.depotPermitNo}</small>}
                   </div>
                 </div>
 
@@ -623,16 +625,18 @@ const DepotForm = () => {
                           className="info-icon"
                         />
                       </Tooltip>
-                      {console.log(formData)}
-                      <input
-                        value={formData.depotAddress1}
-                        className="form-control company"
-                        type="text"
-                        name="depotAddress1"
-                        onChange={handleChange}
-                      />
+                      {/* {console.log(formData)} */}
+                      <div className="field">
+                        <input
+                          value={formData.depotAddress1}
+                          className="form-control company"
+                          type="text"
+                          name="depotAddress1"
+                          onChange={handleChange}
+                        />
+                        {/* {errors.depotAddress1 && <small className="text-danger">{errors.depotAddress1}</small>} */}
+                      </div>
                     </div>
-                    {/* {errors.depotAddress1 && <small className="text-danger">{errors.depotAddress1}</small>} */}
                   </div>
 
                   <div className="form-group col-md-6">
@@ -644,15 +648,17 @@ const DepotForm = () => {
                           className="info-icon"
                         />
                       </Tooltip>
-                      <input
-                        className="form-control company"
-                        type="text"
-                        value={formData.depotAddress2}
-                        name="depotAddress2"
-                        onChange={handleChange}
-                      />
+                      <div className="field">
+                        <input
+                          className="form-control company"
+                          type="text"
+                          value={formData.depotAddress2}
+                          name="depotAddress2"
+                          onChange={handleChange}
+                        />
+                        {/* {errors.depotAddress2 && <small className="text-danger">{errors.depotAddress2}</small>} */}
+                      </div>
                     </div>
-                    {/* {errors.depotAddress2 && <small className="text-danger">{errors.depotAddress2}</small>} */}
                   </div>
                 </div>
                 <div className="form-row">
@@ -665,15 +671,17 @@ const DepotForm = () => {
                           className="info-icon"
                         />
                       </Tooltip>
-                      <input
-                        value={formData.depotAddress3}
-                        className="form-control company"
-                        type="text"
-                        name="depotAddress3"
-                        onChange={handleChange}
-                      />
+                      <div className="field">
+                        <input
+                          value={formData.depotAddress3}
+                          className="form-control company"
+                          type="text"
+                          name="depotAddress3"
+                          onChange={handleChange}
+                        />
+                        {/* {errors.depotAddress3 && <small className="text-danger">{errors.depotAddress3}</small>} */}
+                      </div>
                     </div>
-                    {/* {errors.depotAddress3 && <small className="text-danger">{errors.depotAddress3}</small>} */}
                   </div>
 
                   <div className="form-group col-md-6">
@@ -685,15 +693,17 @@ const DepotForm = () => {
                           className="info-icon"
                         />
                       </Tooltip>
-                      <input
-                        className="form-control company"
-                        type="text"
-                        value={formData.depotAddress4}
-                        name="depotAddress4"
-                        onChange={handleChange}
-                      />
+                      <div className="field">
+                        <input
+                          className="form-control company"
+                          type="text"
+                          value={formData.depotAddress4}
+                          name="depotAddress4"
+                          onChange={handleChange}
+                        />
+                        {/* {errors.depotAddress4 && <small className="text-danger">{errors.depotAddress4}</small>} */}
+                      </div>
                     </div>
-                    {/* {errors.depotAddress4 && <small className="text-danger">{errors.depotAddress4}</small>} */}
                   </div>
                 </div>
 
@@ -792,16 +802,18 @@ const DepotForm = () => {
                           className="info-icon"
                         />
                       </Tooltip>
-                      {console.log(formData.depotPermitTonnageLimit)}
-                      <input
-                        className="form-control company"
-                        type="tel"
-                        name="depotPermitTonnageLimit"
-                        value={formData.depotPermitTonnageLimit}
-                        onChange={handleChange}
-                      />
+                      {/* {console.log(formData.depotPermitTonnageLimit)} */}
+                      <div className="field">
+                        <input
+                          className="form-control company"
+                          type="tel"
+                          name="depotPermitTonnageLimit"
+                          value={formData.depotPermitTonnageLimit}
+                          onChange={handleChange}
+                        />
+                        {/* {errors.depotPermitTonnageLimit && <small className="text-danger">{errors.depotPermitTonnageLimit}</small>} */}
+                      </div>
                     </div>
-                    {/* {errors.depotPermitTonnageLimit && <small className="text-danger">{errors.depotPermitTonnageLimit}</small>} */}
                   </div>
 
                 </div>
@@ -823,26 +835,28 @@ const DepotForm = () => {
                         onChange={handleChange}
                       /> */}
                       <div className="form-check">
-                        <input
-                          type="checkbox"
-                          // className={`form-check-input ${formErrors.companyActive ? "is-invalid" : ""
-                          //   }`}
-                          className='form-check-input'
-                          id="includeTonnageLimitOnDashboard"
-                          name="includeTonnageLimitOnDashboard"
-                          checked={formData.includeTonnageLimitOnDashboard}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              includeTonnageLimitOnDashboard: e.target.checked,
-                            })
-                          }
-                        />
-                        <label
-                          htmlFor="includeTonnageLimitOnDashboard"
-                        >
-                          Confirm Include Tonnage Limit on Dashboard is Active
-                        </label>
+                        <div className="field">
+                          <input
+                            type="checkbox"
+                            // className={`form-check-input ${formErrors.companyActive ? "is-invalid" : ""
+                            //   }`}
+                            className='form-check-input'
+                            id="includeTonnageLimitOnDashboard"
+                            name="includeTonnageLimitOnDashboard"
+                            checked={formData.includeTonnageLimitOnDashboard}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                includeTonnageLimitOnDashboard: e.target.checked,
+                              })
+                            }
+                          />
+                          <label
+                            htmlFor="includeTonnageLimitOnDashboard"
+                          >
+                            Confirm Include Tonnage Limit on Dashboard is Active
+                          </label>
+                        </div>
 
                         {/* {formErrors.includeTonnageLimitOnDashboard && ( */}
                         <div className="invalid-feedback">
@@ -863,15 +877,17 @@ const DepotForm = () => {
                           className="info-icon"
                         />
                       </Tooltip>
-                      <input
-                        value={formData.startDate}
-                        className="form-control company"
-                        type="date"
-                        name="startDate"
-                        onChange={handleChange}
-                      />
+                      <div className="field">
+                        <input
+                          value={formData.startDate}
+                          className="form-control company"
+                          type="date"
+                          name="startDate"
+                          onChange={handleChange}
+                        />
+                        {errors.startDate && <small className="text-danger">{errors.startDate}</small>}
+                      </div>
                     </div>
-                    {errors.startDate && <small className="text-danger">{errors.startDate}</small>}
                   </div>
 
 
@@ -907,15 +923,17 @@ const DepotForm = () => {
                           className="info-icon"
                         />
                       </Tooltip>
-                      <input
-                        className="form-control company"
-                        type="date"
-                        value={formData.endDate}
-                        name="endDate"
-                        onChange={handleChange}
-                      />
+                      <div className="field">
+                        <input
+                          className="form-control company"
+                          type="date"
+                          value={formData.endDate}
+                          name="endDate"
+                          onChange={handleChange}
+                        />
+                        {errors.endDate && <small className="text-danger">{errors.endDate}</small>}
+                      </div>
                     </div>
-                    {errors.endDate && <small className="text-danger">{errors.endDate}</small>}
                   </div>
                   <div className="form-group col-md-6">
                   </div>
@@ -953,7 +971,7 @@ const DepotForm = () => {
           className="btn btn-secondary prevbtn"
           onClick={handlePreviousClick}
         ><Tooltip title="Click 'Previous' to go back and Update your contract details." arrow>
-            Previous step
+            Previous Step
           </Tooltip>
         </button>
 

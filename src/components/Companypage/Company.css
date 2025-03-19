@@ -144,18 +144,7 @@
       margin-bottom: 20px; /* Space below the description */
   }
   
-  .company{
-      border-radius: 20px; 
-       border: 1px solid #e0e0e0;
-       box-shadow: #7f8c8d;
-       background-color: white;
-      width: 100%; 
-      margin-bottom: 20px;
-       width: 284px;
-      height: 66px;   
-      border-radius: 46px 46px 46px 46px !important;
-      border: 1px 0px 0px 0px;    
-  }
+
   .label {
       font-weight: bold;
       margin-bottom: 5px; 
@@ -527,6 +516,7 @@ border: none !important;
 .field{
   /* .searchable_dropdown{ */
   width: 100%;
+  margin-bottom: 20px;
 }
 
 .header {
@@ -564,3 +554,20 @@ border: none !important;
   /* opacity: 0; */
 }
 
+.text-danger{
+  margin-left: 5%;
+}
+
+
+.company{
+  border-radius: 20px; 
+   border: 1px solid #e0e0e0;
+   box-shadow: #7f8c8d;
+   background-color: white;
+  width: 100%; 
+  /* margin-bottom: 20px; */
+   width: 284px;
+  height: 66px;   
+  border-radius: 46px 46px 46px 46px !important;
+  border: 1px 0px 0px 0px;    
+}

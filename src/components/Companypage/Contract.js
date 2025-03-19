@@ -66,9 +66,9 @@ const Contract = () => {
     const fetchContractDetails = async () => {
       try {
         const response = await Authapi.getLatestContractDetails();
-        console.log("API Response:", response);
-        console.log("Contract Name:", response.contract.contract_name);
-        console.log("Contract ID:", response.contract.id);
+        // console.log("API Response:", response);
+        // console.log("Contract Name:", response.contract.contract_name);
+        // console.log("Contract ID:", response.contract.id);
         if (response.status === true) {
           setFormData((prev) => ({
             ...prev,
@@ -140,7 +140,7 @@ const Contract = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setErrors({ ...errors, [name]: "" }); // Clear the error for that field
-   setFormData((prev) => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -569,7 +569,7 @@ const Contract = () => {
           className="btn btn-secondary prevbtn"
           onClick={handlePreviousClick}>
           <Tooltip title="Click 'Previous' to go back and Update your company details." arrow>
-            Previous step
+            Previous Step
           </Tooltip>
         </button>
 

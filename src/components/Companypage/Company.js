@@ -61,12 +61,12 @@ const Company = () => {
   });
   // CODE FOR VALIDATION 26-02-25 END
   const handleStripeCheckoutSuccess = async (sessionId) => {
-    console.log("Session ID:", sessionId);
+    // console.log("Session ID:", sessionId);
 
     try {
       const response = await Authapi.stripeCheckoutSuccess(sessionId);
       if (response.status === true) {
-        console.log("Session ID stored successfully:", response);
+        // console.log("Session ID stored successfully:", response);
       } else {
         console.error(
           "Failed to store session ID:",
@@ -99,7 +99,7 @@ const Company = () => {
     const hasShownSuccessMessage = ls.get("hasShownCompanySetupSuccess");
 
     if (sessionId && success === "true" && !hasShownSuccessMessage) {
-      console.log(showForm);
+      // console.log(showForm);
       if (!showForm) {
         setShowForm(true);
       }
@@ -236,7 +236,7 @@ const Company = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log("FormData before navigation:", formData); // Debugging log
+      // console.log("FormData before navigation:", formData); // Debugging log
       try {
         const response = await Authapi.submitCompanyDetails({
           company_name: formData.companyName,
@@ -897,6 +897,7 @@ const Company = () => {
                         />
                       </Tooltip>
                       <div className="form-check">
+                      <div className="field">
                         <input
                           type="checkbox"
                           className={`form-check-input ${formErrors.companyActive ? "is-invalid" : ""
@@ -919,7 +920,7 @@ const Company = () => {
                         >
                           Confirm Company is Active
                         </label>
-
+</div>
                         {formErrors.companyActive && (
                           <div className="invalid-feedback">
                             {formErrors.companyActive}
