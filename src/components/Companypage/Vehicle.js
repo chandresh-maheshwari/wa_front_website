@@ -151,8 +151,8 @@ const VehicleForm = () => {
         navigate("/depot", {
           state: {
             formData: depotData,
-            contract_id: response.contract.id || "", // Correct contract ID mapping
-            contractName: response.contract.contract_name || "", // Correct contract ID mapping
+            // contract_id: response.contract.id || "", // Correct contract ID mapping
+            // contractName: response.contract.contract_name || "", // Correct contract ID mapping
           },
         });
         // console.log("Redirecting to /depot");
