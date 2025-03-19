@@ -22,10 +22,14 @@ const Contract = () => {
     companyId: "",
     contractId: "",
   });
-  const [formErrors, setFormErrors] = useState({
-    companyName: "",
-    contractName: "",
-  });
+
+  // const [formErrors, setFormErrors] = useState({
+  //   companyName: "",
+  //   contractName: "",
+  // });
+  const [errors, setErrors] = useState({});
+
+
 
   const navigate = useNavigate();
 
@@ -124,43 +128,79 @@ const Contract = () => {
   // };
 
 
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     [name]: value,
+  //   }));
+  //   validateField(name, value);
+  // };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setErrors({ ...errors, [name]: "" }); // Clear the error for that field
+   setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
-    validateField(name, value);
+
   };
 
-  const validateField = (name, value) => {
-    let errors = { ...formErrors };
-    switch (name) {
-      case "companyName":
-        errors.companyName = value ? "" : "Company name is required";
-        break;
-        case "contractName":
-          errors.contractName = value ? "" : "Contract name is required";
-        break;
-        default:
-          break;
-        }
-        // {console.log(errors)}
-        setFormErrors(errors);
-    // checkFormValidity();
+  // const validateField = (name, value) => {
+  //   // let errors = { ...formErrors };
+  //   const errors = {};
+  //   console.log(value);
+  //   // switch (name) {
+  //   //   case "companyName":
+  //   //     errors.companyName = value ? "" : "Company Name is required";
+  //   //     break;
+  //   //   case "contractName":
+  //   //     errors.contractName = value ? "" : "Contract Name is required";
+  //   //     break;
+  //   //   default:
+  //   //     break;
+  //   // }
+  //   console.log(name);
+  //   console.log(name === "companyName");
+  //   if (name === "companyName") {
+  //     errors.companyName = value ? "" : "Company Name is required";
+  //   }
+  //   if (name === "contractName") {
+  //     errors.contractName = value ? "" : "Contract Name is required";
+  //   }
+  //   {console.log(errors)}
+  //   setFormErrors(errors);
+  //   console.log(formErrors);
+  //   // checkFormValidity();
+  // };
+
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.companyName) {
+      newErrors.companyName = "companyName is required.";
+    }
+
+    if (!formData.contractName) {
+      newErrors.contractName = "contractName is required.";
+    }
+
+    setErrors(newErrors); // Set all errors
+    return Object.keys(newErrors).length === 0; // Return true if no errors
   };
-
-
 
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    validateField("companyName", formData.companyName);
-    validateField("contractName", formData.contractName);
-    if (formErrors.companyName || formErrors.contractName || !formData.companyName || !formData.contractName) {
-      return;
-    }
+    // validateField("companyName", formData.companyName);
+    // validateField("contractName", formData.contractName);
+    // if (formErrors.companyName || formErrors.contractName || !formData.companyName || !formData.contractName) {
+    //   return;
+    // }
+    if (!validateForm()) return;
     try {
       const response = await Authapi.submitContractDetails({
         company_id: formData.companyId,
@@ -307,7 +347,7 @@ const Contract = () => {
       const response = await Authapi.getusercompanydetail();
 
       if (response.status === 200 && response.company) {
-        console.log("API Response:", response.company); // Debugging log
+        // console.log("API Response:", response.company); // Debugging log
 
         navigate("/company", {
           state: {
@@ -393,12 +433,12 @@ const Contract = () => {
       <Navlayout />
       <Expired />
 
-      <h2 className="header">Contract</h2>
+      {/* <h2 className="header">Contract</h2>
       <p className="firstcontent">
         Please fill the form below to set up a Contract! Add as many details as
         required and proceed.
-      </p>
-      <div className="container mb-0">
+      </p> */}
+      <div className="container mb-0 mt-5">
         {successMessage && (
           <div className="alert alert-success" role="alert">
             {successMessage}
@@ -435,7 +475,7 @@ const Contract = () => {
         <div className="pro-under-border"></div>
 
         <div className="p-4 content">
-          <h5 className="title">Contract details</h5>
+          <h5 className="title">Contract Details</h5>
           <p className="description">
             Please fill your information so we can get in touch with you.
           </p>
@@ -454,7 +494,7 @@ const Contract = () => {
                 <div className="field">
                   <input
                     type="text"
-                    className={`form-control company ${formErrors.companyName ? "is-invalid" : ""}`}
+                    className='form-control company'
                     id="companyName"
                     name="companyName"
                     value={formData.companyName}
@@ -462,9 +502,11 @@ const Contract = () => {
                     disabled
                     placeholder="Company"
                   />
-                  {formErrors.companyName && (
+                  {/* {console.log(formErrors)}  */}
+                  {/* {formErrors.companyName && (
                     <div className="invalid-feedback">{formErrors.companyName}</div>
-                  )}
+                  )} */}
+                  {errors.companyName && <small className="text-danger">{errors.companyName}</small>}
                 </div>
               </div>
             </div>
@@ -482,16 +524,17 @@ const Contract = () => {
                 <div className="field">
                   <input
                     type="text"
-                    className={`form-control company ${formErrors.contractName ? "is-invalid" : ""}`}
+                    className='form-control company'
                     id="contractName"
                     name="contractName"
                     value={formData.contractName}
                     onChange={handleInputChange}
                     placeholder="Contract Name"
                   />
-                {formErrors.contractName && (
-                  <div className="invalid-feedback">{formErrors.contractName}</div>
-                )}
+                  {/* {formErrors.contractName && (
+                    <div className="invalid-feedback">{formErrors.contractName}</div>
+                  )} */}
+                  {errors.contractName && <small className="text-danger">{errors.contractName}</small>}
                 </div>
               </div>
             </div>
@@ -524,9 +567,10 @@ const Contract = () => {
         <button
           type="button"
           className="btn btn-secondary prevbtn"
-          onClick={handlePreviousClick}
-        >
-          Previous step
+          onClick={handlePreviousClick}>
+          <Tooltip title="Click 'Previous' to go back and Update your company details." arrow>
+            Previous step
+          </Tooltip>
         </button>
 
         <button

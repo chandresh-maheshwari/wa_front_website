@@ -11,6 +11,8 @@ import Navlayout from "../../Wa-Frontend/NavLayout";
 import Tooltip from "@mui/material/Tooltip";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import customSelectStyles from "../../CustomSelectStyles";
+import Select from "react-select";
 
 const VehicleForm = () => {
   // const [formData, setFormData] = useState({
@@ -45,6 +47,7 @@ const VehicleForm = () => {
     vehicle_owner: "",
   });
   const [fuelTypes, setFuelTypes] = useState([]);
+  const [vehicleOwner, setVehicleOwner] = useState([]);
   const [activeStep, setActiveStep] = useState(3);
   const [errors, setErrors] = useState({});
   const [vehicletype, setVehicleType] = useState([]);
@@ -79,7 +82,7 @@ const VehicleForm = () => {
     if (!formData.driver_name)
       newErrors.driver_name = "Driver Name is required";
     if (!formData.vehicle_name)
-      newErrors.vehicle_name = "Vehicle Name is required";
+      newErrors.vehicle_name = "Carrier Name is required";
 
     // Phone number validation: check if it's provided and matches the 10-digit format
     // if (!formData.phone_no) {
@@ -93,15 +96,15 @@ const VehicleForm = () => {
     }
 
     if (!formData.vehicle_license_expire_date)
-      newErrors.vehicle_license_expire_date = "License Expiry Date is required";
+      newErrors.vehicle_license_expire_date = "Carrier's License Expiry Date is required";
     if (!formData.vehicle_license)
-      newErrors.vehicle_license = "Vehicle License is required";
+      newErrors.vehicle_license = "Carrier License No is required";
     if (!formData.fuel_type_id)
       newErrors.fuel_type_id = "Fuel Type is required";
-    if (!formData.vehicle_tare_weight)
-      newErrors.vehicle_tare_weight = "Vehicle Tare Weight is required";
-    if (!formData.vehicle_owner)
-      newErrors.vehicle_owner = "Vehicle Owner is required";
+    // if (!formData.vehicle_tare_weight)
+    //   newErrors.vehicle_tare_weight = "Vehicle Tare Weight is required";
+    // if (!formData.vehicle_owner)
+    //   newErrors.vehicle_owner = "Vehicle Owner is required";
 
     setErrors(newErrors);
 
@@ -112,6 +115,19 @@ const VehicleForm = () => {
   // const handlePreviousClick = () => {
   //   navigate("/depot");
   // };
+
+  const handleVehicleTypeChange = (selectedOption) => {
+    setFormData({ ...formData, vehicle_type_id: selectedOption ? selectedOption.value : "" });
+  };
+
+  const handleFuelTypeChange = (selectedOption) => {
+    setFormData({ ...formData, fuel_type_id: selectedOption ? selectedOption.value : "" });
+  };
+
+
+  const handleVehicleOwnerChange = (selectedOption) => {
+    setFormData({ ...formData, vehicle_owner: selectedOption ? selectedOption.value : "" });
+  };
 
   const handlePreviousClick = async () => {
     try {
@@ -192,6 +208,44 @@ const VehicleForm = () => {
   //   }
   // };
 
+  const fetchFuelTypes = async () => {
+    try {
+      const data = await Authapi.getfualtypesdata();
+      // console.log("Fuel types data:", data);
+      if (data && data.length > 0) {
+        // setFuelTypes(response);
+        const options = data.map((fualType) => ({
+          value: fualType.id,
+          label: fualType.fuel_type_name,
+        }));
+        setFuelTypes(options);
+      } else {
+        console.warn("No fuel types data received");
+      }
+    } catch (error) {
+      console.error("Failed to fetch fuel types:", error);
+    }
+  };
+
+  // const fetchVehicleOwner = async () => {
+  //   try {
+  const vehicleOwnerOptions = [
+    { value: "1", label: "Contract Name" },
+    { value: "2", label: "Third Party Carrier" },
+  ];
+
+
+
+  //     setVehicleOwner(vehicleOwner);
+
+  // } catch (error) {
+  //   console.error("Failed to fetch fuel types:", error);
+  // }
+  // };
+
+
+
+
   useEffect(() => {
     const message = sessionStorage.getItem("successMessage");
     if (message) {
@@ -204,38 +258,33 @@ const VehicleForm = () => {
         setSuccessMessage("");
       }, 10000); // 30 seconds timeout
     }
-    const fetchFuelTypes = async () => {
-      try {
-        const response = await Authapi.getfualtypesdata();
-        // console.log("Fuel types data:", response);
-        if (response && response.length > 0) {
-          setFuelTypes(response);
-        } else {
-          console.warn("No fuel types data received");
-        }
-      } catch (error) {
-        console.error("Failed to fetch fuel types:", error);
-      }
-    };
-    const getVhicalTypeName = async () => {
-      try {
-        const response = await Authapi.userVehicleTypes();
-        // console.log("Vehicle types data:", response);
 
-        if (response && response.length > 0) {
-          // Set the state with the fetched vehicle types
-          setVehicleType(response);
-        } else {
-          console.warn("No vehicle types data received");
-        }
-      } catch (error) {
-        console.error("Failed to fetch vehicle types:", error);
-      }
-    };
 
     getVhicalTypeName();
     fetchFuelTypes();
   }, []);
+
+  const getVhicalTypeName = async () => {
+    try {
+      const data = await Authapi.userVehicleTypes();
+      // console.log("Vehicle types data:", data);
+
+      if (data && data.length > 0) {
+        // Set the state with the fetched vehicle types
+        // setVehicleType(data);
+        //  const data = await Authapi.getUserDepotTypeName();
+        const options = data.map((vehicleType) => ({
+          value: vehicleType.id,
+          label: vehicleType.vehicle_type_name,
+        }));
+        setVehicleType(options);
+      } else {
+        console.warn("No vehicle types data received");
+      }
+    } catch (error) {
+      console.error("Failed to fetch vehicle types:", error);
+    }
+  };
 
   useEffect(() => {
     // const getUservehicledetail = async () => {
@@ -271,13 +320,13 @@ const VehicleForm = () => {
     // };
 
     const getUservehicledetail = async () => {
-     
+
 
       try {
         const response = await Authapi.getUservehicledetail();
         // console.log(response.Vehicle.vehicle_address_1);
         if (response?.status === 200 && response?.Vehicle) {
-        
+
           // const { vehicle } = response;
 
           setFormData((prevData) => ({
@@ -585,18 +634,21 @@ const VehicleForm = () => {
 
       // Check if the request was successful
       if (response.status === 200 || response?.data?.success) {
-        Swal.fire({
-          icon: "success",
-          title: "Depot Setup Complete!",
-          text: "Your vehicle has been successfully registered.",
-          confirmButtonText: "OK",
-        }).then(() => {
-          sessionStorage.setItem(
-            "successMessage",
-            "Depot Setup Complete! Your vehicle has been successfully registered."
-          );
-          navigate("/success");
-        });
+        // Swal.fire({
+        //   icon: "success",
+        //   title: "Depot Setup Complete!",
+        //   text: "Your vehicle has been successfully registered.",
+        //   confirmButtonText: "OK",
+        // }).then(() => {
+        //   sessionStorage.setItem(
+        //     "successMessage",
+        //     "Depot Setup Complete! Your vehicle has been successfully registered."
+        //   );
+
+        sessionStorage.setItem("successMessage", "Vehicle Setup Complete! Your vehicle has been successfully registered.");
+
+        navigate("/success");
+        // });
       } else {
         // console.log("RRRRRRRRRRRRRRRRRR");
         throw new Error(response?.message || "Failed to submit vehicle details");
@@ -604,7 +656,7 @@ const VehicleForm = () => {
     } catch (error) {
       // console.error("Vehicle submission error:", error);
 
-      {console.log(error.message)}
+      { console.log(error.message) }
       Swal.fire({
         icon: "error",
         title: "Submission Failed",
@@ -646,12 +698,12 @@ const VehicleForm = () => {
     <>
       <Navlayout />
       <Expired />
-      <h2 className="header">Vehicle</h2>
+      {/* <h2 className="header">Vehicle</h2>
       <p className="firstcontent">
         Please fill the form below to set up a Vehicle! Add as many details as
         required and proceed.
-      </p>
-      <div className="container mb-0">
+      </p> */}
+      <div className="container mb-0 mt-5">
         {successMessage && (
           <div className="alert alert-success" role="alert">
             {successMessage}
@@ -678,7 +730,7 @@ const VehicleForm = () => {
         <br />
         <div className="pro-under-border"></div>
         <div className="p-4 content">
-          <h5 className="title">Vehicle details</h5>
+          <h5 className="title">Vehicle Details</h5>
           <p className="description">
             Please fill your information so we can get in touch with you.
           </p>
@@ -697,7 +749,7 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
-                  <select
+                  {/* <select
                     className="form-control company"
                     name="vehicle_type_id"
                     value={formData.vehicle_type_id}
@@ -709,13 +761,25 @@ const VehicleForm = () => {
                         {vehicle.vehicle_type_name}
                       </option>
                     ))}
-                  </select>
+                  </select> */}
+                  <div className="field">
+                    <Select
+                      className="searchable_dropdown"
+                      options={vehicletype}
+                      // value={formData.vehicle_type_id}
+                      value={vehicletype.find(option => option.value === formData.vehicle_type_id)}
+                      onChange={handleVehicleTypeChange}
+                      placeholder="Select Vehicle Type"
+                      isSearchable
+                      styles={customSelectStyles}
+                    />
+                    {errors.vehicle_type_id && (
+                      <small className="text-danger">
+                        {errors.vehicle_type_id}
+                      </small>
+                    )}
+                  </div>
                 </div>
-                {errors.vehicle_type_id && (
-                  <small className="text-danger">
-                    {errors.vehicle_type_id}
-                  </small>
-                )}
               </div>
 
               <div className="form-group col-md-6">
@@ -744,7 +808,7 @@ const VehicleForm = () => {
             </div>
             <div className="form-row">
               <div className="form-group col-md-6">
-                <label>Vehicle Registration No :</label>
+                <label>Vehicle Registration No</label>
                 <div className="input-with-icon">
                   <Tooltip title="Add the vehicle driver name if known" arrow>
                     <FontAwesomeIcon
@@ -886,7 +950,7 @@ const VehicleForm = () => {
             </div>
             <div className="form-row">
               <div className="form-group col-md-6">
-                <label>Carriers Address 1:</label>
+                <label>Carriers Address 1</label>
                 <div className="input-with-icon">
                   <Tooltip title="Add the Carrier's address. Ensure this is the address on the Carrier's licence." arrow>
                     <FontAwesomeIcon
@@ -905,7 +969,7 @@ const VehicleForm = () => {
 
               </div>
               <div className="form-group col-md-6">
-                <label>Carriers Address 2:</label>
+                <label>Carriers Address 2</label>
                 <div className="input-with-icon">
                   <Tooltip
                     title="Add the Carrier's address. Ensure this is the address on the Carrier's licence."
@@ -929,7 +993,7 @@ const VehicleForm = () => {
             </div>
             <div className="form-row">
               <div className="form-group col-md-6">
-                <label>Carriers Address 3:</label>
+                <label>Carriers Address 3</label>
                 <div className="input-with-icon">
                   <Tooltip title="Add the Carrier's address. Ensure this is the address on the Carrier's licence." arrow>
                     <FontAwesomeIcon
@@ -949,7 +1013,7 @@ const VehicleForm = () => {
               </div>
 
               <div className="form-group col-md-6">
-                <label>Carriers Address 4:</label>
+                <label>Carriers Address 4</label>
                 <div className="input-with-icon">
                   <Tooltip
                     title="Add the Carrier's address. Ensure this is the address on the Carrier's licence."
@@ -976,7 +1040,7 @@ const VehicleForm = () => {
 
             <div className="form-row">
               <div className="form-group col-md-6">
-                <label>Carriers Postcode :</label>
+                <label>Carriers Postcode</label>
                 <div className="input-with-icon">
                   <Tooltip title="Add the Carrier's postcode." arrow>
                     <FontAwesomeIcon
@@ -1014,7 +1078,7 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
-                  <select
+                  {/* <select
                     value={formData.fuel_type_id}
                     className="form-control company"
                     name="fuel_type_id"
@@ -1026,11 +1090,24 @@ const VehicleForm = () => {
                         {fuelType.fuel_type_name}
                       </option>
                     ))}
-                  </select>
+                  </select> */}
+                  <div className="field">
+
+                    <Select
+                      className="searchable_dropdown"
+                      options={fuelTypes}
+                      // value={formData.depotTypeId}
+                      value={fuelTypes.find(option => option.value === formData.fuel_type_id)}
+                      onChange={handleFuelTypeChange}
+                      placeholder="Select Depot Type"
+                      isSearchable
+                      styles={customSelectStyles}
+                    />
+                    {errors.fuel_type_id && (
+                      <small className="text-danger">{errors.fuel_type_id}</small>
+                    )}
+                  </div>
                 </div>
-                {errors.fuel_type_id && (
-                  <small className="text-danger">{errors.fuel_type_id}</small>
-                )}
               </div>
             </div>
             <div className="form-row">
@@ -1068,7 +1145,7 @@ const VehicleForm = () => {
                     />
                   </Tooltip>
                   {console.log(formData.vehicle_owner)}
-                  <select
+                  {/* <select
                     value={formData.vehicle_owner || ""}
                     className="form-control company"
                     name="vehicle_owner"
@@ -1079,11 +1156,23 @@ const VehicleForm = () => {
                     <option value="2">
                       Third Party Carrier
                     </option>
-                  </select>
+                  </select> */}
+                  <div className="field">
+                    <Select
+                      className="searchable_dropdown"
+                      options={vehicleOwnerOptions}
+                      // value={formData.vehicle_owner}
+                      value={vehicleOwnerOptions.find(option => option.value === formData.vehicle_owner)}
+                      onChange={handleVehicleOwnerChange}
+                      placeholder="Select Owner"
+                      isSearchable
+                      styles={customSelectStyles}
+                    />
+                    {errors.vehicle_owner && (
+                      <small className="text-danger">{errors.vehicle_owner}</small>
+                    )}
+                  </div>
                 </div>
-                {errors.vehicle_owner && (
-                  <small className="text-danger">{errors.vehicle_owner}</small>
-                )}
               </div>
             </div>
             <div className="form-row">
@@ -1091,15 +1180,23 @@ const VehicleForm = () => {
                 <label className="label" htmlFor="contractName">
                   Contract Name
                 </label>
-                <input
-                  type="text"
-                  className="form-control company"
-                  id="contractName"
-                  name="contractName"
-                  value={formData.contractName || ""}
-                  placeholder="Contract Name"
-                  disabled
-                />
+                <div className="input-with-icon">
+                  <Tooltip title="Select the main function of the Depot." arrow>
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      className="info-icon"
+                    />
+                  </Tooltip>
+                  <input
+                    type="text"
+                    className="form-control company"
+                    id="contractName"
+                    name="contractName"
+                    value={formData.contractName || ""}
+                    placeholder="Contract Name"
+                    disabled
+                  />
+                </div>
               </div>
               <div className="form-group col-md-6">
               </div>
@@ -1112,8 +1209,9 @@ const VehicleForm = () => {
           type="button"
           className="btn btn-secondary prevbtn"
           onClick={handlePreviousClick}
-        >
-          Previous step
+        ><Tooltip title="Click 'Previous' to go back and Update your Depot details." arrow>
+            Previous step
+          </Tooltip>
         </button>
 
         <button

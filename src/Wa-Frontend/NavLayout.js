@@ -253,7 +253,7 @@ const Navlayout = () => {
                                     ) : (
                                         <FaUserCircle size={30} />
                                     )}
-                                    <span className="user-name">{userData.name}</span>
+                                    <span className="user-name">{userData.username}</span>
                                     {isDropdownOpen ? <MdArrowDropUp /> : <MdArrowDropDown />}
                                 </div>
 

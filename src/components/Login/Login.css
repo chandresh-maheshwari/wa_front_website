@@ -133,13 +133,24 @@ body {
   }
   
   .input-group .input-icon {
-    padding: 6px;
+    /* padding: 6px;
     background-color: #e9ecef;
     border: 1px solid #ced4da;
-    border-left: none; /* Remove left border for icon */
-  
-    cursor: pointer;
+    border-left: none; 
+    cursor: pointer; */
+
+    border-bottom: 1px solid #ced4da;
+    border-left: none;
+    border-right: 1px solid #ced4da;
+    border-top: 1px solid #ced4da;
+    background-color: #e6f0ff;
+    padding: 10px; 
   }
+
+  .password-field{
+    border-right: none;
+  }
+
   .btn-signin {
     width: 100%;
     padding: 10px;

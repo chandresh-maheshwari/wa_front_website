@@ -129,6 +129,9 @@ import { useState } from "react";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import AuthApi from "../../Authapi";
+import Tooltip from "@mui/material/Tooltip";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
 const Login = ({ onLoginSuccess, onClose }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -206,7 +209,7 @@ const Login = ({ onLoginSuccess, onClose }) => {
         confirmButtonText: 'OK',
       });
 
-       window.location.reload();
+      window.location.reload();
       //  const navigate = useNavigate();
       //  navigate(0); 
       // navigate('/');
@@ -252,7 +255,7 @@ const Login = ({ onLoginSuccess, onClose }) => {
   //       confirmButtonText: "OK",
   //     });
 
-     
+
   //   } catch (error) {
   //     console.error("There was a problem with the login request:", error);
   //     Swal.fire({
@@ -275,32 +278,32 @@ const Login = ({ onLoginSuccess, onClose }) => {
         });
         return;
       }
-  
+
       const registerUserData = {
-        username: ragisterusername, 
-       password: ragisterpassword, 
+        username: ragisterusername,
+        password: ragisterpassword,
         email: email,
       };
-  
+
       console.log("Sending registration data:", registerUserData);
-  
+
       const response = await AuthApi.useregister(registerUserData);
-  
+
       console.log("Registration response data:", response);
-  
+
       if (!response || !response.user) {
         throw new Error("User registration failed. Please try again.");
       }
-  
+
       await Swal.fire({
         title: "Registration Successful!",
         text: "Thank you for registering!",
         icon: "success",
         confirmButtonText: "OK",
       });
-  
+
       setFlipped(false);
-  
+
     } catch (error) {
       console.error("Registration error:", error);
       Swal.fire({
@@ -311,7 +314,7 @@ const Login = ({ onLoginSuccess, onClose }) => {
       });
     }
   };
-  
+
   return (
     <div className="flip-container">
       <div className={`flipper ${flipped ? "flip" : ""}`}>
@@ -348,7 +351,7 @@ const Login = ({ onLoginSuccess, onClose }) => {
               <div className="input-group">
                 <input
                   type={showPassword ? "text" : "password"}
-                  className="form-control"
+                  className="form-control password-field"
                   placeholder="Password"
                   required
                   value={password}
@@ -402,7 +405,15 @@ const Login = ({ onLoginSuccess, onClose }) => {
             }}
           >
             <div className="form-group">
-              <div className="input-group">
+              <div className="input-group input-with-icon">
+                {/* <div className="input-with-icon"> */}
+                <Tooltip title="Select a username for your account" arrow>
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    className="info-icon"
+                  />
+                </Tooltip>
+                {/* <div className="field"> */}
                 <input
                   type="text"
                   className="form-control abc"
@@ -411,6 +422,8 @@ const Login = ({ onLoginSuccess, onClose }) => {
                   onChange={(e) => setRagisterusername(e.target.value)}
                   required
                 />
+                {/* </div> */}
+                {/* </div> */}
               </div>
             </div>
 
@@ -420,7 +433,13 @@ const Login = ({ onLoginSuccess, onClose }) => {
               </div>
             </div> */}
             <div className="form-group mg-b-50">
-              <div className="input-group">
+              <div className="input-group input-with-icon">
+                <Tooltip title="Add your contact email address" arrow>
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    className="info-icon"
+                  />
+                </Tooltip>
                 <input
                   type="email"
                   className="form-control"
@@ -433,15 +452,28 @@ const Login = ({ onLoginSuccess, onClose }) => {
             </div>
 
             <div className="form-group mg-b-50">
-              <div className="input-group">
+              <div className="input-group input-with-icon">
+                <Tooltip title="Select a password. It should be a mix of letters, numbers and symbols." arrow>
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    className="info-icon"
+                  />
+                </Tooltip>
                 <input
-                  type="password"
-                  className="form-control"
+                  // type="password"
+                  type={showPassword ? "text" : "password"}
+                  className="form-control password-field"
                   placeholder="Password"
                   required
                   value={ragisterpassword}
                   onChange={(e) => setRagisterPassword(e.target.value)}
                 />
+                <span
+                  className="input-icon"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaRegEye />}
+                </span>
               </div>
             </div>
 

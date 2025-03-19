@@ -28,7 +28,7 @@ const Company = () => {
   const [showForm, setShowForm] = useState(true);
   const [formData, setFormData] = useState({
     companyName: "",
-    contactName: "",
+    contractName: "",
     contactNumber: "",
     email: "",
     postcode: "",
@@ -50,7 +50,7 @@ const Company = () => {
   // CODE FOR VALIDATION 26-02-25 START
   const [formErrors, setFormErrors] = useState({
     companyName: "",
-    contactName: "",
+    contractName: "",
     contactNumber: "",
     email: "",
     postcode: "",
@@ -138,10 +138,14 @@ const Company = () => {
           const company = response.company;
           setFormData({
             companyName: company.company_name || "",
-            contactName: company.company_contact_name || "",
+            contractName: company.company_contact_name || "",
+            postcode: company.company_postcode || "",
+            addressLine1: company.company_address_1 || "",
+            addressLine2: company.company_address_2 || "",
+            addressLine3: company.company_address_3 || "",
+            addressLine4: company.company_address_4 || "",
             contactNumber: company.company_tel || "",
             email: company.company_email || "",
-            postcode: company.company_postcode || "",
             companyActive: company.company_active || "",
           });
         } else {
@@ -236,7 +240,7 @@ const Company = () => {
       try {
         const response = await Authapi.submitCompanyDetails({
           company_name: formData.companyName,
-          company_contact_name: formData.contactName,
+          company_contact_name: formData.contractName,
           company_email: formData.email,
           company_tel: formData.contactNumber,
           company_postcode: formData.postcode,
@@ -337,29 +341,29 @@ const Company = () => {
 
 
     if (!formData.contactNumber) {
-      errors.contactNumber = "Depot Telephone is required.";
+      errors.contactNumber = "Company Telephone is required.";
       isValid = false;
     } else if (!/^\d{10}$/.test(formData.contactNumber)) {
-      errors.contactNumber = "Phone number must be 10 digits.";
+      errors.contactNumber = "Company Telephone must be 10 digits.";
       isValid = false;
     }
     if (!formData.postcode) {
-      errors.postcode = "Postcode is required";
+      errors.postcode = "Company Postcode is required";
       isValid = false;
     // } else if (!/^.{1,6}$/.test(formData.postcode)) {
     //   errors.postcode = "Postcode must be up to 6 characters";
     //   isValid = false;
     }
     if (!formData.email) {
-      errors.email = "Email is required";
+      errors.email = "Company Email is required";
       isValid = false;
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = "Email is not valid";
+      errors.email = "Company Email is not valid";
       isValid = false;
     }
 
-    if (!formData.contactName) {
-      errors.contactName = "Contact  Name is required";
+    if (!formData.contractName) {
+      errors.contractName = "Company Contract Name is required";
       isValid = false;
     }
 
@@ -403,12 +407,12 @@ const Company = () => {
     <>
       <Navlayout />
       <Expired />
-      <h1 className="header">Company</h1>
+      {/* <h1 className="header">Company</h1>
       <p className="firstcontent">
         Please fill the form below to set up a company! Add as many details as
         required and proceed.
-      </p>
-      <div className="company-setup-container abcd mb-0">
+      </p> */}
+      <div className="company-setup-container abcd mb-0 mt-5">
         <div className="container stepper-connector">
           <CustomStepper steps={steps} activeStep={activeStep} />
         </div>
@@ -442,7 +446,7 @@ const Company = () => {
         <div className="steps-content mt-3">
           {activeStep === 0 && showForm && (
             <div className="p-4 content ">
-              <h5 className="title">Company details</h5>
+              <h5 className="title">Company Details</h5>
               <p className="description">
                 Please fill your information so we can get in touch with you.
               </p>
@@ -480,9 +484,9 @@ const Company = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="form-group col-md-6">
+                  <div className="form-group col-md-6 mb-4">
                     <label className="label" htmlFor="mainIndustry">
-                      Company's Main Industry :
+                      Company's Main Industry
                     </label>
                     <div className="input-with-icon">
                       <Tooltip title="Select your company's main industry." arrow>
@@ -507,7 +511,7 @@ const Company = () => {
                 </div>
 
                 <div className="form-row">
-                  <div className="form-group col-md-6">
+                  <div className="form-group col-md-6  mb-4">
                     <label className="label" htmlFor="mainActivity">
                       Company's Main Activity
                     </label>
@@ -532,7 +536,7 @@ const Company = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="form-group col-md-6">
+                  <div className="form-group col-md-6 mb-4">
                     <label className="label" htmlFor="subActivity">
                       Company's Sub Activity
                     </label>
@@ -596,7 +600,7 @@ const Company = () => {
 
                 <div className="form-row">
                   <div className="form-group col-md-6">
-                    <label className="label" htmlFor="contactName">
+                    <label className="label" htmlFor="contractName">
                       Company Contact Name
                     </label>
                     <div className="input-with-icon">
@@ -609,18 +613,18 @@ const Company = () => {
                       <div className="field">
                         <input
                           type="text"
-                          className={`form-control company ${formErrors.contactName ? "is-invalid" : ""
+                          className={`form-control company ${formErrors.contractName ? "is-invalid" : ""
                             }`}
-                          id="contactName"
-                          name="contactName"
-                          value={formData.contactName}
+                          id="contractName"
+                          name="contractName"
+                          value={formData.contractName}
                           onChange={handleInputChange}
                           required
                           placeholder="Company Contact Name"
                         />
-                        {formErrors.contactName && (
+                        {formErrors.contractName && (
                           <div className="invalid-feedback">
-                            {formErrors.contactName}
+                            {formErrors.contractName}
                           </div>
                         )}
                       </div>
@@ -853,7 +857,7 @@ const Company = () => {
                     )}
                   </div> */}
                   {/* <div className="form-group col-md-6">
-                    <label className="label" htmlFor="contactName">
+                    <label className="label" htmlFor="contractName">
                       Company Contact Name
                     </label>
                     <div className="input-with-icon">
@@ -866,19 +870,19 @@ const Company = () => {
                       <input
                         type="text"
                         className={`form-control company ${
-                          formErrors.contactName ? "is-invalid" : ""
+                          formErrors.contractName ? "is-invalid" : ""
                         }`}
-                        id="contactName"
-                        name="contactName"
-                        value={formData.contactName}
+                        id="contractName"
+                        name="contractName"
+                        value={formData.contractName}
                         onChange={handleInputChange}
                         required
                         placeholder="Company Contact Name"
                       />
                     </div>
-                    {formErrors.contactName && (
+                    {formErrors.contractName && (
                       <div className="invalid-feedback">
-                        {formErrors.contactName}
+                        {formErrors.contractName}
                       </div>
                     )}
                   </div> */}

@@ -10,8 +10,9 @@ import Navlayout from "../../Wa-Frontend/NavLayout";
 import Tooltip from '@mui/material/Tooltip';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-
 import "./Depot.css";
+import customSelectStyles from "../../CustomSelectStyles";
+import Select from "react-select";
 
 const DepotForm = () => {
   //   const [formData, setFormData] = useState({
@@ -57,38 +58,89 @@ const DepotForm = () => {
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
 
+  const getUserDepotTypeName = async (selected) => {
+    // setFormData({ ...formData, depotTypeId: selected });
+    try {
+      const data = await Authapi.getUserDepotTypeName();
+      if (data && data.length > 0) {   
+      const options = data.map((depotType) => ({
+        value: depotType.id,
+        label: depotType.depot_type_name,
+      }));
+      setDepotTypes(options);
+       } else {
+        console.warn("No fuel types data received");
+      }
+    } catch (error) {
+      console.error("Failed to fetch fuel types:", error);
+    }
+  };
   useEffect(() => {
-    const getUserDepotTypeName = async () => {
-      try {
-        const response = await Authapi.getUserDepotTypeName();
-        console.log("Fuel types data:", response);
-        if (response && response.length > 0) {
-          setDepotTypes(response);
-        } else {
-          console.warn("No fuel types data received");
-        }
-      } catch (error) {
-        console.error("Failed to fetch fuel types:", error);
-      }
-    };
 
-    const getcountyName = async () => {
-      try {
-        const response = await Authapi.countynameget();
-        console.log("county data:", response);
-        if (response && response.length > 0) {
-          setCountyTypes(response);
-        } else {
-          console.warn("No county names received");
-        }
-      } catch (error) {
-        console.error("Failed to fetch county names:", error);
-      }
-    };
+    // const getcountyName = async () => {
+    //   //   setFormData({
+    //   //     ...formData,
+    //   //     mainIndustry: selected,
+    //   // });
+
+    //   try {
+    //     // const response = await Authapi.countynameget();
+    //     // OLd WAy
+    //     // console.log("county data:", response);
+    //     // if (response && response.length > 0) {
+    //     //   setCountyTypes(response);
+    //     // } else {
+    //     //   console.warn("No county names received");
+    //     // }
+    //     const data = await Authapi.countynameget();
+    //     const options = data.map((country) => ({
+    //       value: country.id,
+    //       label: country.name,
+    //     }));
+    //     setCountyTypes(options);
+    //   } catch (error) {
+    //     console.error("Failed to fetch county names:", error);
+    //   }
+    // };
 
     getUserDepotTypeName();
     getcountyName();
   }, []);
+
+  const handleDepotTypeChange = (selectedOption) => {
+    setFormData({ ...formData, depotTypeId: selectedOption ? selectedOption.value : "" });
+  };
+
+  const handleCountyChange = (selectedOption) => {
+    setFormData({ ...formData, countyId: selectedOption ? selectedOption.value : "" });
+  };
+
+  const getcountyName = async () => {
+    //   setFormData({
+    //     ...formData,
+    //     mainIndustry: selected,
+    // });
+
+    try {
+      // const response = await Authapi.countynameget();
+      // OLd WAy
+      // console.log("county data:", response);
+      // if (response && response.length > 0) {
+      //   setCountyTypes(response);
+      // } else {
+      //   console.warn("No county names received");
+      // }
+      const data = await Authapi.countynameget();
+      const options = data.map((country) => ({
+        value: country.id,
+        label: country.county_name,
+      }));
+      setCountyTypes(options);
+    } catch (error) {
+      console.error("Failed to fetch county names:", error);
+    }
+  };
+
 
 
   useEffect(() => {
@@ -154,6 +206,10 @@ const DepotForm = () => {
     //   newErrors.depotTypeId = "Depot Type is required.";
     // }
 
+     if (!formData.contractName) {
+      newErrors.contractName = "Contract Name is required.";
+    }
+    
     // Validate Depot Name
     if (!formData.depotName) {
       newErrors.depotName = "Depot Name is required.";
@@ -413,12 +469,12 @@ const DepotForm = () => {
     <>
       <Navlayout />
       <Expired />
-      <h1 className="header">Depot</h1>
+      {/* <h1 className="header">Depot</h1>
       <p className="firstcontent">
         Please fill the form below to set up a Depot! Add as many details as
         required and proceed.
-      </p>
-      <div className="container mb-0">
+      </p> */}
+      <div className="container mb-0 mt-5">
         {successMessage && (
           <div className="alert alert-success" role="alert">
             {successMessage}
@@ -445,7 +501,7 @@ const DepotForm = () => {
         <div className="steps-content mt-3">
           {activeStep === 2 && (
             <div className="p-4 content">
-              <h5 className="title">Depot details</h5>
+              <h5 className="title">Depot Details</h5>
               <p className="description">
                 Please fill your information so we can get in touch with you.
               </p>
@@ -462,7 +518,7 @@ const DepotForm = () => {
                           className="info-icon"
                         />
                       </Tooltip>
-                      <select
+                      {/* <select
                         className="form-control company"
                         name="depotTypeId"
                         value={formData.depotTypeId}
@@ -474,9 +530,21 @@ const DepotForm = () => {
                             {depot.depot_type_name}
                           </option>
                         ))}
-                      </select>
+                      </select> */}
+                      <div className="field">
+                        <Select
+                          className="searchable_dropdown"
+                          options={depotTypes}
+                          // value={formData.depotTypeId}
+                          value={depotTypes.find(option => option.value === formData.depotTypeId)}
+                          onChange={handleDepotTypeChange}
+                          placeholder="Select Depot Type"
+                          isSearchable
+                          styles={customSelectStyles}
+                        />
+                        {errors.depotTypeId && <small className="text-danger">{errors.depotTypeId}</small>}
+                      </div>
                     </div>
-                    {errors.depotTypeId && <small className="text-danger">{errors.depotTypeId}</small>}
                   </div>
 
                   <div className="form-group col-md-6">
@@ -488,6 +556,7 @@ const DepotForm = () => {
                           className="info-icon"
                         />
                       </Tooltip>
+                      <div className="field">
                       <input
                         className="form-control company"
                         type="text"
@@ -495,6 +564,8 @@ const DepotForm = () => {
                         value={formData.contractName}
                         disabled
                       />
+                        {errors.contractName && <small className="text-danger">{errors.contractName}</small>}
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -658,19 +729,31 @@ const DepotForm = () => {
                           className="info-icon"
                         />
                       </Tooltip>
-                      <select
+                      {/* <select
                         className="form-control company"
                         name="countyId"
                         value={formData.countyId}
                         onChange={handleChange}
-                      >
-                        <option value="">Select County</option>
+                      > */}
+                      <div className="field">
+                        <Select
+                          className="searchable_dropdown"
+                          options={countytypes}
+                          // value={formData.countyId}
+                          value={countytypes.find(option => option.value === formData.countyId)}
+                          onChange={handleCountyChange}
+                          placeholder="Select County"
+                          isSearchable
+                          styles={customSelectStyles}
+                        />
+                      </div>
+                      {/* <option value="">Select County</option>
                         {countytypes.map((county) => (
                           <option key={county.id} value={county.id}>
                             {county.county_name}
                           </option>
                         ))}
-                      </select>
+                      </select> */}
                     </div>
                     {errors.countyId && <small className="text-danger">{errors.countyId}</small>}
                   </div>
@@ -869,8 +952,9 @@ const DepotForm = () => {
           type="button"
           className="btn btn-secondary prevbtn"
           onClick={handlePreviousClick}
-        >
-          Previous step
+        ><Tooltip title="Click 'Previous' to go back and Update your contract details." arrow>
+            Previous step
+          </Tooltip>
         </button>
 
         <button
