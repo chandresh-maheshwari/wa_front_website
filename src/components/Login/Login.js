@@ -336,6 +336,12 @@ const Login = ({ onLoginSuccess, onClose }) => {
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <div className="input-group">
+              <Tooltip title="Enter your Username" arrow>
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    className="info-icon login"
+                  />
+                </Tooltip>
                 <input
                   type="text"
                   className="form-control abc"
@@ -349,6 +355,12 @@ const Login = ({ onLoginSuccess, onClose }) => {
 
             <div className="form-group mg-b-50">
               <div className="input-group">
+              <Tooltip title="Enter your password" arrow>
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    className="info-icon login"
+                  />
+                </Tooltip>
                 <input
                   type={showPassword ? "text" : "password"}
                   className="form-control password-field"

@@ -1490,8 +1490,13 @@ body.scrolled-down::-webkit-scrollbar-thumb {
     margin-right: 8px; /* Adjust spacing as needed */
     color: #555; /* Adjust color as needed */
     margin-bottom: 20px;
+    /* margin-top: 10px; */
   }
 
+
+  .login {
+    margin-top: 10px !important;
+  }
   .select2-container--default .select2-selection--single {
     border: none !important;
     border-radius: 50px !important;

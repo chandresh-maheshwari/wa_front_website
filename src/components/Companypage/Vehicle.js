@@ -144,12 +144,15 @@ const VehicleForm = () => {
           dateAddress: response.depots.depot_address_1 || "",
           countyId: response.depots.county_id || "",
           depotTypeId: response.depots.depot_type_id || "",
+
         };
 
         // Passing formData via state
         navigate("/depot", {
           state: {
             formData: depotData,
+            contract_id: response.contract.id || "", // Correct contract ID mapping
+            contractName: response.contract.contract_name || "", // Correct contract ID mapping
           },
         });
         // console.log("Redirecting to /depot");

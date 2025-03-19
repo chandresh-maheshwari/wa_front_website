@@ -413,7 +413,7 @@ const Home = () => {
         },
       });
 
-      console.log("API Response:", response);
+      // console.log("API Response:", response);
 
       const email =
         response?.data?.user?.email || response?.user?.email || response?.email;
@@ -1234,7 +1234,7 @@ const Home = () => {
                       // backgroundImage: `url(${statu.page_image_section?.post_store?.[0]?.['Data'].Image})`, // GET IMAGE FROM POST
                     }}
                   >
-                    {console.log("Image URL:", statu.page_image_section?.image)}
+                    {/* {console.log("Image URL:", statu.page_image_section?.image)} */}
                   </div>
                 </div>
               </div>
@@ -1298,7 +1298,7 @@ const Home = () => {
                       <div className="col-md-6" key={index}>
                         <div className="inputgroup">
                           <label>{item.Data.Label}</label>
-                          {console.log(item.Data.Label, item.Data.Type)}
+                          {/* {console.log(item.Data.Label, item.Data.Type)} */}
 
                           {item.Data.Label === "Tell us what you need" ? (
                             <textarea
@@ -1411,7 +1411,7 @@ const Home = () => {
 
 const Popup = ({ isOpen, onClose, onLoginSuccess }) => {
   if (!isOpen) return null;
-  console.log("Popup is call");
+  // console.log("Popup is call");
   return (
     <div className="popup-overlay  " style={popupOverlayStyles}>
       <div className="popup-content" style={popupContentStyles}>
