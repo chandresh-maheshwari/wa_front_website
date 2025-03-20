@@ -46,6 +46,9 @@ const VehicleForm = () => {
   //   setFormData({ ...formData, [e.target.name]: e.target.value });
   // };
   const handleChange = (e) => {
+    // console.log(11111111111111);
+    // console.log(e.target);
+    // console.log(name);
     const { name, value } = e.target;
     setErrors({ ...errors, [name]: "" });
     if (name === "phone_no" && /^\d{0,10}$/.test(value)) {
@@ -105,15 +108,24 @@ const VehicleForm = () => {
 
   const handleVehicleTypeChange = (selectedOption) => {
     setFormData({ ...formData, vehicle_type_id: selectedOption ? selectedOption.value : "" });
+
+    setErrors({ ...errors, vehicle_type_id: "" });
+
   };
 
   const handleFuelTypeChange = (selectedOption) => {
     setFormData({ ...formData, fuel_type_id: selectedOption ? selectedOption.value : "" });
+    
+    setErrors({ ...errors, fuel_type_id: "" });
+
   };
 
 
   const handleVehicleOwnerChange = (selectedOption) => {
     setFormData({ ...formData, vehicle_owner: selectedOption ? selectedOption.value : "" });
+
+    setErrors({ ...errors, vehicle_owner: "" });
+
   };
 
   const handlePreviousClick = async () => {
@@ -823,7 +835,7 @@ const VehicleForm = () => {
             </div>
             <div className="form-row">
               <div className="form-group col-md-6">
-                <label className="label" htmlFor="contractName">
+                <label htmlFor="contractName">
                   Contract Name
                 </label>
                 <div className="input-with-icon">
@@ -840,7 +852,7 @@ const VehicleForm = () => {
                       id="contractName"
                       name="contractName"
                       value={formData.contractName || ""}
-                      placeholder="Contract Name"
+                      // placeholder="Contract Name"
                       disabled
                     />
                   </div>

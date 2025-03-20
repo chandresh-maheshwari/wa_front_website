@@ -264,7 +264,7 @@ const Contract = () => {
           </p>
           <form >
             <div className="form-group col-md-6">
-              <label className="label" htmlFor="companyName">
+              <label htmlFor="companyName">
                 Company
               </label>
               <div className="input-with-icon">
@@ -283,7 +283,7 @@ const Contract = () => {
                     value={formData.companyName}
                     onChange={handleInputChange}
                     disabled
-                    placeholder="Company"
+                    // placeholder="Company"
                   />
                   {/* {console.log(formErrors)}  */}
                   {/* {formErrors.companyName && (
@@ -294,7 +294,7 @@ const Contract = () => {
               </div>
             </div>
             <div className="form-group col-md-6">
-              <label className="label" htmlFor="contractName">
+              <label htmlFor="contractName">
                 Contract Name
               </label>
               <div className="input-with-icon">
@@ -312,7 +312,7 @@ const Contract = () => {
                     name="contractName"
                     value={formData.contractName}
                     onChange={handleInputChange}
-                    placeholder="Contract Name"
+                    // placeholder="Contract Name"
                   />
                   {/* {formErrors.contractName && (
                     <div className="invalid-feedback">{formErrors.contractName}</div>

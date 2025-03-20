@@ -856,12 +856,12 @@ const Company = () => {
                           >
                             Confirm Company is Active
                           </label>
-                        </div>
                         {formErrors.companyActive && (
                           <div className="invalid-feedback">
                             {formErrors.companyActive}
                           </div>
                         )}
+                        </div>
                       </div>
                     </div>
                   </div>
