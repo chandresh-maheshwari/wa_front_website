@@ -350,9 +350,9 @@ const Company = () => {
     if (!formData.postcode) {
       errors.postcode = "Company Postcode is required";
       isValid = false;
-    // } else if (!/^.{1,6}$/.test(formData.postcode)) {
-    //   errors.postcode = "Postcode must be up to 6 characters";
-    //   isValid = false;
+      // } else if (!/^.{1,6}$/.test(formData.postcode)) {
+      //   errors.postcode = "Postcode must be up to 6 characters";
+      //   isValid = false;
     }
     if (!formData.email) {
       errors.email = "Company Email is required";
@@ -694,15 +694,15 @@ const Company = () => {
                         />
                       </Tooltip>
                       <div className="field">
-                      <input
-                        type="text"
-                        className="form-control company"
-                        name="addressLine2"
-                        value={formData.addressLine2}
-                        onChange={handleInputChange}
-                        required
-                        placeholder="Address Line 2"
-                      />
+                        <input
+                          type="text"
+                          className="form-control company"
+                          name="addressLine2"
+                          value={formData.addressLine2}
+                          onChange={handleInputChange}
+                          required
+                          placeholder="Address Line 2"
+                        />
                       </div>
                     </div>
                   </div>
@@ -719,15 +719,15 @@ const Company = () => {
                         />
                       </Tooltip>
                       <div className="field">
-                      <input
-                        type="text"
-                        className="form-control company"
-                        name="addressLine3"
-                        value={formData.addressLine3}
-                        onChange={handleInputChange}
-                        required
-                        placeholder="Address Line 3"
-                      />
+                        <input
+                          type="text"
+                          className="form-control company"
+                          name="addressLine3"
+                          value={formData.addressLine3}
+                          onChange={handleInputChange}
+                          required
+                          placeholder="Address Line 3"
+                        />
                       </div>
                     </div>
                   </div>
@@ -741,16 +741,16 @@ const Company = () => {
                         />
                       </Tooltip>
                       <div className="field">
-                      <input
-                        type="text"
-                        className="form-control company"
-                        name="addressLine4"
-                        value={formData.addressLine4}
-                        onChange={handleInputChange}
-                        required
-                        placeholder="Address Line 4"
-                      />
-                    </div>
+                        <input
+                          type="text"
+                          className="form-control company"
+                          name="addressLine4"
+                          value={formData.addressLine4}
+                          onChange={handleInputChange}
+                          required
+                          placeholder="Address Line 4"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -768,23 +768,23 @@ const Company = () => {
                         />
                       </Tooltip>
                       <div className="field">
-                      <input
-                        type="tel"
-                        className={`form-control company ${formErrors.contactNumber ? "is-invalid" : ""
-                          }`}
-                        id="contactNumber"
-                        name="contactNumber"
-                        value={formData.contactNumber}
-                        onChange={handleInputChange}
-                        required
-                        placeholder="Company Telephone"
-                      />
-                      {formErrors.contactNumber && (
-                        <div className="invalid-feedback">
-                          {formErrors.contactNumber}
-                        </div>
-                      )}
-                    </div>
+                        <input
+                          type="tel"
+                          className={`form-control company ${formErrors.contactNumber ? "is-invalid" : ""
+                            }`}
+                          id="contactNumber"
+                          name="contactNumber"
+                          value={formData.contactNumber}
+                          onChange={handleInputChange}
+                          required
+                          placeholder="Company Telephone"
+                        />
+                        {formErrors.contactNumber && (
+                          <div className="invalid-feedback">
+                            {formErrors.contactNumber}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -803,90 +803,26 @@ const Company = () => {
                         />
                       </Tooltip>
                       <div className="field">
-                      <input
-                        type="email"
-                        className={`form-control company ${formErrors.email ? "is-invalid" : ""
-                          }`}
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        required
-                        placeholder="Company Email"
-                      />
-                    {formErrors.email && (
-                      <div className="invalid-feedback">{formErrors.email}</div>
-                    )}
+                        <input
+                          type="email"
+                          className={`form-control company ${formErrors.email ? "is-invalid" : ""
+                            }`}
+                          id="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          required
+                          placeholder="Company Email"
+                        />
+                        {formErrors.email && (
+                          <div className="invalid-feedback">{formErrors.email}</div>
+                        )}
+                      </div>
                     </div>
-                  </div>
                   </div>
                 </div>
 
                 <div className="form-row">
-                  {/* <div className="form-group col-md-6">
-                    <label className="label" htmlFor="contactNumber">
-                      Company Telephone
-                    </label>
-                    <div className="input-with-icon">
-                      <Tooltip
-                        title="Add the number of the main contact in your company."
-                        arrow
-                      >
-                        <FontAwesomeIcon
-                          icon={faInfoCircle}
-                          className="info-icon"
-                        />
-                      </Tooltip>
-                      <input
-                        type="tel"
-                        className={`form-control company ${
-                          formErrors.contactNumber ? "is-invalid" : ""
-                        }`}
-                        id="contactNumber"
-                        name="contactNumber"
-                        value={formData.contactNumber}
-                        onChange={handleInputChange}
-                        required
-                        placeholder="Company Telephone"
-                      />
-                    </div>
-                    {formErrors.contactNumber && (
-                      <div className="invalid-feedback">
-                        {formErrors.contactNumber}
-                      </div>
-                    )}
-                  </div> */}
-                  {/* <div className="form-group col-md-6">
-                    <label className="label" htmlFor="contractName">
-                      Company Contact Name
-                    </label>
-                    <div className="input-with-icon">
-                      <Tooltip title="Add the name of the main contact" arrow>
-                        <FontAwesomeIcon
-                          icon={faInfoCircle}
-                          className="info-icon"
-                        />
-                      </Tooltip>
-                      <input
-                        type="text"
-                        className={`form-control company ${
-                          formErrors.contractName ? "is-invalid" : ""
-                        }`}
-                        id="contractName"
-                        name="contractName"
-                        value={formData.contractName}
-                        onChange={handleInputChange}
-                        required
-                        placeholder="Company Contact Name"
-                      />
-                    </div>
-                    {formErrors.contractName && (
-                      <div className="invalid-feedback">
-                        {formErrors.contractName}
-                      </div>
-                    )}
-                  </div> */}
-
                   <div className="form-group col-md-6">
                     <label className="label">Company Active</label>
                     <div className="input-with-icon">
@@ -897,30 +833,30 @@ const Company = () => {
                         />
                       </Tooltip>
                       <div className="form-check">
-                      <div className="field">
-                        <input
-                          type="checkbox"
-                          className={`form-check-input ${formErrors.companyActive ? "is-invalid" : ""
-                            }`}
-                          id="companyActive"
-                          name="companyActive"
-                          checked={formData.companyActive}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              companyActive: e.target.checked,
-                            })
-                          }
-                        />
-                        <label
-                          // className={`form-check-label ${
-                          //   formErrors.companyActive ? "text-danger" : ""
-                          // }`}
-                          htmlFor="companyActive"
-                        >
-                          Confirm Company is Active
-                        </label>
-</div>
+                        <div className="field">
+                          <input
+                            type="checkbox"
+                            className={`form-check-input ${formErrors.companyActive ? "is-invalid" : ""
+                              }`}
+                            id="companyActive"
+                            name="companyActive"
+                            checked={formData.companyActive}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                companyActive: e.target.checked,
+                              })
+                            }
+                          />
+                          <label
+                            // className={`form-check-label ${
+                            //   formErrors.companyActive ? "text-danger" : ""
+                            // }`}
+                            htmlFor="companyActive"
+                          >
+                            Confirm Company is Active
+                          </label>
+                        </div>
                         {formErrors.companyActive && (
                           <div className="invalid-feedback">
                             {formErrors.companyActive}

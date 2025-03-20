@@ -15,19 +15,6 @@ import customSelectStyles from "../../CustomSelectStyles";
 import Select from "react-select";
 
 const VehicleForm = () => {
-  // const [formData, setFormData] = useState({
-  //   vehicle_type_id: "",
-  //   vehicle_description: "",
-  //   driver_name: "",
-  //   vehicle_name: "",
-  //   phone_no: "",
-  //   vehicle_license_expire_date: "",
-  //   fuel_type_id: "",
-  //   vehicle_tare_weight: "",
-  //   vehicle_owner: "",
-  //   contract_id: "",
-  //   contractName: "",
-  // });
   const [formData, setFormData] = useState({
     vehicle_type_id: "",
     vehicle_description: "",
@@ -177,40 +164,6 @@ const VehicleForm = () => {
     }
   };
 
-  // const handlePreviousClick = async () => {
-  //   try {
-  //     const response = await Authapi.getUserDepotdetail();
-
-  //     console.log(response);
-
-  //     if (response.status === 200 && response.depots && response.depots.depot_postcode) {
-  //       console.log("Depot Postcode:", response.depots.depot_postcode);
-  //       navigate("/depot", {
-  //         state: { formData: { depotpostcode: response.depots.depot_postcode } }
-  //       });
-
-  //       console.log("Redirecting to /depot");
-  //     } else {
-  //       console.log("Error message:", response.message);
-
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "Error",
-  //         text: response.message || "Failed to fetch company data. Please try again.",
-  //         confirmButtonText: "OK",
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching company data:", error);
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Error",
-  //       text: "An error occurred while fetching company data.",
-  //       confirmButtonText: "OK",
-  //     });
-  //   }
-  // };
-
   const fetchFuelTypes = async () => {
     try {
       const data = await Authapi.getfualtypesdata();
@@ -238,17 +191,6 @@ const VehicleForm = () => {
   ];
 
 
-
-  //     setVehicleOwner(vehicleOwner);
-
-  // } catch (error) {
-  //   console.error("Failed to fetch fuel types:", error);
-  // }
-  // };
-
-
-
-
   useEffect(() => {
     const message = sessionStorage.getItem("successMessage");
     if (message) {
@@ -270,12 +212,9 @@ const VehicleForm = () => {
   const getVhicalTypeName = async () => {
     try {
       const data = await Authapi.userVehicleTypes();
-      // console.log("Vehicle types data:", data);
 
       if (data && data.length > 0) {
-        // Set the state with the fetched vehicle types
-        // setVehicleType(data);
-        //  const data = await Authapi.getUserDepotTypeName();
+
         const options = data.map((vehicleType) => ({
           value: vehicleType.id,
           label: vehicleType.vehicle_type_name,
@@ -290,38 +229,6 @@ const VehicleForm = () => {
   };
 
   useEffect(() => {
-    // const getUservehicledetail = async () => {
-    //   try {
-    //     const response = await Authapi.getUservehicledetail();
-    //     if (response.status === 200) {
-    //       const Vehicle = response.Vehicle;
-    //       // console.log(Vehicle.vehicle_owner);
-    //       // console.log(Vehicle.vehicle_owner);
-    //       // console.log(Vehicle.vehicle_owner === '1');
-    //       const vehicleOwnerMapped =
-    //         Vehicle.vehicle_owner == "1"
-    //           ? "contract_name"
-    //           : "third_party_carrier";
-    //       // console.log(vehicleOwnerMapped);
-    //       setFormData({
-    //         vehicle_type_id: Vehicle.vehicle_type_id || "",
-    //         vehicle_description: Vehicle.vehicle_description || "",
-    //         driver_name: Vehicle.driver_name || "",
-    //         vehicle_name: Vehicle.vehicle_name || "",
-    //         phone_no: Vehicle.phone_no || "",
-    //         vehicle_license_expire_date:
-    //           Vehicle.vehicle_license_expire_date || "",
-    //         fuel_type_id: Vehicle.fuel_type_id || "",
-    //         vehicle_tare_weight: Vehicle.vehicle_tare_weight || "",
-    //         vehicle_owner: vehicleOwnerMapped || "",
-    //         contract_id: Vehicle.contract_id || "",
-    //       });
-    //     }
-    //   } catch (error) {
-    //     console.error("Error fetching company details:", error);
-    //   }
-    // };
-
     const getUservehicledetail = async () => {
 
 
@@ -389,216 +296,6 @@ const VehicleForm = () => {
     fetchContractDetails();
   }, []);
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   if (!validateForm()) return;
-  //   // Map the vehicle_owner to the appropriate database value
-  //   const vehicleOwnerValue =
-  //     formData.vehicle_owner === "contract_name" ? 1 : 2;
-
-  //   try {
-  //     const response = await Authapi.userVehicleDetails({
-  //       vehicle_type_id: formData.vehicle_type_id,
-  //       vehicle_description: formData.vehicle_description,
-  //       driver_name: formData.driver_name,
-  //       vehicle_name: formData.vehicle_name,
-  //       phone_no: formData.phone_no,
-  //       vehicle_license_expire_date: formData.vehicle_license_expire_date,
-  //       fuel_type_id: formData.fuel_type_id,
-  //       vehicle_tare_weight: formData.vehicle_tare_weight,
-  //       vehicle_owner: vehicleOwnerValue,
-  //       contract_id: formData.contract_id,
-  //     });
-
-  //     if (response.status === 200) {
-  //       // Swal.fire({
-  //       //   icon: "success",
-  //       //   title: "Vehicle Details Submitted",
-  //       //   text: "Your vehicle details have been successfully submitted.",
-  //       //   confirmButtonText: "OK",
-  //       // }).then(() => {
-  //       // });
-  //       sessionStorage.setItem(
-  //         "successMessage",
-  //         "Depot Setup Complete! Your Depot has been successfully registered."
-  //       );
-
-  //       navigate("/success");
-  //     } else {
-  //       throw new Error(response.message || "Failed to submit vehicle details");
-  //     }
-  //   } catch (error) {
-  //     console.error("Vehicle submission error:", error);
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Submission Failed",
-  //       text:
-  //         error.message ||
-  //         "Failed to submit vehicle details. Please try again.",
-  //       confirmButtonText: "OK",
-  //     });
-  //   }
-  // };
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   if (!validateForm()) return;
-
-  //   // Map the vehicle_owner to database value (1 = contract_name, 2 = third_party_carrier)
-  //   const vehicleOwnerValue =
-  //     formData.vehicle_owner === "contract_name" ? 1 : 2;
-
-  //   try {
-  //     const response = await Authapi.userVehicleDetails({
-  //       contract_id: formData.contract_id,
-  //       vehicle_type_id: formData.vehicle_type_id,
-  //       tip_id: formData.tip_id,
-  //       user_tip_id: formData.user_tip_id,
-  //       vehicle_description: formData.vehicle_description,
-  //       vehicle_reg: formData.vehicle_reg,
-  //       vehicle_name: formData.vehicle_name,
-  //       phone_no: formData.phone_no,
-  //       vehicle_license: formData.vehicle_license,
-  //       vehicle_license_expire_date: formData.vehicle_license_expire_date,
-  //       vehicle_address_1: formData.vehicle_address_1,
-  //       vehicle_address_2: formData.vehicle_address_2,
-  //       vehicle_address_3: formData.vehicle_address_3,
-  //       vehicle_address_4: formData.vehicle_address_4,
-  //       vehicle_postcode: formData.vehicle_postcode,
-  //       vehicle_owner: vehicleOwnerValue,
-  //       vehicle_emissions: formData.vehicle_emissions,
-  //       vehicle_ppm: formData.vehicle_ppm,
-  //       vehicle_load: formData.vehicle_load,
-  //       vehicle_tare_weight: formData.vehicle_tare_weight,
-  //       fuel_type_id: formData.fuel_type_id,
-  //       driver_name: formData.driver_name,
-  //     });
-
-  //     if (response.status === 200) {
-  //       sessionStorage.setItem(
-  //         "successMessage",
-  //         "Depot Setup Complete! Your Depot has been successfully registered."
-  //       );
-  //       navigate("/success");
-  //     } else {
-  //       throw new Error(
-  //         response.message || "Failed to submit vehicle details."
-  //       );
-  //     }
-  //   } catch (error) {
-  //     console.error("Vehicle submission error:", error);
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Submission Failed",
-  //       text:
-  //         error.message ||
-  //         "An unexpected error occurred while submitting vehicle details. Please try again.",
-  //       confirmButtonText: "OK",
-  //     });
-  //   }
-  // };
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   if (!validateForm()) return;
-
-  //   // Map vehicle_owner to appropriate database value
-  //   const vehicleOwnerValue = formData.vehicle_owner === "contract_name" ? 1 : 2;
-
-  //   try {
-  //     const response = await Authapi.userVehicleDetails({
-  //       vehicle_type_id: formData.vehicle_type_id,
-  //       vehicle_description: formData.vehicle_description,
-  //       driver_name: formData.driver_name,
-  //       vehicle_name: formData.vehicle_name,
-  //       phone_no: formData.phone_no,
-  //       vehicle_license_expire_date: formData.vehicle_license_expire_date,
-  //       fuel_type_id: formData.fuel_type_id,
-  //       vehicle_tare_weight: formData.vehicle_tare_weight,
-  //       vehicle_owner: vehicleOwnerValue,
-  //       contract_id: formData.contract_id,
-
-  //       // ✅ Add Address Fields
-  //       vehicle_address_1: formData.vehicle_address_1,
-  //       vehicle_address_2: formData.vehicle_address_2,
-  //       vehicle_address_3: formData.vehicle_address_3,
-  //       vehicle_address_4: formData.vehicle_address_4,
-  //       vehicle_postcode: formData.vehicle_postcode,
-  //     });
-
-  //     if (response.status === 200) {
-  //       sessionStorage.setItem(
-  //         "successMessage",
-  //         "Depot Setup Complete! Your Depot has been successfully registered."
-  //       );
-  //       navigate("/success");
-  //     } else {
-  //       throw new Error(response.message || "Failed to submit vehicle details");
-  //     }
-  //   } catch (error) {
-  //     console.error("Vehicle submission error:", error);
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Submission Failed",
-  //       text: error.message || "Failed to submit vehicle details. Please try again.",
-  //       confirmButtonText: "OK",
-  //     });
-  //   }
-  // };
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   if (!validateForm()) return;
-
-  //   // Map vehicle_owner to appropriate database value
-  //   const vehicleOwnerValue = formData.vehicle_owner === "contract_name" ? 1 : 2;
-
-  //   try {
-  //     const response = await Authapi.userVehicleDetails({
-  //       contract_id: formData.contract_id,
-  //       vehicle_type_id: formData.vehicle_type_id,
-  //       tip_id: formData.tip_id,
-  //       user_tip_id: formData.user_tip_id,
-  //       vehicle_description: formData.vehicle_description,
-  //       vehicle_reg: formData.vehicle_reg,
-  //       vehicle_name: formData.vehicle_name,
-  //       phone_no: formData.phone_no,
-  //       vehicle_license: formData.vehicle_license,
-  //       vehicle_license_expire_date: formData.vehicle_license_expire_date,
-  //       vehicle_address_1: formData.vehicle_address_1,
-  //       vehicle_address_2: formData.vehicle_address_2,
-  //       vehicle_address_3: formData.vehicle_address_3,
-  //       vehicle_address_4: formData.vehicle_address_4,
-  //       vehicle_postcode: formData.vehicle_postcode,
-  //       vehicle_owner: vehicleOwnerValue,
-  //       vehicle_emissions: formData.vehicle_emissions,
-  //       vehicle_ppm: formData.vehicle_ppm,
-  //       vehicle_load: formData.vehicle_load,
-  //       vehicle_tare_weight: formData.vehicle_tare_weight,
-  //       fuel_type_id: formData.fuel_type_id,
-  //       driver_name: formData.driver_name,
-  //     });
-
-  //     if (response.status === 200) {
-  //       sessionStorage.setItem(
-  //         "successMessage",
-  //         "Depot Setup Complete! Your Depot has been successfully registered."
-  //       );
-  //       navigate("/success");
-  //     } else {
-  //       throw new Error(response.message || "Failed to submit vehicle details");
-  //     }
-  //   } catch (error) {
-  //     console.error("Vehicle submission error:", error);
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Submission Failed",
-  //       text: error.message || "Failed to submit vehicle details. Please try again.",
-  //       confirmButtonText: "OK",
-  //     });
-  //   }
-  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -637,16 +334,6 @@ const VehicleForm = () => {
 
       // Check if the request was successful
       if (response.status === 200 || response?.data?.success) {
-        // Swal.fire({
-        //   icon: "success",
-        //   title: "Depot Setup Complete!",
-        //   text: "Your vehicle has been successfully registered.",
-        //   confirmButtonText: "OK",
-        // }).then(() => {
-        //   sessionStorage.setItem(
-        //     "successMessage",
-        //     "Depot Setup Complete! Your vehicle has been successfully registered."
-        //   );
 
         sessionStorage.setItem("successMessage", "Vehicle Setup Complete! Your vehicle has been successfully registered.");
 
@@ -701,11 +388,6 @@ const VehicleForm = () => {
     <>
       <Navlayout />
       <Expired />
-      {/* <h2 className="header">Vehicle</h2>
-      <p className="firstcontent">
-        Please fill the form below to set up a Vehicle! Add as many details as
-        required and proceed.
-      </p> */}
       <div className="container mb-0 mt-5">
         {successMessage && (
           <div className="alert alert-success" role="alert">
@@ -752,19 +434,6 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
-                  {/* <select
-                    className="form-control company"
-                    name="vehicle_type_id"
-                    value={formData.vehicle_type_id}
-                    onChange={handleChange}
-                  >
-                    <option value="">Select Vehicle Type</option>
-                    {vehicletype.map((vehicle) => (
-                      <option key={vehicle.id} value={vehicle.id}>
-                        {vehicle.vehicle_type_name}
-                      </option>
-                    ))}
-                  </select> */}
                   <div className="field">
                     <Select
                       className="searchable_dropdown"
@@ -804,11 +473,6 @@ const VehicleForm = () => {
                     />
                   </div>
                 </div>
-                {/* {errors.vehicle_description && (
-                  <small className="text-danger">
-                    {errors.vehicle_description}
-                  </small>
-                )} */}
               </div>
             </div>
             <div className="form-row">
@@ -829,13 +493,6 @@ const VehicleForm = () => {
                       name="vehicle_reg"
                       onChange={handleChange}
                     />
-                    {/* <input
-                    value={formData.vehicle_description}
-                    type="text"
-                    className="form-control"
-                    name="vehicle_description"
-                    onChange={handleChange}
-                  /> */}
                   </div>
                 </div>
               </div>
@@ -857,9 +514,6 @@ const VehicleForm = () => {
                       name="driver_name"
                       onChange={handleChange}
                     />
-                    {/* {errors.driver_name && (
-                  <small className="text-danger">{errors.driver_name}</small>
-                  )} */}
                   </div>
                 </div>
               </div>
@@ -1069,13 +723,6 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
-                  {/* <input
-                    // value={formData.}
-                    className="form-control company"
-                    type="text"
-                    name=""
-                    onChange={handleChange}
-                  /> */}
                   <div className="field">
                     <input
                       value={formData.vehicle_postcode}
@@ -1101,19 +748,6 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
-                  {/* <select
-                    value={formData.fuel_type_id}
-                    className="form-control company"
-                    name="fuel_type_id"
-                    onChange={handleChange}
-                  >
-                    <option value="">Select Fuel Type</option>
-                    {fuelTypes.map((fuelType) => (
-                      <option key={fuelType.id} value={fuelType.id}>
-                        {fuelType.fuel_type_name}
-                      </option>
-                    ))}
-                  </select> */}
                   <div className="field">
                     <Select
                       className="searchable_dropdown"
@@ -1169,19 +803,6 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
-                  {/* {console.log(formData.vehicle_owner)} */}
-                  {/* <select
-                    value={formData.vehicle_owner || ""}
-                    className="form-control company"
-                    name="vehicle_owner"
-                    onChange={handleChange}
-                  >
-                    <option value="">Select Owner</option>
-                    <option value="1">Contract Name</option>
-                    <option value="2">
-                      Third Party Carrier
-                    </option>
-                  </select> */}
                   <div className="field">
                     <Select
                       className="searchable_dropdown"

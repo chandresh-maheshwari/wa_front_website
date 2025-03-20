@@ -22,34 +22,8 @@ const Contract = () => {
     companyId: "",
     contractId: "",
   });
-
-  // const [formErrors, setFormErrors] = useState({
-  //   companyName: "",
-  //   contractName: "",
-  // });
   const [errors, setErrors] = useState({});
-
-
-
   const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   const fetchContractDetails = async () => {
-  //     try {
-  //       const response = await Authapi.getLatestContractDetails();
-  //       if (response.status === true) {
-  //         setFormData((prev) => ({
-  //           ...prev,
-  //           contractName: response.contract.contract_name || "",
-  //           contractId: response.contract.id || "",
-  //         }));
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching contract details:", error);
-  //     }
-  //   };
-  //   fetchContractDetails();   
-  // }, []);
 
   useEffect(() => {
     const message = sessionStorage.getItem("successMessage");
@@ -66,13 +40,12 @@ const Contract = () => {
     const fetchContractDetails = async () => {
       try {
         const response = await Authapi.getLatestContractDetails();
-        // console.log("API Response:", response);
-        // console.log("Contract Name:", response.contract.contract_name);
-        // console.log("Contract ID:", response.contract.id);
         if (response.status === true) {
           setFormData((prev) => ({
             ...prev,
             contractName: response.contract.contract_name || "",
+            companyId: response.contract.company_id || "",
+            companyName: response.contract.company_name || "",
             contractId: response.contract.id || "",
           }));
         }
@@ -119,24 +92,6 @@ const Contract = () => {
     fetchContractDetails();
   }, []);
 
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     [name]: value,
-  //   }));
-  // };
-
-
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     [name]: value,
-  //   }));
-  //   validateField(name, value);
-  // };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setErrors({ ...errors, [name]: "" }); // Clear the error for that field
@@ -147,37 +102,9 @@ const Contract = () => {
 
   };
 
-  // const validateField = (name, value) => {
-  //   // let errors = { ...formErrors };
-  //   const errors = {};
-  //   console.log(value);
-  //   // switch (name) {
-  //   //   case "companyName":
-  //   //     errors.companyName = value ? "" : "Company Name is required";
-  //   //     break;
-  //   //   case "contractName":
-  //   //     errors.contractName = value ? "" : "Contract Name is required";
-  //   //     break;
-  //   //   default:
-  //   //     break;
-  //   // }
-  //   console.log(name);
-  //   console.log(name === "companyName");
-  //   if (name === "companyName") {
-  //     errors.companyName = value ? "" : "Company Name is required";
-  //   }
-  //   if (name === "contractName") {
-  //     errors.contractName = value ? "" : "Contract Name is required";
-  //   }
-  //   {console.log(errors)}
-  //   setFormErrors(errors);
-  //   console.log(formErrors);
-  //   // checkFormValidity();
-  // };
-
-
   const validateForm = () => {
     const newErrors = {};
+    // console.log(formData);
 
     if (!formData.companyName) {
       newErrors.companyName = "companyName is required.";
@@ -195,11 +122,6 @@ const Contract = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // validateField("companyName", formData.companyName);
-    // validateField("contractName", formData.contractName);
-    // if (formErrors.companyName || formErrors.contractName || !formData.companyName || !formData.contractName) {
-    //   return;
-    // }
     if (!validateForm()) return;
     try {
       const response = await Authapi.submitContractDetails({
@@ -232,115 +154,6 @@ const Contract = () => {
       });
     }
   };
-
-  // const handlePreviousClick = () => {
-  //   const fetchCompanyData = async () => {
-  //     try {
-  //       const response = await Authapi.  (); 
-  //       // console.log(response)
-  //       if (response.status === 200 && response.company) {
-  //       setFormData({
-  //         companyName: response.company.company_name || "",
-  //         companyId: response.company.company_contact_name || "",
-  //         contractName: "",
-  //         contractId: "",
-  //       });
-
-  //       } else {
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "Error",
-  //         text: response.message || "Failed to fetch company data. Please try again.",
-  //         confirmButtonText: "OK",
-  //       });
-  //       }
-  //     } catch (error) {
-  //     console.error("Error fetching company data:", error);
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Error",
-  //       text: "An error occurred while fetching company data.",
-  //       confirmButtonText: "OK",
-  //     });
-  //     }
-  //   };
-
-  //   fetchCompanyData();
-  // navigate("/company");
-
-  // };
-
-
-  // const handlePreviousClick = async () => {
-  //   try {
-  //     const response = await Authapi.getusercompanydetail(); 
-  //     // Check if the API response contains company data
-  //     if (response.status === 200 && response.company) {
-  //       setFormData({
-  //         companyName: response.company.company_name || "",
-  //         contactName: response.company.company_contact_name || "",
-  //         contactNumber: response.company.company_tel || "",
-  //         email: response.company.company_email || "",
-  //       });
-  //     } else {
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "Error",
-  //         text: response.message || "Failed to fetch company data. Please try again.",
-  //         confirmButtonText: "OK",
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching company data:", error);
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Error",
-  //       text: "An error occurred while fetching company data.",
-  //       confirmButtonText: "OK",
-  //     });
-  //   }
-  //   navigate("/company");
-  // };
-
-
-
-  // const handlePreviousClick = async () => {
-  //   try {
-  //     const response = await Authapi.getusercompanydetail();
-
-  //     if (response.status === 200 && response.company) {
-  //       console.log(response.company.company_contact_name);
-
-  //       navigate("/company", {
-  //         state: {
-  //           formData: {
-  //             companyName: response.company.company_name || "",
-  //             contactName: response.company.company_contact_name || "",
-  //             contactNumber: response.company.company_tel || "",
-  //             email: response.company.company_email || "",
-  //             // postcode:response.company.company_postcode || "", 
-  //             postcode: response.company.company_postcode || "",
-  //           },
-  //         },
-  //       });
-  //     } else {
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "Error",
-  //         text: response.message || "Failed to fetch company data. Please try again.",
-  //         confirmButtonText: "OK",
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching company data:", error);
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Error",
-  //       text: "An error occurred while fetching company data.",
-  //       confirmButtonText: "OK",
-  //     });
-  //   }
-  // };
 
   const handlePreviousClick = async () => {
     try {
@@ -384,15 +197,6 @@ const Contract = () => {
     }
   };
 
-  // const handleNextClick = async () => {
-  //   try {
-  //     await handleSubmit();
-  //     setActiveStep(2);
-  //   } catch (error) {
-  //     console.error("Error advancing to next step:", error);
-  //   }
-  // };
-
   const handleStepChange = (step) => {
     setActiveStep(step);
   };
@@ -433,11 +237,6 @@ const Contract = () => {
       <Navlayout />
       <Expired />
 
-      {/* <h2 className="header">Contract</h2>
-      <p className="firstcontent">
-        Please fill the form below to set up a Contract! Add as many details as
-        required and proceed.
-      </p> */}
       <div className="container mb-0 mt-5">
         {successMessage && (
           <div className="alert alert-success" role="alert">
@@ -446,22 +245,6 @@ const Contract = () => {
         )}
       </div>
       <div className=" company-setup-container abcd mb-0">
-        {/* <Stepper
-          activeStep={activeStep}
-          onStepClick={handleStepChange}
-          connectorStyleConfig={connectorStyleConfig}
-        >
-          <Step label="Company" />
-          <Step label="Contract" />
-          <Step label="Depot" />
-          <Step label="Vehicle" />
-        </Stepper> */}
-        {/* <div>
-          <Stepper
-            steps={steps}
-            activeStep={activeStep1} /> */}
-
-
         <div className="container stepper-connector">
           <CustomStepper
             steps={steps}
@@ -541,28 +324,7 @@ const Contract = () => {
           </form>
         </div>
       </div>
-      {/* <div className="container">
-        <div className="row">
-          <div className="col-6">
-            <button
-              type="button"
-              className="btn btn-secondary prevbtn"
-              onClick={handlePreviousClick}
-            >
-              Previous step
-            </button>
-          </div>
-          <div className="col-6">
-            <button
-              type="button"
-              className="btn next btn-primary prevbtn"
-              onClick={handleSubmit}
-            >
-              Next step
-            </button>
-          </div>
-        </div>
-      </div> */}
+     
       <div className=" company-setup-container mt-0 ">
         <button
           type="button"

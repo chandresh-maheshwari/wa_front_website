@@ -76,33 +76,6 @@ const DepotForm = () => {
     }
   };
   useEffect(() => {
-
-    // const getcountyName = async () => {
-    //   //   setFormData({
-    //   //     ...formData,
-    //   //     mainIndustry: selected,
-    //   // });
-
-    //   try {
-    //     // const response = await Authapi.countynameget();
-    //     // OLd WAy
-    //     // console.log("county data:", response);
-    //     // if (response && response.length > 0) {
-    //     //   setCountyTypes(response);
-    //     // } else {
-    //     //   console.warn("No county names received");
-    //     // }
-    //     const data = await Authapi.countynameget();
-    //     const options = data.map((country) => ({
-    //       value: country.id,
-    //       label: country.name,
-    //     }));
-    //     setCountyTypes(options);
-    //   } catch (error) {
-    //     console.error("Failed to fetch county names:", error);
-    //   }
-    // };
-
     getUserDepotTypeName();
     getcountyName();
   }, []);
@@ -122,14 +95,6 @@ const DepotForm = () => {
     // });
 
     try {
-      // const response = await Authapi.countynameget();
-      // OLd WAy
-      // console.log("county data:", response);
-      // if (response && response.length > 0) {
-      //   setCountyTypes(response);
-      // } else {
-      //   console.warn("No county names received");
-      // }
       const data = await Authapi.countynameget();
       const options = data.map((country) => ({
         value: country.id,
@@ -403,46 +368,6 @@ const DepotForm = () => {
     }
   };
 
-  // const handlePreviousClick = async () => {
-  //   try {
-  //     const response = await Authapi.getUserContractdetail();
-
-  //     console.log(response); 
-
-  //     if (response.status === 200 && response.contract) {
-  //       console.log("Contract Name:", response.contract.contract_name); 
-
-
-  //       navigate("/depot", {
-  //         state: {
-  //           formData: {
-  //             depotPostcode: response.depots.depot_postcode || "", 
-  //           },
-  //         },
-  //       });
-
-
-  //       console.log("Redirecting to /depot");
-  //     } else {
-  //       console.log("Error message:", response.message); 
-
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "Error",
-  //         text: response.message || "Failed to fetch company data. Please try again.",
-  //         confirmButtonText: "OK",
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching company data:", error);
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Error",
-  //       text: "An error occurred while fetching company data.",
-  //       confirmButtonText: "OK",
-  //     });
-  //   }
-  // };
 
   const steps = [
     { title: 'Company' },
@@ -520,19 +445,6 @@ const DepotForm = () => {
                           className="info-icon"
                         />
                       </Tooltip>
-                      {/* <select
-                        className="form-control company"
-                        name="depotTypeId"
-                        value={formData.depotTypeId}
-                        onChange={handleChange}
-                      >
-                        <option value="">Select Depot Type</option>
-                        {depotTypes.map((depot) => (
-                          <option key={depot.id} value={depot.id}>
-                            {depot.depot_type_name}
-                          </option>
-                        ))}
-                      </select> */}
                       <div className="field">
                         <Select
                           className="searchable_dropdown"
@@ -741,12 +653,6 @@ const DepotForm = () => {
                           className="info-icon"
                         />
                       </Tooltip>
-                      {/* <select
-                        className="form-control company"
-                        name="countyId"
-                        value={formData.countyId}
-                        onChange={handleChange}
-                      > */}
                       <div className="field">
                         <Select
                           className="searchable_dropdown"
@@ -759,13 +665,6 @@ const DepotForm = () => {
                           styles={customSelectStyles}
                         />
                       </div>
-                      {/* <option value="">Select County</option>
-                        {countytypes.map((county) => (
-                          <option key={county.id} value={county.id}>
-                            {county.county_name}
-                          </option>
-                        ))}
-                      </select> */}
                     </div>
                     {errors.countyId && <small className="text-danger">{errors.countyId}</small>}
                   </div>
@@ -829,13 +728,6 @@ const DepotForm = () => {
                           className="info-icon"
                         />
                       </Tooltip>
-                      {/* <input
-                        className="form-control company"
-                        type="date"
-                        value={formData.includeTonnageLimitonDashboard}
-                        name="includeTonnageLimitonDashboard"
-                        onChange={handleChange}
-                      /> */}
                       <div className="form-check">
                         <div className="field">
                           <input
@@ -896,26 +788,6 @@ const DepotForm = () => {
                 </div>
 
                 <div className="form-row">
-                  {/* <div className="form-group col-md-6">
-                    <label>Date Address</label>
-                    <div className="input-with-icon">
-                      <Tooltip title="Enter the depot address" arrow>
-                        <FontAwesomeIcon
-                          icon={faInfoCircle}
-                          className="info-icon"
-                        />
-                      </Tooltip>
-                      <input
-                        value={formData.dateAddress}
-                        className="form-control company"
-                        type="text"
-                        name="dateAddress"
-                        onChange={handleChange}
-                      />
-                    </div>
-                    {errors.dateAddress && <small className="text-danger">{errors.dateAddress}</small>}
-                  </div>
-                  <div className="form-group col-md-6"></div> */}
                   <div className="form-group col-md-6">
                     <label>Date End</label>
                     <div className="input-with-icon">
@@ -945,28 +817,6 @@ const DepotForm = () => {
           )}
         </div>
       </div>
-      {/* <div className="container">
-        <div className="row">
-          <div className="col-6">
-            <button
-              type="button"
-              className="btn btn-secondary prevbtn depotbuttons "
-              onClick={handlePreviousClick}
-            >
-              Previous step
-            </button>
-          </div>
-          <div className="col-6">
-            <button
-              type="button"
-              className="btn next btn-primary prevbtn next1 depotbuttons"
-              onClick={handleSubmit}
-            >
-              Next step
-            </button>
-          </div>
-        </div>
-      </div> */}
       <div className=" company-setup-container mt-0 ">
         <button
           type="button"

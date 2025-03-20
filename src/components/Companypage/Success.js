@@ -36,24 +36,8 @@ const SuccessPage = () => {
     <div>
       <Navlayout />
       <Expired />
-      {/* <h2 className="header">Set up Ready !!!</h2>
-      <p className="firstcontent">
-        "Your setup has been successfully created! Let's get started on your
-        work and make it a great success..."
-      </p> */}
+   
       <div className="company-setup-container abcd mt-5">
-        {/* <Stepper activeStep={activeStep} onStepClick={setActiveStep}>
-          <Step label="Company" />
-          <Step label="Contract" />
-          <Step label="Depot" />
-          <Step label="Vehicle" />
-          <Step label="Completed" />
-
-        </Stepper> */}
-        {/* <div>
-          <Stepper
-            steps={steps}
-            activeStep={activeStep1} /> */}
         <div className="container stepper-connector-fifth-child stepper-connector">
           <CustomStepper
             steps={steps}
