@@ -197,15 +197,16 @@ const DepotForm = () => {
       setFormData({ ...formData, [name]: value }); // Update formData for other fields
     }
   };
-
+  
   const validateForm = () => {
     const newErrors = {};
-
+    
     // Validate Depot Type
     // if (!formData.depotTypeId) {
-    //   newErrors.depotTypeId = "Depot Type is required.";
-    // }
-
+      //   newErrors.depotTypeId = "Depot Type is required.";
+      // }
+      // console.log(formData);
+      
     if (!formData.contractName) {
       newErrors.contractName = "Contract Name is required.";
     }
@@ -219,10 +220,10 @@ const DepotForm = () => {
     // if (!formData.countyId) {
     //   newErrors.countyId = "County is required.";
     // }
-
+    
     // Validate Start Date
     // if (!formData.startDate) {
-    //   newErrors.startDate = "Start Date is required.";
+      //   newErrors.startDate = "Start Date is required.";
     // }
 
     // // Validate End Date
@@ -246,7 +247,6 @@ const DepotForm = () => {
     // if (!formData.dateAddress) {
     //   newErrors.dateAddress = "Depot Address is required.";
     // }
-
     setErrors(newErrors); // Set all errors
     return Object.keys(newErrors).length === 0; // Return true if no errors
   };
@@ -320,6 +320,7 @@ const DepotForm = () => {
         setFormData({
           depotTypeId: response.depots.depot_type_id || "",
           contractId: response.depots.contract_id || "",
+          contractName: response.depots.contract_name || "",
           depotName: response.depots.depot_name || "",
           depotPermitNo: response.depots.depot_permit_no || "",
           depotAddress1: response.depots.depot_address_1 || "",
