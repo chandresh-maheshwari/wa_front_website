@@ -264,16 +264,17 @@ const Contract = () => {
           </p>
           <form >
             <div className="form-group col-md-6">
-              <label htmlFor="companyName">
+              <div className="input-with-icon">
+              <label  className="label" htmlFor="companyName">
                 Company
               </label>
-              <div className="input-with-icon">
                 <Tooltip title="Select your company from the drop down menu" arrow>
                   <FontAwesomeIcon
                     icon={faInfoCircle}
                     className="info-icon"
                   />
                 </Tooltip>
+                </div>
                 <div className="field">
                   <input
                     type="text"
@@ -290,20 +291,20 @@ const Contract = () => {
                     <div className="invalid-feedback">{formErrors.companyName}</div>
                   )} */}
                   {errors.companyName && <small className="text-danger">{errors.companyName}</small>}
-                </div>
               </div>
             </div>
             <div className="form-group col-md-6">
-              <label htmlFor="contractName">
+              <div className="input-with-icon">
+              <label className="label" htmlFor="contractName">
                 Contract Name
               </label>
-              <div className="input-with-icon">
                 <Tooltip title="Add the name of the contract that you are adding data to" arrow>
                   <FontAwesomeIcon
                     icon={faInfoCircle}
                     className="info-icon"
                   />
                 </Tooltip>
+                </div>
                 <div className="field">
                   <input
                     type="text"
@@ -318,7 +319,6 @@ const Contract = () => {
                     <div className="invalid-feedback">{formErrors.contractName}</div>
                   )} */}
                   {errors.contractName && <small className="text-danger">{errors.contractName}</small>}
-                </div>
               </div>
             </div>
           </form>

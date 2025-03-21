@@ -1487,10 +1487,9 @@ body.scrolled-down::-webkit-scrollbar-thumb {
   }
   
   .info-icon {
-    margin-right: 8px; /* Adjust spacing as needed */
-    color: #555; /* Adjust color as needed */
-    margin-bottom: 20px;
-    /* margin-top: 10px; */
+    color: #555;
+    margin-bottom: 10px;
+    margin-left: 10px;
   }
 
 

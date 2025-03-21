@@ -435,8 +435,8 @@ const VehicleForm = () => {
           <form onSubmit={handleSubmit}>
             <div className="form-row">
               <div className="form-group col-md-6">
-                <label>Vehicle Type</label>
                 <div className="input-with-icon">
+                <label className="label">Vehicle Type</label>
                   <Tooltip
                     title="Select the Vehicle Type from the drop-down menu"
                     arrow
@@ -446,6 +446,7 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
+                  </div>
                   <div className="field">
                     <Select
                       className="searchable_dropdown"
@@ -462,19 +463,19 @@ const VehicleForm = () => {
                         {errors.vehicle_type_id}
                       </small>
                     )}
-                  </div>
                 </div>
               </div>
 
               <div className="form-group col-md-6">
-                <label>Vehicle Description</label>
                 <div className="input-with-icon">
+                <label className="label">Vehicle Description</label>
                   <Tooltip title="Enter a description for the vehicle" arrow>
                     <FontAwesomeIcon
                       icon={faInfoCircle}
                       className="info-icon"
                     />
                   </Tooltip>
+                  </div>
                   <div className="field">
                     <input
                       value={formData.vehicle_description}
@@ -483,20 +484,20 @@ const VehicleForm = () => {
                       name="vehicle_description"
                       onChange={handleChange}
                     />
-                  </div>
                 </div>
               </div>
             </div>
             <div className="form-row">
               <div className="form-group col-md-6">
-                <label>Vehicle Registration No</label>
                 <div className="input-with-icon">
+                <label className="label">Vehicle Registration No</label>
                   <Tooltip title="Add the vehicle driver name if known" arrow>
                     <FontAwesomeIcon
                       icon={faInfoCircle}
                       className="info-icon"
                     />
                   </Tooltip>
+                  </div>
                   <div className="field">
                     <input
                       value={formData.vehicle_reg} // ✅ Corrected value
@@ -505,19 +506,19 @@ const VehicleForm = () => {
                       name="vehicle_reg"
                       onChange={handleChange}
                     />
-                  </div>
                 </div>
               </div>
 
               <div className="form-group col-md-6">
-                <label>Vehicle Driver Name</label>
                 <div className="input-with-icon">
+                <label className="label">Vehicle Driver Name</label>
                   <Tooltip title="Add the vehicle driver name if known" arrow>
                     <FontAwesomeIcon
                       icon={faInfoCircle}
                       className="info-icon"
                     />
                   </Tooltip>
+                  </div>
                   <div className="field">
                     <input
                       value={formData.driver_name}
@@ -526,20 +527,20 @@ const VehicleForm = () => {
                       name="driver_name"
                       onChange={handleChange}
                     />
-                  </div>
                 </div>
               </div>
             </div>
             <div className="form-row">
               <div className="form-group col-md-6">
-                <label>Carriers Name</label>
                 <div className="input-with-icon">
+                <label className="label">Carriers Name</label>
                   <Tooltip title="Add the name of the Carrier" arrow>
                     <FontAwesomeIcon
                       icon={faInfoCircle}
                       className="info-icon"
                     />
                   </Tooltip>
+                  </div>
                   <div className="field">
                     <input
                       value={formData.vehicle_name}
@@ -551,18 +552,18 @@ const VehicleForm = () => {
                     {errors.vehicle_name && (
                       <small className="text-danger">{errors.vehicle_name}</small>
                     )}
-                  </div>
                 </div>
               </div>
               <div className="form-group col-md-6">
-                <label>Phone No</label>
                 <div className="input-with-icon">
+                <label className="label">Phone No</label>
                   <Tooltip title="Add the Carrier company's phone number" arrow>
                     <FontAwesomeIcon
                       icon={faInfoCircle}
                       className="info-icon"
                     />
                   </Tooltip>
+                  </div>
                   <div className="field">
                     <input
                       value={formData.phone_no}
@@ -574,21 +575,20 @@ const VehicleForm = () => {
                     {errors.phone_no && (
                       <small className="text-danger">{errors.phone_no}</small>
                     )}
-                  </div>
                 </div>
               </div>
             </div>
             <div className="form-row">
               <div className="form-group col-md-6">
-                <label>Carrier License No</label>
                 <div className="input-with-icon">
+                <label className="label">Carrier License No</label>
                   <Tooltip title="Add the Waste Carrier's licence number. To find the licence number, please visit https://environment.data.gov.uk/public-register/view/search-waste-carriers-brokers" arrow>
                     <FontAwesomeIcon
                       icon={faInfoCircle}
                       className="info-icon"
                     />
                   </Tooltip>
-
+                  </div>
                   <div className="field">
                     <input
                       value={formData.vehicle_license}
@@ -600,12 +600,11 @@ const VehicleForm = () => {
                     {errors.vehicle_license && (
                       <small className="text-danger">{errors.vehicle_license}</small>
                     )}
-                  </div>
                 </div>
               </div>
               <div className="form-group col-md-6">
-                <label>Carrier's License Expiry Date</label>
                 <div className="input-with-icon">
+                <label className="label">Carrier's License Expiry Date</label>
                   <Tooltip
                     title="Add the expiry date of the licence. This can be found on the above website."
                     arrow
@@ -615,6 +614,7 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
+                  </div>
                   <div className="field">
                     <input
                       value={formData.vehicle_license_expire_date}
@@ -628,20 +628,20 @@ const VehicleForm = () => {
                         {errors.vehicle_license_expire_date}
                       </small>
                     )}
-                  </div>
                 </div>
               </div>
             </div>
             <div className="form-row">
               <div className="form-group col-md-6">
-                <label>Carriers Address 1</label>
                 <div className="input-with-icon">
+                <label className="label">Carriers Address 1</label>
                   <Tooltip title="Add the Carrier's address. Ensure this is the address on the Carrier's licence." arrow>
                     <FontAwesomeIcon
                       icon={faInfoCircle}
                       className="info-icon"
                     />
                   </Tooltip>
+                  </div>
                   <div className="field">
                     <input
                       value={formData.vehicle_address_1}
@@ -651,11 +651,10 @@ const VehicleForm = () => {
                       onChange={handleChange}
                     />
                   </div>
-                </div>
               </div>
               <div className="form-group col-md-6">
-                <label>Carriers Address 2</label>
                 <div className="input-with-icon">
+                <label className="label">Carriers Address 2</label>
                   <Tooltip
                     title="Add the Carrier's address. Ensure this is the address on the Carrier's licence."
                     arrow
@@ -665,6 +664,7 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
+                  </div>
                   <div className="field">
                     <input
                       value={formData.vehicle_address_2}
@@ -675,18 +675,18 @@ const VehicleForm = () => {
                     />
                   </div>
                 </div>
-              </div>
             </div>
             <div className="form-row">
               <div className="form-group col-md-6">
-                <label>Carriers Address 3</label>
                 <div className="input-with-icon">
+                <label className="label">Carriers Address 3</label>
                   <Tooltip title="Add the Carrier's address. Ensure this is the address on the Carrier's licence." arrow>
                     <FontAwesomeIcon
                       icon={faInfoCircle}
                       className="info-icon"
                     />
                   </Tooltip>
+                  </div>
                   <div className="field">
                     <input
                       value={formData.vehicle_address_3}
@@ -698,11 +698,9 @@ const VehicleForm = () => {
                   </div>
                 </div>
 
-              </div>
-
               <div className="form-group col-md-6">
-                <label>Carriers Address 4</label>
                 <div className="input-with-icon">
+                <label className="label">Carriers Address 4</label>
                   <Tooltip
                     title="Add the Carrier's address. Ensure this is the address on the Carrier's licence."
                     arrow
@@ -712,6 +710,7 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
+                  </div>
                   <div className="field">
                     <input
                       value={formData.vehicle_address_4}
@@ -722,19 +721,19 @@ const VehicleForm = () => {
                     />
                   </div>
                 </div>
-              </div>
             </div>
 
             <div className="form-row">
               <div className="form-group col-md-6">
-                <label>Carriers Postcode</label>
                 <div className="input-with-icon">
+                <label className="label">Carriers Postcode</label>
                   <Tooltip title="Add the Carrier's postcode." arrow>
                     <FontAwesomeIcon
                       icon={faInfoCircle}
                       className="info-icon"
                     />
                   </Tooltip>
+                  </div>
                   <div className="field">
                     <input
                       value={formData.vehicle_postcode}
@@ -746,11 +745,9 @@ const VehicleForm = () => {
                   </div>
                 </div>
 
-              </div>
-
               <div className="form-group col-md-6">
-                <label>Vehicle Fuel Type</label>
                 <div className="input-with-icon">
+                <label className="label">Vehicle Fuel Type</label>
                   <Tooltip
                     title="Select the Vehicle Type from the drop-down menu"
                     arrow
@@ -760,6 +757,7 @@ const VehicleForm = () => {
                       className="info-icon"
                     />
                   </Tooltip>
+                  </div>
                   <div className="field">
                     <Select
                       className="searchable_dropdown"
@@ -774,20 +772,20 @@ const VehicleForm = () => {
                     {errors.fuel_type_id && (
                       <small className="text-danger">{errors.fuel_type_id}</small>
                     )}
-                  </div>
                 </div>
               </div>
             </div>
             <div className="form-row">
               <div className="form-group col-md-6">
-                <label>Vehicle Tare Weight</label>
                 <div className="input-with-icon">
+                <label className="label">Vehicle Tare Weight</label>
                   <Tooltip title="Enter the tare weight of the vehicle" arrow>
                     <FontAwesomeIcon
                       icon={faInfoCircle}
                       className="info-icon"
                     />
                   </Tooltip>
+                  </div>
                   <div className="field">
                     <input
                       value={formData.vehicle_tare_weight}
@@ -796,25 +794,24 @@ const VehicleForm = () => {
                       name="vehicle_tare_weight"
                       onChange={handleChange}
                     />
-
                     {errors.vehicle_tare_weight && (
                       <small className="text-danger">
                         {errors.vehicle_tare_weight}
                       </small>
                     )}
-                  </div>
                 </div>
               </div>
 
               <div className="form-group col-md-6">
-                <label>Vehicle Owner</label>
                 <div className="input-with-icon">
+                <label className="label">Vehicle Owner</label>
                   <Tooltip title="Select the owner of the vehicle" arrow>
                     <FontAwesomeIcon
                       icon={faInfoCircle}
                       className="info-icon"
                     />
                   </Tooltip>
+                  </div>
                   <div className="field">
                     <Select
                       className="searchable_dropdown"
@@ -829,22 +826,22 @@ const VehicleForm = () => {
                     {errors.vehicle_owner && (
                       <small className="text-danger">{errors.vehicle_owner}</small>
                     )}
-                  </div>
                 </div>
               </div>
             </div>
             <div className="form-row">
               <div className="form-group col-md-6">
-                <label htmlFor="contractName">
+                <div className="input-with-icon">
+                <label className="label" htmlFor="contractName">
                   Contract Name
                 </label>
-                <div className="input-with-icon">
                   <Tooltip title="Select the main function of the Depot." arrow>
                     <FontAwesomeIcon
                       icon={faInfoCircle}
                       className="info-icon"
                     />
                   </Tooltip>
+                  </div>
                   <div className="field">
                     <input
                       type="text"
@@ -856,7 +853,6 @@ const VehicleForm = () => {
                       disabled
                     />
                   </div>
-                </div>
               </div>
               <div className="form-group col-md-6">
               </div>

@@ -454,100 +454,102 @@ const Company = () => {
               <form onSubmit={handleSubmit} className="company-form">
                 <div className="form-row">
                   <div className="form-group col-md-6">
-                    <label className="label" htmlFor="companyName">
-                      Company Name
-                    </label>
                     <div className="input-with-icon">
+                      <label className="label" htmlFor="companyName">
+                        Company Name
+                      </label>
                       <Tooltip title="Add your company name" arrow>
                         <FontAwesomeIcon
                           icon={faInfoCircle}
                           className="info-icon"
                         />
                       </Tooltip>
-                      <div className="field">
-                        <input
-                          type="text"
-                          className={`form-control company ${formErrors.companyName ? "is-invalid" : ""
-                            }`}
-                          id="companyName"
-                          name="companyName"
-                          value={formData.companyName}
-                          onChange={handleInputChange}
-                          required
-                          placeholder="Company Name"
-                        />
-                        {formErrors.companyName && (
-                          <div className="invalid-feedback">
-                            {formErrors.companyName}
-                          </div>
-                        )}
-                      </div>
                     </div>
+                    <div className="field">
+                      <input
+                        type="text"
+                        className={`form-control company ${formErrors.companyName ? "is-invalid" : ""
+                          }`}
+                        id="companyName"
+                        name="companyName"
+                        value={formData.companyName}
+                        onChange={handleInputChange}
+                        required
+                        placeholder="Company Name"
+                      />
+                      {formErrors.companyName && (
+                        <div className="invalid-feedback">
+                          {formErrors.companyName}
+                        </div>
+                      )}
+                    </div>
+
                   </div>
                   <div className="form-group col-md-6 mb-4">
-                    <label className="label" htmlFor="mainIndustry">
-                      Company's Main Industry
-                    </label>
                     <div className="input-with-icon">
+                      <label className="label" htmlFor="mainIndustry">
+                        Company's Main Industry
+                      </label>
                       <Tooltip title="Select your company's main industry." arrow>
                         <FontAwesomeIcon
                           icon={faInfoCircle}
                           className="info-icon"
                         />
                       </Tooltip>
-                      <div className="field">
-                        <Select
-                          className="searchable_dropdown"
-                          options={mainIndustryOptions}
-                          value={formData.mainIndustry}
-                          onChange={handleMainIndustryChange}
-                          placeholder="Select Main Industry"
-                          isSearchable
-                          styles={customSelectStyles}
-                        />
-                      </div>
+                    </div>
+                    <div className="field">
+                      <Select
+                        className="searchable_dropdown"
+                        options={mainIndustryOptions}
+                        value={formData.mainIndustry}
+                        onChange={handleMainIndustryChange}
+                        placeholder="Select Main Industry"
+                        isSearchable
+                        styles={customSelectStyles}
+                      />
                     </div>
                   </div>
                 </div>
 
                 <div className="form-row">
                   <div className="form-group col-md-6  mb-4">
-                    <label className="label" htmlFor="mainActivity">
-                      Company's Main Activity
-                    </label>
                     <div className="input-with-icon">
+                      <label className="label" htmlFor="mainActivity">
+                        Company's Main Activity
+                      </label>
                       <Tooltip title="Select your company's main activity from the drop-down menu" arrow>
                         <FontAwesomeIcon
                           icon={faInfoCircle}
                           className="info-icon"
                         />
                       </Tooltip>
-                      <div className="field">
-                        <Select
-                          className="searchable_dropdown"
-                          options={mainActivityOptions}
-                          value={formData.mainActivity}
-                          onChange={handleMainActivityChange}
-                          placeholder="Select Main Activity"
-                          isSearchable
-                          isDisabled={!formData.mainIndustry}
-                          styles={customSelectStyles}
-                        />
-                      </div>
+                    </div>
+                    <div className="field">
+                      <Select
+                        className="searchable_dropdown"
+                        options={mainActivityOptions}
+                        value={formData.mainActivity}
+                        onChange={handleMainActivityChange}
+                        placeholder="Select Main Activity"
+                        isSearchable
+                        isDisabled={!formData.mainIndustry}
+                        styles={customSelectStyles}
+                      />
                     </div>
                   </div>
                   <div className="form-group col-md-6 mb-4">
-                    <label className="label" htmlFor="subActivity">
-                      Company's Sub Activity
-                    </label>
                     <div className="input-with-icon">
+                      <label className="label" htmlFor="subActivity">
+                        Company's Sub Activity
+                      </label>
                       <Tooltip title="This can be found on the Companies House website, under Nature of Business (SIC)" arrow>
                         <FontAwesomeIcon
                           icon={faInfoCircle}
                           className="info-icon"
                         />
                       </Tooltip>
-                      {/* <Select
+                    </div>
+                    {/* <Select
                       className="form-control company"
                       options={subActivityOptions}
                       value={formData.subActivity}
@@ -557,326 +559,325 @@ const Company = () => {
                       isDisabled={!formData.mainActivity}
                      
                     /> */}
-                      <div className="field">
-                        <Select
-                          className="searchable_dropdown"
-                          options={subActivityOptions}
-                          value={formData.subActivity}
-                          onChange={handleSubActivityChange}
-                          placeholder="Select Sub Activity"
-                          isSearchable
-                          isDisabled={!formData.mainActivity}
-                          styles={customSelectStyles} // Apply styles
-                        />
-                      </div>
-                    </div>
+                    <div className="field">
+                      <Select
+                        className="searchable_dropdown"
+                        options={subActivityOptions}
+                        value={formData.subActivity}
+                        onChange={handleSubActivityChange}
+                        placeholder="Select Sub Activity"
+                        isSearchable
+                        isDisabled={!formData.mainActivity}
+                        styles={customSelectStyles} // Apply styles
+                      />
                   </div>
                 </div>
+            </div>
 
                 {isSicCodeVisible && (
-                  <div className="form-group col-md-6">
-                    <label className="label">Company's SIC Code :</label>
-                    <div className="input-with-icon">
-                      <Tooltip title="Select your company's main industry." arrow>
-                        <FontAwesomeIcon
-                          icon={faInfoCircle}
-                          className="info-icon"
-                        />
-                      </Tooltip>
-                      <div className="field">
-                        <input
-                          type="text"
-                          className="form-control company"
-                          id="sicCode"
-                          name="sicCode"
-                          value={formData.sicCode}
-                          disabled
-                          placeholder="Company's SIC Code"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                <div className="form-row">
-                  <div className="form-group col-md-6">
-                    <label className="label" htmlFor="contractName">
-                      Company Contact Name
-                    </label>
-                    <div className="input-with-icon">
-                      <Tooltip title="Add the name of the main contact" arrow>
-                        <FontAwesomeIcon
-                          icon={faInfoCircle}
-                          className="info-icon"
-                        />
-                      </Tooltip>
-                      <div className="field">
-                        <input
-                          type="text"
-                          className={`form-control company ${formErrors.contractName ? "is-invalid" : ""
-                            }`}
-                          id="contractName"
-                          name="contractName"
-                          value={formData.contractName}
-                          onChange={handleInputChange}
-                          required
-                          placeholder="Company Contact Name"
-                        />
-                        {formErrors.contractName && (
-                          <div className="invalid-feedback">
-                            {formErrors.contractName}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="form-group col-md-6">
-                    <label className="label">Company Postcode</label>
-                    <div className="input-with-icon">
-                      <Tooltip title="Please add the postcode for your company's registered office, that appears on the Companies House website." arrow>
-                        <FontAwesomeIcon
-                          icon={faInfoCircle}
-                          className="info-icon"
-                        />
-                      </Tooltip>
-                      <div className="field">
-                        <input
-                          type="text"
-                          className={`form-control company ${formErrors.postcode ? "is-invalid" : ""
-                            }`}
-                          name="postcode"
-                          value={formData.postcode}
-                          onChange={handleInputChange}
-                          required
-                          placeholder="Company Postcode"
-                        />
-                        {formErrors.postcode && (
-                          <div className="invalid-feedback">
-                            {formErrors.postcode}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+            <div className="form-group col-md-6">
+              <div className="input-with-icon">
+              <label className="label">Company's SIC Code :</label>
+                <Tooltip title="Select your company's main industry." arrow>
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    className="info-icon"
+                  />
+                </Tooltip>
                 </div>
-
-                <div className="form-row">
-                  <div className="form-group col-md-6">
-                    <label className="label">Address Line 1</label>
-                    <div className="input-with-icon">
-                      <Tooltip title="Please add the full address for your company's registered office, that appears on the Companies House website." arrow>
-                        <FontAwesomeIcon
-                          icon={faInfoCircle}
-                          className="info-icon"
-                        />
-                      </Tooltip>
-                      <div className="field">
-                        <input
-                          type="text"
-                          className="form-control company"
-                          name="addressLine1"
-                          value={formData.addressLine1}
-                          onChange={handleInputChange}
-                          required
-                          placeholder="Address Line 1"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="form-group col-md-6">
-                    <label className="label">Address Line 2</label>
-                    <div className="input-with-icon">
-                      <Tooltip title="Please add the full address for your company's registered office, that appears on the Companies House website." arrow>
-                        <FontAwesomeIcon
-                          icon={faInfoCircle}
-                          className="info-icon"
-                        />
-                      </Tooltip>
-                      <div className="field">
-                        <input
-                          type="text"
-                          className="form-control company"
-                          name="addressLine2"
-                          value={formData.addressLine2}
-                          onChange={handleInputChange}
-                          required
-                          placeholder="Address Line 2"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="form-row">
-                  <div className="form-group col-md-6">
-                    <label className="label">Address Line 3</label>
-                    <div className="input-with-icon">
-                      <Tooltip title="Please add the full address for your company's registered office, that appears on the Companies House website." arrow>
-                        <FontAwesomeIcon
-                          icon={faInfoCircle}
-                          className="info-icon"
-                        />
-                      </Tooltip>
-                      <div className="field">
-                        <input
-                          type="text"
-                          className="form-control company"
-                          name="addressLine3"
-                          value={formData.addressLine3}
-                          onChange={handleInputChange}
-                          required
-                          placeholder="Address Line 3"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="form-group col-md-6">
-                    <label className="label">Address Line 4</label>
-                    <div className="input-with-icon">
-                      <Tooltip title="Please add the full address for your company's registered office, that appears on the Companies House website." arrow>
-                        <FontAwesomeIcon
-                          icon={faInfoCircle}
-                          className="info-icon"
-                        />
-                      </Tooltip>
-                      <div className="field">
-                        <input
-                          type="text"
-                          className="form-control company"
-                          name="addressLine4"
-                          value={formData.addressLine4}
-                          onChange={handleInputChange}
-                          required
-                          placeholder="Address Line 4"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="form-row">
-                  <div className="form-group col-md-6">
-                    <label className="label" htmlFor="contactNumber">
-                      Company Telephone
-                    </label>
-                    <div className="input-with-icon">
-                      <Tooltip title="Add the number of the main contact in your company." arrow>
-                        <FontAwesomeIcon
-                          icon={faInfoCircle}
-                          className="info-icon"
-                        />
-                      </Tooltip>
-                      <div className="field">
-                        <input
-                          type="tel"
-                          className={`form-control company ${formErrors.contactNumber ? "is-invalid" : ""
-                            }`}
-                          id="contactNumber"
-                          name="contactNumber"
-                          value={formData.contactNumber}
-                          onChange={handleInputChange}
-                          required
-                          placeholder="Company Telephone"
-                        />
-                        {formErrors.contactNumber && (
-                          <div className="invalid-feedback">
-                            {formErrors.contactNumber}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="form-group col-md-6">
-                    <label className="label" htmlFor="email">
-                      Company Email
-                    </label>
-                    <div className="input-with-icon">
-                      <Tooltip
-                        title="Add the email address of the main contact in your company."
-                        arrow
-                      >
-                        <FontAwesomeIcon
-                          icon={faInfoCircle}
-                          className="info-icon"
-                        />
-                      </Tooltip>
-                      <div className="field">
-                        <input
-                          type="email"
-                          className={`form-control company ${formErrors.email ? "is-invalid" : ""
-                            }`}
-                          id="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          required
-                          placeholder="Company Email"
-                        />
-                        {formErrors.email && (
-                          <div className="invalid-feedback">{formErrors.email}</div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="form-row">
-                  <div className="form-group col-md-6">
-                    <label className="label">Company Active</label>
-                    <div className="input-with-icon">
-                      <Tooltip title="Tick this box so that your company is visible in Waste Accountant." arrow>
-                        <FontAwesomeIcon
-                          icon={faInfoCircle}
-                          className="info-icon"
-                        />
-                      </Tooltip>
-                      <div className="form-check">
-                        <div className="field">
-                          <input
-                            type="checkbox"
-                            className={`form-check-input ${formErrors.companyActive ? "is-invalid" : ""
-                              }`}
-                            id="companyActive"
-                            name="companyActive"
-                            checked={formData.companyActive}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                companyActive: e.target.checked,
-                              })
-                            }
-                          />
-                          <label
-                            // className={`form-check-label ${
-                            //   formErrors.companyActive ? "text-danger" : ""
-                            // }`}
-                            htmlFor="companyActive"
-                          >
-                            Confirm Company is Active
-                          </label>
-                        {formErrors.companyActive && (
-                          <div className="invalid-feedback">
-                            {formErrors.companyActive}
-                          </div>
-                        )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </form>
+                <div className="field">
+                  <input
+                    type="text"
+                    className="form-control company"
+                    id="sicCode"
+                    name="sicCode"
+                    value={formData.sicCode}
+                    disabled
+                    placeholder="Company's SIC Code"
+                  />
+              </div>
             </div>
           )}
 
-          {activeStep === 1 && (
-            <div>
-              <h5>Step 2 Content</h5>
+          <div className="form-row">
+            <div className="form-group col-md-6">
+              <div className="input-with-icon">
+              <label className="label" htmlFor="contractName">
+                Company Contact Name
+              </label>
+                <Tooltip title="Add the name of the main contact" arrow>
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    className="info-icon"
+                  />
+                </Tooltip>
+                </div>
+                <div className="field">
+                  <input
+                    type="text"
+                    className={`form-control company ${formErrors.contractName ? "is-invalid" : ""
+                      }`}
+                    id="contractName"
+                    name="contractName"
+                    value={formData.contractName}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="Company Contact Name"
+                  />
+                  {formErrors.contractName && (
+                    <div className="invalid-feedback">
+                      {formErrors.contractName}
+                    </div>
+                  )}
+              </div>
             </div>
-          )}
-        </div>
+            <div className="form-group col-md-6">
+              <div className="input-with-icon">
+              <label className="label">Company Postcode</label>
+                <Tooltip title="Please add the postcode for your company's registered office, that appears on the Companies House website." arrow>
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    className="info-icon"
+                  />
+                </Tooltip>
+                </div>
+                <div className="field">
+                  <input
+                    type="text"
+                    className={`form-control company ${formErrors.postcode ? "is-invalid" : ""
+                      }`}
+                    name="postcode"
+                    value={formData.postcode}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="Company Postcode"
+                  />
+                  {formErrors.postcode && (
+                    <div className="invalid-feedback">
+                      {formErrors.postcode}
+                    </div>
+                  )}
+              </div>
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group col-md-6">
+              <div className="input-with-icon">
+              <label className="label">Address Line 1</label>
+                <Tooltip title="Please add the full address for your company's registered office, that appears on the Companies House website." arrow>
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    className="info-icon"
+                  />
+                </Tooltip>
+                </div>
+                <div className="field">
+                  <input
+                    type="text"
+                    className="form-control company"
+                    name="addressLine1"
+                    value={formData.addressLine1}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="Address Line 1"
+                  />
+              </div>
+            </div>
+
+            <div className="form-group col-md-6">
+              <div className="input-with-icon">
+              <label className="label">Address Line 2</label>
+                <Tooltip title="Please add the full address for your company's registered office, that appears on the Companies House website." arrow>
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    className="info-icon"
+                  />
+                </Tooltip>
+                </div>
+                <div className="field">
+                  <input
+                    type="text"
+                    className="form-control company"
+                    name="addressLine2"
+                    value={formData.addressLine2}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="Address Line 2"
+                  />
+              </div>
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group col-md-6">
+              <div className="input-with-icon">
+              <label className="label">Address Line 3</label>
+                <Tooltip title="Please add the full address for your company's registered office, that appears on the Companies House website." arrow>
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    className="info-icon"
+                  />
+                </Tooltip>
+                </div>
+                <div className="field">
+                  <input
+                    type="text"
+                    className="form-control company"
+                    name="addressLine3"
+                    value={formData.addressLine3}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="Address Line 3"
+                  />
+              </div>
+            </div>
+            <div className="form-group col-md-6">
+              <div className="input-with-icon">
+              <label className="label">Address Line 4</label>
+                <Tooltip title="Please add the full address for your company's registered office, that appears on the Companies House website." arrow>
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    className="info-icon"
+                  />
+                </Tooltip>
+                </div>
+                <div className="field">
+                  <input
+                    type="text"
+                    className="form-control company"
+                    name="addressLine4"
+                    value={formData.addressLine4}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="Address Line 4"
+                  />
+              </div>
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group col-md-6">
+              <div className="input-with-icon">
+              <label className="label" htmlFor="contactNumber">
+                Company Telephone
+              </label>
+                <Tooltip title="Add the number of the main contact in your company." arrow>
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    className="info-icon"
+                  />
+                </Tooltip>
+                </div>
+                <div className="field">
+                  <input
+                    type="tel"
+                    className={`form-control company ${formErrors.contactNumber ? "is-invalid" : ""
+                      }`}
+                    id="contactNumber"
+                    name="contactNumber"
+                    value={formData.contactNumber}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="Company Telephone"
+                  />
+                  {formErrors.contactNumber && (
+                    <div className="invalid-feedback">
+                      {formErrors.contactNumber}
+                    </div>
+                  )}
+              </div>
+            </div>
+
+            <div className="form-group col-md-6">
+              <div className="input-with-icon">
+              <label className="label" htmlFor="email">
+                Company Email
+              </label>
+                <Tooltip
+                  title="Add the email address of the main contact in your company."
+                  arrow
+                >
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    className="info-icon"
+                  />
+                </Tooltip>
+                </div>
+                <div className="field">
+                  <input
+                    type="email"
+                    className={`form-control company ${formErrors.email ? "is-invalid" : ""
+                      }`}
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="Company Email"
+                  />
+                  {formErrors.email && (
+                    <div className="invalid-feedback">{formErrors.email}</div>
+                  )}
+              </div>
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group col-md-6">
+              <div className="input-with-icon">
+              <label className="label">Company Active</label>
+                <Tooltip title="Tick this box so that your company is visible in Waste Accountant." arrow>
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    className="info-icon"
+                  />
+                </Tooltip>
+                </div>
+                <div className="form-check">
+                  <div className="field">
+                    <input
+                      type="checkbox"
+                      className={`form-check-input ${formErrors.companyActive ? "is-invalid" : ""
+                        }`}
+                      id="companyActive"
+                      name="companyActive"
+                      checked={formData.companyActive}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          companyActive: e.target.checked,
+                        })
+                      }
+                    />
+                    <label
+                      // className={`form-check-label ${
+                      //   formErrors.companyActive ? "text-danger" : ""
+                      // }`}
+                      htmlFor="companyActive"
+                    >
+                      Confirm Company is Active
+                    </label>
+                    {formErrors.companyActive && (
+                      <div className="invalid-feedback">
+                        {formErrors.companyActive}
+                      </div>
+                    )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
       </div>
+          )}
+
+      {activeStep === 1 && (
+        <div>
+          <h5>Step 2 Content</h5>
+        </div>
+      )}
+    </div >
+      </div >
 
       <div className=" company-setup-container mt-1">
         <button
