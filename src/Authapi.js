@@ -862,5 +862,202 @@ async useregister(registerUserData) {
         }
     }
 
+    async getDistrictCouncildata() {
+        try {
+            const url = `${Config.waapiurl}${Config.authApis.getDistrictCouncildata}`;
+            this.setHeaders("get");
+
+            const authToken = ls.get("WAauthToken") || "";
+            console.log("Auth Token:", authToken);
+
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            if (error.response) {
+                throw new Error(
+                    error.response.data.message || "Failed to fetch District Council details"
+                );
+            } else {
+                throw new Error(
+                    "An error occurred while fetching District Council details. Please try again later!"
+                );
+            }
+        }
+    }
+
+    async getOrigindata() {
+        try {
+            const url = `${Config.waapiurl}${Config.authApis.getOrigindata}`;
+            this.setHeaders("get");
+
+            const authToken = ls.get("WAauthToken") || "";
+            console.log("Auth Token:", authToken);
+
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            if (error.response) {
+                throw new Error(
+                    error.response.data.message || "Failed to fetch District Council details"
+                );
+            } else {
+                throw new Error(
+                    "An error occurred while fetching Origin details. Please try again later!"
+                );
+            }
+        }
+    }
+
+    async getJobTypedata() {
+        try {
+            const url = `${Config.waapiurl}${Config.authApis.getJobTypedata}`;
+            this.setHeaders("get");
+
+            const authToken = ls.get("WAauthToken") || "";
+            console.log("Auth Token:", authToken);
+
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            if (error.response) {
+                throw new Error(
+                    error.response.data.message || "Failed to fetch District Council details"
+                );
+            } else {
+                throw new Error(
+                    "An error occurred while fetching Job Type details. Please try again later!"
+                );
+            }
+        }
+    }
+
+    async getSubContractCompanydata() {
+        try {
+            const url = `${Config.waapiurl}${Config.authApis.getSubContractCompanydata}`;
+            this.setHeaders("get");
+
+            const authToken = ls.get("WAauthToken") || "";
+            console.log("Auth Token:", authToken);
+
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            if (error.response) {
+                throw new Error(
+                    error.response.data.message || "Failed to fetch District Council details"
+                );
+            } else {
+                throw new Error(
+                    "An error occurred while fetching Job Type details. Please try again later!"
+                );
+            }
+        }
+    }
+
+    async userSiteDetails(formData) {
+        try {
+            const url = `${Config.waapiurl}${Config.authApis.userSiteDetails}`;
+            this.setHeaders("post");
+
+            const authToken = ls.get("WAauthToken") || "";
+            console.log("Auth Token:", authToken);
+
+            const response = await axios.post(url, formData, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            console.log("Company details submitted successfully:", response.data);
+            return response.data;
+        } catch (error) {
+            console.error("API Error:", error);
+            if (error.response) {
+                throw new Error(
+                    error.response.data.message || "Failed to submit company details"
+                );
+            } else {
+                throw new Error(
+                    "An error occurred while submitting company details. Please try again later!"
+                );
+            }
+        }
+    }
+
+    // async getUserSitedetail(contract_id) {
+    //     try {
+    //         const url = `${Config.waapiurl}${Config.authApis.getUserSitedetail}`;
+    //         this.setHeaders("get");
+
+    //         const authToken = ls.get("WAauthToken") || "";
+    //         console.log("Auth Token:", authToken);
+
+    //         const response = await axios.get(url, {
+    //             headers: {
+    //                 Authorization: `Bearer ${authToken}`,
+    //                 "Content-Type": "application/json",
+    //             },
+    //         });
+    //         return response.data;
+    //     } catch (error) {
+    //         console.error("API Error:", error);
+    //         throw error;
+    //     }
+    // }
+
+
+
+    async getUserSitedetail(contract_id) {
+        try {
+          const url = `${Config.waapiurl}${Config.authApis.getUserSitedetail}`;
+          this.setHeaders("post"); // Set headers for POST request
+      
+          const authToken = ls.get("WAauthToken") || "";
+          console.log("Auth Token:", authToken);
+      
+          // Prepare the payload with contract_id
+          const data = { contract_id };
+      
+          // Make the POST request with the payload
+          const response = await axios.post(url, data, {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+              "Content-Type": "application/json",
+            },
+          });
+      
+          return response.data;
+        } catch (error) {
+          console.error("API Error:", error);
+          throw error;
+        }
+      }
+      
+
     
 })();

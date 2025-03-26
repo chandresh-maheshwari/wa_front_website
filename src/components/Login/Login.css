@@ -272,3 +272,9 @@ body {
  .popup-content{
   background-color: unset !important;
  }
+
+.auth-icon{
+ margin-left: -21px;
+ margin-right: 7px;
+ margin-top: 15px !important;
+}

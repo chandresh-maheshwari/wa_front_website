@@ -162,16 +162,16 @@ const DepotForm = () => {
       setFormData({ ...formData, [name]: value }); // Update formData for other fields
     }
   };
-  
+
   const validateForm = () => {
     const newErrors = {};
-    
+
     // Validate Depot Type
     // if (!formData.depotTypeId) {
-      //   newErrors.depotTypeId = "Depot Type is required.";
-      // }
-      // console.log(formData);
-      
+    //   newErrors.depotTypeId = "Depot Type is required.";
+    // }
+    // console.log(formData);
+
     if (!formData.contractName) {
       newErrors.contractName = "Contract Name is required.";
     }
@@ -185,10 +185,10 @@ const DepotForm = () => {
     // if (!formData.countyId) {
     //   newErrors.countyId = "County is required.";
     // }
-    
+
     // Validate Start Date
     // if (!formData.startDate) {
-      //   newErrors.startDate = "Start Date is required.";
+    //   newErrors.startDate = "Start Date is required.";
     // }
 
     // // Validate End Date
@@ -254,7 +254,8 @@ const DepotForm = () => {
         // });
         sessionStorage.setItem("successMessage", "Depot Setup Complete! Your Depot has been successfully registered.");
 
-        navigate("/vehicle");
+        // navigate("/vehicle");
+        navigate("/site");
       } else {
         throw new Error(response.message || "Failed to setup depot");
       }
@@ -373,7 +374,7 @@ const DepotForm = () => {
     { title: 'Company' },
     { title: 'Contract' },
     { title: 'Depot' },
-    { title: 'Vehicle' },
+    { title: 'Site' },
   ];
   const activeStep1 = 2;
 
@@ -438,318 +439,318 @@ const DepotForm = () => {
 
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
-                    <label className="label">Depot Type</label>
+                      <label className="label">Depot Type</label>
                       <Tooltip title="Select the main function of the Depot." arrow>
                         <FontAwesomeIcon
                           icon={faInfoCircle}
                           className="info-icon"
                         />
                       </Tooltip>
-                      </div>
-                      <div className="field">
-                        <Select
-                          className="searchable_dropdown"
-                          options={depotTypes}
-                          // value={formData.depotTypeId}
-                          value={depotTypes.find(option => option.value === formData.depotTypeId)}
-                          onChange={handleDepotTypeChange}
-                          placeholder="Select Depot Type"
-                          isSearchable
-                          styles={customSelectStyles}
-                        />
-                        {errors.depotTypeId && <small className="text-danger">{errors.depotTypeId}</small>}
+                    </div>
+                    <div className="field">
+                      <Select
+                        className="searchable_dropdown"
+                        options={depotTypes}
+                        // value={formData.depotTypeId}
+                        value={depotTypes.find(option => option.value === formData.depotTypeId)}
+                        onChange={handleDepotTypeChange}
+                        placeholder="Select Depot Type"
+                        isSearchable
+                        styles={customSelectStyles}
+                      />
+                      {errors.depotTypeId && <small className="text-danger">{errors.depotTypeId}</small>}
                     </div>
                   </div>
 
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
-                    <label className="label">Contract</label>
+                      <label className="label">Contract</label>
                       <Tooltip title="Select the Contract that manages the depot from the drop-down menu" arrow>
                         <FontAwesomeIcon
                           icon={faInfoCircle}
                           className="info-icon"
                         />
                       </Tooltip>
-                      </div>
-                      <div className="field">
-                        <input
-                          className="form-control company"
-                          type="text"
-                          name="contractName"
-                          value={formData.contractName}
-                          onChange={handleDepotTypeChange}
-                          disabled                        />
-                        {errors.contractName && <small className="text-danger">{errors.contractName}</small>}
-                      </div>
+                    </div>
+                    <div className="field">
+                      <input
+                        className="form-control company"
+                        type="text"
+                        name="contractName"
+                        value={formData.contractName}
+                        onChange={handleDepotTypeChange}
+                        disabled />
+                      {errors.contractName && <small className="text-danger">{errors.contractName}</small>}
+                    </div>
                   </div>
                 </div>
                 <div className="form-row">
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
-                    <label className="label">Depot Name</label>
+                      <label className="label">Depot Name</label>
                       <Tooltip title="Add the name of the Depot." arrow>
                         <FontAwesomeIcon
                           icon={faInfoCircle}
                           className="info-icon"
                         />
                       </Tooltip>
-                      </div>
-                      <div className="field">
-                        <input
-                          className="form-control company"
-                          type="text"
-                          name="depotName"
-                          value={formData.depotName}
-                          onChange={handleChange}
-                        />
-                        {errors.depotName && <small className="text-danger">{errors.depotName}</small>}
-                      </div>
+                    </div>
+                    <div className="field">
+                      <input
+                        className="form-control company"
+                        type="text"
+                        name="depotName"
+                        value={formData.depotName}
+                        onChange={handleChange}
+                      />
+                      {errors.depotName && <small className="text-danger">{errors.depotName}</small>}
+                    </div>
                   </div>
 
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
-                    <label className="label">Depot Permit No</label>
+                      <label className="label">Depot Permit No</label>
                       <Tooltip title="If the Depot has an environmental permit, add this here." arrow>
                         <FontAwesomeIcon
                           icon={faInfoCircle}
                           className="info-icon"
                         />
                       </Tooltip>
-                      </div>
-                      <div className="field">
-                        <input
-                          className="form-control company"
-                          type="text"
-                          name="depotPermitNo"
-                          value={formData.depotPermitNo}
-                          onChange={handleChange}
-                        />
-                        {errors.depotPermitNo && <small className="text-danger">{errors.depotPermitNo}</small>}
-                      </div>
                     </div>
+                    <div className="field">
+                      <input
+                        className="form-control company"
+                        type="text"
+                        name="depotPermitNo"
+                        value={formData.depotPermitNo}
+                        onChange={handleChange}
+                      />
+                      {errors.depotPermitNo && <small className="text-danger">{errors.depotPermitNo}</small>}
+                    </div>
+                  </div>
                 </div>
 
                 <div className="form-row">
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
-                    <label className="label">Depot Address 1</label>
+                      <label className="label">Depot Address 1</label>
                       <Tooltip title="Add the depot address" arrow>
                         <FontAwesomeIcon
                           icon={faInfoCircle}
                           className="info-icon"
                         />
                       </Tooltip>
-                      </div>
-                      {/* {console.log(formData)} */}
-                      <div className="field">
-                        <input
-                          value={formData.depotAddress1}
-                          className="form-control company"
-                          type="text"
-                          name="depotAddress1"
-                          onChange={handleChange}
-                        />
-                        {/* {errors.depotAddress1 && <small className="text-danger">{errors.depotAddress1}</small>} */}
-                      </div>
                     </div>
+                    {/* {console.log(formData)} */}
+                    <div className="field">
+                      <input
+                        value={formData.depotAddress1}
+                        className="form-control company"
+                        type="text"
+                        name="depotAddress1"
+                        onChange={handleChange}
+                      />
+                      {/* {errors.depotAddress1 && <small className="text-danger">{errors.depotAddress1}</small>} */}
+                    </div>
+                  </div>
 
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
-                    <label className="label">Depot Address 2</label>
+                      <label className="label">Depot Address 2</label>
                       <Tooltip title="Add the depot address" arrow>
                         <FontAwesomeIcon
                           icon={faInfoCircle}
                           className="info-icon"
                         />
                       </Tooltip>
-                      </div>
-                      <div className="field">
-                        <input
-                          className="form-control company"
-                          type="text"
-                          value={formData.depotAddress2}
-                          name="depotAddress2"
-                          onChange={handleChange}
-                        />
-                        {/* {errors.depotAddress2 && <small className="text-danger">{errors.depotAddress2}</small>} */}
-                      </div>
+                    </div>
+                    <div className="field">
+                      <input
+                        className="form-control company"
+                        type="text"
+                        value={formData.depotAddress2}
+                        name="depotAddress2"
+                        onChange={handleChange}
+                      />
+                      {/* {errors.depotAddress2 && <small className="text-danger">{errors.depotAddress2}</small>} */}
+                    </div>
                   </div>
                 </div>
                 <div className="form-row">
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
-                    <label className="label">Depot Address 3</label>
+                      <label className="label">Depot Address 3</label>
                       <Tooltip title="Add the depot address" arrow>
                         <FontAwesomeIcon
                           icon={faInfoCircle}
                           className="info-icon"
                         />
                       </Tooltip>
-                      </div>
-                      <div className="field">
-                        <input
-                          value={formData.depotAddress3}
-                          className="form-control company"
-                          type="text"
-                          name="depotAddress3"
-                          onChange={handleChange}
-                        />
-                        {/* {errors.depotAddress3 && <small className="text-danger">{errors.depotAddress3}</small>} */}
-                      </div>
                     </div>
+                    <div className="field">
+                      <input
+                        value={formData.depotAddress3}
+                        className="form-control company"
+                        type="text"
+                        name="depotAddress3"
+                        onChange={handleChange}
+                      />
+                      {/* {errors.depotAddress3 && <small className="text-danger">{errors.depotAddress3}</small>} */}
+                    </div>
+                  </div>
 
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
-                    <label className="label">Depot Address 4</label>
+                      <label className="label">Depot Address 4</label>
                       <Tooltip title="Add the depot address" arrow>
                         <FontAwesomeIcon
                           icon={faInfoCircle}
                           className="info-icon"
                         />
                       </Tooltip>
-                      </div>
-                      <div className="field">
-                        <input
-                          className="form-control company"
-                          type="text"
-                          value={formData.depotAddress4}
-                          name="depotAddress4"
-                          onChange={handleChange}
-                        />
-                        {/* {errors.depotAddress4 && <small className="text-danger">{errors.depotAddress4}</small>} */}
-                      </div>
                     </div>
+                    <div className="field">
+                      <input
+                        className="form-control company"
+                        type="text"
+                        value={formData.depotAddress4}
+                        name="depotAddress4"
+                        onChange={handleChange}
+                      />
+                      {/* {errors.depotAddress4 && <small className="text-danger">{errors.depotAddress4}</small>} */}
+                    </div>
+                  </div>
                 </div>
 
                 <div className="form-row">
                   <div className="form-group col-md-6 ">
                     <div className="input-with-icon">
-                    <label className="label">Depot Postcode</label>
+                      <label className="label">Depot Postcode</label>
                       <Tooltip title="Add the depot postcode" arrow>
                         <FontAwesomeIcon
                           icon={faInfoCircle}
                           className="info-icon"
                         />
                       </Tooltip>
-                      </div>
-                      <div className="field">
-                        <input
-                          className="form-control company"
-                          type="text"
-                          name="depotPostcode"
-                          value={formData.depotPostcode}
-                          onChange={handleChange}
-                        />
-                        {errors.depotPostcode && <small className="text-danger">{errors.depotPostcode}</small>}
-                      </div>
                     </div>
+                    <div className="field">
+                      <input
+                        className="form-control company"
+                        type="text"
+                        name="depotPostcode"
+                        value={formData.depotPostcode}
+                        onChange={handleChange}
+                      />
+                      {errors.depotPostcode && <small className="text-danger">{errors.depotPostcode}</small>}
+                    </div>
+                  </div>
 
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
-                    <label className="label">County</label>
+                      <label className="label">County</label>
                       <Tooltip title="Select the county where the depot is located form the drop-down menu." arrow>
                         <FontAwesomeIcon
                           icon={faInfoCircle}
                           className="info-icon"
                         />
                       </Tooltip>
-                      </div>
-                      <div className="field">
-                        <Select
-                          className="searchable_dropdown"
-                          options={countytypes}
-                          // value={formData.countyId}
-                          value={countytypes.find(option => option.value === formData.countyId)}
-                          onChange={handleCountyChange}
-                          placeholder="Select County"
-                          isSearchable
-                          styles={customSelectStyles}
-                        />
-                    {errors.countyId && <small className="text-danger">{errors.countyId}</small>}
-                      </div>
+                    </div>
+                    <div className="field">
+                      <Select
+                        className="searchable_dropdown"
+                        options={countytypes}
+                        // value={formData.countyId}
+                        value={countytypes.find(option => option.value === formData.countyId)}
+                        onChange={handleCountyChange}
+                        placeholder="Select County"
+                        isSearchable
+                        styles={customSelectStyles}
+                      />
+                      {errors.countyId && <small className="text-danger">{errors.countyId}</small>}
+                    </div>
                   </div>
                 </div>
 
                 <div className="form-row">
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
-                    <label className="label">Telephone</label>
+                      <label className="label">Telephone</label>
                       <Tooltip title="Add the depot telephone number" arrow>
                         <FontAwesomeIcon
                           icon={faInfoCircle}
                           className="info-icon"
                         />
                       </Tooltip>
-                      </div>
-                      <div className="field">
-                        <input
-                          className="form-control company"
-                          type="tel"
-                          name="depotTelephone"
-                          value={formData.depotTelephone}
-                          onChange={handleChange}
-                        />
-                        {errors.depotTelephone && <small className="text-danger">{errors.depotTelephone}</small>}
-                      </div>
                     </div>
+                    <div className="field">
+                      <input
+                        className="form-control company"
+                        type="tel"
+                        name="depotTelephone"
+                        value={formData.depotTelephone}
+                        onChange={handleChange}
+                      />
+                      {errors.depotTelephone && <small className="text-danger">{errors.depotTelephone}</small>}
+                    </div>
+                  </div>
 
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
-                    <label className="label">Depot Permit Tonnage Limit</label>
+                      <label className="label">Depot Permit Tonnage Limit</label>
                       <Tooltip title="If the depot has an environmental permit, please add the permit number." arrow>
                         <FontAwesomeIcon
                           icon={faInfoCircle}
                           className="info-icon"
                         />
                       </Tooltip>
-                      </div>
-                      {/* {console.log(formData.depotPermitTonnageLimit)} */}
-                      <div className="field">
-                        <input
-                          className="form-control company"
-                          type="tel"
-                          name="depotPermitTonnageLimit"
-                          value={formData.depotPermitTonnageLimit}
-                          onChange={handleChange}
-                        />
-                        {/* {errors.depotPermitTonnageLimit && <small className="text-danger">{errors.depotPermitTonnageLimit}</small>} */}
-                      </div>
+                    </div>
+                    {/* {console.log(formData.depotPermitTonnageLimit)} */}
+                    <div className="field">
+                      <input
+                        className="form-control company"
+                        type="tel"
+                        name="depotPermitTonnageLimit"
+                        value={formData.depotPermitTonnageLimit}
+                        onChange={handleChange}
+                      />
+                      {/* {errors.depotPermitTonnageLimit && <small className="text-danger">{errors.depotPermitTonnageLimit}</small>} */}
+                    </div>
                   </div>
 
                 </div>
                 <div className="form-row">
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
-                    <label className="label">Include Tonnage Limit on Dashboard</label>
+                      <label className="label">Include Tonnage Limit on Dashboard</label>
                       <Tooltip title="Tick if you wish to see tonnage limit in the dashboard." arrow>
                         <FontAwesomeIcon
                           icon={faInfoCircle}
                           className="info-icon"
                         />
                       </Tooltip>
-                      </div>
-                      <div className="form-check">
-                        <div className="field">
-                          <input
-                            type="checkbox"
-                            // className={`form-check-input ${formErrors.companyActive ? "is-invalid" : ""
-                            //   }`}
-                            className='form-check-input'
-                            id="includeTonnageLimitOnDashboard"
-                            name="includeTonnageLimitOnDashboard"
-                            checked={formData.includeTonnageLimitOnDashboard}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                includeTonnageLimitOnDashboard: e.target.checked,
-                              })
-                            }
-                          />
-                          <label className="label"
-                            htmlFor="includeTonnageLimitOnDashboard"
-                          >
-                            Confirm Include Tonnage Limit on Dashboard is Active
-                          </label>
+                    </div>
+                    <div className="form-check">
+                      <div className="field">
+                        <input
+                          type="checkbox"
+                          // className={`form-check-input ${formErrors.companyActive ? "is-invalid" : ""
+                          //   }`}
+                          className='form-check-input'
+                          id="includeTonnageLimitOnDashboard"
+                          name="includeTonnageLimitOnDashboard"
+                          checked={formData.includeTonnageLimitOnDashboard}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              includeTonnageLimitOnDashboard: e.target.checked,
+                            })
+                          }
+                        />
+                        <label className="label"
+                          htmlFor="includeTonnageLimitOnDashboard"
+                        >
+                          Confirm Include Tonnage Limit on Dashboard is Active
+                        </label>
 
                         {/* {formErrors.includeTonnageLimitOnDashboard && ( */}
                         <div className="invalid-feedback">
@@ -763,24 +764,24 @@ const DepotForm = () => {
 
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
-                    <label className="label">Date From</label>
+                      <label className="label">Date From</label>
                       <Tooltip title="Select the start date" arrow>
                         <FontAwesomeIcon
                           icon={faInfoCircle}
                           className="info-icon"
                         />
                       </Tooltip>
-                      </div>
-                      <div className="field">
-                        <input
-                          value={formData.startDate}
-                          className="form-control company"
-                          type="date"
-                          name="startDate"
-                          onChange={handleChange}
-                        />
-                        {errors.startDate && <small className="text-danger">{errors.startDate}</small>}
-                      </div>
+                    </div>
+                    <div className="field">
+                      <input
+                        value={formData.startDate}
+                        className="form-control company"
+                        type="date"
+                        name="startDate"
+                        onChange={handleChange}
+                      />
+                      {errors.startDate && <small className="text-danger">{errors.startDate}</small>}
+                    </div>
                   </div>
 
 
@@ -789,25 +790,25 @@ const DepotForm = () => {
                 <div className="form-row">
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
-                    <label className="label">Date End</label>
+                      <label className="label">Date End</label>
                       <Tooltip title="Select the end date" arrow>
                         <FontAwesomeIcon
                           icon={faInfoCircle}
                           className="info-icon"
                         />
                       </Tooltip>
-                      </div>
-                      <div className="field">
-                        <input
-                          className="form-control company"
-                          type="date"
-                          value={formData.endDate}
-                          name="endDate"
-                          onChange={handleChange}
-                        />
-                        {errors.endDate && <small className="text-danger">{errors.endDate}</small>}
-                      </div>
                     </div>
+                    <div className="field">
+                      <input
+                        className="form-control company"
+                        type="date"
+                        value={formData.endDate}
+                        name="endDate"
+                        onChange={handleChange}
+                      />
+                      {errors.endDate && <small className="text-danger">{errors.endDate}</small>}
+                    </div>
+                  </div>
                   <div className="form-group col-md-6">
                   </div>
                 </div>

@@ -442,19 +442,19 @@ const Home = () => {
     // console.log(price_id);
     const token = localStorage.getItem("WAauthToken");
     if (!token) {
-      Swal.fire({
-        icon: "warning",
-        title: "Please Log In",
-        text: "You need to be logged in to make a purchase.",
-        showConfirmButton: true,
-        showCancelButton: true,
-        cancelButtonText: "Cancel",
-      }).then((result) => {
-        if (result.isConfirmed) {
+      // Swal.fire({
+      //   icon: "warning",
+      //   title: "Please Log In",
+      //   text: "You need to be logged in to make a purchase.",
+      //   showConfirmButton: true,
+      //   showCancelButton: true,
+      //   cancelButtonText: "Cancel",
+      // }).then((result) => {
+      //   if (result.isConfirmed) {
           // Show the login popup when "OK" is clicked
           toggleLoginPopup();
-        }
-      });
+      //   }
+      // });
       return;
     }
     setLoading(true);

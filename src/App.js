@@ -60,6 +60,7 @@ import Contract from "./components/companypage/Contract";
 import Depot from "./components/companypage/Depot";
 import Vehicle from "./components/companypage/Vehicle";  
 import Success from "./components/companypage/Success";
+import Site from "./components/companypage/Site";
 
 // const stripePromise = loadStripe('pk_test_51P4GXaAvL6Jnl0r3yHDSV2zN0JrGRt2UFxn217kqw9JFFBXe4K1n5xZHGfsKaIicVfUBAP5ch0TBIO8C8cI3ijQv00bNWJynzK');
 
@@ -161,6 +162,7 @@ function App() {
           <Route path="/contract" element={<ProtectedRoute><Contract /></ProtectedRoute>} />
           <Route path="/depot" element={<ProtectedRoute><Depot /></ProtectedRoute>} />
           <Route path="/vehicle" element={<ProtectedRoute><Vehicle /></ProtectedRoute>} />
+          <Route path="/site" element={<ProtectedRoute><Site /></ProtectedRoute>} />
           <Route path="/success" element={<ProtectedRoute><Success /></ProtectedRoute>} />
           <Route path="*" element={<NoPage />} />
         </Routes>

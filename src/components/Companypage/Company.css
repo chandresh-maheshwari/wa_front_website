@@ -571,3 +571,15 @@ border: none !important;
   border-radius: 46px 46px 46px 46px !important;
   border: 1px 0px 0px 0px;    
 }
+
+.section-datatable-title {
+  font-size: 20px;
+  text-align: center;
+  background-color: #113B4F;
+  height: 50px;
+  width: 100%;
+  padding: 10px 10px;
+  color: #fff;
+  border-radius: 15px;
+  margin-bottom: 3rem;
+}

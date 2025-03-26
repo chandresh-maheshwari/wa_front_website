@@ -211,7 +211,7 @@ const Contract = () => {
     { title: 'Company' },
     { title: 'Contract' },
     { title: 'Depot' },
-    { title: 'Vehicle' },
+    { title: 'Site' },
   ];
   const activeStep1 = 1;
 

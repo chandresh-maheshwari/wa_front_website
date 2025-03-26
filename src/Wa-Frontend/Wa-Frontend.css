@@ -1526,3 +1526,32 @@ body.scrolled-down::-webkit-scrollbar-thumb {
   .select2-results__option {
     padding: 8px 15px !important;
   }
+
+
+  .countdown-timer {
+    font-size: 2rem;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+}
+
+.warning {
+    color: red;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.normal {
+    color: black; /* Default color */
+}

@@ -58,7 +58,15 @@ export default {
     createCheckoutSession : "api/create-checkout-session",
     mainIndustry : "api/mainIndustry",
     getMainActivity: "api/getMainActivity",
-    getSubActivity: "api/getSubActivity"
+    getSubActivity: "api/getSubActivity",
+
+    getDistrictCouncildata: "api/get-district-council",
+    getOrigindata: "api/get-origin",
+    getJobTypedata: "api/get-job-types",
+    getSubContractCompanydata: "api/subcontract_company",
+    userSiteDetails: "api/user_details_site_job_store",
+    getUserSitedetail : "api/user_latest_site_and_job_get",
+
 
   },
 };

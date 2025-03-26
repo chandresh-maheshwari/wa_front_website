@@ -141,83 +141,19 @@ const Login = ({ onLoginSuccess, onClose }) => {
   const [email, setEmail] = useState("");
   const [ragisterusername, setRagisterusername] = useState("");
   const [ragisterpassword, setRagisterPassword] = useState("");
-
   const navigate = useNavigate();
-
-  // const handleSignInClick = async () => {
-  //   try {
-  //     console.log("Attempting to log in with:", { username, password });
-
-  //     const userData = { username, password };
-  //     const data = await AuthApi.login(userData);
-
-  //     console.log("Login response data:", data);
-
-  //     if (!data || !data.user || !data.token) {
-  //       throw new Error("User data or token is missing in the response");
-  //     }
-
-  //     localStorage.setItem("WAauthToken", data.token);
-  //     localStorage.setItem("userData", JSON.stringify(data.user));
-
-  //     onLoginSuccess(data.user);
-
-  //     await Swal.fire({
-  //       title: "Login Successful!",
-  //       text: "Welcome back!",
-  //       icon: "success",
-  //       confirmButtonText: "OK",
-  //     });
-
-  //     window.location.reload();
-  //   } catch (error) {
-  //     console.error("There was a problem with the login request:", error);
-  //     Swal.fire({
-  //       title: "Login Failed",
-  //       text: error.message || "Please check your username and password.",
-  //       icon: "error",
-  //       confirmButtonText: "Try Again",
-  //     });
-  //   }
-  // };
-
   const handleSignInClick = async () => {
     try {
-      console.log('Attempting to log in with:', { username, password });
-
       const userData = { username, password };
       const data = await AuthApi.login(userData);
-
       console.log('Login response data:', data);
-
       if (!data || !data.user || !data.token) {
         throw new Error('User data or token is missing in the response');
       }
-
-
       localStorage.setItem('WAauthToken', data.token);
       localStorage.setItem('userData', JSON.stringify(data.user));
-
-
       onLoginSuccess(data.user);
-
-
-      await Swal.fire({
-        title: 'Login Successful!',
-        text: 'Welcome back!',
-        icon: 'success',
-        confirmButtonText: 'OK',
-      });
-
       window.location.reload();
-      //  const navigate = useNavigate();
-      //  navigate(0); 
-      // navigate('/');
-      // window.location.reload(true);
-      // window.location.assign(window.location.href);
-      // window.location.replace(window.location.href);
-
-
     } catch (error) {
       console.error('There was a problem with the login request:', error);
       Swal.fire({
@@ -234,41 +170,9 @@ const Login = ({ onLoginSuccess, onClose }) => {
     handleSignInClick();
   };
 
-  // const handleSignUPClick = async () => {
-  //   try {
-  //     console.log("Attempting to log in with:", { ragisterusername, ragisterpassword, email });
-
-  //     const ragisteruserData = { ragisterusername, ragisterpassword, email };
-  //     const ragisterdata = await AuthApi.useregister(ragisteruserData);
-
-  //     // if (!ragisterdata || !ragisterdata.user || !ragisterdata.email) {
-  //     //   throw new Error('User data or token is missing in the response');
-  //     // }
-
-  //     console.log("Login response data:", ragisterdata);
-  //     // onLoginSuccess(ragisterdata.user);
-
-  //     await Swal.fire({
-  //       title: "ragister Successful!",
-  //       text: "Thank You for Ragister!",
-  //       icon: "success",
-  //       confirmButtonText: "OK",
-  //     });
-
-
-  //   } catch (error) {
-  //     console.error("There was a problem with the login request:", error);
-  //     Swal.fire({
-  //       title: "Login Failed",
-  //       text: error.message || "Please check your username and password.",
-  //       icon: "error",
-  //       confirmButtonText: "Try Again",
-  //     });
-  //   }
-  // };
   const handleSignUPClick = async () => {
     try {
-      // Validate inputs before making an API request
+      // Validate input fields
       if (!ragisterusername.trim() || !ragisterpassword.trim() || !email.trim()) {
         Swal.fire({
           title: "Registration Failed",
@@ -278,39 +182,55 @@ const Login = ({ onLoginSuccess, onClose }) => {
         });
         return;
       }
-
+  
+      // Prepare registration data
       const registerUserData = {
         username: ragisterusername,
         password: ragisterpassword,
         email: email,
       };
-
-      console.log("Sending registration data:", registerUserData);
-
-      const response = await AuthApi.useregister(registerUserData);
-
-      console.log("Registration response data:", response);
-
-      if (!response || !response.user) {
-        throw new Error("User registration failed. Please try again.");
+  
+      // Send registration request
+      const registerResponse = await AuthApi.useregister(registerUserData);
+      console.log("Registration response data:", registerResponse);
+  
+      if (!registerResponse || !registerResponse.user) {
+        throw new Error(registerResponse);
       }
-
+  
+      // After successful registration, log the user in
+      const loginData = await AuthApi.login({
+        username: ragisterusername,
+        password: ragisterpassword,
+      });
+      console.log("Login response data:", loginData);
+  
+      if (!loginData || !loginData.user || !loginData.token) {
+        throw new Error(loginData);
+      }
+  
+      // Store authentication token and user data
+      localStorage.setItem("WAauthToken", loginData.token);
+      localStorage.setItem("userData", JSON.stringify(loginData.user));
+  
+      // Update the application state with the logged-in user
+      onLoginSuccess(loginData.user);
+  
       await Swal.fire({
-        title: "Registration Successful!",
-        text: "Thank you for registering!",
+        title: "Registration and Login Successful!",
+        text: "Welcome !",
         icon: "success",
         confirmButtonText: "OK",
       });
-
-      setFlipped(false);
-
+  
+      // window.location.reload();
     } catch (error) {
-      console.error("Registration error:", error);
+      console.error("Error during registration and login:", error);
       Swal.fire({
-        title: "Registration Failed",
-        text: error.response?.data?.message || "Something went wrong. Please try again.",
+        title: "Error",
+        text: error || "An unexpected error occurred. Please try again.",
         icon: "error",
-        confirmButtonText: "Try Again",
+        confirmButtonText: "OK",
       });
     }
   };
@@ -318,7 +238,7 @@ const Login = ({ onLoginSuccess, onClose }) => {
   return (
     <div className="flip-container">
       <div className={`flipper ${flipped ? "flip" : ""}`}>
-        {/* 🔵 LOGIN FORM */}
+        {/* LOGIN FORM */}
         <div className="front signin-box">
           <button className="close-button" onClick={onClose}>
             <FaTimes />
@@ -336,10 +256,10 @@ const Login = ({ onLoginSuccess, onClose }) => {
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <div className="input-group">
-              <Tooltip title="Enter your Username" arrow>
+                <Tooltip title="Enter your Username" arrow>
                   <FontAwesomeIcon
                     icon={faInfoCircle}
-                    className="info-icon login"
+                    className="info-icon login auth-icon"
                   />
                 </Tooltip>
                 <input
@@ -355,10 +275,10 @@ const Login = ({ onLoginSuccess, onClose }) => {
 
             <div className="form-group mg-b-50">
               <div className="input-group">
-              <Tooltip title="Enter your password" arrow>
+                <Tooltip title="Enter your password" arrow>
                   <FontAwesomeIcon
                     icon={faInfoCircle}
-                    className="info-icon login"
+                    className="info-icon login auth-icon"
                   />
                 </Tooltip>
                 <input
@@ -422,7 +342,7 @@ const Login = ({ onLoginSuccess, onClose }) => {
                 <Tooltip title="Select a username for your account" arrow>
                   <FontAwesomeIcon
                     icon={faInfoCircle}
-                    className="info-icon"
+                    className="info-icon auth-icon"
                   />
                 </Tooltip>
                 {/* <div className="field"> */}
@@ -438,18 +358,12 @@ const Login = ({ onLoginSuccess, onClose }) => {
                 {/* </div> */}
               </div>
             </div>
-
-            {/* <div className="form-group mg-b-50">
-              <div className="input-group">
-                <input type="email" className="form-control" name='email' placeholder="Email" required />
-              </div>
-            </div> */}
             <div className="form-group mg-b-50">
               <div className="input-group input-with-icon">
                 <Tooltip title="Add your contact email address" arrow>
                   <FontAwesomeIcon
                     icon={faInfoCircle}
-                    className="info-icon"
+                    className="info-icon auth-icon"
                   />
                 </Tooltip>
                 <input
@@ -468,7 +382,7 @@ const Login = ({ onLoginSuccess, onClose }) => {
                 <Tooltip title="Select a password. It should be a mix of letters, numbers and symbols." arrow>
                   <FontAwesomeIcon
                     icon={faInfoCircle}
-                    className="info-icon"
+                    className="info-icon auth-icon"
                   />
                 </Tooltip>
                 <input
