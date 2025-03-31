@@ -98,7 +98,8 @@ const SuccessPage = () => {
           <img src="/sucsess.png" alt="Success" className="success-image" />
           <h5 className="submittitle">Submit your request Successfully...</h5>
           {/* <p>Redirecting you in {count} sec </p> */}
-          <div>Wait to redirect dashboard :<span> {timer} </span></div>
+          <div>Wait to redirect dashboard : <span className={timer > 5 ? "normal" : "warning"}>{timer}</span></div>
+          {/* <div>Wait to redirect dashboard : <span className={timer > 5 ? "normal" : "warning"}>{timer}</span></div> */}
           {/* <div className="countdown-timer">
             Wait to redirect dashboard: <span className={timer > 5 ? "normal" : "warning"}>{timer}</span>
         </div> */}
