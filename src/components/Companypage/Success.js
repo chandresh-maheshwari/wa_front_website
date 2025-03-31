@@ -64,7 +64,8 @@ const SuccessPage = () => {
   React.useEffect(() => {
     if (timer === 0) {
       clear();
-      window.location.href = "http://walara.localhost.com/admin/dashboard"; 
+      // window.location.href = "http://walara.localhost.com/admin/user/dashboard"; 
+      window.location.href = `http://walara.localhost.com/admin/user/dashboard?token=${localStorage.getItem('WAauthToken')}`;; 
     }
   }, [timer]);
   function CustomStepper(props) {
