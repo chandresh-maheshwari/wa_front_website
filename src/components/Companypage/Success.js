@@ -61,10 +61,30 @@ const SuccessPage = () => {
     return () => clear();
   }, []);
 
+  const userData = localStorage.getItem("userData");
+
+ console.log(userData);
+      const parsedData = JSON.parse(userData);
+    //  const username = parsedData.username;
+    //  const pass =  parsedData.password;
+  
   React.useEffect(() => {
     if (timer === 0) {
       clear();
-      window.location.href = "http://walara.localhost.com/admin/dashboard"; 
+      // const queryParams = new URLSearchParams({
+      //   username: parsedData.username,
+      //   password: parsedData.password
+      // }).toString();
+      const dynamicHost = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
+      console.log(dynamicHost);
+
+      const token = localStorage.getItem("WAauthToken");
+
+      // Dynamically create the URL
+      window.location.href = `${dynamicHost}/admin/user/dashboard/?token=${token}`;
+      // window.location.href = `http://walara.localhost.com/admin/user/dashboard/?token=${localStorage.getItem("WAauthToken")}`;
+            // window.location.href = 'http://walara.localhost.com/admin/xyz'; 
+
     }
   }, [timer]);
   function CustomStepper(props) {
