@@ -11,6 +11,7 @@ import Navlayout from "../../Wa-Frontend/NavLayout";
 import Tooltip from '@mui/material/Tooltip';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { RotatingLines } from "react-loader-spinner";
 
 
 const Contract = () => {
@@ -24,6 +25,21 @@ const Contract = () => {
   });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
+
+  // Add Code For loader 
+  const Loader = () => (
+    <div className="loader-overlay">
+      <RotatingLines
+        strokeColor="grey"
+        strokeWidth="5"
+        animationDuration="0.75"
+        width="96"
+        visible={true}
+      />
+    </div>
+  );
 
   useEffect(() => {
     const message = sessionStorage.getItem("successMessage");
@@ -124,6 +140,7 @@ const Contract = () => {
     e.preventDefault();
     if (!validateForm()) return;
     try {
+      setLoading(true);
       const response = await Authapi.submitContractDetails({
         company_id: formData.companyId,
         company_name: formData.companyName,
@@ -132,6 +149,7 @@ const Contract = () => {
       });
 
       if (response.status === 200) {
+        setLoading(false);
         // await Swal.fire({
         //   icon: "success",
         //   title: "Contract Setup Complete",
@@ -142,9 +160,11 @@ const Contract = () => {
 
         navigate("/depot");
       } else {
+        setLoading(false);
         throw new Error(response.message || "Failed to setup contract");
       }
     } catch (error) {
+      setLoading(false);
       console.error("Contract setup error:", error);
       Swal.fire({
         icon: "error",
@@ -236,6 +256,7 @@ const Contract = () => {
     <>
       <Navlayout />
       <Expired />
+      {loading && <Loader />}
 
       <div className="container mb-0 mt-5">
         {successMessage && (
@@ -265,66 +286,66 @@ const Contract = () => {
           <form >
             <div className="form-group col-md-6">
               <div className="input-with-icon">
-              <label  className="label" htmlFor="companyName">
-                Company
-              </label>
+                <label className="label" htmlFor="companyName">
+                  Company
+                </label>
                 <Tooltip title="Select your company from the drop down menu" arrow>
                   <FontAwesomeIcon
                     icon={faInfoCircle}
                     className="info-icon"
                   />
                 </Tooltip>
-                </div>
-                <div className="field">
-                  <input
-                    type="text"
-                    className='form-control company'
-                    id="companyName"
-                    name="companyName"
-                    value={formData.companyName}
-                    onChange={handleInputChange}
-                    disabled
-                    // placeholder="Company"
-                  />
-                  {/* {console.log(formErrors)}  */}
-                  {/* {formErrors.companyName && (
+              </div>
+              <div className="field">
+                <input
+                  type="text"
+                  className='form-control company'
+                  id="companyName"
+                  name="companyName"
+                  value={formData.companyName}
+                  onChange={handleInputChange}
+                  disabled
+                // placeholder="Company"
+                />
+                {/* {console.log(formErrors)}  */}
+                {/* {formErrors.companyName && (
                     <div className="invalid-feedback">{formErrors.companyName}</div>
                   )} */}
-                  {errors.companyName && <small className="text-danger">{errors.companyName}</small>}
+                {errors.companyName && <small className="text-danger">{errors.companyName}</small>}
               </div>
             </div>
             <div className="form-group col-md-6">
               <div className="input-with-icon">
-              <label className="label" htmlFor="contractName">
-                Contract Name
-              </label>
+                <label className="label" htmlFor="contractName">
+                  Contract Name
+                </label>
                 <Tooltip title="Add the name of the contract that you are adding data to" arrow>
                   <FontAwesomeIcon
                     icon={faInfoCircle}
                     className="info-icon"
                   />
                 </Tooltip>
-                </div>
-                <div className="field">
-                  <input
-                    type="text"
-                    className='form-control company'
-                    id="contractName"
-                    name="contractName"
-                    value={formData.contractName}
-                    onChange={handleInputChange}
-                    // placeholder="Contract Name"
-                  />
-                  {/* {formErrors.contractName && (
+              </div>
+              <div className="field">
+                <input
+                  type="text"
+                  className='form-control company'
+                  id="contractName"
+                  name="contractName"
+                  value={formData.contractName}
+                  onChange={handleInputChange}
+                // placeholder="Contract Name"
+                />
+                {/* {formErrors.contractName && (
                     <div className="invalid-feedback">{formErrors.contractName}</div>
                   )} */}
-                  {errors.contractName && <small className="text-danger">{errors.contractName}</small>}
+                {errors.contractName && <small className="text-danger">{errors.contractName}</small>}
               </div>
             </div>
           </form>
         </div>
       </div>
-     
+
       <div className=" company-setup-container mt-0 ">
         <button
           type="button"

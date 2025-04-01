@@ -13,6 +13,7 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import "./Depot.css";
 import customSelectStyles from "../../CustomSelectStyles";
 import Select from "react-select";
+import { RotatingLines } from "react-loader-spinner";
 
 const DepotForm = () => {
   //   const [formData, setFormData] = useState({
@@ -57,6 +58,20 @@ const DepotForm = () => {
   const [countytypes, setCountyTypes] = useState([]);
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+
+    // Add Code For loader 
+    const Loader = () => (
+      <div className="loader-overlay">
+        <RotatingLines
+          strokeColor="grey"
+          strokeWidth="5"
+          animationDuration="0.75"
+          width="96"
+          visible={true}
+        />
+      </div>
+    );
 
   const getUserDepotTypeName = async (selected) => {
     // setFormData({ ...formData, depotTypeId: selected });
@@ -225,6 +240,7 @@ const DepotForm = () => {
     // console.log(formData);
     // console.log(formData.contractId);
     try {
+      setLoading(true);
       const response = await Authapi.submitDepotDetails({
         depot_type_id: formData.depotTypeId,
         contract_id: formData.contractId,
@@ -252,14 +268,17 @@ const DepotForm = () => {
         //   text: "Your depot has been successfully registered.",
         //   confirmButtonText: "OK",
         // });
+        setLoading(false);
         sessionStorage.setItem("successMessage", "Depot Setup Complete! Your Depot has been successfully registered.");
 
         // navigate("/vehicle");
         navigate("/site");
       } else {
+        setLoading(false);
         throw new Error(response.message || "Failed to setup depot");
       }
     } catch (error) {
+      setLoading(false);
       console.error("Depot setup error:", error);
       Swal.fire({
         icon: "error",
@@ -402,6 +421,8 @@ const DepotForm = () => {
         Please fill the form below to set up a Depot! Add as many details as
         required and proceed.
       </p> */}
+      {loading && <Loader />}
+
       <div className="container mb-0 mt-5">
         {successMessage && (
           <div className="alert alert-success" role="alert">

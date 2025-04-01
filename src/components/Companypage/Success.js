@@ -71,6 +71,7 @@ const SuccessPage = () => {
   React.useEffect(() => {
     if (timer === 0) {
       clear();
+<<<<<<< HEAD
       // const queryParams = new URLSearchParams({
       //   username: parsedData.username,
       //   password: parsedData.password
@@ -85,6 +86,10 @@ const SuccessPage = () => {
       // window.location.href = `http://walara.localhost.com/admin/user/dashboard/?token=${localStorage.getItem("WAauthToken")}`;
             // window.location.href = 'http://walara.localhost.com/admin/xyz'; 
 
+=======
+      // window.location.href = "http://walara.localhost.com/admin/user/dashboard"; 
+      window.location.href = `http://walara.localhost.com/admin/user/dashboard?token=${localStorage.getItem('WAauthToken')}`;; 
+>>>>>>> a8926c7e22cd02f53634e1c2c8efa2435c84fa50
     }
   }, [timer]);
   function CustomStepper(props) {
@@ -117,7 +122,8 @@ const SuccessPage = () => {
           <img src="/sucsess.png" alt="Success" className="success-image" />
           <h5 className="submittitle">Submit your request Successfully...</h5>
           {/* <p>Redirecting you in {count} sec </p> */}
-          <div>Wait to redirect dashboard :<span> {timer} </span></div>
+          <div>Wait to redirect dashboard : <span className={timer > 5 ? "normal" : "warning"}>{timer}</span></div>
+          {/* <div>Wait to redirect dashboard : <span className={timer > 5 ? "normal" : "warning"}>{timer}</span></div> */}
           {/* <div className="countdown-timer">
             Wait to redirect dashboard: <span className={timer > 5 ? "normal" : "warning"}>{timer}</span>
         </div> */}

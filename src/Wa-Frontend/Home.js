@@ -401,7 +401,7 @@ const Home = () => {
       const token = ls.get("WAauthToken");
 
       if (!token) {
-        console.log("No auth token found");
+        // console.log("No auth token found");
         return;
       }
 
@@ -424,8 +424,8 @@ const Home = () => {
         setUserEmail(email);
         return email;
       } else {
-        console.log("Email not found in response structure");
-        console.log("Response structure:", JSON.stringify(response, null, 2));
+        // console.log("Email not found in response structure");
+        // console.log("Response structure:", JSON.stringify(response, null, 2));
       }
     } catch (error) {
       console.error("Error in getUserEmail:", error);
