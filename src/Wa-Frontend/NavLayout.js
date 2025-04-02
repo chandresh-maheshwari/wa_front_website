@@ -153,6 +153,7 @@ const Navlayout = () => {
         }
     };
 
+
     const handleViewProfile = () => {
         navigate('/');
     };
@@ -160,6 +161,12 @@ const Navlayout = () => {
     const handleEditProfile = () => {
         navigate('/');
     };
+
+    // const handleDashboard = async () => {
+    //     const dynamicHost = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
+    //     const token = localStorage.getItem("WAauthToken");
+    //     window.location.href = `${dynamicHost}/admin/user/dashboard/?token=${token}`;
+    // };
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -262,6 +269,7 @@ const Navlayout = () => {
                                     <div className="dropdown-menu">
                                         <button onClick={handleViewProfile}>View Profile</button>
                                         <button onClick={handleEditProfile}>Edit Profile</button>
+                                        {/* <button onClick={handleDashboard}>Go to dashboard</button> */}
                                         <button onClick={handleLogout}>Logout</button>
                                     </div>
                                 )}

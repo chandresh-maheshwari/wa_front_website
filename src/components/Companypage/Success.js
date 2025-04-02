@@ -75,12 +75,9 @@ const SuccessPage = () => {
       //   username: parsedData.username,
       //   password: parsedData.password
       // }).toString();
+      // console.log(dynamicHost);
       const dynamicHost = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
-      console.log(dynamicHost);
-
       const token = localStorage.getItem("WAauthToken");
-
-      // Dynamically create the URL
       window.location.href = `${dynamicHost}/admin/user/dashboard/?token=${token}`;
       // window.location.href = `http://walara.localhost.com/admin/user/dashboard/?token=${localStorage.getItem("WAauthToken")}`;
             // window.location.href = 'http://walara.localhost.com/admin/xyz'; 
