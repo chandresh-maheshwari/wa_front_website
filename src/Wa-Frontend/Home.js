@@ -451,8 +451,8 @@ const Home = () => {
       //   cancelButtonText: "Cancel",
       // }).then((result) => {
       //   if (result.isConfirmed) {
-          // Show the login popup when "OK" is clicked
-          toggleLoginPopup();
+      // Show the login popup when "OK" is clicked
+      toggleLoginPopup();
       //   }
       // });
       return;
@@ -759,6 +759,28 @@ const Home = () => {
     });
   };
 
+  const test = () => {
+
+    const homesectionImageKey = homesection?.Field_slug_homesectionimage;
+    const capitalizedKey = homesectionImageKey
+      ? homesectionImageKey.charAt(0).toUpperCase() + homesectionImageKey.slice(1)
+      : '';
+    // console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+    // console.log(capitalizedKey);
+
+    const test1 = homesection?.[capitalizedKey];
+    return (
+      <>
+        <img
+          src={test1}
+          // src={homesection?.Homesectionimage}
+          alt="homeimg"
+          className="homeimg"
+        />
+
+      </>
+    );
+  }
   const renderSections = () => {
     const sections = [
       {
@@ -771,16 +793,50 @@ const Home = () => {
                 <div className="row">
                   <div className="col-sm-2">
                     {/* {console.log(homesection.Tell_me_more_button_section?.Homesectionbuttontitle)} */}
-                    <img
-                      src={homesection?.Homesectionimage}
+                    {/* {(() => {
+                        const homesectionTitleKey = homesection?.Field_slug_homesectiontitle2;
+                        const capitalizedKey = homesectionTitleKey
+                          ? homesectionTitleKey.charAt(0).toUpperCase() + homesectionTitleKey.slice(1)
+                          : ''; 
+                       return test =  homesection?.[capitalizedKey]; 
+                      })()} */}
+                    {/* <img
+                      src={test}
+                      // src={homesection?.Homesectionimage}
                       alt="homeimg"
                       className="homeimg"
-                    />
+                    /> */}
+                    {test()}
                   </div>
                   <div className="col-sm-10">
                     <div className="homefont">
                       {/* {console.log(homesection)} */}
-                      <h4>{homesection?.Homesectiontitle}</h4>
+                      {/* <h4>
+                        {/* {homesection?.Homesectiontitle} 
+                        {(() => {
+                          // console.log("DTATATATATATTTATA");
+                          console.log(homesection?.Field_slug_homesectiontitle1);
+                          const homesectionTitleKey = homesection?.Field_slug_homesectiontitle;
+                          // console.log(homesectionTitleKey);
+
+                          // const capitalizedKey = homesectionTitleKey
+                          //   ? homesectionTitleKey.charAt(0).toUpperCase() + homesectionTitleKey.slice(1)
+                          //   : '';
+                          //   console.log(homesection?.[capitalizedKey]);
+                          // return homesection?.[capitalizedKey];
+                        })()}
+                        {homesection?.[homesectionTitleKey]}
+                      </h4> */}
+
+                      <h4>
+                        {/* {(() => {
+                          console.log(homesection?.Field_slug_homesectiontitle1);
+                          const homesectionTitleKey = homesection?.Field_slug_homesectiontitle;                         
+                        })()}
+                        {homesection?.[homesectionTitleKey]} */}
+                        {homesection?.[homesection?.Field_slug_homesectiontitle]}
+
+                      </h4>
                     </div>
                     <p
                       className="home-p-font"
@@ -790,26 +846,47 @@ const Home = () => {
                         marginBottom: "27px",
                       }}
                     >
-                      {homesection?.Homesectiondescription}
+                      {/* {(() => {
+                        const homesectionDescriptionKey = homesection?.Field_slug_homesectiondescription;
+                        const capitalizedKey = homesectionDescriptionKey
+                          ? homesectionDescriptionKey.charAt(0).toUpperCase() + homesectionDescriptionKey.slice(1)
+                          : '';
+                        return homesection?.[capitalizedKey];
+                      })()} */}
+
+                      {/* {homesection?.Homesectiondescription} */}
+                      {homesection?.[homesection?.Field_slug_homesectiondescription]}
                     </p>
                     <button
                       type="button"
                       className="btn"
                       id="tellmemore"
                       style={{
-                        backgroundColor:
-                          homesection.Tell_me_more_button_section
-                            ?.Homesectionbuttonbackgroundcolor || "",
-                        color:
-                          homesection.Tell_me_more_button_section
-                            ?.Homesectionbuttontextcolor || "",
+                        backgroundColor: homesection?.TellMeMoreButtonSection?.[homesection?.TellMeMoreButtonSection?.Field_slug_homesectionbuttonbackgroundcolor],
+                        color: homesection?.TellMeMoreButtonSection?.[homesection?.TellMeMoreButtonSection?.Field_slug_homesectionbuttontextcolor],
                       }}
                     >
-                      {
+                      {console.log(homesection.TellMeMoreButtonSection)}
+                      {homesection?.TellMeMoreButtonSection?.[homesection?.TellMeMoreButtonSection?.Field_slug_homesectionbuttontitle]}
+                    </button>
+
+                    {/* {(() => {
+                        console.log("DTATATATATATTTATA");
+                        console.log(homesection?.Field_slug_homesectiontitle1);
+                        const homesectionTitleKey = homesection?.Field_slug_homesectiontitle;
+                        console.log(homesectionTitleKey);
+
+                        const capitalizedKey = homesectionTitleKey
+                          ? homesectionTitleKey.charAt(0).toUpperCase() + homesectionTitleKey.slice(1)
+                          : '';
+                        console.log(homesection?.[capitalizedKey]);
+                        return homesection?.[capitalizedKey];
+                      })()} */}
+                    {/* {
                         homesection.Tell_me_more_button_section
                           ?.Homesectionbuttontitle
-                      }
-                    </button>
+                      } */}
+                    {/* </button> */}
                     {/* {console.log(homesection.HomeSectionTitle)} */}
                   </div>
                 </div>
@@ -1035,26 +1112,21 @@ const Home = () => {
 
                   return (
                     <div
-                      className={`col ${
-                        isSinglePost ? "col-12" : "col-md-6 col-sm-6 col-xs-3"
-                      } 
-                                  ${
-                                    isSinglePost ? "center-text no-border" : ""
-                                  } 
+                      className={`col ${isSinglePost ? "col-12" : "col-md-6 col-sm-6 col-xs-3"
+                        } 
+                                  ${isSinglePost ? "center-text no-border" : ""
+                        } 
                                   ${isTwoPosts ? "no-bottom-border" : ""} 
                                   ${isThreePosts ? "no-top-right-border" : ""} 
-                                  ${
-                                    isThreePosts && index === 2 ? "mx-auto" : ""
-                                  } 
-                                  ${
-                                    index % 2 === 0 ? "text-end" : "text-start"
-                                  }`}
+                                  ${isThreePosts && index === 2 ? "mx-auto" : ""
+                        } 
+                                  ${index % 2 === 0 ? "text-end" : "text-start"
+                        }`}
                       key={item.id}
                     >
                       <h5
-                        className={`for-waste ${
-                          isTwoPosts ? "margin-top-5" : ""
-                        } ${isSinglePost ? "center-text" : ""}`}
+                        className={`for-waste ${isTwoPosts ? "margin-top-5" : ""
+                          } ${isSinglePost ? "center-text" : ""}`}
                       >
                         {item["Data"].Title}
                       </h5>
@@ -1151,7 +1223,7 @@ const Home = () => {
                   {/* Old Code Start */}
 
                   {/* New Code Start */}
-                  <button
+                  {/* <button
                     type="submit"
                     className="btn w-auto sky-blue-btn-tellmemore"
                     style={{
@@ -1167,7 +1239,7 @@ const Home = () => {
                       statu.tell_me_more_section?.post_store[0]["Data"]
                         ?.Button_setting.Buttontext
                     }
-                  </button>
+                  </button> */}
                   {/* New Code new */}
                 </div>
               </div>
@@ -1311,7 +1383,7 @@ const Home = () => {
                             <input
                               className="form-control"
                               name={`field${index}`}
-                              type={item.Data.Type} 
+                              type={item.Data.Type}
                               onChange={(e) => handleInputChange(e, index)}
                             />
                           )}
