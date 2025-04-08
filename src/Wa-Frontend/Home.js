@@ -170,31 +170,35 @@ const Home = () => {
     autoplaySpeed: 2000,
   };
 
-  const handleInputChange = (event, index) => {
-    const { value, name } = event.target;
-    const newErrors = { ...errors };
-    console.log(event.target.type === "tel");
-    if (event.target.type === "tel" && name.includes("field")) {
-      let cleanedValue = value.replace(/\D/g, "");
-      if (cleanedValue.length > 10) {
-        cleanedValue = cleanedValue.slice(0, 10);
-      }
-
-      event.target.value = cleanedValue;
-      if (cleanedValue.length === 10) {
-        newErrors[`label${index}`] = "";
-      } else {
-        newErrors[`label${index}`] = "";
-      }
-    } else {
-      if (value) {
-        newErrors[`label${index}`] = "";
+  // Utility function for validation
+  const validateInput = (name, value) => {
+    const errors = {};
+    if (name.includes("field")) {
+      if (name.includes("tel")) {
+        const cleanedValue = value.replace(/\D/g, "");
+        if (cleanedValue.length !== 10) {
+          errors[name] = "Phone number must be 10 digits";
+        }
+      } else if (name.includes("email")) {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(value)) {
+          errors[name] = "Please enter a valid email address";
+        }
       }
     }
-
-    setErrors(newErrors);
+    console.log(`Validation for ${name}:`, errors);
+    return errors;
   };
 
+  // Update handleInputChange to use validateInput
+  const handleInputChange = (event, index) => {
+    const { value, name } = event.target;
+    const newErrors = { ...errors, ...validateInput(name, value) };
+    setErrors(newErrors);
+    console.log("Current errors:", newErrors);
+  };
+
+  // Update handleSubmit to use validateInput
   const handleSubmit = async (event) => {
     event.preventDefault();
     const newErrors = {};
@@ -203,35 +207,13 @@ const Home = () => {
     statu.contact_us?.post_store.forEach((item, index) => {
       const value = document.querySelector(`[name="field${index}"]`).value;
       formData[`field${index}`] = value;
-      if (item.Type === "tel") {
-        const cleanedValue = value.replace(/\D/g, "");
-        if (!value) {
-          // newErrors[`label${index}`] = "Phone number must be 10 digits";
-          newErrors[`label${index}`] = "This field is required";
-        } else if (cleanedValue.length !== 10) {
-          // newErrors[`label${index}`] = "";
-          newErrors[`label${index}`] = "Phone number must be 10 digits";
-        } else {
-          newErrors[`label${index}`] = "";
-        }
-      } else if (item.Type === "email") {
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!value) {
-          newErrors[`label${index}`] = "This field is required";
-        } else if (!emailPattern.test(value)) {
-          newErrors[`label${index}`] = "Please enter a valid email address";
-        } else {
-          newErrors[`label${index}`] = "";
-        }
-      } else if (!value) {
-        newErrors[`label${index}`] = "This field is required";
-      } else {
-        newErrors[`label${index}`] = "";
-      }
+      const fieldErrors = validateInput(`field${index}`, value);
+      Object.assign(newErrors, fieldErrors);
     });
 
     if (Object.values(newErrors).some((error) => error)) {
       setErrors(newErrors);
+      console.log("Errors found during submission:", newErrors);
     } else {
       Swal.fire({
         title: "Submitting...",
@@ -766,8 +748,6 @@ const Home = () => {
                 <div className="col-md-5">
                   <h5 className="transfotext1 for-waste">
                     {/* {console.log(Transforming)} */}
-                    {/* {Transforming[0]?.Pagesectiontitle1} <br />
-                    <b>{Transforming[0]?.Pagesectiontitle2}</b> */}
                     {Transforming.Pagesectiontitle1} <br />
                     <b>{Transforming.Pagesectiontitle2}</b>
                   </h5>
