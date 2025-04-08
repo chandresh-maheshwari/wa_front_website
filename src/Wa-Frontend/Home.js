@@ -436,7 +436,7 @@ const Home = () => {
     setShowLoginPopup(!showLoginPopup);
   };
 
-  const handlePurchaseSubmit = async (productName, amount, price_id) => {
+  const handlePurchaseSubmit = async (productName, amount, price_id,trail_days) => {
     // console.log(productName);
     // console.log(amount);
     // console.log(price_id);
@@ -487,7 +487,8 @@ const Home = () => {
         productName,
         amount,
         email,
-        price_id
+        price_id,
+        trail_days,
       );
 
       if (!response.status) {
@@ -745,7 +746,8 @@ const Home = () => {
                     handlePurchaseSubmit(
                       card["Data"].Packagename,
                       purchaseButtonSection.Amount,
-                      purchaseButtonSection.Stripid
+                      purchaseButtonSection.Stripid,
+                      purchaseButtonSection.Trialdays
                     )
                   }
                 >

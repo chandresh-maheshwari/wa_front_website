@@ -841,7 +841,7 @@ async useregister(registerUserData) {
         }
     }
 
-    async createCheckoutSession(productName, amount, email, price_id) {
+    async createCheckoutSession(productName, amount, email, price_id,trail_days) {
         try {
             const url = Config.waapiurl + Config.authApis.createCheckoutSession;
             this.setHeaders("post");
@@ -849,7 +849,9 @@ async useregister(registerUserData) {
                 product_name: productName,
                 amount: parseFloat(amount),
                 email: email,
-                price_id: price_id
+                price_id: price_id,
+                trail_days :trail_days
+                
             }, {
                 headers: {
                     'Content-Type': 'application/json',
