@@ -866,7 +866,7 @@ const Home = () => {
                         color: homesection?.TellMeMoreButtonSection?.[homesection?.TellMeMoreButtonSection?.Field_slug_homesectionbuttontextcolor],
                       }}
                     >
-                      {console.log(homesection.TellMeMoreButtonSection)}
+                      {/* {console.log(homesection.TellMeMoreButtonSection)} */}
                       {homesection?.TellMeMoreButtonSection?.[homesection?.TellMeMoreButtonSection?.Field_slug_homesectionbuttontitle]}
                     </button>
 
