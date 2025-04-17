@@ -98,25 +98,43 @@ const Home = () => {
         // setDescription(dynamicDescriptions);
         // console.log(response.results.about_us.post_store);
 
-        // Extract Titles
+        // Extract Titles OLD CODE START
+        // const dynamicTitles = response.results.about_us.post_store.flatMap(
+        //   (post) =>
+        //     Object.keys(post.Data) // Access 'Data' property directly
+        //       .filter((key) => key.startsWith("Field_slug_title")) // Filter by keys that start with 'Title'
+        //       .map((key) => post.Data[key]) // Get the corresponding value for each 'Title'
+        // );
+        // Extract Titles OLD CODE END
+
         const dynamicTitles = response.results.about_us.post_store.flatMap(
-          (post) =>
-            Object.keys(post.Data) // Access 'Data' property directly
-              .filter((key) => key.startsWith("Title")) // Filter by keys that start with 'Title'
-              .map((key) => post.Data[key]) // Get the corresponding value for each 'Title'
+          (post) => {
+            const data = post.Data;
+            const titleKey = data.Field_slug_title; // This gives 'Title'
+            return data[titleKey] ? [data[titleKey]] : [];
+          }
         );
 
         // console.log(dynamicTitles);
         setTitles(dynamicTitles);
 
-        // Extract Descriptions
-        const dynamicDescriptions =
-          response.results.about_us.post_store.flatMap(
-            (post) =>
-              Object.keys(post.Data) // Access 'Data' property directly
-                .filter((key) => key.startsWith("Description")) // Filter by keys that start with 'Description'
-                .map((key) => post.Data[key]) // Get the corresponding value for each 'Description'
-          );
+        // Extract Descriptions OLD CODE START
+        // const dynamicDescriptions =
+        //   response.results.about_us.post_store.flatMap(
+        //     (post) =>
+        //       Object.keys(post.Data) // Access 'Data' property directly
+        //         .filter((key) => key.startsWith("Description")) // Filter by keys that start with 'Description'
+        //         .map((key) => post.Data[key]) // Get the corresponding value for each 'Description'
+        //   );
+        // Extract Descriptions OLD CODE END
+        const dynamicDescriptions = response.results.about_us.post_store.flatMap(
+          (post) => {
+            const data = post.Data;
+            const descriptionKey = data.Field_slug_description; // e.g., 'Description'
+            return data[descriptionKey] ? [data[descriptionKey]] : [];
+          }
+        );
+
 
         setDescription(dynamicDescriptions);
       } else {
@@ -529,28 +547,50 @@ const Home = () => {
     // console.log(statu.our_products?.post_store);
     return statu.our_products?.post_store.map((card, index) => {
       // Destructure and extract relevant fields from the Data object
-      const feesSection = card.Data.Fees_section || {};
-      const infoSection1 = card.Data.Package_info || {};
-      const serviceSection = card.Data.Package_services || {};
-      const feessection = card.Data.Fees_section || {};
-      const purchaseButtonSection = card.Data.Purchase_button || {};
+      // const feesSection = card.Data.Fees_section || {};
+      // const infoSection1 = card.Data.Package_info || {};
+      // const serviceSection = card.Data.Package_services || {};
+      // const feessection = card.Data.Fees_section || {};
+      // const purchaseButtonSection = card.Data.Purchase_button || {};
+
+      const feesSection = card.Data.FeesSection || {};
+      const infoSection1 = card.Data.PackageInfo || {};
+      const serviceSection = card.Data.PackageServices || {};
+      const purchaseButtonSection = card.Data.PurchaseButton || {};
 
       // Check if there's any content to display (excluding the Field_slug values)
       const hasContent =
-        infoSection1.Information1 ||
-        infoSection1.Information2 ||
-        infoSection1.Information3 ||
-        infoSection1.Information4 ||
-        infoSection1.Information5 ||
-        serviceSection.Service1 ||
-        serviceSection.Service2 ||
-        feesSection.Monthlyfee ||
-        feessection.Montlyfeecardtext1 ||
-        feessection.Montlyfeecardtext1 ||
-        purchaseButtonSection.Amount ||
-        purchaseButtonSection.Buttonbackgroundcolor ||
-        purchaseButtonSection.Buttoncolor ||
-        purchaseButtonSection.Buttontext;
+        // infoSection1.Information1 ||
+        // infoSection1.Information2 ||
+        // infoSection1.Information3 ||
+        // infoSection1.Information4 ||
+        // infoSection1.Information5 ||
+        // serviceSection.Service1 ||
+        // serviceSection.Service2 ||
+        // feesSection.Monthlyfee ||
+        // feesSection.Montlyfeecardtext1 ||
+        // feesSection.Montlyfeecardtext1 ||
+        // purchaseButtonSection.Amount ||
+        // purchaseButtonSection.Buttonbackgroundcolor ||
+        // purchaseButtonSection.Buttoncolor ||
+        // purchaseButtonSection.Buttontext;
+
+        // console.log("TTTTTTTTTTTTTT");
+        // console.log(infoSection1?.[infoSection1?.Field_slug_information1]);
+        infoSection1?.[infoSection1?.Field_slug_information1] ||
+        infoSection1?.[infoSection1?.Field_slug_information2] ||
+        infoSection1?.[infoSection1?.Field_slug_information3] ||
+        infoSection1?.[infoSection1?.Field_slug_information4] ||
+        infoSection1?.[infoSection1?.Field_slug_information5] ||
+        serviceSection?.[serviceSection?.Field_slug_service1] ||
+        serviceSection?.[serviceSection?.Field_slug_service2] ||
+        feesSection?.[feesSection?.Field_slug_monthlyfee] ||
+        feesSection?.[feesSection?.Field_slug_montlyfeecardtext1] ||
+        feesSection?.[feesSection?.Field_slug_montlyfeecardtext2] ||
+        purchaseButtonSection?.[purchaseButtonSection?.Field_slug_amount] ||
+        purchaseButtonSection?.[purchaseButtonSection?.Field_slug_buttonbackgroundcolor] ||
+        purchaseButtonSection?.[purchaseButtonSection?.Field_slug_buttoncolor] ||
+        purchaseButtonSection?.[purchaseButtonSection?.Field_slug_buttontext];
 
       if (!hasContent) return null;
 
@@ -563,15 +603,21 @@ const Home = () => {
           <div className={`card${index + 1} card`}>
             {/* {console.log(card['Data'].Modelsectionpackagesection)} */}
             {/* <span className="medaltype">{card.Post_name}</span> */}
-            <span className="medaltype">{card["Data"].Packagename}</span>
+            <span className="medaltype">{card?.Data?.[card?.Data?.Field_slug_packagename]}</span>
+            {/* <span className="medaltype">{card["Data"].Packagename}</span> */}
             <div className={`card${index + 1}-text`}>
               {/* Render Information Section */}
               {[
-                infoSection1.Information1,
-                infoSection1.Information2,
-                infoSection1.Information3,
-                infoSection1.Information4,
-                infoSection1.Information5,
+                // infoSection1.Information1,
+                // infoSection1.Information2,
+                // infoSection1.Information3,
+                // infoSection1.Information4,
+                // infoSection1.Information5,
+                infoSection1?.[infoSection1?.Field_slug_information1],
+                infoSection1?.[infoSection1?.Field_slug_information2],
+                infoSection1?.[infoSection1?.Field_slug_information3],
+                infoSection1?.[infoSection1?.Field_slug_information4],
+                infoSection1?.[infoSection1?.Field_slug_information5],
               ].map(
                 (text, i) =>
                   text && (
@@ -650,7 +696,7 @@ const Home = () => {
 
             <div className={`card${index + 1}-sec-2-text`}>
               {/* Render Service Section */}
-              {serviceSection.Service1 && (
+              {serviceSection?.[serviceSection?.Field_slug_service1] && (
                 <p style={cardTextStyle}>
                   <img
                     src={plushicon}
@@ -658,23 +704,28 @@ const Home = () => {
                     alt="Add On Icon"
                     style={cardTextImageStyle}
                   />
-                  {serviceSection.Service1}
+                  {serviceSection?.[serviceSection?.Field_slug_service1]}
                 </p>
               )}
-              {serviceSection.Service1 && (
+              {serviceSection?.[serviceSection?.Field_slug_service1] && (
                 <div className="card-liner-inside-2"></div>
               )}
 
               <div className={`card-${index + 1}-sec-3`}>
                 {/* Render Monthly Fee */}
-                {feesSection.Monthlyfee && (
+                {/* {feesSection.Monthlyfee && (
                   <p className={`card${index + 1}-sec-3-text1`}>
                     {feesSection.Monthlyfee}
                   </p>
+                )} */}
+                {feesSection?.[feesSection?.Field_slug_monthlyfee] && (
+                  <p className={`card${index + 1}-sec-3-text1`}>
+                    {feesSection?.[feesSection?.Field_slug_monthlyfee]}
+                  </p>
                 )}
                 {[
-                  feessection.Montlyfeecardtext1,
-                  feessection.Montlyfeecardtext2,
+                  feesSection?.[feesSection?.Field_slug_montlyfeecardtext1],
+                  feesSection?.[feesSection?.Field_slug_montlyfeecardtext2]
                 ].map(
                   (text, i) =>
                     text && (
@@ -691,7 +742,7 @@ const Home = () => {
                 )}
 
                 {/* Render Service 2 */}
-                {serviceSection.Service2 && (
+                {serviceSection?.[serviceSection?.Field_slug_service2] && (
                   <p className={`card${index + 1}-sec-3-text`}>
                     <img
                       src={plushicon}
@@ -699,13 +750,14 @@ const Home = () => {
                       alt="Add On Icon"
                       style={cardTextImageStyle}
                     />
-                    {serviceSection.Service2}
+                    {serviceSection?.[serviceSection?.Field_slug_service2]}
                   </p>
                 )}
               </div>
             </div>
             {/* style={{ position: 'absolute', bottom: '13px', left: '0', right: '0' }} */}
-            {purchaseButtonSection.Buttontext && (
+            {purchaseButtonSection?.[purchaseButtonSection?.Field_slug_buttontext] && (
+            // {purchaseButtonSection.Buttontext && (
               <div className="text-center purchase-btn">
                 {/* <button
                   role="link"
@@ -743,13 +795,14 @@ const Home = () => {
                   // {loading && <div className="loader"></div>}
                   onClick={() =>
                     handlePurchaseSubmit(
-                      card["Data"].Packagename,
-                      purchaseButtonSection.Amount,
-                      purchaseButtonSection.Stripid
+                      card?.Data.Packagename,
+                      purchaseButtonSection?.[purchaseButtonSection?.Field_slug_amount],
+                      purchaseButtonSection?.[purchaseButtonSection?.Field_slug_stripid]
                     )
                   }
                 >
-                  {`${purchaseButtonSection.Buttontext} - $${purchaseButtonSection.Amount}`}
+                  {`${purchaseButtonSection?.[purchaseButtonSection?.Field_slug_buttontext]} - $${purchaseButtonSection?.[purchaseButtonSection?.Field_slug_amount]}`}
+                  {/* {`${purchaseButtonSection.Buttontext} - $${purchaseButtonSection.Amount}`} */}
                 </button>
               </div>
             )}
@@ -913,25 +966,35 @@ const Home = () => {
             </div>
             <div className="container">
               <div className="row p-5 justify-content-center">
+                {/* {console.log(Transforming[0]?.Data[Transforming[0]?.Data?.Field_slug_pagesectiondescription])} */}
+
+                {/* {console.log(Transforming[0]?.Data?.Field_slug_pagesectiondescription)} */}
                 {Transforming[0]?.Data && !Transforming[1]?.Data && (
                   <div className="col-md-8 text-center">
                     <h5 className="for-waste centered-text">
-                      {Transforming[0]?.Data?.Pagesectiontitle1} <br />
-                      <b>{Transforming[0]?.Data?.Pagesectiontitle2}</b>
+                      {/* {Transforming[0]?.Data?.Pagesectiontitle1} <br />
+                      <b>{Transforming[0]?.Data?.Pagesectiontitle2}</b> */}
+                      {Transforming[0]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiontitle1]} <br />
+                      <b>{Transforming[0]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiontitle2]}</b>
                     </h5>
                     <p className="transfotextdes1 centered-text">
-                      {Transforming[0]?.Data?.Pagesectiondescription}
+                      {/* {Transforming[0]?.Data?.Pagesectiondescription} */}
+                      {Transforming[0]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiondescription]}
                     </p>
                   </div>
                 )}
                 {Transforming[1]?.Data && !Transforming[0]?.Data && (
                   <div className="col-md-8 text-center">
                     <h5 className="for-waste">
-                      {Transforming[1]?.Data?.Pagesectiontitle1} <br />
-                      <b>{Transforming[1]?.Data?.Pagesectiontitle2}</b>
+                      {/* {Transforming[1]?.Data?.Pagesectiontitle1} <br />
+                      <b>{Transforming[1]?.Data?.Pagesectiontitle2}</b> */}
+                      {Transforming[1]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiontitle1]} <br />
+                      <b>{Transforming[1]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiontitle2]}</b>
                     </h5>
                     <p className="transfotextdes2 centered-text">
-                      {Transforming[1]?.Data?.Pagesectiondescription}
+                      {/* {Transforming[1]?.Data?.Pagesectiondescription} */}
+                      {Transforming[1]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiondescription]}
+
                     </p>
                   </div>
                 )}
@@ -939,11 +1002,15 @@ const Home = () => {
                   <>
                     <div className="col-md-5">
                       <h5 className="transfotext1 for-waste">
-                        {Transforming[0]?.Data?.Pagesectiontitle1} <br />
-                        <b>{Transforming[0]?.Data?.Pagesectiontitle2}</b>
+                        {/* {Transforming[0]?.Data?.Pagesectiontitle1} <br />
+                        <b>{Transforming[0]?.Data?.Pagesectiontitle2}</b> */}
+                        {Transforming[0]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiontitle1]} <br />
+                        <b>{Transforming[0]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiontitle2]}</b>
                       </h5>
                       <p className="transfotextdes1">
-                        {Transforming[0]?.Data?.Pagesectiondescription}
+                        {/* {Transforming[0]?.Data?.Pagesectiondescription} */}
+                        {Transforming[0]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiondescription]}
+
                       </p>
                     </div>
                     <div className="col-md-2 stretch-line">
@@ -956,11 +1023,15 @@ const Home = () => {
                     </div>
                     <div className="col-md-5">
                       <h5 className="transfotext2 for-waste">
-                        {Transforming[1]?.Data?.Pagesectiontitle1} <br />
-                        <b>{Transforming[1]?.Data?.Pagesectiontitle2}</b>
+                        {/* {Transforming[1]?.Data?.Pagesectiontitle1} <br />
+                        <b>{Transforming[1]?.Data?.Pagesectiontitle2}</b> */}
+                        {Transforming[1]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiontitle1]} <br />
+                        <b>{Transforming[1]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiontitle2]}</b>
                       </h5>
                       <p className="transfotextdes2">
-                        {Transforming[1]?.Data?.Pagesectiondescription}
+                        {/* {Transforming[1]?.Data?.Pagesectiondescription} */}
+                        {Transforming[1]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiondescription]}
+
                       </p>
                     </div>
                   </>
@@ -979,14 +1050,15 @@ const Home = () => {
               <div className="row">
                 <div className="col-md-12">
                   <div className="sec-3-text">
-                    {/* {console.log(statu.qute_section_1?.post_store[0]['Data'].Qutesectionimage)} */}
+                    {/* {console.log(statu.quote_section_1?.post_store[0].Data?.[statu.quote_section_1?.post_store[0].Data?.Field_slug_quotesectionimage])} */}
                     <img
                       // src={
                       //   statu.qute_section_1?.post_store[0]?.Qutesectionimage
                       // }
                       src={
-                        statu.quote_section_1?.post_store[0]["Data"]
-                          .Quotesectionimage
+                        // statu.quote_section_1?.post_store[0]["Data"]
+                        //   .Quotesectionimage
+                        statu.quote_section_1?.post_store[0].Data?.[statu.quote_section_1?.post_store[0].Data?.Field_slug_quotesectionimage]
                       }
                       className="quoteimage1"
                       alt="quoteimage1"
@@ -995,8 +1067,7 @@ const Home = () => {
                   <div className="sec-3-text2">
                     <p className="text-light">
                       {
-                        statu.quote_section_1?.post_store[0]["Data"]
-                          ?.Quotesectiontitle
+                        statu.quote_section_1?.post_store[0].Data?.[statu.quote_section_1?.post_store[0].Data?.Field_slug_quotesectiontitle]
                       }{" "}
                       <br />
                       <span
@@ -1004,8 +1075,9 @@ const Home = () => {
                         style={{ fontSize: "medium" }}
                       >
                         {
-                          statu.quote_section_1?.post_store[0]["Data"]
-                            ?.Quotesectiondescription
+                          // statu.quote_section_1?.post_store[0]["Data"]
+                          //   ?.Quotesectiondescription
+                          statu.quote_section_1?.post_store[0].Data?.[statu.quote_section_1?.post_store[0].Data?.Field_slug_quotesectiondescription]
                         }
                       </span>
                     </p>
@@ -1027,8 +1099,10 @@ const Home = () => {
                   <div className="sec-3-text">
                     <img
                       src={
-                        statu.quote_section_2?.post_store[0]["Data"]
-                          ?.Quotesectionimage
+                        // statu.quote_section_2?.post_store[0]["Data"]
+                        //   ?.Quotesectionimage
+                        statu.quote_section_2?.post_store[0].Data?.[statu.quote_section_2?.post_store[0].Data?.Field_slug_quotesectionimage]
+
                       }
                       className="quoteimage1"
                       alt="quoteimage1"
@@ -1037,8 +1111,10 @@ const Home = () => {
                   <div className="sec-3-text2">
                     <p className="text-light">
                       {
-                        statu.quote_section_2?.post_store[0]["Data"]
-                          ?.Quotesectiontitle
+                        // statu.quote_section_2?.post_store[0]["Data"]
+                        //   ?.Quotesectiontitle
+                        statu.quote_section_2?.post_store[0].Data?.[statu.quote_section_2?.post_store[0].Data?.Field_slug_quotesectiontitle]
+
                       }{" "}
                       <br />
                       <span
@@ -1046,8 +1122,10 @@ const Home = () => {
                         style={{ fontSize: "medium" }}
                       >
                         {
-                          statu.quote_section_2?.post_store[0]["Data"]
-                            ?.Quotesectiondescription
+                          // statu.quote_section_2?.post_store[0]["Data"]
+                          //   ?.Quotesectiondescription
+                          statu.quote_section_2?.post_store[0].Data?.[statu.quote_section_2?.post_store[0].Data?.Field_slug_quotesectiondescription]
+
                         }
                       </span>
                     </p>
@@ -1071,12 +1149,18 @@ const Home = () => {
               {statu.contact_us?.page_status === 1 && (
                 <div className="row mt-5">
                   <div className="col-12">
-                    <button
+                    {/* <button
                       type="button"
                       onClick={() => navigate("/menu/contact-us")}
                       className="btn sky-blue-btn"
+                    > */}
+                    <button
+                      type="button"
+                      onClick={() => navigate(`${statu.contact_us?.button_link}`)}
+                      className="btn sky-blue-btn"
                     >
-                      Contact Us
+                      {statu.contact_us?.button_name}
+                      {/* Contact Us */}
                     </button>
                   </div>
                 </div>
@@ -1128,13 +1212,23 @@ const Home = () => {
                         className={`for-waste ${isTwoPosts ? "margin-top-5" : ""
                           } ${isSinglePost ? "center-text" : ""}`}
                       >
-                        {item["Data"].Title}
+                        {/* {console.log(item.Data[item.Data.Field_slug_title])} */}
+                        {/* {item["Data"].Title} */}
+                        {item.Data[item.Data.Field_slug_title]}
                       </h5>
                       <p
                         style={{ marginTop: "25px" }}
                         className={isSinglePost ? "center-text" : ""}
                       >
-                        {item["Data"].Description.split("\r\n").map(
+                        {/* {item["Data"].Description.split("\r\n").map(
+                          (line, i) => (
+                            <React.Fragment key={i}>
+                              {line}
+                              <br />
+                            </React.Fragment>
+                          )
+                        )} */}
+                        {item.Data[item.Data.Field_slug_description].split("\r\n").map(
                           (line, i) => (
                             <React.Fragment key={i}>
                               {line}
@@ -1174,9 +1268,11 @@ const Home = () => {
                       {statu.who_use_wa?.post_store.map((item, index) => (
                         <div key={item.id}>
                           {/* {console.log(item['Data'].Image)} */}
-                          <Link to={item["Data"].Link}>
+                          <Link to={item?.Data?.[item?.Data?.Field_slug_link]}>
+                          {/* <Link to={item["Data"].Link}> */}
                             <img
-                              src={item["Data"].Image}
+                              src={item?.Data?.[item?.Data?.Field_slug_image]}
+                              // src={item["Data"].Image}
                               className="sliderimages"
                               alt={`Logo ${index + 1}`}
                             />
@@ -1185,12 +1281,17 @@ const Home = () => {
                       ))}
                     </Slider>
                   </div>
+                  {/* {console.log(statu.who_use_wa.button_name)} */}
                   <button
                     type="submit"
-                    onClick={() => navigate("/OurProducts")}
+                    onClick={() => navigate(`${statu?.who_use_wa?.button_link}`)}
+                    // onClick={() => navigate("/OurProducts")}
                     className="btn w-auto blue-btn-Find-out-More"
                   >
-                    Find out More
+                    {statu?.who_use_wa?.button_name}
+                    {/* Find out More */}
+
+
                   </button>
                 </div>
               </div>
@@ -1206,7 +1307,9 @@ const Home = () => {
             <div className="container">
               <h4 className="tellmemoretitle">
                 {/* {console.log(statu.tell_me_more_section.post_store[0]['Data'].Button_setting.Buttontext)} */}
-                {statu.tell_me_more_section?.post_store[0]["Data"]?.Title}
+                {/* {statu.tell_me_more_section?.post_store[0]["Data"]?.Title} */}
+                {statu.tell_me_more_section?.post_store[0].Data?.[statu.tell_me_more_section?.post_store[0].Data?.Field_slug_title]}
+
               </h4>
               <div className="row">
                 <div className="col-12">
@@ -1241,6 +1344,39 @@ const Home = () => {
                     }
                   </button> */}
                   {/* New Code new */}
+                  {/* <button
+                    type="submit"
+                    className="btn w-auto sky-blue-btn-tellmemore"
+                    style={{
+                      backgroundColor:
+                        // statu.tell_me_more_section?.post_store[0]["Data"]
+                        //   ?.Button_setting.Buttonbackgroundcolor || "#40bedd",
+                   statu.tell_me_more_section?.post_store[0].Data?.ButtonSetting?.[statu.tell_me_more_section?.post_store[0].Data?.ButtonSetting?.Field_slug_buttonbackgroundcolor]
+                   || "#40bedd",
+                      color:
+                        // statu.tell_me_more_section?.post_store[0]["Data"]
+                        // ?.Button_setting.Buttontextcolor || "#ffffff",
+                        statu.tell_me_more_section?.post_store[0].Data?.ButtonSetting?.[statu.tell_me_more_section?.post_store[0].Data?.ButtonSetting?.Field_slug_buttontextcolor]
+                        || "#ffffff",
+                    }}
+                  >
+                    {
+                      // statu.tell_me_more_section?.post_store[0]["Data"]
+                      //   ?.Button_setting.Buttontext
+                      statu.tell_me_more_section?.post_store[0].Data?.ButtonSetting?.[statu.tell_me_more_section?.post_store[0].Data?.ButtonSetting?.Field_slug_buttontext]
+
+                    }
+                  </button> */}
+                  <button
+                    type="submit"
+                    className="btn w-auto sky-blue-btn-tellmemore"
+                    style={{
+                      backgroundColor: "#40bedd",
+                      color: "#ffffff",
+                    }}
+                  >
+                    {statu.tell_me_more_section?.button_name}
+                  </button>
                 </div>
               </div>
             </div>
@@ -1326,10 +1462,13 @@ const Home = () => {
                     <div className="col-12">
                       <h4 className="letstallktitle">
                         {/* {statu.contact_us?.post_store[0]?.Title} */}
-                        {statu.contact_us?.post_store[0]["Data"]?.Title}
+                        {/* {statu.contact_us?.post_store[0]["Data"]?.Title} */}
+                        {statu.contact_us?.post_store[0].Data?.[statu.contact_us?.post_store[0].Data?.Field_slug_title]}
                       </h4>
                       <div className="inputgroup">
-                        {statu.contact_us?.post_store[0]["Data"]?.Description}
+                        {/* {statu.contact_us?.post_store[0]["Data"]?.Description} */}
+                        {statu.contact_us?.post_store[0].Data?.[statu.contact_us?.post_store[0].Data?.Field_slug_description]}
+
                       </div>
                     </div>
                   </div>
@@ -1369,10 +1508,15 @@ const Home = () => {
                     {statu.contact_us?.post_store.map((item, index) => (
                       <div className="col-md-6" key={index}>
                         <div className="inputgroup">
-                          <label>{item.Data.Label}</label>
+                          {/* <label>{item.Data.Label}</label> */}
+                          <label>{item.Data?.[item.Data?.Field_slug_label]}</label>
+
                           {/* {console.log(item.Data.Label, item.Data.Type)} */}
 
-                          {item.Data.Label === "Tell us what you need" ? (
+                          {/* {item.Data.Label === "Tell us what you need" ? ( */}
+                          {/* {console.log(item.Data?.[item.Data?.Field_slug_type])} */}
+                          {item.Data?.[item.Data?.Field_slug_type] === "Textarea" ? (
+
                             <textarea
                               className="form-control"
                               name={`field${index}`}
@@ -1443,7 +1587,8 @@ const Home = () => {
                       onClick={handleSubmit}
                       className="btn w-auto sky-blue-btn-sendmeasge"
                     >
-                      Send my message
+                      {/* Send my message */}
+                      {statu.contact_us?.button_name}
                     </button>
                   </div>
                 </div>
