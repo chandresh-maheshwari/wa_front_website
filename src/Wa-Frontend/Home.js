@@ -98,25 +98,43 @@ const Home = () => {
         // setDescription(dynamicDescriptions);
         // console.log(response.results.about_us.post_store);
 
-        // Extract Titles
+        // Extract Titles OLD CODE START
+        // const dynamicTitles = response.results.about_us.post_store.flatMap(
+        //   (post) =>
+        //     Object.keys(post.Data) // Access 'Data' property directly
+        //       .filter((key) => key.startsWith("Field_slug_title")) // Filter by keys that start with 'Title'
+        //       .map((key) => post.Data[key]) // Get the corresponding value for each 'Title'
+        // );
+        // Extract Titles OLD CODE END
+
         const dynamicTitles = response.results.about_us.post_store.flatMap(
-          (post) =>
-            Object.keys(post.Data) // Access 'Data' property directly
-              .filter((key) => key.startsWith("Title")) // Filter by keys that start with 'Title'
-              .map((key) => post.Data[key]) // Get the corresponding value for each 'Title'
+          (post) => {
+            const data = post.Data;
+            const titleKey = data.Field_slug_title; // This gives 'Title'
+            return data[titleKey] ? [data[titleKey]] : [];
+          }
         );
 
         // console.log(dynamicTitles);
         setTitles(dynamicTitles);
 
-        // Extract Descriptions
-        const dynamicDescriptions =
-          response.results.about_us.post_store.flatMap(
-            (post) =>
-              Object.keys(post.Data) // Access 'Data' property directly
-                .filter((key) => key.startsWith("Description")) // Filter by keys that start with 'Description'
-                .map((key) => post.Data[key]) // Get the corresponding value for each 'Description'
-          );
+        // Extract Descriptions OLD CODE START
+        // const dynamicDescriptions =
+        //   response.results.about_us.post_store.flatMap(
+        //     (post) =>
+        //       Object.keys(post.Data) // Access 'Data' property directly
+        //         .filter((key) => key.startsWith("Description")) // Filter by keys that start with 'Description'
+        //         .map((key) => post.Data[key]) // Get the corresponding value for each 'Description'
+        //   );
+        // Extract Descriptions OLD CODE END
+        const dynamicDescriptions = response.results.about_us.post_store.flatMap(
+          (post) => {
+            const data = post.Data;
+            const descriptionKey = data.Field_slug_description; // e.g., 'Description'
+            return data[descriptionKey] ? [data[descriptionKey]] : [];
+          }
+        );
+
 
         setDescription(dynamicDescriptions);
       } else {
@@ -451,8 +469,8 @@ const Home = () => {
       //   cancelButtonText: "Cancel",
       // }).then((result) => {
       //   if (result.isConfirmed) {
-          // Show the login popup when "OK" is clicked
-          toggleLoginPopup();
+      // Show the login popup when "OK" is clicked
+      toggleLoginPopup();
       //   }
       // });
       return;
@@ -483,21 +501,46 @@ const Home = () => {
       });
 
       // Replace the fetch call with the Authapi function
-      const response = await Authapi.createCheckoutSession(
-        productName,
-        amount,
-        email,
+      //   const response = await Authapi.createCheckoutSession(
+      //     productName,
+      //     amount,
+      //     email,
+      //     price_id
+      //   );
+
+      //   if (!response.status) {
+      //     throw new Error(
+      //       response.message || "Failed to create checkout session"
+      //     );
+      //   }
+
+      //   window.location.href = response.url;
+      // } catch (error) {
+      //   console.error("Purchase Error:", error);
+      //   Swal.fire({
+      //     icon: "error",
+      //     title: "Payment Error",
+      //     text:
+      //       error.message ||
+      //       "There was an error processing your payment. Please try again.",
+      //     background: "#f8f9fa",
+      //     showConfirmButton: true,
+      //     confirmButtonText: "OK",
+      //   });
+      //   // }
+      // } finally {
+      //   setLoading(false);
+      // }
+
+
+      const response = await Authapi.createsub(
+
         price_id,
-        trail_days,
+
       );
 
-      if (!response.status) {
-        throw new Error(
-          response.message || "Failed to create checkout session"
-        );
-      }
 
-      window.location.href = response.url;
+      window.location.href = response.checkout_url;
     } catch (error) {
       console.error("Purchase Error:", error);
       Swal.fire({
@@ -516,80 +559,108 @@ const Home = () => {
     }
   };
 
-  const handleLoginSuccess = (data) => {
-    // setUserData(data);
-    setIsLoggedIn(true);
-    // setIsDropdownOpen(true);
-    localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("userData", JSON.stringify(data));
-    setShowLoginPopup(false);
-    // console.log('Login successful:', data);
-  };
+const handleLoginSuccess = (data) => {
+  // setUserData(data);
+  setIsLoggedIn(true);
+  // setIsDropdownOpen(true);
+  localStorage.setItem("isLoggedIn", "true");
+  localStorage.setItem("userData", JSON.stringify(data));
+  setShowLoginPopup(false);
+  // console.log('Login successful:', data);
+};
 
-  const renderCards = () => {
-    // console.log(statu.our_products?.post_store);
-    return statu.our_products?.post_store.map((card, index) => {
-      // Destructure and extract relevant fields from the Data object
-      const feesSection = card.Data.Fees_section || {};
-      const infoSection1 = card.Data.Package_info || {};
-      const serviceSection = card.Data.Package_services || {};
-      const feessection = card.Data.Fees_section || {};
-      const purchaseButtonSection = card.Data.Purchase_button || {};
+const renderCards = () => {
+  // console.log(statu.our_products?.post_store);
+  return statu.our_products?.post_store.map((card, index) => {
+    // Destructure and extract relevant fields from the Data object
+    // const feesSection = card.Data.Fees_section || {};
+    // const infoSection1 = card.Data.Package_info || {};
+    // const serviceSection = card.Data.Package_services || {};
+    // const feessection = card.Data.Fees_section || {};
+    // const purchaseButtonSection = card.Data.Purchase_button || {};
 
-      // Check if there's any content to display (excluding the Field_slug values)
-      const hasContent =
-        infoSection1.Information1 ||
-        infoSection1.Information2 ||
-        infoSection1.Information3 ||
-        infoSection1.Information4 ||
-        infoSection1.Information5 ||
-        serviceSection.Service1 ||
-        serviceSection.Service2 ||
-        feesSection.Monthlyfee ||
-        feessection.Montlyfeecardtext1 ||
-        feessection.Montlyfeecardtext1 ||
-        purchaseButtonSection.Amount ||
-        purchaseButtonSection.Buttonbackgroundcolor ||
-        purchaseButtonSection.Buttoncolor ||
-        purchaseButtonSection.Buttontext;
+    const feesSection = card.Data.FeesSection || {};
+    const infoSection1 = card.Data.PackageInfo || {};
+    const serviceSection = card.Data.PackageServices || {};
+    const purchaseButtonSection = card.Data.PurchaseButton || {};
 
-      if (!hasContent) return null;
+    // Check if there's any content to display (excluding the Field_slug values)
+    const hasContent =
+      // infoSection1.Information1 ||
+      // infoSection1.Information2 ||
+      // infoSection1.Information3 ||
+      // infoSection1.Information4 ||
+      // infoSection1.Information5 ||
+      // serviceSection.Service1 ||
+      // serviceSection.Service2 ||
+      // feesSection.Monthlyfee ||
+      // feesSection.Montlyfeecardtext1 ||
+      // feesSection.Montlyfeecardtext1 ||
+      // purchaseButtonSection.Amount ||
+      // purchaseButtonSection.Buttonbackgroundcolor ||
+      // purchaseButtonSection.Buttoncolor ||
+      // purchaseButtonSection.Buttontext;
 
-      return (
-        <div className={`col-lg-4`} id={`card${index + 1}`} key={card.Id}>
-          <div
-            className={`card-liner-card-${index + 1}`}
-            id="card-liner-card"
-          ></div>
-          <div className={`card${index + 1} card`}>
-            {/* {console.log(card['Data'].Modelsectionpackagesection)} */}
-            {/* <span className="medaltype">{card.Post_name}</span> */}
-            <span className="medaltype">{card["Data"].Packagename}</span>
-            <div className={`card${index + 1}-text`}>
-              {/* Render Information Section */}
-              {[
-                infoSection1.Information1,
-                infoSection1.Information2,
-                infoSection1.Information3,
-                infoSection1.Information4,
-                infoSection1.Information5,
-              ].map(
-                (text, i) =>
-                  text && (
-                    <p style={cardTextStyle} key={i} className="cardtext">
-                      <img
-                        src={righticon}
-                        className={`card${index + 1}righticon`}
-                        alt={`Icon ${i + 1}`}
-                        style={cardTextImageStyle}
-                      />
-                      {text}
-                    </p>
-                  )
-              )}
-              {/* {infoSection1.Information1 || infoSection1.Information2 || infoSection1.Information3 || infoSection1.Information4 || infoSection1.Information5 ? <div className="card-liner-inside"></div> : null} */}
+      // console.log("TTTTTTTTTTTTTT");
+      // console.log(infoSection1?.[infoSection1?.Field_slug_information1]);
+      infoSection1?.[infoSection1?.Field_slug_information1] ||
+      infoSection1?.[infoSection1?.Field_slug_information2] ||
+      infoSection1?.[infoSection1?.Field_slug_information3] ||
+      infoSection1?.[infoSection1?.Field_slug_information4] ||
+      infoSection1?.[infoSection1?.Field_slug_information5] ||
+      serviceSection?.[serviceSection?.Field_slug_service1] ||
+      serviceSection?.[serviceSection?.Field_slug_service2] ||
+      feesSection?.[feesSection?.Field_slug_monthlyfee] ||
+      feesSection?.[feesSection?.Field_slug_monthlyfeecardtext1] ||
+      feesSection?.[feesSection?.Field_slug_monthlyfeecardtext2] ||
+      purchaseButtonSection?.[purchaseButtonSection?.Field_slug_amount] ||
+      purchaseButtonSection?.[purchaseButtonSection?.Field_slug_buttonbackgroundcolor] ||
+      purchaseButtonSection?.[purchaseButtonSection?.Field_slug_buttoncolor] ||
+      purchaseButtonSection?.[purchaseButtonSection?.Field_slug_buttontext];
 
-              {/* {infoSection1.Information1 && (
+    if (!hasContent) return null;
+
+    return (
+      <div className={`col-lg-4`} id={`card${index + 1}`} key={card.Id}>
+        <div
+          className={`card-liner-card-${index + 1}`}
+          id="card-liner-card"
+        ></div>
+        <div className={`card${index + 1} card`}>
+          {/* {console.log(card['Data'].Modelsectionpackagesection)} */}
+          {/* <span className="medaltype">{card.Post_name}</span> */}
+          <span className="medaltype">{card?.Data?.[card?.Data?.Field_slug_packagename]}</span>
+          {/* <span className="medaltype">{card["Data"].Packagename}</span> */}
+          <div className={`card${index + 1}-text`}>
+            {/* Render Information Section */}
+            {[
+              // infoSection1.Information1,
+              // infoSection1.Information2,
+              // infoSection1.Information3,
+              // infoSection1.Information4,
+              // infoSection1.Information5,
+              infoSection1?.[infoSection1?.Field_slug_information1],
+              infoSection1?.[infoSection1?.Field_slug_information2],
+              infoSection1?.[infoSection1?.Field_slug_information3],
+              infoSection1?.[infoSection1?.Field_slug_information4],
+              infoSection1?.[infoSection1?.Field_slug_information5],
+            ].map(
+              (text, i) =>
+                text && (
+                  <p style={cardTextStyle} key={i} className="cardtext">
+                    <img
+                      src={righticon}
+                      className={`card${index + 1}righticon`}
+                      alt={`Icon ${i + 1}`}
+                      style={cardTextImageStyle}
+                    />
+                    {text}
+                  </p>
+                )
+            )}
+            {/* {infoSection1.Information1 || infoSection1.Information2 || infoSection1.Information3 || infoSection1.Information4 || infoSection1.Information5 ? <div className="card-liner-inside"></div> : null} */}
+
+            {/* {infoSection1.Information1 && (
                 <p style={cardTextStyle} key="info1" className="cardtext">
                   <img
                     src={righticon}
@@ -644,71 +715,77 @@ const Home = () => {
                   {infoSection1.Information5}
                 </p>
               )} */}
-              {Object.values(infoSection1).some((text) => text) && (
-                <div className="card-liner-inside"></div>
-              )}
-            </div>
+            {Object.values(infoSection1).some((text) => text) && (
+              <div className="card-liner-inside"></div>
+            )}
+          </div>
 
-            <div className={`card${index + 1}-sec-2-text`}>
-              {/* Render Service Section */}
-              {serviceSection.Service1 && (
-                <p style={cardTextStyle}>
+          <div className={`card${index + 1}-sec-2-text`}>
+            {/* Render Service Section */}
+            {serviceSection?.[serviceSection?.Field_slug_service1] && (
+              <p style={cardTextStyle}>
+                <img
+                  src={plushicon}
+                  className={`card${index + 1}plushicon`}
+                  alt="Add On Icon"
+                  style={cardTextImageStyle}
+                />
+                {serviceSection?.[serviceSection?.Field_slug_service1]}
+              </p>
+            )}
+            {serviceSection?.[serviceSection?.Field_slug_service1] && (
+              <div className="card-liner-inside-2"></div>
+            )}
+
+            <div className={`card-${index + 1}-sec-3`}>
+              {/* Render Monthly Fee */}
+              {/* {feesSection.Monthlyfee && (
+                  <p className={`card${index + 1}-sec-3-text1`}>
+                    {feesSection.Monthlyfee}
+                  </p>
+                )} */}
+              {feesSection?.[feesSection?.Field_slug_monthlyfee] && (
+                <p className={`card${index + 1}-sec-3-text1`}>
+                  {feesSection?.[feesSection?.Field_slug_monthlyfee]}
+                </p>
+              )}
+              {[
+                feesSection?.[feesSection?.Field_slug_monthlyfeecardtext1],
+                feesSection?.[feesSection?.Field_slug_monthlyfeecardtext2]
+              ].map(
+                (text, i) =>
+                  text && (
+                    <p style={cardTextStyle} key={i} className="cardtext">
+                      <img
+                        src={plushicon}
+                        className={`card${index + 1}plushicon`}
+                        alt="Add On Icon"
+                        style={cardTextImageStyle}
+                      />
+                      {text}
+                    </p>
+                  )
+              )}
+
+              {/* Render Service 2 */}
+              {serviceSection?.[serviceSection?.Field_slug_service2] && (
+                <p className={`card${index + 1}-sec-3-text`}>
                   <img
                     src={plushicon}
                     className={`card${index + 1}plushicon`}
                     alt="Add On Icon"
                     style={cardTextImageStyle}
                   />
-                  {serviceSection.Service1}
+                  {serviceSection?.[serviceSection?.Field_slug_service2]}
                 </p>
               )}
-              {serviceSection.Service1 && (
-                <div className="card-liner-inside-2"></div>
-              )}
-
-              <div className={`card-${index + 1}-sec-3`}>
-                {/* Render Monthly Fee */}
-                {feesSection.Monthlyfee && (
-                  <p className={`card${index + 1}-sec-3-text1`}>
-                    {feesSection.Monthlyfee}
-                  </p>
-                )}
-                {[
-                  feessection.Montlyfeecardtext1,
-                  feessection.Montlyfeecardtext2,
-                ].map(
-                  (text, i) =>
-                    text && (
-                      <p style={cardTextStyle} key={i} className="cardtext">
-                        <img
-                          src={plushicon}
-                          className={`card${index + 1}plushicon`}
-                          alt="Add On Icon"
-                          style={cardTextImageStyle}
-                        />
-                        {text}
-                      </p>
-                    )
-                )}
-
-                {/* Render Service 2 */}
-                {serviceSection.Service2 && (
-                  <p className={`card${index + 1}-sec-3-text`}>
-                    <img
-                      src={plushicon}
-                      className={`card${index + 1}plushicon`}
-                      alt="Add On Icon"
-                      style={cardTextImageStyle}
-                    />
-                    {serviceSection.Service2}
-                  </p>
-                )}
-              </div>
             </div>
-            {/* style={{ position: 'absolute', bottom: '13px', left: '0', right: '0' }} */}
-            {purchaseButtonSection.Buttontext && (
-              <div className="text-center purchase-btn">
-                {/* <button
+          </div>
+          {/* style={{ position: 'absolute', bottom: '13px', left: '0', right: '0' }} */}
+          {purchaseButtonSection?.[purchaseButtonSection?.Field_slug_buttontext] && (
+            // {purchaseButtonSection.Buttontext && (
+            <div className="text-center purchase-btn">
+              {/* <button
                   role="link"
                   className="btn w-50"
                   style={{
@@ -725,423 +802,545 @@ const Home = () => {
                 >
                   {`${purchaseButtonSection.Buttontext} - ${purchaseButtonSection.Amount}`}
                 </button> */}
-                {/* {console.log(purchaseButtonSection.Stripid)} */}
-                <button
-                  role="link"
-                  className="btn w-50"
-                  style={{
-                    backgroundColor:
-                      purchaseButtonSection.Buttonbackgroundcolor || "#40bedd",
-                    color: purchaseButtonSection.Buttoncolor || "#ffffff",
-                  }}
-                  // onMouseOver={(e) => {
-                  //   e.target.style.backgroundColor = card.Buttonhovercolor || '#17bee8';
-                  // }}
-                  // onMouseOut={(e) => {
-                  //   e.target.style.backgroundColor = card.Buttonbackgroundcolor || '#40bedd';
-                  // }}
+              {/* {console.log(purchaseButtonSection.Stripid)} */}
+              <button
+                role="link"
+                className="btn w-50"
+                style={{
+                  backgroundColor:
+                    purchaseButtonSection.Buttonbackgroundcolor || "#40bedd",
+                  color: purchaseButtonSection.Buttoncolor || "#ffffff",
+                }}
+                // onMouseOver={(e) => {
+                //   e.target.style.backgroundColor = card.Buttonhovercolor || '#17bee8';
+                // }}
+                // onMouseOut={(e) => {
+                //   e.target.style.backgroundColor = card.Buttonbackgroundcolor || '#40bedd';
+                // }}
 
-                  // {loading && <div className="loader"></div>}
-                  onClick={() =>
-                    handlePurchaseSubmit(
-                      card["Data"].Packagename,
-                      purchaseButtonSection.Amount,
-                      purchaseButtonSection.Stripid,
-                      purchaseButtonSection.Trialdays
-                    )
-                  }
-                >
-                  {`${purchaseButtonSection.Buttontext} - $${purchaseButtonSection.Amount}`}
-                </button>
-              </div>
-            )}
-          </div>
+                // {loading && <div className="loader"></div>}
+                onClick={() =>
+                  handlePurchaseSubmit(
+                    card?.Data.Packagename,
+                    purchaseButtonSection?.[purchaseButtonSection?.Field_slug_amount],
+                    purchaseButtonSection?.[purchaseButtonSection?.Field_slug_stripid]
+                  )
+                }
+              >
+                {`${purchaseButtonSection?.[purchaseButtonSection?.Field_slug_buttontext]} - $${purchaseButtonSection?.[purchaseButtonSection?.Field_slug_amount]}`}
+                {/* {`${purchaseButtonSection.Buttontext} - $${purchaseButtonSection.Amount}`} */}
+              </button>
+            </div>
+          )}
         </div>
-      );
-    });
-  };
+      </div>
+    );
+  });
+};
 
-  const renderSections = () => {
-    const sections = [
-      {
-        condition: statu.home_section?.status === 1,
-        ordering: statu.home_section?.ordering || 0,
-        content: (
-          <section className="homesection">
-            <div className="container">
-              <div className="home">
-                <div className="row">
-                  <div className="col-sm-2">
-                    {/* {console.log(homesection.Tell_me_more_button_section?.Homesectionbuttontitle)} */}
-                    <img
-                      src={homesection?.Homesectionimage}
+const test = () => {
+
+  const homesectionImageKey = homesection?.Field_slug_homesectionimage;
+  const capitalizedKey = homesectionImageKey
+    ? homesectionImageKey.charAt(0).toUpperCase() + homesectionImageKey.slice(1)
+    : '';
+  // console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+  // console.log(capitalizedKey);
+
+  const test1 = homesection?.[capitalizedKey];
+  return (
+    <>
+      <img
+        src={test1}
+        // src={homesection?.Homesectionimage}
+        alt="homeimg"
+        className="homeimg"
+      />
+
+    </>
+  );
+}
+const renderSections = () => {
+  const sections = [
+    {
+      condition: statu.home_section?.status === 1,
+      ordering: statu.home_section?.ordering || 0,
+      content: (
+        <section className="homesection">
+          <div className="container">
+            <div className="home">
+              <div className="row">
+                <div className="col-sm-2">
+                  {/* {console.log(homesection.Tell_me_more_button_section?.Homesectionbuttontitle)} */}
+                  {/* {(() => {
+                        const homesectionTitleKey = homesection?.Field_slug_homesectiontitle2;
+                        const capitalizedKey = homesectionTitleKey
+                          ? homesectionTitleKey.charAt(0).toUpperCase() + homesectionTitleKey.slice(1)
+                          : ''; 
+                       return test =  homesection?.[capitalizedKey]; 
+                      })()} */}
+                  {/* <img
+                      src={test}
+                      // src={homesection?.Homesectionimage}
                       alt="homeimg"
                       className="homeimg"
-                    />
+                    /> */}
+                  {test()}
+                </div>
+                <div className="col-sm-10">
+                  <div className="homefont">
+                    {/* {console.log(homesection)} */}
+                    {/* <h4>
+                        {/* {homesection?.Homesectiontitle} 
+                        {(() => {
+                          // console.log("DTATATATATATTTATA");
+                          console.log(homesection?.Field_slug_homesectiontitle1);
+                          const homesectionTitleKey = homesection?.Field_slug_homesectiontitle;
+                          // console.log(homesectionTitleKey);
+
+                          // const capitalizedKey = homesectionTitleKey
+                          //   ? homesectionTitleKey.charAt(0).toUpperCase() + homesectionTitleKey.slice(1)
+                          //   : '';
+                          //   console.log(homesection?.[capitalizedKey]);
+                          // return homesection?.[capitalizedKey];
+                        })()}
+                        {homesection?.[homesectionTitleKey]}
+                      </h4> */}
+
+                    <h4>
+                      {/* {(() => {
+                          console.log(homesection?.Field_slug_homesectiontitle1);
+                          const homesectionTitleKey = homesection?.Field_slug_homesectiontitle;                         
+                        })()}
+                        {homesection?.[homesectionTitleKey]} */}
+                      {homesection?.[homesection?.Field_slug_homesectiontitle]}
+
+                    </h4>
                   </div>
-                  <div className="col-sm-10">
-                    <div className="homefont">
-                      {/* {console.log(homesection)} */}
-                      <h4>{homesection?.Homesectiontitle}</h4>
-                    </div>
-                    <p
-                      className="home-p-font"
-                      style={{
-                        Color: "rgb(173, 173, 173)",
-                        maxWidth: "46%",
-                        marginBottom: "27px",
-                      }}
-                    >
-                      {homesection?.Homesectiondescription}
-                    </p>
-                    <button
-                      type="button"
-                      className="btn"
-                      id="tellmemore"
-                      style={{
-                        backgroundColor:
-                          homesection.Tell_me_more_button_section
-                            ?.Homesectionbuttonbackgroundcolor || "",
-                        color:
-                          homesection.Tell_me_more_button_section
-                            ?.Homesectionbuttontextcolor || "",
-                      }}
-                    >
-                      {
+                  <p
+                    className="home-p-font"
+                    style={{
+                      Color: "rgb(173, 173, 173)",
+                      maxWidth: "46%",
+                      marginBottom: "27px",
+                    }}
+                  >
+                    {/* {(() => {
+                        const homesectionDescriptionKey = homesection?.Field_slug_homesectiondescription;
+                        const capitalizedKey = homesectionDescriptionKey
+                          ? homesectionDescriptionKey.charAt(0).toUpperCase() + homesectionDescriptionKey.slice(1)
+                          : '';
+                        return homesection?.[capitalizedKey];
+                      })()} */}
+
+                    {/* {homesection?.Homesectiondescription} */}
+                    {homesection?.[homesection?.Field_slug_homesectiondescription]}
+                  </p>
+                  <button
+                    type="button"
+                    className="btn"
+                    id="tellmemore"
+                    style={{
+                      backgroundColor: homesection?.TellMeMoreButtonSection?.[homesection?.TellMeMoreButtonSection?.Field_slug_homesectionbuttonbackgroundcolor],
+                      color: homesection?.TellMeMoreButtonSection?.[homesection?.TellMeMoreButtonSection?.Field_slug_homesectionbuttontextcolor],
+                    }}
+                  >
+                    {/* {console.log(homesection.TellMeMoreButtonSection)} */}
+                    {homesection?.TellMeMoreButtonSection?.[homesection?.TellMeMoreButtonSection?.Field_slug_homesectionbuttontitle]}
+                  </button>
+
+                  {/* {(() => {
+                        console.log("DTATATATATATTTATA");
+                        console.log(homesection?.Field_slug_homesectiontitle1);
+                        const homesectionTitleKey = homesection?.Field_slug_homesectiontitle;
+                        console.log(homesectionTitleKey);
+
+                        const capitalizedKey = homesectionTitleKey
+                          ? homesectionTitleKey.charAt(0).toUpperCase() + homesectionTitleKey.slice(1)
+                          : '';
+                        console.log(homesection?.[capitalizedKey]);
+                        return homesection?.[capitalizedKey];
+                      })()} */}
+                  {/* {
                         homesection.Tell_me_more_button_section
                           ?.Homesectionbuttontitle
-                      }
-                    </button>
-                    {/* {console.log(homesection.HomeSectionTitle)} */}
-                  </div>
+                      } */}
+                  {/* </button> */}
+                  {/* {console.log(homesection.HomeSectionTitle)} */}
                 </div>
               </div>
             </div>
-          </section>
-        ),
-      },
-      {
-        condition: statu.transforming_waste_industry?.status === 1,
-        ordering: statu.transforming_waste_industry?.ordering || 0,
-        content: (
-          <section className="page-section" id="transforming_section">
-            <div className="container p-5 transforming_section_container">
-              <div className="row">
-                <div className="col-md-12">
-                  <div className="transfo">
-                    <h5 className="text-center transforming ">
-                      {statu.transforming_waste_industry?.page_description}
-                    </h5>
-                  </div>
+          </div>
+        </section>
+      ),
+    },
+    {
+      condition: statu.transforming_waste_industry?.status === 1,
+      ordering: statu.transforming_waste_industry?.ordering || 0,
+      content: (
+        <section className="page-section" id="transforming_section">
+          <div className="container p-5 transforming_section_container">
+            <div className="row">
+              <div className="col-md-12">
+                <div className="transfo">
+                  <h5 className="text-center transforming ">
+                    {statu.transforming_waste_industry?.page_description}
+                  </h5>
                 </div>
               </div>
             </div>
-            <div className="container">
-              <div className="row p-5 justify-content-center">
-                {Transforming[0]?.Data && !Transforming[1]?.Data && (
-                  <div className="col-md-8 text-center">
-                    <h5 className="for-waste centered-text">
-                      {Transforming[0]?.Data?.Pagesectiontitle1} <br />
-                      <b>{Transforming[0]?.Data?.Pagesectiontitle2}</b>
+          </div>
+          <div className="container">
+            <div className="row p-5 justify-content-center">
+              {/* {console.log(Transforming[0]?.Data[Transforming[0]?.Data?.Field_slug_pagesectiondescription])} */}
+
+              {/* {console.log(Transforming[0]?.Data?.Field_slug_pagesectiondescription)} */}
+              {Transforming[0]?.Data && !Transforming[1]?.Data && (
+                <div className="col-md-8 text-center">
+                  <h5 className="for-waste centered-text">
+                    {/* {Transforming[0]?.Data?.Pagesectiontitle1} <br />
+                      <b>{Transforming[0]?.Data?.Pagesectiontitle2}</b> */}
+                    {Transforming[0]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiontitle1]} <br />
+                    <b>{Transforming[0]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiontitle2]}</b>
+                  </h5>
+                  <p className="transfotextdes1 centered-text">
+                    {/* {Transforming[0]?.Data?.Pagesectiondescription} */}
+                    {Transforming[0]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiondescription]}
+                  </p>
+                </div>
+              )}
+              {Transforming[1]?.Data && !Transforming[0]?.Data && (
+                <div className="col-md-8 text-center">
+                  <h5 className="for-waste">
+                    {/* {Transforming[1]?.Data?.Pagesectiontitle1} <br />
+                      <b>{Transforming[1]?.Data?.Pagesectiontitle2}</b> */}
+                    {Transforming[1]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiontitle1]} <br />
+                    <b>{Transforming[1]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiontitle2]}</b>
+                  </h5>
+                  <p className="transfotextdes2 centered-text">
+                    {/* {Transforming[1]?.Data?.Pagesectiondescription} */}
+                    {Transforming[1]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiondescription]}
+
+                  </p>
+                </div>
+              )}
+              {Transforming[0]?.Data && Transforming[1]?.Data && (
+                <>
+                  <div className="col-md-5">
+                    <h5 className="transfotext1 for-waste">
+                      {/* {Transforming[0]?.Data?.Pagesectiontitle1} <br />
+                        <b>{Transforming[0]?.Data?.Pagesectiontitle2}</b> */}
+                      {Transforming[0]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiontitle1]} <br />
+                      <b>{Transforming[0]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiontitle2]}</b>
                     </h5>
-                    <p className="transfotextdes1 centered-text">
-                      {Transforming[0]?.Data?.Pagesectiondescription}
+                    <p className="transfotextdes1">
+                      {/* {Transforming[0]?.Data?.Pagesectiondescription} */}
+                      {Transforming[0]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiondescription]}
+
                     </p>
                   </div>
-                )}
-                {Transforming[1]?.Data && !Transforming[0]?.Data && (
-                  <div className="col-md-8 text-center">
-                    <h5 className="for-waste">
-                      {Transforming[1]?.Data?.Pagesectiontitle1} <br />
-                      <b>{Transforming[1]?.Data?.Pagesectiontitle2}</b>
-                    </h5>
-                    <p className="transfotextdes2 centered-text">
-                      {Transforming[1]?.Data?.Pagesectiondescription}
-                    </p>
-                  </div>
-                )}
-                {Transforming[0]?.Data && Transforming[1]?.Data && (
-                  <>
-                    <div className="col-md-5">
-                      <h5 className="transfotext1 for-waste">
-                        {Transforming[0]?.Data?.Pagesectiontitle1} <br />
-                        <b>{Transforming[0]?.Data?.Pagesectiontitle2}</b>
-                      </h5>
-                      <p className="transfotextdes1">
-                        {Transforming[0]?.Data?.Pagesectiondescription}
-                      </p>
-                    </div>
-                    <div className="col-md-2 stretch-line">
-                      <img
-                        src={statu.transforming_waste_industry?.image}
-                        width="60px"
-                        className="strech"
-                        alt="strech"
-                      />
-                    </div>
-                    <div className="col-md-5">
-                      <h5 className="transfotext2 for-waste">
-                        {Transforming[1]?.Data?.Pagesectiontitle1} <br />
-                        <b>{Transforming[1]?.Data?.Pagesectiontitle2}</b>
-                      </h5>
-                      <p className="transfotextdes2">
-                        {Transforming[1]?.Data?.Pagesectiondescription}
-                      </p>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          </section>
-        ),
-      },
-      {
-        condition: statu.quote_section_1?.status === 1,
-        ordering: statu.quote_section_1?.ordering || 0,
-        content: (
-          <section className="qute-sec" id="testimonial_section">
-            <div className="container-fluid">
-              <div className="row">
-                <div className="col-md-12">
-                  <div className="sec-3-text">
-                    {/* {console.log(statu.qute_section_1?.post_store[0]['Data'].Qutesectionimage)} */}
+                  <div className="col-md-2 stretch-line">
                     <img
-                      // src={
-                      //   statu.qute_section_1?.post_store[0]?.Qutesectionimage
-                      // }
-                      src={
-                        statu.quote_section_1?.post_store[0]["Data"]
-                          .Quotesectionimage
-                      }
-                      className="quoteimage1"
-                      alt="quoteimage1"
+                      src={statu.transforming_waste_industry?.image}
+                      width="60px"
+                      className="strech"
+                      alt="strech"
                     />
                   </div>
-                  <div className="sec-3-text2">
-                    <p className="text-light">
-                      {
-                        statu.quote_section_1?.post_store[0]["Data"]
-                          ?.Quotesectiontitle
-                      }{" "}
-                      <br />
-                      <span
-                        className="text-secondary"
-                        style={{ fontSize: "medium" }}
-                      >
-                        {
-                          statu.quote_section_1?.post_store[0]["Data"]
-                            ?.Quotesectiondescription
-                        }
-                      </span>
+                  <div className="col-md-5">
+                    <h5 className="transfotext2 for-waste">
+                      {/* {Transforming[1]?.Data?.Pagesectiontitle1} <br />
+                        <b>{Transforming[1]?.Data?.Pagesectiontitle2}</b> */}
+                      {Transforming[1]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiontitle1]} <br />
+                      <b>{Transforming[1]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiontitle2]}</b>
+                    </h5>
+                    <p className="transfotextdes2">
+                      {/* {Transforming[1]?.Data?.Pagesectiondescription} */}
+                      {Transforming[1]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiondescription]}
+
                     </p>
                   </div>
-                </div>
-              </div>
+                </>
+              )}
             </div>
-          </section>
-        ),
-      },
-      {
-        condition: statu.quote_section_2?.status === 1,
-        ordering: statu.quote_section_2?.ordering || 0,
-        content: (
-          <section className="qute-sec" id="testimonial_section">
-            <div className="container-fluid">
-              <div className="row">
-                <div className="col-md-12">
-                  <div className="sec-3-text">
-                    <img
-                      src={
-                        statu.quote_section_2?.post_store[0]["Data"]
-                          ?.Quotesectionimage
+          </div>
+        </section>
+      ),
+    },
+    {
+      condition: statu.quote_section_1?.status === 1,
+      ordering: statu.quote_section_1?.ordering || 0,
+      content: (
+        <section className="qute-sec" id="testimonial_section">
+          <div className="container-fluid">
+            <div className="row">
+              <div className="col-md-12">
+                <div className="sec-3-text">
+                  {/* {console.log(statu.quote_section_1?.post_store[0].Data?.[statu.quote_section_1?.post_store[0].Data?.Field_slug_quotesectionimage])} */}
+                  <img
+                    // src={
+                    //   statu.qute_section_1?.post_store[0]?.Qutesectionimage
+                    // }
+                    src={
+                      // statu.quote_section_1?.post_store[0]["Data"]
+                      //   .Quotesectionimage
+                      statu.quote_section_1?.post_store[0].Data?.[statu.quote_section_1?.post_store[0].Data?.Field_slug_quotesectionimage]
+                    }
+                    className="quoteimage1"
+                    alt="quoteimage1"
+                  />
+                </div>
+                <div className="sec-3-text2">
+                  <p className="text-light">
+                    {
+                      statu.quote_section_1?.post_store[0].Data?.[statu.quote_section_1?.post_store[0].Data?.Field_slug_quotesectiontitle]
+                    }{" "}
+                    <br />
+                    <span
+                      className="text-secondary"
+                      style={{ fontSize: "medium" }}
+                    >
+                      {
+                        // statu.quote_section_1?.post_store[0]["Data"]
+                        //   ?.Quotesectiondescription
+                        statu.quote_section_1?.post_store[0].Data?.[statu.quote_section_1?.post_store[0].Data?.Field_slug_quotesectiondescription]
                       }
-                      className="quoteimage1"
-                      alt="quoteimage1"
-                    />
-                  </div>
-                  <div className="sec-3-text2">
-                    <p className="text-light">
-                      {
-                        statu.quote_section_2?.post_store[0]["Data"]
-                          ?.Quotesectiontitle
-                      }{" "}
-                      <br />
-                      <span
-                        className="text-secondary"
-                        style={{ fontSize: "medium" }}
-                      >
-                        {
-                          statu.quote_section_2?.post_store[0]["Data"]
-                            ?.Quotesectiondescription
-                        }
-                      </span>
-                    </p>
-                  </div>
+                    </span>
+                  </p>
                 </div>
               </div>
             </div>
-          </section>
-        ),
-      },
-      {
-        condition: statu.our_products?.status === 1,
-        ordering: statu.our_products?.ordering || 0,
-        content: (
-          <section className="packages-sec" id="package_section">
-            <div className="container mt-2">
-              <div className="waste-management-service-title">
-                <h4>{statu.our_products?.page_description}</h4>
+          </div>
+        </section>
+      ),
+    },
+    {
+      condition: statu.quote_section_2?.status === 1,
+      ordering: statu.quote_section_2?.ordering || 0,
+      content: (
+        <section className="qute-sec" id="testimonial_section">
+          <div className="container-fluid">
+            <div className="row">
+              <div className="col-md-12">
+                <div className="sec-3-text">
+                  <img
+                    src={
+                      // statu.quote_section_2?.post_store[0]["Data"]
+                      //   ?.Quotesectionimage
+                      statu.quote_section_2?.post_store[0].Data?.[statu.quote_section_2?.post_store[0].Data?.Field_slug_quotesectionimage]
+
+                    }
+                    className="quoteimage1"
+                    alt="quoteimage1"
+                  />
+                </div>
+                <div className="sec-3-text2">
+                  <p className="text-light">
+                    {
+                      // statu.quote_section_2?.post_store[0]["Data"]
+                      //   ?.Quotesectiontitle
+                      statu.quote_section_2?.post_store[0].Data?.[statu.quote_section_2?.post_store[0].Data?.Field_slug_quotesectiontitle]
+
+                    }{" "}
+                    <br />
+                    <span
+                      className="text-secondary"
+                      style={{ fontSize: "medium" }}
+                    >
+                      {
+                        // statu.quote_section_2?.post_store[0]["Data"]
+                        //   ?.Quotesectiondescription
+                        statu.quote_section_2?.post_store[0].Data?.[statu.quote_section_2?.post_store[0].Data?.Field_slug_quotesectiondescription]
+
+                      }
+                    </span>
+                  </p>
+                </div>
               </div>
-              <div className="row">{renderCards()}</div>
-              {statu.contact_us?.page_status === 1 && (
-                <div className="row mt-5">
-                  <div className="col-12">
-                    <button
+            </div>
+          </div>
+        </section>
+      ),
+    },
+    {
+      condition: statu.our_products?.status === 1,
+      ordering: statu.our_products?.ordering || 0,
+      content: (
+        <section className="packages-sec" id="package_section">
+          <div className="container mt-2">
+            <div className="waste-management-service-title">
+              <h4>{statu.our_products?.page_description}</h4>
+            </div>
+            <div className="row">{renderCards()}</div>
+            {statu.contact_us?.page_status === 1 && (
+              <div className="row mt-5">
+                <div className="col-12">
+                  {/* <button
                       type="button"
                       onClick={() => navigate("/menu/contact-us")}
                       className="btn sky-blue-btn"
-                    >
-                      Contact Us
-                    </button>
-                  </div>
+                    > */}
+                  <button
+                    type="button"
+                    onClick={() => navigate(`${statu.contact_us?.button_link}`)}
+                    className="btn sky-blue-btn"
+                  >
+                    {statu.contact_us?.button_name}
+                    {/* Contact Us */}
+                  </button>
                 </div>
-              )}
-            </div>
-          </section>
-        ),
-      },
-      {
-        condition: statu.why_choose_wa?.status === 1,
-        ordering: statu.why_choose_wa?.ordering || 0,
-        content: (
-          <section className="why_choose_section">
-            <div className="container p-5">
-              <div className="row">
-                <div className="col-md-12">
-                  <div className="transfo">
-                    <h5 className="text-center">
-                      {statu.why_choose_wa?.page_description}
-                    </h5>
-                  </div>
+              </div>
+            )}
+          </div>
+        </section>
+      ),
+    },
+    {
+      condition: statu.why_choose_wa?.status === 1,
+      ordering: statu.why_choose_wa?.ordering || 0,
+      content: (
+        <section className="why_choose_section">
+          <div className="container p-5">
+            <div className="row">
+              <div className="col-md-12">
+                <div className="transfo">
+                  <h5 className="text-center">
+                    {statu.why_choose_wa?.page_description}
+                  </h5>
                 </div>
               </div>
             </div>
+          </div>
 
-            <div className="container type-2">
-              <div className="row justify-content-center">
-                {statu.why_choose_wa?.post_store.map((item, index) => {
-                  const postCount = statu.why_choose_wa?.post_store.length;
-                  const isSinglePost = postCount === 1;
-                  const isTwoPosts = postCount === 2;
-                  const isThreePosts = postCount === 3;
+          <div className="container type-2">
+            <div className="row justify-content-center">
+              {statu.why_choose_wa?.post_store.map((item, index) => {
+                const postCount = statu.why_choose_wa?.post_store.length;
+                const isSinglePost = postCount === 1;
+                const isTwoPosts = postCount === 2;
+                const isThreePosts = postCount === 3;
 
-                  return (
-                    <div
-                      className={`col ${
-                        isSinglePost ? "col-12" : "col-md-6 col-sm-6 col-xs-3"
+                return (
+                  <div
+                    className={`col ${isSinglePost ? "col-12" : "col-md-6 col-sm-6 col-xs-3"
                       } 
-                                  ${
-                                    isSinglePost ? "center-text no-border" : ""
-                                  } 
+                                  ${isSinglePost ? "center-text no-border" : ""
+                      } 
                                   ${isTwoPosts ? "no-bottom-border" : ""} 
                                   ${isThreePosts ? "no-top-right-border" : ""} 
-                                  ${
-                                    isThreePosts && index === 2 ? "mx-auto" : ""
-                                  } 
-                                  ${
-                                    index % 2 === 0 ? "text-end" : "text-start"
-                                  }`}
-                      key={item.id}
-                    >
-                      <h5
-                        className={`for-waste ${
-                          isTwoPosts ? "margin-top-5" : ""
+                                  ${isThreePosts && index === 2 ? "mx-auto" : ""
+                      } 
+                                  ${index % 2 === 0 ? "text-end" : "text-start"
+                      }`}
+                    key={item.id}
+                  >
+                    <h5
+                      className={`for-waste ${isTwoPosts ? "margin-top-5" : ""
                         } ${isSinglePost ? "center-text" : ""}`}
-                      >
-                        {item["Data"].Title}
-                      </h5>
-                      <p
-                        style={{ marginTop: "25px" }}
-                        className={isSinglePost ? "center-text" : ""}
-                      >
-                        {item["Data"].Description.split("\r\n").map(
+                    >
+                      {/* {console.log(item.Data[item.Data.Field_slug_title])} */}
+                      {/* {item["Data"].Title} */}
+                      {item.Data[item.Data.Field_slug_title]}
+                    </h5>
+                    <p
+                      style={{ marginTop: "25px" }}
+                      className={isSinglePost ? "center-text" : ""}
+                    >
+                      {/* {item["Data"].Description.split("\r\n").map(
                           (line, i) => (
                             <React.Fragment key={i}>
                               {line}
                               <br />
                             </React.Fragment>
                           )
-                        )}
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </section>
-        ),
-      },
-      {
-        condition: statu.who_use_wa?.status === 1,
-        ordering: statu.who_use_wa?.ordering || 0,
-        content: (
-          <section className="why-section" id="logo_section">
-            <div className="container" onClick={handlePlayPause}>
-              <div className="sliderconatainer">
-                <h2 className="font-weight-light slider-heading text-center">
-                  {statu.who_use_wa?.page_description}
-                  {/* {console.log(statu.why_section?.post_store[0]['Data'])} */}
-                  {/* {console.log(statu.why_section?.post_store)} */}
-                  {/* {console.log(statu.why_section?.post_store[0]['Data'])} */}
-                </h2>
-                <div className="slider-container">
-                  {isPlaying ? "" : ""}
-                  <div onClick={handleContainerClick}>
-                    <Slider
-                      ref={(slider) => setSliderRef(slider)}
-                      {...settings}
-                    >
-                      {statu.who_use_wa?.post_store.map((item, index) => (
-                        <div key={item.id}>
-                          {/* {console.log(item['Data'].Image)} */}
-                          <Link to={item["Data"].Link}>
-                            <img
-                              src={item["Data"].Image}
-                              className="sliderimages"
-                              alt={`Logo ${index + 1}`}
-                            />
-                          </Link>
-                        </div>
-                      ))}
-                    </Slider>
+                        )} */}
+                      {item.Data[item.Data.Field_slug_description].split("\r\n").map(
+                        (line, i) => (
+                          <React.Fragment key={i}>
+                            {line}
+                            <br />
+                          </React.Fragment>
+                        )
+                      )}
+                    </p>
                   </div>
-                  <button
-                    type="submit"
-                    onClick={() => navigate("/OurProducts")}
-                    className="btn w-auto blue-btn-Find-out-More"
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      ),
+    },
+    {
+      condition: statu.who_use_wa?.status === 1,
+      ordering: statu.who_use_wa?.ordering || 0,
+      content: (
+        <section className="why-section" id="logo_section">
+          <div className="container" onClick={handlePlayPause}>
+            <div className="sliderconatainer">
+              <h2 className="font-weight-light slider-heading text-center">
+                {statu.who_use_wa?.page_description}
+                {/* {console.log(statu.why_section?.post_store[0]['Data'])} */}
+                {/* {console.log(statu.why_section?.post_store)} */}
+                {/* {console.log(statu.why_section?.post_store[0]['Data'])} */}
+              </h2>
+              <div className="slider-container">
+                {isPlaying ? "" : ""}
+                <div onClick={handleContainerClick}>
+                  <Slider
+                    ref={(slider) => setSliderRef(slider)}
+                    {...settings}
                   >
-                    Find out More
-                  </button>
+                    {statu.who_use_wa?.post_store.map((item, index) => (
+                      <div key={item.id}>
+                        {/* {console.log(item['Data'].Image)} */}
+                        <Link to={item?.Data?.[item?.Data?.Field_slug_link]}>
+                          {/* <Link to={item["Data"].Link}> */}
+                          <img
+                            src={item?.Data?.[item?.Data?.Field_slug_image]}
+                            // src={item["Data"].Image}
+                            className="sliderimages"
+                            alt={`Logo ${index + 1}`}
+                          />
+                        </Link>
+                      </div>
+                    ))}
+                  </Slider>
                 </div>
+                {/* {console.log(statu.who_use_wa.button_name)} */}
+                <button
+                  type="submit"
+                  onClick={() => navigate(`${statu?.who_use_wa?.button_link}`)}
+                  // onClick={() => navigate("/OurProducts")}
+                  className="btn w-auto blue-btn-Find-out-More"
+                >
+                  {statu?.who_use_wa?.button_name}
+                  {/* Find out More */}
+
+
+                </button>
               </div>
             </div>
-          </section>
-        ),
-      },
-      {
-        condition: statu.tell_me_more_section?.status === 1,
-        ordering: statu.tell_me_more_section?.ordering || 0,
-        content: (
-          <section className="tellmemore">
-            <div className="container">
-              <h4 className="tellmemoretitle">
-                {/* {console.log(statu.tell_me_more_section.post_store[0]['Data'].Button_setting.Buttontext)} */}
-                {statu.tell_me_more_section?.post_store[0]["Data"]?.Title}
-              </h4>
-              <div className="row">
-                <div className="col-12">
-                  {/* Old Code Start */}
-                  {/* <button
+          </div>
+        </section>
+      ),
+    },
+    {
+      condition: statu.tell_me_more_section?.status === 1,
+      ordering: statu.tell_me_more_section?.ordering || 0,
+      content: (
+        <section className="tellmemore">
+          <div className="container">
+            <h4 className="tellmemoretitle">
+              {/* {console.log(statu.tell_me_more_section.post_store[0]['Data'].Button_setting.Buttontext)} */}
+              {/* {statu.tell_me_more_section?.post_store[0]["Data"]?.Title} */}
+              {statu.tell_me_more_section?.post_store[0].Data?.[statu.tell_me_more_section?.post_store[0].Data?.Field_slug_title]}
+
+            </h4>
+            <div className="row">
+              <div className="col-12">
+                {/* Old Code Start */}
+                {/* <button
                     type="submit"
                     className="btn w-auto sky-blue-btn-tellmemore"
                     style={{
@@ -1150,10 +1349,10 @@ const Home = () => {
                     }}>
                     {statu.tell_me_more_section?.post_store[0]['Data']?.Buttontext}
                   </button> */}
-                  {/* Old Code Start */}
+                {/* Old Code Start */}
 
-                  {/* New Code Start */}
-                  <button
+                {/* New Code Start */}
+                {/* <button
                     type="submit"
                     className="btn w-auto sky-blue-btn-tellmemore"
                     style={{
@@ -1169,102 +1368,138 @@ const Home = () => {
                       statu.tell_me_more_section?.post_store[0]["Data"]
                         ?.Button_setting.Buttontext
                     }
-                  </button>
-                  {/* New Code new */}
-                </div>
-              </div>
-            </div>
-          </section>
-        ),
-      },
-      {
-        condition: statu.about_us?.status === 1,
-        ordering: statu.about_us?.ordering || 0,
-        content: (
-          <section className="page-section" id="package_section">
-            <div className="container type-1">
-              <div className="row">
-                <div className="col-12">
-                  <div className="sec-8-heading">
-                    <h1 id="About-us">{statu.about_us?.page_name}</h1>
-                  </div>
-                </div>
-              </div>
-
-              <div className="row" style={{ marginBottom: "6%" }}>
-                <div className="col-md-3">
-                  <div className="content-box">
-                    {/* {console.log(titles)} */}
-
-                    {titles.map((title, index) => (
-                      <div key={index}>
-                        {/* {console.log(title)} */}
-                        <h5 className="title-sm">{title}</h5>
-                        <p></p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="col-md-9">
-                  <div className="content-box">
-                    {Array.isArray(description) ? (
-                      description.map((descItem, index) => (
-                        <p key={index}>{descItem}</p>
-                      ))
-                    ) : (
-                      <p>{description}</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-        ),
-      },
-      {
-        condition: statu.page_image_section?.status === 1,
-        ordering: statu.page_image_section?.ordering || 0,
-        content: (
-          <section className="imagesection" id="parallaximagesection">
-            <div className="container-fluid">
-              <div className="row">
-                <div className="col-12 p-0">
-                  <div
-                    className="parallax-img"
+                  </button> */}
+                {/* New Code new */}
+                {/* <button
+                    type="submit"
+                    className="btn w-auto sky-blue-btn-tellmemore"
                     style={{
-                      backgroundImage: `url(${statu.page_image_section?.image})`, // GET IMAGE FORM PAGE
-                      // backgroundImage: `url(${statu.page_image_section?.post_store?.[0]?.['Data'].Image})`, // GET IMAGE FROM POST
+                      backgroundColor:
+                        // statu.tell_me_more_section?.post_store[0]["Data"]
+                        //   ?.Button_setting.Buttonbackgroundcolor || "#40bedd",
+                   statu.tell_me_more_section?.post_store[0].Data?.ButtonSetting?.[statu.tell_me_more_section?.post_store[0].Data?.ButtonSetting?.Field_slug_buttonbackgroundcolor]
+                   || "#40bedd",
+                      color:
+                        // statu.tell_me_more_section?.post_store[0]["Data"]
+                        // ?.Button_setting.Buttontextcolor || "#ffffff",
+                        statu.tell_me_more_section?.post_store[0].Data?.ButtonSetting?.[statu.tell_me_more_section?.post_store[0].Data?.ButtonSetting?.Field_slug_buttontextcolor]
+                        || "#ffffff",
                     }}
                   >
-                    {/* {console.log("Image URL:", statu.page_image_section?.image)} */}
-                  </div>
+                    {
+                      // statu.tell_me_more_section?.post_store[0]["Data"]
+                      //   ?.Button_setting.Buttontext
+                      statu.tell_me_more_section?.post_store[0].Data?.ButtonSetting?.[statu.tell_me_more_section?.post_store[0].Data?.ButtonSetting?.Field_slug_buttontext]
+
+                    }
+                  </button> */}
+                <button
+                  type="submit"
+                  className="btn w-auto sky-blue-btn-tellmemore"
+                  style={{
+                    backgroundColor: "#40bedd",
+                    color: "#ffffff",
+                  }}
+                >
+                  {statu.tell_me_more_section?.button_name}
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      ),
+    },
+    {
+      condition: statu.about_us?.status === 1,
+      ordering: statu.about_us?.ordering || 0,
+      content: (
+        <section className="page-section" id="package_section">
+          <div className="container type-1">
+            <div className="row">
+              <div className="col-12">
+                <div className="sec-8-heading">
+                  <h1 id="About-us">{statu.about_us?.page_name}</h1>
                 </div>
               </div>
             </div>
-          </section>
-        ),
-      },
-      {
-        condition: statu.contact_us?.status === 1,
-        ordering: statu.contact_us?.ordering || 0,
-        content: (
-          <section className="lets-talk-sec" id="package_section">
-            <div className="container" id="sec-10">
-              <div className="contactusswction">
-                <form id="contactForm">
-                  <div className="row ">
-                    <div className="col-12">
-                      <h4 className="letstallktitle">
-                        {/* {statu.contact_us?.post_store[0]?.Title} */}
-                        {statu.contact_us?.post_store[0]["Data"]?.Title}
-                      </h4>
-                      <div className="inputgroup">
-                        {statu.contact_us?.post_store[0]["Data"]?.Description}
-                      </div>
+
+            <div className="row" style={{ marginBottom: "6%" }}>
+              <div className="col-md-3">
+                <div className="content-box">
+                  {/* {console.log(titles)} */}
+
+                  {titles.map((title, index) => (
+                    <div key={index}>
+                      {/* {console.log(title)} */}
+                      <h5 className="title-sm">{title}</h5>
+                      <p></p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="col-md-9">
+                <div className="content-box">
+                  {Array.isArray(description) ? (
+                    description.map((descItem, index) => (
+                      <p key={index}>{descItem}</p>
+                    ))
+                  ) : (
+                    <p>{description}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      ),
+    },
+    {
+      condition: statu.page_image_section?.status === 1,
+      ordering: statu.page_image_section?.ordering || 0,
+      content: (
+        <section className="imagesection" id="parallaximagesection">
+          <div className="container-fluid">
+            <div className="row">
+              <div className="col-12 p-0">
+                <div
+                  className="parallax-img"
+                  style={{
+                    backgroundImage: `url(${statu.page_image_section?.image})`, // GET IMAGE FORM PAGE
+                    // backgroundImage: `url(${statu.page_image_section?.post_store?.[0]?.['Data'].Image})`, // GET IMAGE FROM POST
+                  }}
+                >
+                  {/* {console.log("Image URL:", statu.page_image_section?.image)} */}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      ),
+    },
+    {
+      condition: statu.contact_us?.status === 1,
+      ordering: statu.contact_us?.ordering || 0,
+      content: (
+        <section className="lets-talk-sec" id="package_section">
+          <div className="container" id="sec-10">
+            <div className="contactusswction">
+              <form id="contactForm">
+                <div className="row ">
+                  <div className="col-12">
+                    <h4 className="letstallktitle">
+                      {/* {statu.contact_us?.post_store[0]?.Title} */}
+                      {/* {statu.contact_us?.post_store[0]["Data"]?.Title} */}
+                      {statu.contact_us?.post_store[0].Data?.[statu.contact_us?.post_store[0].Data?.Field_slug_title]}
+                    </h4>
+                    <div className="inputgroup">
+                      {/* {statu.contact_us?.post_store[0]["Data"]?.Description} */}
+                      {statu.contact_us?.post_store[0].Data?.[statu.contact_us?.post_store[0].Data?.Field_slug_description]}
+
                     </div>
                   </div>
+                </div>
 
-                  {/* <div className="row">
+                {/* <div className="row">
                     {statu.contact_us?.post_store.map((item, index) => (
                       <div className="col-md-6" key={index}>
                         <div className="inputgroup">
@@ -1295,40 +1530,45 @@ const Home = () => {
                       </div>
                     ))}
                   </div> */}
-                  <div className="row">
-                    {statu.contact_us?.post_store.map((item, index) => (
-                      <div className="col-md-6" key={index}>
-                        <div className="inputgroup">
-                          <label>{item.Data.Label}</label>
-                          {/* {console.log(item.Data.Label, item.Data.Type)} */}
+                <div className="row">
+                  {statu.contact_us?.post_store.map((item, index) => (
+                    <div className="col-md-6" key={index}>
+                      <div className="inputgroup">
+                        {/* <label>{item.Data.Label}</label> */}
+                        <label>{item.Data?.[item.Data?.Field_slug_label]}</label>
 
-                          {item.Data.Label === "Tell us what you need" ? (
-                            <textarea
-                              className="form-control"
-                              name={`field${index}`}
-                              rows="4"
-                              onChange={(e) => handleInputChange(e, index)}
-                            />
-                          ) : (
-                            <input
-                              className="form-control"
-                              name={`field${index}`}
-                              type={item.Data.Type} 
-                              onChange={(e) => handleInputChange(e, index)}
-                            />
-                          )}
+                        {/* {console.log(item.Data.Label, item.Data.Type)} */}
 
-                          {errors[`label${index}`] && (
-                            <span style={{ color: "red" }}>
-                              {errors[`label${index}`]}
-                            </span>
-                          )}
-                        </div>
+                        {/* {item.Data.Label === "Tell us what you need" ? ( */}
+                        {/* {console.log(item.Data?.[item.Data?.Field_slug_type])} */}
+                        {item.Data?.[item.Data?.Field_slug_type] === "Textarea" ? (
+
+                          <textarea
+                            className="form-control"
+                            name={`field${index}`}
+                            rows="4"
+                            onChange={(e) => handleInputChange(e, index)}
+                          />
+                        ) : (
+                          <input
+                            className="form-control"
+                            name={`field${index}`}
+                            type={item.Data.Type}
+                            onChange={(e) => handleInputChange(e, index)}
+                          />
+                        )}
+
+                        {errors[`label${index}`] && (
+                          <span style={{ color: "red" }}>
+                            {errors[`label${index}`]}
+                          </span>
+                        )}
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ))}
+                </div>
 
-                  {/* <div className="row">
+                {/* <div className="row">
                     {statu.contact_us?.post_store.map((item, index) => (
                       <div className="col-md-6" key={index}>
                         <div className="inputgroup">
@@ -1364,51 +1604,52 @@ const Home = () => {
                       </div>
                     ))}
                   </div> */}
-                </form>
+              </form>
 
-                <div className="row mt-3 ">
-                  <div className="col-12">
-                    <button
-                      type="submit"
-                      onClick={handleSubmit}
-                      className="btn w-auto sky-blue-btn-sendmeasge"
-                    >
-                      Send my message
-                    </button>
-                  </div>
+              <div className="row mt-3 ">
+                <div className="col-12">
+                  <button
+                    type="submit"
+                    onClick={handleSubmit}
+                    className="btn w-auto sky-blue-btn-sendmeasge"
+                  >
+                    {/* Send my message */}
+                    {statu.contact_us?.button_name}
+                  </button>
                 </div>
               </div>
             </div>
-          </section>
-        ),
-      },
-    ];
+          </div>
+        </section>
+      ),
+    },
+  ];
 
-    const orderedSections = sections
-      .filter((section) => section.condition)
-      .sort((a, b) => a.ordering - b.ordering);
+  const orderedSections = sections
+    .filter((section) => section.condition)
+    .sort((a, b) => a.ordering - b.ordering);
 
-    return orderedSections.map((section, index) => (
-      <div key={index}>{section.content}</div>
-    ));
-  };
+  return orderedSections.map((section, index) => (
+    <div key={index}>{section.content}</div>
+  ));
+};
 
-  return (
-    <>
-      <Navlayout />
-      <Expired />
+return (
+  <>
+    <Navlayout />
+    <Expired />
 
-      {renderSections()}
-      {showLoginPopup && (
-        <Popup
-          isOpen={showLoginPopup}
-          onClose={toggleLoginPopup}
-          onLoginSuccess={handleLoginSuccess}
-        />
-      )}
-      <Outlet />
-    </>
-  );
+    {renderSections()}
+    {showLoginPopup && (
+      <Popup
+        isOpen={showLoginPopup}
+        onClose={toggleLoginPopup}
+        onLoginSuccess={handleLoginSuccess}
+      />
+    )}
+    <Outlet />
+  </>
+);
 };
 
 const Popup = ({ isOpen, onClose, onLoginSuccess }) => {

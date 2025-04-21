@@ -37,18 +37,26 @@ const TopNav = () => {
                                 <div className='frontlogo'>
                                     {/* {console.log(topbardata.Top_bar_logo_section?.Logoimage)}     */}
                                     {/* {console.log(topbardata.Top_bar_logo_section?.Logoimage)}    */}
-                                    <Link to={topbardata.Top_bar_logo_section?.Logolink}>
-                                    <img src={topbardata.Top_bar_logo_section?.Logoimage} className="wa-logo" alt="wa-logo" /></Link>
+                                    {/* <Link to={topbardata.Top_bar_logo_section?.Logolink}>
+                                    <img src={topbardata.Top_bar_logo_section?.Logoimage} className="wa-logo" alt="wa-logo" /></Link> */}
+                                    {console.log(topbardata)}                       
+
+                                    <Link to={topbardata?.TopBarLogoSection?.[topbardata?.TopBarLogoSection?.Field_slug_logolink]}>
+                                    <img src={topbardata?.TopBarLogoSection?.[topbardata?.TopBarLogoSection?.Field_slug_logoimage]} className="wa-logo" alt="wa-logo" /></Link>
                                 </div>
                             </div>
                             <div className='col-sm-6'>
                                 <div className='toptext'>
                                     <div className='topcontent'>
-                                        <p className='partoflife'> {topbardata.Mts_group_section?.Title}</p> <p className='mtsgroup' style={{ color: "rgb(173, 173, 173);" }}>{topbardata.Mts_group_section?.Description}</p>
+                                        {/* <p className='partoflife'> {topbardata.Mts_group_section?.Title}</p> 
+                                        <p className='mtsgroup' style={{ color: "rgb(173, 173, 173);" }}>{topbardata.Mts_group_section?.Description}</p> */}
+                                        <p className='partoflife'> {topbardata?.MTSGroupSection?.[topbardata?.MTSGroupSection?.Field_slug_title]}</p> 
+                                        <p className='mtsgroup' style={{ color: "rgb(173, 173, 173);" }}>{topbardata?.MTSGroupSection?.[topbardata?.MTSGroupSection?.Field_slug_description]}</p>
                                     </div>
                                 </div>
                                 {/* {console.log(topbardata.Mts_group_section?.Sidelogoimage)}                                 */}
-                                <img src={topbardata.Mts_group_section?.Sidelogoimage} className="mts-logo" alt="mts-logo" />
+                                <img src={topbardata?.MTSGroupSection?.[topbardata?.MTSGroupSection?.Field_slug_sidelogoimage]} className="mts-logo" alt="mts-logo" />
+                                {/* <img src={topbardata.Mts_group_section?.Sidelogoimage} className="mts-logo" alt="mts-logo" /> */}
 
                             </div>
                         </div>
