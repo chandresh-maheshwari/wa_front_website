@@ -39,7 +39,7 @@ const TopNav = () => {
                                     {/* {console.log(topbardata.Top_bar_logo_section?.Logoimage)}    */}
                                     {/* <Link to={topbardata.Top_bar_logo_section?.Logolink}>
                                     <img src={topbardata.Top_bar_logo_section?.Logoimage} className="wa-logo" alt="wa-logo" /></Link> */}
-                                    {console.log(topbardata)}                       
+                                    {/* {console.log(topbardata)}                        */}
 
                                     <Link to={topbardata?.TopBarLogoSection?.[topbardata?.TopBarLogoSection?.Field_slug_logolink]}>
                                     <img src={topbardata?.TopBarLogoSection?.[topbardata?.TopBarLogoSection?.Field_slug_logoimage]} className="wa-logo" alt="wa-logo" /></Link>

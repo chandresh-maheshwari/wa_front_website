@@ -68,7 +68,7 @@ const Home = () => {
   const fetchData = async () => {
     try {
       const response = await Authapi.Alldynamicpageget();
-      // console.log(response.results.contact_us.ordering)
+      // console.log(response.results.lets_talk.ordering)
 
       // console.log(response.results)
       if (response.status === true) {
@@ -238,7 +238,7 @@ const Home = () => {
     const newErrors = {};
     const formData = {};
 
-    statu.contact_us?.post_store.forEach((item, index) => {
+    statu.lets_talk?.post_store.forEach((item, index) => {
       const value = document
         .querySelector(`[name="field${index}"]`)
         .value.trim();
@@ -1172,7 +1172,7 @@ const renderSections = () => {
               <h4>{statu.our_products?.page_description}</h4>
             </div>
             <div className="row">{renderCards()}</div>
-            {statu.contact_us?.page_status === 1 && (
+            {statu.lets_talk?.page_status === 1 && (
               <div className="row mt-5">
                 <div className="col-12">
                   {/* <button
@@ -1182,10 +1182,10 @@ const renderSections = () => {
                     > */}
                   <button
                     type="button"
-                    onClick={() => navigate(`${statu.contact_us?.button_link}`)}
+                    onClick={() => navigate(`${statu.lets_talk?.button_link}`)}
                     className="btn sky-blue-btn"
                   >
-                    {statu.contact_us?.button_name}
+                    {statu.lets_talk?.button_name}
                     {/* Contact Us */}
                   </button>
                 </div>
@@ -1477,8 +1477,8 @@ const renderSections = () => {
       ),
     },
     {
-      condition: statu.contact_us?.status === 1,
-      ordering: statu.contact_us?.ordering || 0,
+      condition: statu.lets_talk?.status === 1,
+      ordering: statu.lets_talk?.ordering || 0,
       content: (
         <section className="lets-talk-sec" id="package_section">
           <div className="container" id="sec-10">
@@ -1487,20 +1487,22 @@ const renderSections = () => {
                 <div className="row ">
                   <div className="col-12">
                     <h4 className="letstallktitle">
-                      {/* {statu.contact_us?.post_store[0]?.Title} */}
-                      {/* {statu.contact_us?.post_store[0]["Data"]?.Title} */}
-                      {statu.contact_us?.post_store[0].Data?.[statu.contact_us?.post_store[0].Data?.Field_slug_title]}
+                      {/* {console.log(statu.lets_talk)} */}
+                      {/* {statu.lets_talk?.post_store[0]?.Title} */}
+                      {/* {statu.lets_talk?.post_store[0]["Data"]?.Title} */}
+                      {/* {statu.lets_talk?.post_store[0].Data?.[statu.lets_talk?.post_store[0].Data?.Field_slug_title]} */}
+                      {statu?.lets_talk?.page_name}
                     </h4>
                     <div className="inputgroup">
-                      {/* {statu.contact_us?.post_store[0]["Data"]?.Description} */}
-                      {statu.contact_us?.post_store[0].Data?.[statu.contact_us?.post_store[0].Data?.Field_slug_description]}
-
+                      {/* {statu.lets_talk?.post_store[0]["Data"]?.Description} */}
+                      {/* {statu.lets_talk?.post_store[0].Data?.[statu.lets_talk?.post_store[0].Data?.Field_slug_description]} */}
+                      {statu?.lets_talk?.page_description}
                     </div>
                   </div>
                 </div>
 
                 {/* <div className="row">
-                    {statu.contact_us?.post_store.map((item, index) => (
+                    {statu.lets_talk?.post_store.map((item, index) => (
                       <div className="col-md-6" key={index}>
                         <div className="inputgroup">
                           <label>{item.Data.Label}</label>
@@ -1531,7 +1533,7 @@ const renderSections = () => {
                     ))}
                   </div> */}
                 <div className="row">
-                  {statu.contact_us?.post_store.map((item, index) => (
+                  {statu.lets_talk?.post_store.map((item, index) => (
                     <div className="col-md-6" key={index}>
                       <div className="inputgroup">
                         {/* <label>{item.Data.Label}</label> */}
@@ -1569,7 +1571,7 @@ const renderSections = () => {
                 </div>
 
                 {/* <div className="row">
-                    {statu.contact_us?.post_store.map((item, index) => (
+                    {statu.lets_talk?.post_store.map((item, index) => (
                       <div className="col-md-6" key={index}>
                         <div className="inputgroup">
                           <label>{item.Label}</label>
@@ -1614,7 +1616,7 @@ const renderSections = () => {
                     className="btn w-auto sky-blue-btn-sendmeasge"
                   >
                     {/* Send my message */}
-                    {statu.contact_us?.button_name}
+                    {statu.lets_talk?.button_name}
                   </button>
                 </div>
               </div>
