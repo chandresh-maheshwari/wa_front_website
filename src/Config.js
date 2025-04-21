@@ -67,6 +67,6 @@ export default {
     userSiteDetails: "api/user_details_site_job_store",
     getUserSitedetail : "api/user_latest_site_and_job_get",
 
-
+    createsub:"api/checkout",
   },
 };
