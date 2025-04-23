@@ -23,35 +23,33 @@ const Navlayout = () => {
         : [];
 
     const renderContactUsButtons = () => {
-        // console.log(buttonData);
         return Object.entries(buttonData).map(([buttonNum, data]) => {
-            if (data.buttontitle === 'Login') {
+            if (data[data[`Field_Slug_buttontitle${buttonNum}`]] === 'Login') {
                 return null;
             }
 
-            if (data.buttontitle === 'Contact Us') {
+            if (data[data[`Field_Slug_buttontitle${buttonNum}`]] === 'Contact Us') {
                 return (
                     <button
                         key={buttonNum}
                         type="button"
                         className="btn btn-outline-light"
                         onClick={() => {
-                            if (data.buttonlink) {
-                                window.location.href = data.buttonlink;
+                            if (data[data[`Field_Slug_buttonlink${buttonNum}`]]) {
+                                window.location.href = data[data[`Field_Slug_buttonlink${buttonNum}`]];
                             }
                         }}
                         id={`button${buttonNum}`}
                         style={{
-                            backgroundColor: data.buttonbackgroundcolor || '',
-                            color: data.buttontextcolor || '',
+                            backgroundColor: data[data[`Field_Slug_buttonbackgroundcolor${buttonNum}`]] || '',
+                            color: data[data[`Field_Slug_buttontextcolor${buttonNum}`]] || '',
                             marginLeft: '10px'
                         }}
                     >
-                        {data.buttontitle}
+                        {data[data[`Field_Slug_buttontitle${buttonNum}`]]}
                     </button>
                 );
             }
-
             return null;
         });
     };
@@ -87,18 +85,20 @@ const Navlayout = () => {
                     const firstPost = postStore[0]['data'];
                     if (firstPost) {
                         const buttonData = {};
-
-                        // Extract button data from Contact_us_button and Login_button
-                        ['Contact_us_button', 'Login_button'].forEach(buttonKey => {
+                        
+                        ['ContactUsButton', 'LoginButton'].forEach(buttonKey => {
                             const buttonGroup = firstPost[buttonKey];
                             if (buttonGroup) {
                                 Object.entries(buttonGroup).forEach(([key, value]) => {
-                                    const buttonNum = key.match(/\d+/)[0]; // Extract the number from the key
-                                    if (!buttonData[buttonNum]) {
-                                        buttonData[buttonNum] = {};
+                                    // Extract the button number from the field slug
+                                    const buttonNum = key.match(/\d+/)?.[0];
+                                    if (buttonNum) {
+                                        if (!buttonData[buttonNum]) {
+                                            buttonData[buttonNum] = {};
+                                        }
+                                        // Use the original key directly
+                                        buttonData[buttonNum][key] = value;
                                     }
-                                    const propertyName = key.replace(buttonNum, '').toLowerCase();
-                                    buttonData[buttonNum][propertyName] = value;
                                 });
                             }
                         });
@@ -210,11 +210,12 @@ const Navlayout = () => {
 
     const renderLoginButton = () => {
         return Object.entries(buttonData).map(([buttonNum, data]) => {
-            if (isLoggedIn && data.buttontitle === 'Login') {
+            console.log("DATA=>");
+            console.log(data[data?.Field_Slug_buttontitle2]);
+            if (isLoggedIn && data[data?.Field_Slug_buttontitle2] === 'Login') {
                 return null;
             }
-    
-            if (data.buttontitle === 'Login') {
+            if (data[data?.Field_Slug_buttontitle2] === 'Login') {
                 return (
                     <button
                         key={buttonNum}
@@ -223,16 +224,15 @@ const Navlayout = () => {
                         onClick={toggleLoginPopup}
                         id={`button${buttonNum}`}
                         style={{
-                            backgroundColor: data.buttonbackgroundcolor || '',
-                            color: data.buttontextcolor || '',
+                            backgroundColor: data[data?.Field_Slug_buttonbackgroundcolor2] || '',
+                            color: data[data?.Field_Slug_buttontextcolor2] || '',
                             marginLeft: '10px'
                         }}
                     >
-                        {data.buttontitle}
+                        {data[data[`Field_Slug_buttontitle${buttonNum}`]]}
                     </button>
                 );
             }
-    
             return null;
         });
     };

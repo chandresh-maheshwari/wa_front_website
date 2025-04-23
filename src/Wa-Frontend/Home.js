@@ -43,7 +43,7 @@ const Home = () => {
   const [Transforming, setTransforming] = useState({});
   const [titles, setTitles] = useState([]);
   const [description, setDescription] = useState([]);
-  const [formData, setFormData] = useState({});
+  const [formdata, setFormdata] = useState({});
   const [errors, setErrors] = useState({});
   const [statu, setStatus] = useState({});
   const [userEmail, setUserEmail] = useState(null);
@@ -62,10 +62,10 @@ const Home = () => {
   }, [sliderRef, isPlaying]);
 
   useEffect(() => {
-    fetchData();
+    fetchdata();
   }, []);
   // console.log(statu)
-  const fetchData = async () => {
+  const fetchdata = async () => {
     try {
       const response = await Authapi.Alldynamicpageget();
       // console.log(response.results.lets_talk.ordering)
@@ -74,9 +74,9 @@ const Home = () => {
       if (response.status === true) {
         ls("data", response.results);
 
-        // console.log(response.results.transforming_waste_industry.post_store[0]['Data'].Pagesectiontitle1)
+        // console.log(response.results.transforming_waste_industry.post_store[0]['data'].Pagesectiontitle1)
         setStatus(response.results);
-        setHomesection(response.results.home_section.post_store[0]["Data"]);
+        setHomesection(response.results.home_section.post_store[0]["data"]);
         setTransforming(
           response.results.transforming_waste_industry.post_store
         );
@@ -101,16 +101,16 @@ const Home = () => {
         // Extract Titles OLD CODE START
         // const dynamicTitles = response.results.about_us.post_store.flatMap(
         //   (post) =>
-        //     Object.keys(post.Data) // Access 'Data' property directly
-        //       .filter((key) => key.startsWith("Field_slug_title")) // Filter by keys that start with 'Title'
-        //       .map((key) => post.Data[key]) // Get the corresponding value for each 'Title'
+        //     Object.keys(post.data) // Access 'data' property directly
+        //       .filter((key) => key.startsWith("Field_Slug_title")) // Filter by keys that start with 'Title'
+        //       .map((key) => post.data[key]) // Get the corresponding value for each 'Title'
         // );
         // Extract Titles OLD CODE END
 
         const dynamicTitles = response.results.about_us.post_store.flatMap(
           (post) => {
-            const data = post.Data;
-            const titleKey = data.Field_slug_title; // This gives 'Title'
+            const data = post.data;
+            const titleKey = data.Field_Slug_title; // This gives 'Title'
             return data[titleKey] ? [data[titleKey]] : [];
           }
         );
@@ -122,15 +122,15 @@ const Home = () => {
         // const dynamicDescriptions =
         //   response.results.about_us.post_store.flatMap(
         //     (post) =>
-        //       Object.keys(post.Data) // Access 'Data' property directly
+        //       Object.keys(post.data) // Access 'data' property directly
         //         .filter((key) => key.startsWith("Description")) // Filter by keys that start with 'Description'
-        //         .map((key) => post.Data[key]) // Get the corresponding value for each 'Description'
+        //         .map((key) => post.data[key]) // Get the corresponding value for each 'Description'
         //   );
         // Extract Descriptions OLD CODE END
         const dynamicDescriptions = response.results.about_us.post_store.flatMap(
           (post) => {
-            const data = post.Data;
-            const descriptionKey = data.Field_slug_description; // e.g., 'Description'
+            const data = post.data;
+            const descriptionKey = data.Field_Slug_description; // e.g., 'Description'
             return data[descriptionKey] ? [data[descriptionKey]] : [];
           }
         );
@@ -145,7 +145,7 @@ const Home = () => {
     }
   };
 
-  // const fetchData = async () => {
+  // const fetchdata = async () => {
   //     try {
   //         const response = await Authapi.Alldynamicpageget();
 
@@ -236,24 +236,24 @@ const Home = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const newErrors = {};
-    const formData = {};
+    const formdata = {};
 
     statu.lets_talk?.post_store.forEach((item, index) => {
       const value = document
         .querySelector(`[name="field${index}"]`)
         .value.trim();
-      formData[`field${index}`] = value;
+      formdata[`field${index}`] = value;
 
       if (!value) {
         newErrors[`label${index}`] = "This field is required";
-      } else if (item.Data.Type === "tel") {
-        // Fix: Use item.Data.Type
+      } else if (item.data.Type === "tel") {
+        // Fix: Use item.data.Type
         const cleanedValue = value.replace(/\D/g, "");
         if (cleanedValue.length !== 10) {
           newErrors[`label${index}`] = "Phone number must be 10 digits";
         }
-      } else if (item.Data.Type === "email") {
-        // Fix: Use item.Data.Type
+      } else if (item.data.Type === "email") {
+        // Fix: Use item.data.Type
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailPattern.test(value)) {
           newErrors[`label${index}`] = "Please enter a valid email address";
@@ -278,7 +278,7 @@ const Home = () => {
     });
 
     try {
-      const response = await Authapi.contactdatapost(formData);
+      const response = await Authapi.contactdatapost(formdata);
       if (response && response.status === true) {
         Swal.fire({
           icon: "success",
@@ -560,11 +560,11 @@ const Home = () => {
   };
 
 const handleLoginSuccess = (data) => {
-  // setUserData(data);
+  // setUserdata(data);
   setIsLoggedIn(true);
   // setIsDropdownOpen(true);
   localStorage.setItem("isLoggedIn", "true");
-  localStorage.setItem("userData", JSON.stringify(data));
+  localStorage.setItem("userdata", JSON.stringify(data));
   setShowLoginPopup(false);
   // console.log('Login successful:', data);
 };
@@ -572,17 +572,17 @@ const handleLoginSuccess = (data) => {
 const renderCards = () => {
   // console.log(statu.our_products?.post_store);
   return statu.our_products?.post_store.map((card, index) => {
-    // Destructure and extract relevant fields from the Data object
-    // const feesSection = card.Data.Fees_section || {};
-    // const infoSection1 = card.Data.Package_info || {};
-    // const serviceSection = card.Data.Package_services || {};
-    // const feessection = card.Data.Fees_section || {};
-    // const purchaseButtonSection = card.Data.Purchase_button || {};
-
-    const feesSection = card.Data.FeesSection || {};
-    const infoSection1 = card.Data.PackageInfo || {};
-    const serviceSection = card.Data.PackageServices || {};
-    const purchaseButtonSection = card.Data.PurchaseButton || {};
+    // Destructure and extract relevant fields from the data object
+    // const feesSection = card.data.Fees_section || {};
+    // const infoSection1 = card.data.Package_info || {};
+    // const serviceSection = card.data.Package_services || {};
+    // const feessection = card.data.Fees_section || {};
+    // const purchaseButtonSection = card.data.Purchase_button || {};
+// console.log(card);
+    const feesSection = card.data.FeesSection || {};
+    const infoSection1 = card.data.PackageInfo || {};
+    const serviceSection = card.data.PackageServices || {};
+    const purchaseButtonSection = card.data.PurchaseButton || {};
 
     // Check if there's any content to display (excluding the Field_slug values)
     const hasContent =
@@ -602,21 +602,21 @@ const renderCards = () => {
       // purchaseButtonSection.Buttontext;
 
       // console.log("TTTTTTTTTTTTTT");
-      // console.log(infoSection1?.[infoSection1?.Field_slug_information1]);
-      infoSection1?.[infoSection1?.Field_slug_information1] ||
-      infoSection1?.[infoSection1?.Field_slug_information2] ||
-      infoSection1?.[infoSection1?.Field_slug_information3] ||
-      infoSection1?.[infoSection1?.Field_slug_information4] ||
-      infoSection1?.[infoSection1?.Field_slug_information5] ||
-      serviceSection?.[serviceSection?.Field_slug_service1] ||
-      serviceSection?.[serviceSection?.Field_slug_service2] ||
-      feesSection?.[feesSection?.Field_slug_monthlyfee] ||
-      feesSection?.[feesSection?.Field_slug_monthlyfeecardtext1] ||
-      feesSection?.[feesSection?.Field_slug_monthlyfeecardtext2] ||
-      purchaseButtonSection?.[purchaseButtonSection?.Field_slug_amount] ||
-      purchaseButtonSection?.[purchaseButtonSection?.Field_slug_buttonbackgroundcolor] ||
-      purchaseButtonSection?.[purchaseButtonSection?.Field_slug_buttoncolor] ||
-      purchaseButtonSection?.[purchaseButtonSection?.Field_slug_buttontext];
+      // console.log(infoSection1?.[infoSection1?.Field_Slug_information1]);
+      infoSection1?.[infoSection1?.Field_Slug_information1] ||
+      infoSection1?.[infoSection1?.Field_Slug_information2] ||
+      infoSection1?.[infoSection1?.Field_Slug_information3] ||
+      infoSection1?.[infoSection1?.Field_Slug_information4] ||
+      infoSection1?.[infoSection1?.Field_Slug_information5] ||
+      serviceSection?.[serviceSection?.Field_Slug_service1] ||
+      serviceSection?.[serviceSection?.Field_Slug_service2] ||
+      feesSection?.[feesSection?.Field_Slug_monthlyfee] ||
+      feesSection?.[feesSection?.Field_Slug_monthlyfeecardtext1] ||
+      feesSection?.[feesSection?.Field_Slug_monthlyfeecardtext2] ||
+      purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_amount] ||
+      purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttonbackgroundcolor] ||
+      purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttoncolor] ||
+      purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttontext];
 
     if (!hasContent) return null;
 
@@ -627,10 +627,10 @@ const renderCards = () => {
           id="card-liner-card"
         ></div>
         <div className={`card${index + 1} card`}>
-          {/* {console.log(card['Data'].Modelsectionpackagesection)} */}
+          {/* {console.log(card['data'].Modelsectionpackagesection)} */}
           {/* <span className="medaltype">{card.Post_name}</span> */}
-          <span className="medaltype">{card?.Data?.[card?.Data?.Field_slug_packagename]}</span>
-          {/* <span className="medaltype">{card["Data"].Packagename}</span> */}
+          <span className="medaltype">{card?.data?.[card?.data?.Field_Slug_packagename]}</span>
+          {/* <span className="medaltype">{card["data"].Packagename}</span> */}
           <div className={`card${index + 1}-text`}>
             {/* Render Information Section */}
             {[
@@ -639,11 +639,11 @@ const renderCards = () => {
               // infoSection1.Information3,
               // infoSection1.Information4,
               // infoSection1.Information5,
-              infoSection1?.[infoSection1?.Field_slug_information1],
-              infoSection1?.[infoSection1?.Field_slug_information2],
-              infoSection1?.[infoSection1?.Field_slug_information3],
-              infoSection1?.[infoSection1?.Field_slug_information4],
-              infoSection1?.[infoSection1?.Field_slug_information5],
+              infoSection1?.[infoSection1?.Field_Slug_information1],
+              infoSection1?.[infoSection1?.Field_Slug_information2],
+              infoSection1?.[infoSection1?.Field_Slug_information3],
+              infoSection1?.[infoSection1?.Field_Slug_information4],
+              infoSection1?.[infoSection1?.Field_Slug_information5],
             ].map(
               (text, i) =>
                 text && (
@@ -722,7 +722,7 @@ const renderCards = () => {
 
           <div className={`card${index + 1}-sec-2-text`}>
             {/* Render Service Section */}
-            {serviceSection?.[serviceSection?.Field_slug_service1] && (
+            {serviceSection?.[serviceSection?.Field_Slug_service1] && (
               <p style={cardTextStyle}>
                 <img
                   src={plushicon}
@@ -730,10 +730,10 @@ const renderCards = () => {
                   alt="Add On Icon"
                   style={cardTextImageStyle}
                 />
-                {serviceSection?.[serviceSection?.Field_slug_service1]}
+                {serviceSection?.[serviceSection?.Field_Slug_service1]}
               </p>
             )}
-            {serviceSection?.[serviceSection?.Field_slug_service1] && (
+            {serviceSection?.[serviceSection?.Field_Slug_service1] && (
               <div className="card-liner-inside-2"></div>
             )}
 
@@ -744,14 +744,14 @@ const renderCards = () => {
                     {feesSection.Monthlyfee}
                   </p>
                 )} */}
-              {feesSection?.[feesSection?.Field_slug_monthlyfee] && (
+              {feesSection?.[feesSection?.Field_Slug_monthlyfee] && (
                 <p className={`card${index + 1}-sec-3-text1`}>
-                  {feesSection?.[feesSection?.Field_slug_monthlyfee]}
+                  {feesSection?.[feesSection?.Field_Slug_monthlyfee]}
                 </p>
               )}
               {[
-                feesSection?.[feesSection?.Field_slug_monthlyfeecardtext1],
-                feesSection?.[feesSection?.Field_slug_monthlyfeecardtext2]
+                feesSection?.[feesSection?.Field_Slug_monthlyfeecardtext1],
+                feesSection?.[feesSection?.Field_Slug_monthlyfeecardtext2]
               ].map(
                 (text, i) =>
                   text && (
@@ -768,7 +768,7 @@ const renderCards = () => {
               )}
 
               {/* Render Service 2 */}
-              {serviceSection?.[serviceSection?.Field_slug_service2] && (
+              {serviceSection?.[serviceSection?.Field_Slug_service2] && (
                 <p className={`card${index + 1}-sec-3-text`}>
                   <img
                     src={plushicon}
@@ -776,13 +776,13 @@ const renderCards = () => {
                     alt="Add On Icon"
                     style={cardTextImageStyle}
                   />
-                  {serviceSection?.[serviceSection?.Field_slug_service2]}
+                  {serviceSection?.[serviceSection?.Field_Slug_service2]}
                 </p>
               )}
             </div>
           </div>
           {/* style={{ position: 'absolute', bottom: '13px', left: '0', right: '0' }} */}
-          {purchaseButtonSection?.[purchaseButtonSection?.Field_slug_buttontext] && (
+          {purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttontext] && (
             // {purchaseButtonSection.Buttontext && (
             <div className="text-center purchase-btn">
               {/* <button
@@ -821,13 +821,13 @@ const renderCards = () => {
                 // {loading && <div className="loader"></div>}
                 onClick={() =>
                   handlePurchaseSubmit(
-                    card?.Data.Packagename,
-                    purchaseButtonSection?.[purchaseButtonSection?.Field_slug_amount],
-                    purchaseButtonSection?.[purchaseButtonSection?.Field_slug_stripid]
+                    card?.data.Packagename,
+                    purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_amount],
+                    purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_stripid]
                   )
                 }
               >
-                {`${purchaseButtonSection?.[purchaseButtonSection?.Field_slug_buttontext]} - $${purchaseButtonSection?.[purchaseButtonSection?.Field_slug_amount]}`}
+                {`${purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttontext]} - $${purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_amount]}`}
                 {/* {`${purchaseButtonSection.Buttontext} - $${purchaseButtonSection.Amount}`} */}
               </button>
             </div>
@@ -840,14 +840,14 @@ const renderCards = () => {
 
 const test = () => {
 
-  const homesectionImageKey = homesection?.Field_slug_homesectionimage;
-  const capitalizedKey = homesectionImageKey
-    ? homesectionImageKey.charAt(0).toUpperCase() + homesectionImageKey.slice(1)
-    : '';
+  const homesectionImageKey = homesection?.Field_Slug_homesectionimage;
+  // const capitalizedKey = homesectionImageKey
+  //   // ? homesectionImageKey.charAt(0).toUpperCase() + homesectionImageKey.slice(1)
+  //   // : '';
   // console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAA");
   // console.log(capitalizedKey);
 
-  const test1 = homesection?.[capitalizedKey];
+  const test1 = homesection?.[homesectionImageKey];
   return (
     <>
       <img
@@ -873,7 +873,7 @@ const renderSections = () => {
                 <div className="col-sm-2">
                   {/* {console.log(homesection.Tell_me_more_button_section?.Homesectionbuttontitle)} */}
                   {/* {(() => {
-                        const homesectionTitleKey = homesection?.Field_slug_homesectiontitle2;
+                        const homesectionTitleKey = homesection?.Field_Slug_homesectiontitle2;
                         const capitalizedKey = homesectionTitleKey
                           ? homesectionTitleKey.charAt(0).toUpperCase() + homesectionTitleKey.slice(1)
                           : ''; 
@@ -894,8 +894,8 @@ const renderSections = () => {
                         {/* {homesection?.Homesectiontitle} 
                         {(() => {
                           // console.log("DTATATATATATTTATA");
-                          console.log(homesection?.Field_slug_homesectiontitle1);
-                          const homesectionTitleKey = homesection?.Field_slug_homesectiontitle;
+                          console.log(homesection?.Field_Slug_homesectiontitle1);
+                          const homesectionTitleKey = homesection?.Field_Slug_homesectiontitle;
                           // console.log(homesectionTitleKey);
 
                           // const capitalizedKey = homesectionTitleKey
@@ -909,11 +909,11 @@ const renderSections = () => {
 
                     <h4>
                       {/* {(() => {
-                          console.log(homesection?.Field_slug_homesectiontitle1);
-                          const homesectionTitleKey = homesection?.Field_slug_homesectiontitle;                         
+                          console.log(homesection?.Field_Slug_homesectiontitle1);
+                          const homesectionTitleKey = homesection?.Field_Slug_homesectiontitle;                         
                         })()}
                         {homesection?.[homesectionTitleKey]} */}
-                      {homesection?.[homesection?.Field_slug_homesectiontitle]}
+                      {homesection?.[homesection?.Field_Slug_homesectiontitle]}
 
                     </h4>
                   </div>
@@ -926,7 +926,7 @@ const renderSections = () => {
                     }}
                   >
                     {/* {(() => {
-                        const homesectionDescriptionKey = homesection?.Field_slug_homesectiondescription;
+                        const homesectionDescriptionKey = homesection?.Field_Slug_homesectiondescription;
                         const capitalizedKey = homesectionDescriptionKey
                           ? homesectionDescriptionKey.charAt(0).toUpperCase() + homesectionDescriptionKey.slice(1)
                           : '';
@@ -934,25 +934,25 @@ const renderSections = () => {
                       })()} */}
 
                     {/* {homesection?.Homesectiondescription} */}
-                    {homesection?.[homesection?.Field_slug_homesectiondescription]}
+                    {homesection?.[homesection?.Field_Slug_homesectiondescription]}
                   </p>
                   <button
                     type="button"
                     className="btn"
                     id="tellmemore"
                     style={{
-                      backgroundColor: homesection?.TellMeMoreButtonSection?.[homesection?.TellMeMoreButtonSection?.Field_slug_homesectionbuttonbackgroundcolor],
-                      color: homesection?.TellMeMoreButtonSection?.[homesection?.TellMeMoreButtonSection?.Field_slug_homesectionbuttontextcolor],
+                      backgroundColor: homesection?.TellMeMoreButtonSection?.[homesection?.TellMeMoreButtonSection?.Field_Slug_homesectionbuttonbackgroundcolor],
+                      color: homesection?.TellMeMoreButtonSection?.[homesection?.TellMeMoreButtonSection?.Field_Slug_homesectionbuttontextcolor],
                     }}
                   >
                     {/* {console.log(homesection.TellMeMoreButtonSection)} */}
-                    {homesection?.TellMeMoreButtonSection?.[homesection?.TellMeMoreButtonSection?.Field_slug_homesectionbuttontitle]}
+                    {homesection?.TellMeMoreButtonSection?.[homesection?.TellMeMoreButtonSection?.Field_Slug_homesectionbuttontitle]}
                   </button>
 
                   {/* {(() => {
                         console.log("DTATATATATATTTATA");
-                        console.log(homesection?.Field_slug_homesectiontitle1);
-                        const homesectionTitleKey = homesection?.Field_slug_homesectiontitle;
+                        console.log(homesection?.Field_Slug_homesectiontitle1);
+                        const homesectionTitleKey = homesection?.Field_Slug_homesectiontitle;
                         console.log(homesectionTitleKey);
 
                         const capitalizedKey = homesectionTitleKey
@@ -992,50 +992,50 @@ const renderSections = () => {
           </div>
           <div className="container">
             <div className="row p-5 justify-content-center">
-              {/* {console.log(Transforming[0]?.Data[Transforming[0]?.Data?.Field_slug_pagesectiondescription])} */}
+              {/* {console.log(Transforming[0]?.data[Transforming[0]?.data?.Field_Slug_pagesectiondescription])} */}
 
-              {/* {console.log(Transforming[0]?.Data?.Field_slug_pagesectiondescription)} */}
-              {Transforming[0]?.Data && !Transforming[1]?.Data && (
+              {/* {console.log(Transforming[0]?.data?.Field_Slug_pagesectiondescription)} */}
+              {Transforming[0]?.data && !Transforming[1]?.data && (
                 <div className="col-md-8 text-center">
                   <h5 className="for-waste centered-text">
-                    {/* {Transforming[0]?.Data?.Pagesectiontitle1} <br />
-                      <b>{Transforming[0]?.Data?.Pagesectiontitle2}</b> */}
-                    {Transforming[0]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiontitle1]} <br />
-                    <b>{Transforming[0]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiontitle2]}</b>
+                    {/* {Transforming[0]?.data?.Pagesectiontitle1} <br />
+                      <b>{Transforming[0]?.data?.Pagesectiontitle2}</b> */}
+                    {Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle1]} <br />
+                    <b>{Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle2]}</b>
                   </h5>
                   <p className="transfotextdes1 centered-text">
-                    {/* {Transforming[0]?.Data?.Pagesectiondescription} */}
-                    {Transforming[0]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiondescription]}
+                    {/* {Transforming[0]?.data?.Pagesectiondescription} */}
+                    {Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiondescription]}
                   </p>
                 </div>
               )}
-              {Transforming[1]?.Data && !Transforming[0]?.Data && (
+              {Transforming[1]?.data && !Transforming[0]?.data && (
                 <div className="col-md-8 text-center">
                   <h5 className="for-waste">
-                    {/* {Transforming[1]?.Data?.Pagesectiontitle1} <br />
-                      <b>{Transforming[1]?.Data?.Pagesectiontitle2}</b> */}
-                    {Transforming[1]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiontitle1]} <br />
-                    <b>{Transforming[1]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiontitle2]}</b>
+                    {/* {Transforming[1]?.data?.Pagesectiontitle1} <br />
+                      <b>{Transforming[1]?.data?.Pagesectiontitle2}</b> */}
+                    {Transforming[1]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle1]} <br />
+                    <b>{Transforming[1]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle2]}</b>
                   </h5>
                   <p className="transfotextdes2 centered-text">
-                    {/* {Transforming[1]?.Data?.Pagesectiondescription} */}
-                    {Transforming[1]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiondescription]}
+                    {/* {Transforming[1]?.data?.Pagesectiondescription} */}
+                    {Transforming[1]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiondescription]}
 
                   </p>
                 </div>
               )}
-              {Transforming[0]?.Data && Transforming[1]?.Data && (
+              {Transforming[0]?.data && Transforming[1]?.data && (
                 <>
                   <div className="col-md-5">
                     <h5 className="transfotext1 for-waste">
-                      {/* {Transforming[0]?.Data?.Pagesectiontitle1} <br />
-                        <b>{Transforming[0]?.Data?.Pagesectiontitle2}</b> */}
-                      {Transforming[0]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiontitle1]} <br />
-                      <b>{Transforming[0]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiontitle2]}</b>
+                      {/* {Transforming[0]?.data?.Pagesectiontitle1} <br />
+                        <b>{Transforming[0]?.data?.Pagesectiontitle2}</b> */}
+                      {Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle1]} <br />
+                      <b>{Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle2]}</b>
                     </h5>
                     <p className="transfotextdes1">
-                      {/* {Transforming[0]?.Data?.Pagesectiondescription} */}
-                      {Transforming[0]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiondescription]}
+                      {/* {Transforming[0]?.data?.Pagesectiondescription} */}
+                      {Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiondescription]}
 
                     </p>
                   </div>
@@ -1049,14 +1049,14 @@ const renderSections = () => {
                   </div>
                   <div className="col-md-5">
                     <h5 className="transfotext2 for-waste">
-                      {/* {Transforming[1]?.Data?.Pagesectiontitle1} <br />
-                        <b>{Transforming[1]?.Data?.Pagesectiontitle2}</b> */}
-                      {Transforming[1]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiontitle1]} <br />
-                      <b>{Transforming[1]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiontitle2]}</b>
+                      {/* {Transforming[1]?.data?.Pagesectiontitle1} <br />
+                        <b>{Transforming[1]?.data?.Pagesectiontitle2}</b> */}
+                      {Transforming[1]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle1]} <br />
+                      <b>{Transforming[1]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle2]}</b>
                     </h5>
                     <p className="transfotextdes2">
-                      {/* {Transforming[1]?.Data?.Pagesectiondescription} */}
-                      {Transforming[1]?.Data?.[Transforming[0]?.Data?.Field_slug_pagesectiondescription]}
+                      {/* {Transforming[1]?.data?.Pagesectiondescription} */}
+                      {Transforming[1]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiondescription]}
 
                     </p>
                   </div>
@@ -1076,15 +1076,15 @@ const renderSections = () => {
             <div className="row">
               <div className="col-md-12">
                 <div className="sec-3-text">
-                  {/* {console.log(statu.quote_section_1?.post_store[0].Data?.[statu.quote_section_1?.post_store[0].Data?.Field_slug_quotesectionimage])} */}
+                  {/* {console.log(statu.quote_section_1?.post_store[0].data?.[statu.quote_section_1?.post_store[0].data?.Field_Slug_quotesectionimage])} */}
                   <img
                     // src={
                     //   statu.qute_section_1?.post_store[0]?.Qutesectionimage
                     // }
                     src={
-                      // statu.quote_section_1?.post_store[0]["Data"]
+                      // statu.quote_section_1?.post_store[0]["data"]
                       //   .Quotesectionimage
-                      statu.quote_section_1?.post_store[0].Data?.[statu.quote_section_1?.post_store[0].Data?.Field_slug_quotesectionimage]
+                      statu.quote_section_1?.post_store[0].data?.[statu.quote_section_1?.post_store[0].data?.Field_Slug_quotesectionimage]
                     }
                     className="quoteimage1"
                     alt="quoteimage1"
@@ -1093,7 +1093,7 @@ const renderSections = () => {
                 <div className="sec-3-text2">
                   <p className="text-light">
                     {
-                      statu.quote_section_1?.post_store[0].Data?.[statu.quote_section_1?.post_store[0].Data?.Field_slug_quotesectiontitle]
+                      statu.quote_section_1?.post_store[0].data?.[statu.quote_section_1?.post_store[0].data?.Field_Slug_quotesectiontitle]
                     }{" "}
                     <br />
                     <span
@@ -1101,9 +1101,9 @@ const renderSections = () => {
                       style={{ fontSize: "medium" }}
                     >
                       {
-                        // statu.quote_section_1?.post_store[0]["Data"]
+                        // statu.quote_section_1?.post_store[0]["data"]
                         //   ?.Quotesectiondescription
-                        statu.quote_section_1?.post_store[0].Data?.[statu.quote_section_1?.post_store[0].Data?.Field_slug_quotesectiondescription]
+                        statu.quote_section_1?.post_store[0].data?.[statu.quote_section_1?.post_store[0].data?.Field_Slug_quotesectiondescription]
                       }
                     </span>
                   </p>
@@ -1125,9 +1125,9 @@ const renderSections = () => {
                 <div className="sec-3-text">
                   <img
                     src={
-                      // statu.quote_section_2?.post_store[0]["Data"]
+                      // statu.quote_section_2?.post_store[0]["data"]
                       //   ?.Quotesectionimage
-                      statu.quote_section_2?.post_store[0].Data?.[statu.quote_section_2?.post_store[0].Data?.Field_slug_quotesectionimage]
+                      statu.quote_section_2?.post_store[0].data?.[statu.quote_section_2?.post_store[0].data?.Field_Slug_quotesectionimage]
 
                     }
                     className="quoteimage1"
@@ -1137,9 +1137,9 @@ const renderSections = () => {
                 <div className="sec-3-text2">
                   <p className="text-light">
                     {
-                      // statu.quote_section_2?.post_store[0]["Data"]
+                      // statu.quote_section_2?.post_store[0]["data"]
                       //   ?.Quotesectiontitle
-                      statu.quote_section_2?.post_store[0].Data?.[statu.quote_section_2?.post_store[0].Data?.Field_slug_quotesectiontitle]
+                      statu.quote_section_2?.post_store[0].data?.[statu.quote_section_2?.post_store[0].data?.Field_Slug_quotesectiontitle]
 
                     }{" "}
                     <br />
@@ -1148,9 +1148,9 @@ const renderSections = () => {
                       style={{ fontSize: "medium" }}
                     >
                       {
-                        // statu.quote_section_2?.post_store[0]["Data"]
+                        // statu.quote_section_2?.post_store[0]["data"]
                         //   ?.Quotesectiondescription
-                        statu.quote_section_2?.post_store[0].Data?.[statu.quote_section_2?.post_store[0].Data?.Field_slug_quotesectiondescription]
+                        statu.quote_section_2?.post_store[0].data?.[statu.quote_section_2?.post_store[0].data?.Field_Slug_quotesectiondescription]
 
                       }
                     </span>
@@ -1195,82 +1195,83 @@ const renderSections = () => {
         </section>
       ),
     },
-    {
-      condition: statu.why_choose_wa?.status === 1,
-      ordering: statu.why_choose_wa?.ordering || 0,
-      content: (
-        <section className="why_choose_section">
-          <div className="container p-5">
-            <div className="row">
-              <div className="col-md-12">
-                <div className="transfo">
-                  <h5 className="text-center">
-                    {statu.why_choose_wa?.page_description}
-                  </h5>
-                </div>
-              </div>
-            </div>
-          </div>
+    // {
+    //   condition: statu.why_choose_wa?.status === 1,
+    //   ordering: statu.why_choose_wa?.ordering || 0,
+    //   content: (
+    //     <section className="why_choose_section">
+    //       <div className="container p-5">
+    //         <div className="row">
+    //           <div className="col-md-12">
+    //             <div className="transfo">
+    //               <h5 className="text-center">
+    //                 {statu.why_choose_wa?.page_description}
+    //               </h5>
+    //             </div>
+    //           </div>
+    //         </div>
+    //       </div>
 
-          <div className="container type-2">
-            <div className="row justify-content-center">
-              {statu.why_choose_wa?.post_store.map((item, index) => {
-                const postCount = statu.why_choose_wa?.post_store.length;
-                const isSinglePost = postCount === 1;
-                const isTwoPosts = postCount === 2;
-                const isThreePosts = postCount === 3;
+    //       <div className="container type-2">
+    //         <div className="row justify-content-center">
+    //           {statu.why_choose_wa?.post_store.map((item, index) => {
+    //             const postCount = statu.why_choose_wa?.post_store.length;
+    //             const isSinglePost = postCount === 1;
+    //             const isTwoPosts = postCount === 2;
+    //             const isThreePosts = postCount === 3;
 
-                return (
-                  <div
-                    className={`col ${isSinglePost ? "col-12" : "col-md-6 col-sm-6 col-xs-3"
-                      } 
-                                  ${isSinglePost ? "center-text no-border" : ""
-                      } 
-                                  ${isTwoPosts ? "no-bottom-border" : ""} 
-                                  ${isThreePosts ? "no-top-right-border" : ""} 
-                                  ${isThreePosts && index === 2 ? "mx-auto" : ""
-                      } 
-                                  ${index % 2 === 0 ? "text-end" : "text-start"
-                      }`}
-                    key={item.id}
-                  >
-                    <h5
-                      className={`for-waste ${isTwoPosts ? "margin-top-5" : ""
-                        } ${isSinglePost ? "center-text" : ""}`}
-                    >
-                      {/* {console.log(item.Data[item.Data.Field_slug_title])} */}
-                      {/* {item["Data"].Title} */}
-                      {item.Data[item.Data.Field_slug_title]}
-                    </h5>
-                    <p
-                      style={{ marginTop: "25px" }}
-                      className={isSinglePost ? "center-text" : ""}
-                    >
-                      {/* {item["Data"].Description.split("\r\n").map(
-                          (line, i) => (
-                            <React.Fragment key={i}>
-                              {line}
-                              <br />
-                            </React.Fragment>
-                          )
-                        )} */}
-                      {item.Data[item.Data.Field_slug_description].split("\r\n").map(
-                        (line, i) => (
-                          <React.Fragment key={i}>
-                            {line}
-                            <br />
-                          </React.Fragment>
-                        )
-                      )}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-      ),
-    },
+    //             return (
+    //               <div
+    //                 className={`col ${isSinglePost ? "col-12" : "col-md-6 col-sm-6 col-xs-3"
+    //                   } 
+    //                               ${isSinglePost ? "center-text no-border" : ""
+    //                   } 
+    //                               ${isTwoPosts ? "no-bottom-border" : ""} 
+    //                               ${isThreePosts ? "no-top-right-border" : ""} 
+    //                               ${isThreePosts && index === 2 ? "mx-auto" : ""
+    //                   } 
+    //                               ${index % 2 === 0 ? "text-end" : "text-start"
+    //                   }`}
+    //                 key={item.id}
+    //               >
+    //                 <h5
+    //                   className={`for-waste ${isTwoPosts ? "margin-top-5" : ""
+    //                     } ${isSinglePost ? "center-text" : ""}`}
+    //                 >
+    //                   {/* {console.log(item.data[item.data.Field_Slug_title])} */}
+    //                   {/* {item["data"].Title} */}
+    //                   {item.data[item.data.Field_Slug_title]}
+    //                 </h5>
+    //                 <p
+    //                   style={{ marginTop: "25px" }}
+    //                   className={isSinglePost ? "center-text" : ""}
+    //                 >
+    //                   {/* {item["data"].Description.split("\r\n").map(
+    //                       (line, i) => (
+    //                         <React.Fragment key={i}>
+    //                           {line}
+    //                           <br />
+    //                         </React.Fragment>
+    //                       )
+    //                     )} */}
+    //                     {console.log(item)}
+    //                   {item.data[item.data.Field_Slug_description].split("\r\n").map(
+    //                     (line, i) => (
+    //                       <React.Fragment key={i}>
+    //                         {line}
+    //                         <br />
+    //                       </React.Fragment>
+    //                     )
+    //                   )}
+    //                 </p>
+    //               </div>
+    //             );
+    //           })}
+    //         </div>
+    //       </div>
+    //     </section>
+    //   ),
+    // },
     {
       condition: statu.who_use_wa?.status === 1,
       ordering: statu.who_use_wa?.ordering || 0,
@@ -1280,9 +1281,9 @@ const renderSections = () => {
             <div className="sliderconatainer">
               <h2 className="font-weight-light slider-heading text-center">
                 {statu.who_use_wa?.page_description}
-                {/* {console.log(statu.why_section?.post_store[0]['Data'])} */}
+                {/* {console.log(statu.why_section?.post_store[0]['data'])} */}
                 {/* {console.log(statu.why_section?.post_store)} */}
-                {/* {console.log(statu.why_section?.post_store[0]['Data'])} */}
+                {/* {console.log(statu.why_section?.post_store[0]['data'])} */}
               </h2>
               <div className="slider-container">
                 {isPlaying ? "" : ""}
@@ -1293,12 +1294,12 @@ const renderSections = () => {
                   >
                     {statu.who_use_wa?.post_store.map((item, index) => (
                       <div key={item.id}>
-                        {/* {console.log(item['Data'].Image)} */}
-                        <Link to={item?.Data?.[item?.Data?.Field_slug_link]}>
-                          {/* <Link to={item["Data"].Link}> */}
+                        {/* {console.log(item['data'].Image)} */}
+                        <Link to={item?.data?.[item?.data?.Field_Slug_link]}>
+                          {/* <Link to={item["data"].Link}> */}
                           <img
-                            src={item?.Data?.[item?.Data?.Field_slug_image]}
-                            // src={item["Data"].Image}
+                            src={item?.data?.[item?.data?.Field_Slug_image]}
+                            // src={item["data"].Image}
                             className="sliderimages"
                             alt={`Logo ${index + 1}`}
                           />
@@ -1332,9 +1333,9 @@ const renderSections = () => {
         <section className="tellmemore">
           <div className="container">
             <h4 className="tellmemoretitle">
-              {/* {console.log(statu.tell_me_more_section.post_store[0]['Data'].Button_setting.Buttontext)} */}
-              {/* {statu.tell_me_more_section?.post_store[0]["Data"]?.Title} */}
-              {statu.tell_me_more_section?.post_store[0].Data?.[statu.tell_me_more_section?.post_store[0].Data?.Field_slug_title]}
+              {/* {console.log(statu.tell_me_more_section.post_store[0]['data'].Button_setting.Buttontext)} */}
+              {/* {statu.tell_me_more_section?.post_store[0]["data"]?.Title} */}
+              {statu.tell_me_more_section?.post_store[0].data?.[statu.tell_me_more_section?.post_store[0].data?.Field_Slug_title]}
 
             </h4>
             <div className="row">
@@ -1344,10 +1345,10 @@ const renderSections = () => {
                     type="submit"
                     className="btn w-auto sky-blue-btn-tellmemore"
                     style={{
-                      backgroundColor: statu.tell_me_more_section?.post_store[0]['Data']?.Buttonbackgroundcolor || '#40bedd',
-                      color: statu.tell_me_more_section?.post_store[0]['Data']?.Buttontextcolor || '#ffffff',
+                      backgroundColor: statu.tell_me_more_section?.post_store[0]['data']?.Buttonbackgroundcolor || '#40bedd',
+                      color: statu.tell_me_more_section?.post_store[0]['data']?.Buttontextcolor || '#ffffff',
                     }}>
-                    {statu.tell_me_more_section?.post_store[0]['Data']?.Buttontext}
+                    {statu.tell_me_more_section?.post_store[0]['data']?.Buttontext}
                   </button> */}
                 {/* Old Code Start */}
 
@@ -1357,15 +1358,15 @@ const renderSections = () => {
                     className="btn w-auto sky-blue-btn-tellmemore"
                     style={{
                       backgroundColor:
-                        statu.tell_me_more_section?.post_store[0]["Data"]
+                        statu.tell_me_more_section?.post_store[0]["data"]
                           ?.Button_setting.Buttonbackgroundcolor || "#40bedd",
                       color:
-                        statu.tell_me_more_section?.post_store[0]["Data"]
+                        statu.tell_me_more_section?.post_store[0]["data"]
                           ?.Button_setting.Buttontextcolor || "#ffffff",
                     }}
                   >
                     {
-                      statu.tell_me_more_section?.post_store[0]["Data"]
+                      statu.tell_me_more_section?.post_store[0]["data"]
                         ?.Button_setting.Buttontext
                     }
                   </button> */}
@@ -1375,21 +1376,21 @@ const renderSections = () => {
                     className="btn w-auto sky-blue-btn-tellmemore"
                     style={{
                       backgroundColor:
-                        // statu.tell_me_more_section?.post_store[0]["Data"]
+                        // statu.tell_me_more_section?.post_store[0]["data"]
                         //   ?.Button_setting.Buttonbackgroundcolor || "#40bedd",
-                   statu.tell_me_more_section?.post_store[0].Data?.ButtonSetting?.[statu.tell_me_more_section?.post_store[0].Data?.ButtonSetting?.Field_slug_buttonbackgroundcolor]
+                   statu.tell_me_more_section?.post_store[0].data?.ButtonSetting?.[statu.tell_me_more_section?.post_store[0].data?.ButtonSetting?.Field_Slug_buttonbackgroundcolor]
                    || "#40bedd",
                       color:
-                        // statu.tell_me_more_section?.post_store[0]["Data"]
+                        // statu.tell_me_more_section?.post_store[0]["data"]
                         // ?.Button_setting.Buttontextcolor || "#ffffff",
-                        statu.tell_me_more_section?.post_store[0].Data?.ButtonSetting?.[statu.tell_me_more_section?.post_store[0].Data?.ButtonSetting?.Field_slug_buttontextcolor]
+                        statu.tell_me_more_section?.post_store[0].data?.ButtonSetting?.[statu.tell_me_more_section?.post_store[0].data?.ButtonSetting?.Field_Slug_buttontextcolor]
                         || "#ffffff",
                     }}
                   >
                     {
-                      // statu.tell_me_more_section?.post_store[0]["Data"]
+                      // statu.tell_me_more_section?.post_store[0]["data"]
                       //   ?.Button_setting.Buttontext
-                      statu.tell_me_more_section?.post_store[0].Data?.ButtonSetting?.[statu.tell_me_more_section?.post_store[0].Data?.ButtonSetting?.Field_slug_buttontext]
+                      statu.tell_me_more_section?.post_store[0].data?.ButtonSetting?.[statu.tell_me_more_section?.post_store[0].data?.ButtonSetting?.Field_Slug_buttontext]
 
                     }
                   </button> */}
@@ -1465,7 +1466,7 @@ const renderSections = () => {
                   className="parallax-img"
                   style={{
                     backgroundImage: `url(${statu.page_image_section?.image})`, // GET IMAGE FORM PAGE
-                    // backgroundImage: `url(${statu.page_image_section?.post_store?.[0]?.['Data'].Image})`, // GET IMAGE FROM POST
+                    // backgroundImage: `url(${statu.page_image_section?.post_store?.[0]?.['data'].Image})`, // GET IMAGE FROM POST
                   }}
                 >
                   {/* {console.log("Image URL:", statu.page_image_section?.image)} */}
@@ -1489,13 +1490,13 @@ const renderSections = () => {
                     <h4 className="letstallktitle">
                       {/* {console.log(statu.lets_talk)} */}
                       {/* {statu.lets_talk?.post_store[0]?.Title} */}
-                      {/* {statu.lets_talk?.post_store[0]["Data"]?.Title} */}
-                      {/* {statu.lets_talk?.post_store[0].Data?.[statu.lets_talk?.post_store[0].Data?.Field_slug_title]} */}
+                      {/* {statu.lets_talk?.post_store[0]["data"]?.Title} */}
+                      {/* {statu.lets_talk?.post_store[0].data?.[statu.lets_talk?.post_store[0].data?.Field_Slug_title]} */}
                       {statu?.lets_talk?.page_name}
                     </h4>
                     <div className="inputgroup">
-                      {/* {statu.lets_talk?.post_store[0]["Data"]?.Description} */}
-                      {/* {statu.lets_talk?.post_store[0].Data?.[statu.lets_talk?.post_store[0].Data?.Field_slug_description]} */}
+                      {/* {statu.lets_talk?.post_store[0]["data"]?.Description} */}
+                      {/* {statu.lets_talk?.post_store[0].data?.[statu.lets_talk?.post_store[0].data?.Field_Slug_description]} */}
                       {statu?.lets_talk?.page_description}
                     </div>
                   </div>
@@ -1505,9 +1506,9 @@ const renderSections = () => {
                     {statu.lets_talk?.post_store.map((item, index) => (
                       <div className="col-md-6" key={index}>
                         <div className="inputgroup">
-                          <label>{item.Data.Label}</label>
+                          <label>{item.data.Label}</label>
 
-                          {item.Data.Label === "Tell us what you need" ? (
+                          {item.data.Label === "Tell us what you need" ? (
                             <textarea
                               className="form-control"
                               name={`field${index}`}
@@ -1518,7 +1519,7 @@ const renderSections = () => {
                             <input
                               className="form-control"
                               name={`field${index}`}
-                              type={item.Data.Type} // ✅ Keep the original input type
+                              type={item.data.Type} // ✅ Keep the original input type
                               onChange={(e) => handleInputChange(e, index)}
                             />
                           )}
@@ -1536,14 +1537,14 @@ const renderSections = () => {
                   {statu.lets_talk?.post_store.map((item, index) => (
                     <div className="col-md-6" key={index}>
                       <div className="inputgroup">
-                        {/* <label>{item.Data.Label}</label> */}
-                        <label>{item.Data?.[item.Data?.Field_slug_label]}</label>
+                        {/* <label>{item.data.Label}</label> */}
+                        <label>{item.data?.[item.data?.Field_Slug_label]}</label>
 
-                        {/* {console.log(item.Data.Label, item.Data.Type)} */}
+                        {/* {console.log(item.data.Label, item.data.Type)} */}
 
-                        {/* {item.Data.Label === "Tell us what you need" ? ( */}
-                        {/* {console.log(item.Data?.[item.Data?.Field_slug_type])} */}
-                        {item.Data?.[item.Data?.Field_slug_type] === "Textarea" ? (
+                        {/* {item.data.Label === "Tell us what you need" ? ( */}
+                        {/* {console.log(item.data?.[item.data?.Field_Slug_type])} */}
+                        {item.data?.[item.data?.Field_Slug_type] === "Textarea" ? (
 
                           <textarea
                             className="form-control"
@@ -1555,7 +1556,7 @@ const renderSections = () => {
                           <input
                             className="form-control"
                             name={`field${index}`}
-                            type={item.Data.Type}
+                            type={item.data.Type}
                             onChange={(e) => handleInputChange(e, index)}
                           />
                         )}
