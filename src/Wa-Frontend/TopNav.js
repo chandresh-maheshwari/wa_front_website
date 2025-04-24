@@ -43,6 +43,20 @@ const TopNav = () => {
 
                                     <Link to={topbardata?.TopBarLogoSection?.[topbardata?.TopBarLogoSection?.Field_Slug_logolink]}>
                                     <img src={topbardata?.TopBarLogoSection?.[topbardata?.TopBarLogoSection?.Field_Slug_logoimage]} className="wa-logo" alt="wa-logo" /></Link>
+
+                                    {/* <a
+                                        href={
+                                            topbardata?.TopBarLogoSection?.[topbardata?.TopBarLogoSection?.Field_Slug_logolink]?.startsWith('http')
+                                                ? topbardata?.TopBarLogoSection?.[topbardata?.TopBarLogoSection?.Field_Slug_logolink]
+                                                : `https://${topbardata?.TopBarLogoSection?.[topbardata?.TopBarLogoSection?.Field_Slug_logolink]}`
+                                        }
+                                    >
+                                        <img
+                                            src={topbardata?.TopBarLogoSection?.[topbardata?.TopBarLogoSection?.Field_Slug_logoimage]}
+                                            className="wa-logo"
+                                            alt="wa-logo"
+                                        />
+                                    </a> */}
                                 </div>
                             </div>
                             <div className='col-sm-6'>
@@ -50,7 +64,7 @@ const TopNav = () => {
                                     <div className='topcontent'>
                                         {/* <p className='partoflife'> {topbardata.Mts_group_section?.Title}</p> 
                                         <p className='mtsgroup' style={{ color: "rgb(173, 173, 173);" }}>{topbardata.Mts_group_section?.Description}</p> */}
-                                        <p className='partoflife'> {topbardata?.MTSGroupSection?.[topbardata?.MTSGroupSection?.Field_Slug_title]}</p> 
+                                        <p className='partoflife'> {topbardata?.MTSGroupSection?.[topbardata?.MTSGroupSection?.Field_Slug_title]}</p>
                                         <p className='mtsgroup' style={{ color: "rgb(173, 173, 173);" }}>{topbardata?.MTSGroupSection?.[topbardata?.MTSGroupSection?.Field_Slug_description]}</p>
                                     </div>
                                 </div>

@@ -68,7 +68,7 @@ const Home = () => {
   const fetchdata = async () => {
     try {
       const response = await Authapi.Alldynamicpageget();
-      // console.log(response.results.lets_talk.ordering)
+      // console.log(response.results.contact_us.ordering)
 
       // console.log(response.results)
       if (response.status === true) {
@@ -238,7 +238,7 @@ const Home = () => {
     const newErrors = {};
     const formdata = {};
 
-    statu.lets_talk?.post_store.forEach((item, index) => {
+    statu.contact_us?.post_store.forEach((item, index) => {
       const value = document
         .querySelector(`[name="field${index}"]`)
         .value.trim();
@@ -944,6 +944,13 @@ const renderSections = () => {
                       backgroundColor: homesection?.TellMeMoreButtonSection?.[homesection?.TellMeMoreButtonSection?.Field_Slug_homesectionbuttonbackgroundcolor],
                       color: homesection?.TellMeMoreButtonSection?.[homesection?.TellMeMoreButtonSection?.Field_Slug_homesectionbuttontextcolor],
                     }}
+                    onClick={() => {
+                      const rawUrl = statu?.home_section?.button_link;
+
+                      // const rawUrl = statu.who_use_wa?.button_link;
+                      // const formattedUrl = rawUrl?.startsWith('http') ? rawUrl : `https://${rawUrl}`;
+                      window.location.href = rawUrl;
+                    }}
                   >
                     {/* {console.log(homesection.TellMeMoreButtonSection)} */}
                     {homesection?.TellMeMoreButtonSection?.[homesection?.TellMeMoreButtonSection?.Field_Slug_homesectionbuttontitle]}
@@ -1172,25 +1179,43 @@ const renderSections = () => {
               <h4>{statu.our_products?.page_description}</h4>
             </div>
             <div className="row">{renderCards()}</div>
-            {statu.lets_talk?.page_status === 1 && (
+            {/* {statu.contact_us?.page_status === 1 && (
               <div className="row mt-5">
                 <div className="col-12">
                   {/* <button
                       type="button"
                       onClick={() => navigate("/menu/contact-us")}
                       className="btn sky-blue-btn"
-                    > */}
+                    > 
                   <button
                     type="button"
-                    onClick={() => navigate(`${statu.lets_talk?.button_link}`)}
+                    // onClick={() => navigate(`${statu.contact_us?.button_link}`)}
                     className="btn sky-blue-btn"
+                    onClick={() => {
+                      const rawUrl = statu.who_use_wa?.button_link;
+                      // const formattedUrl = rawUrl?.startsWith('http') ? rawUrl : `https://${rawUrl}`;
+                      window.location.href = rawUrl;
+                    }}
                   >
-                    {statu.lets_talk?.button_name}
-                    {/* Contact Us */}
+                    {statu.contact_us?.button_name}
+                    {/* Contact Us *
                   </button>
                 </div>
               </div>
-            )}
+            )} */}
+            {/* <button
+                    type="button"
+                    // onClick={() => navigate(`${statu.contact_us?.button_link}`)}
+                    className="btn sky-blue-btn"
+                    onClick={() => {
+                      const rawUrl = statu.our_products?.button_link;
+                      // const formattedUrl = rawUrl?.startsWith('http') ? rawUrl : `https://${rawUrl}`;
+                      window.location.href = rawUrl;
+                    }}
+                  >
+                    {statu.our_products?.button_name}
+                    {/* Contact Us 
+                  </button> */}
           </div>
         </section>
       ),
@@ -1311,9 +1336,14 @@ const renderSections = () => {
                 {/* {console.log(statu.who_use_wa.button_name)} */}
                 <button
                   type="submit"
-                  onClick={() => navigate(`${statu?.who_use_wa?.button_link}`)}
+                  // onClick={() => navigate(`${statu?.who_use_wa?.button_link}`)}
                   // onClick={() => navigate("/OurProducts")}
                   className="btn w-auto blue-btn-Find-out-More"
+                  onClick={() => {
+                    const rawUrl = statu.who_use_wa?.button_link;
+                    // const formattedUrl = rawUrl?.startsWith('http') ? rawUrl : `https://${rawUrl}`;
+                    window.location.href = rawUrl;
+                  }}
                 >
                   {statu?.who_use_wa?.button_name}
                   {/* Find out More */}
@@ -1400,6 +1430,12 @@ const renderSections = () => {
                   style={{
                     backgroundColor: "#40bedd",
                     color: "#ffffff",
+                    
+                  }}
+                  onClick={() => {
+                    const rawUrl = statu.tell_me_more_section?.button_link;
+                    // const formattedUrl = rawUrl?.startsWith('http') ? rawUrl : `https://${rawUrl}`;
+                    window.location.href = rawUrl;
                   }}
                 >
                   {statu.tell_me_more_section?.button_name}
@@ -1478,8 +1514,8 @@ const renderSections = () => {
       ),
     },
     {
-      condition: statu.lets_talk?.status === 1,
-      ordering: statu.lets_talk?.ordering || 0,
+      condition: statu.contact_us?.status === 1,
+      ordering: statu.contact_us?.ordering || 0,
       content: (
         <section className="lets-talk-sec" id="package_section">
           <div className="container" id="sec-10">
@@ -1488,22 +1524,22 @@ const renderSections = () => {
                 <div className="row ">
                   <div className="col-12">
                     <h4 className="letstallktitle">
-                      {/* {console.log(statu.lets_talk)} */}
-                      {/* {statu.lets_talk?.post_store[0]?.Title} */}
-                      {/* {statu.lets_talk?.post_store[0]["data"]?.Title} */}
-                      {/* {statu.lets_talk?.post_store[0].data?.[statu.lets_talk?.post_store[0].data?.Field_Slug_title]} */}
-                      {statu?.lets_talk?.page_name}
+                      {/* {console.log(statu.contact_us)} */}
+                      {/* {statu.contact_us?.post_store[0]?.Title} */}
+                      {/* {statu.contact_us?.post_store[0]["data"]?.Title} */}
+                      {statu.contact_us?.post_store[0].data?.[statu.contact_us?.post_store[0].data?.Field_Slug_title]}
+                      {/* {statu?.contact_us?.page_name} */}
                     </h4>
                     <div className="inputgroup">
-                      {/* {statu.lets_talk?.post_store[0]["data"]?.Description} */}
-                      {/* {statu.lets_talk?.post_store[0].data?.[statu.lets_talk?.post_store[0].data?.Field_Slug_description]} */}
-                      {statu?.lets_talk?.page_description}
+                      {/* {statu.contact_us?.post_store[0]["data"]?.Description} */}
+                      {statu.contact_us?.post_store[0].data?.[statu.contact_us?.post_store[0].data?.Field_Slug_description]}
+                      {/* {statu?.contact_us?.page_description} */}
                     </div>
                   </div>
                 </div>
 
                 {/* <div className="row">
-                    {statu.lets_talk?.post_store.map((item, index) => (
+                    {statu.contact_us?.post_store.map((item, index) => (
                       <div className="col-md-6" key={index}>
                         <div className="inputgroup">
                           <label>{item.data.Label}</label>
@@ -1534,7 +1570,7 @@ const renderSections = () => {
                     ))}
                   </div> */}
                 <div className="row">
-                  {statu.lets_talk?.post_store.map((item, index) => (
+                  {statu.contact_us?.post_store.map((item, index) => (
                     <div className="col-md-6" key={index}>
                       <div className="inputgroup">
                         {/* <label>{item.data.Label}</label> */}
@@ -1572,7 +1608,7 @@ const renderSections = () => {
                 </div>
 
                 {/* <div className="row">
-                    {statu.lets_talk?.post_store.map((item, index) => (
+                    {statu.contact_us?.post_store.map((item, index) => (
                       <div className="col-md-6" key={index}>
                         <div className="inputgroup">
                           <label>{item.Label}</label>
@@ -1617,7 +1653,7 @@ const renderSections = () => {
                     className="btn w-auto sky-blue-btn-sendmeasge"
                   >
                     {/* Send my message */}
-                    {statu.lets_talk?.button_name}
+                    {statu.contact_us?.button_name}
                   </button>
                 </div>
               </div>

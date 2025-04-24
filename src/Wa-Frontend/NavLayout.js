@@ -198,7 +198,8 @@ const Navlayout = () => {
                         <Link
                             className="nav-link"
                             id="menu-item"
-                            to={`/menu/${item.replace(/\s+/g, '-').toLowerCase()}`}
+                            // to={`/menu/${item.replace(/\s+/g, '-').toLowerCase()}`}
+                            to={`https://${item}`}
                             state={{ menuName: item }}
                         >
                             {item}
