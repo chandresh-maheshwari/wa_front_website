@@ -504,48 +504,151 @@ const MenuPage = () => {
 
     const renderCards = () => {
         // console.log(statu.our_products?.post_store);
-        return statu.post_store.map((card, index) => {
-            // Destructure and extract relevant fields from the Data object
-            const feesSection = card.data.Fees_section || {};
-            const infoSection1 = card.data.Package_info || {};
-            const serviceSection = card.data.Package_services || {};
-            const feessection = card.data.Fees_section || {};
-            const purchaseButtonSection = card.data.Purchase_button || {};
+        // console.log("YYYYYYYYY");
+        // console.log(statu);
+        return statu?.post_store.map((card, index) => {
+            // Destructure and extract relevant fields from the data object
+            // const feesSection = card.data.Fees_section || {};
+            // const infoSection1 = card.data.Package_info || {};
+            // const serviceSection = card.data.Package_services || {};
+            // const feessection = card.data.Fees_section || {};
+            // const purchaseButtonSection = card.data.Purchase_button || {};
+            const feesSection = card.data.FeesSection || {};
+            const infoSection1 = card.data.PackageInfo || {};
+            const serviceSection = card.data.PackageServices || {};
+            const purchaseButtonSection = card.data.PurchaseButton || {};
 
             // Check if there's any content to display (excluding the Field_slug values)
             const hasContent =
-                infoSection1.Information1 ||
-                infoSection1.Information2 ||
-                infoSection1.Information3 ||
-                infoSection1.Information4 ||
-                infoSection1.Information5 ||
-                serviceSection.Service1 ||
-                serviceSection.Service2 ||
-                feesSection.Monthlyfee ||
-                feessection.Montlyfeecardtext1 ||
-                feessection.Montlyfeecardtext1 ||
-                purchaseButtonSection.Amount ||
-                purchaseButtonSection.Buttonbackgroundcolor ||
-                purchaseButtonSection.Buttoncolor ||
-                purchaseButtonSection.Buttontext;
+                // infoSection1.Information1 ||
+                // infoSection1.Information2 ||
+                // infoSection1.Information3 ||
+                // infoSection1.Information4 ||
+                // infoSection1.Information5 ||
+                // serviceSection.Service1 ||
+                // serviceSection.Service2 ||
+                // feesSection.Monthlyfee ||
+                // feesSection.Montlyfeecardtext1 ||
+                // feesSection.Montlyfeecardtext1 ||
+                // purchaseButtonSection.Amount ||
+                // purchaseButtonSection.Buttonbackgroundcolor ||
+                // purchaseButtonSection.Buttoncolor ||
+                // purchaseButtonSection.Buttontext;
+
+                // console.log("TTTTTTTTTTTTTT");
+                // console.log(infoSection1?.[infoSection1?.Field_Slug_information1]);
+                infoSection1?.[infoSection1?.Field_Slug_information1] ||
+                infoSection1?.[infoSection1?.Field_Slug_information2] ||
+                infoSection1?.[infoSection1?.Field_Slug_information3] ||
+                infoSection1?.[infoSection1?.Field_Slug_information4] ||
+                infoSection1?.[infoSection1?.Field_Slug_information5] ||
+                serviceSection?.[serviceSection?.Field_Slug_service1] ||
+                serviceSection?.[serviceSection?.Field_Slug_service2] ||
+                feesSection?.[feesSection?.Field_Slug_monthlyfee] ||
+                feesSection?.[feesSection?.Field_Slug_monthlyfeecardtext1] ||
+                feesSection?.[feesSection?.Field_Slug_monthlyfeecardtext2] ||
+                purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_amount] ||
+                purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttonbackgroundcolor] ||
+                purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttoncolor] ||
+                purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttontext];
 
             if (!hasContent) return null;
 
             return (
                 <div className={`col-lg-4`} id={`card${index + 1}`} key={card.Id}>
-                    <div className={`card-liner-card-${index + 1}`} id="card-liner-card"></div>
+                    <div
+                        className={`card-liner-card-${index + 1}`}
+                        id="card-liner-card"
+                    ></div>
                     <div className={`card${index + 1} card`}>
-                        <span className="medaltype">{card['data'].Packagename}</span>
+                        {/* {console.log(card['data'].Modelsectionpackagesection)} */}
+                        {/* <span className="medaltype">{card.Post_name}</span> */}
+                        <span className="medaltype">{card?.data?.[card?.data?.Field_Slug_packagename]}</span>
+                        {/* <span className="medaltype">{card["data"].Packagename}</span> */}
                         <div className={`card${index + 1}-text`}>
                             {/* Render Information Section */}
-                            {[infoSection1.Information1, infoSection1.Information2, infoSection1.Information3, infoSection1.Information4, infoSection1.Information5].map((text, i) => (
-                                text && (
-                                    <p style={cardTextStyle} key={i} className='cardtext'>
-                                        <img src={righticon} className={`card${index + 1}righticon`} alt={`Icon ${i + 1}`} style={cardTextImageStyle} />
-                                        {text}
-                                    </p>
-                                )
-                            ))}
+                            {[
+                                // infoSection1.Information1,
+                                // infoSection1.Information2,
+                                // infoSection1.Information3,
+                                // infoSection1.Information4,
+                                // infoSection1.Information5,
+                                infoSection1?.[infoSection1?.Field_Slug_information1],
+                                infoSection1?.[infoSection1?.Field_Slug_information2],
+                                infoSection1?.[infoSection1?.Field_Slug_information3],
+                                infoSection1?.[infoSection1?.Field_Slug_information4],
+                                infoSection1?.[infoSection1?.Field_Slug_information5],
+                            ].map(
+                                (text, i) =>
+                                    text && (
+                                        <p style={cardTextStyle} key={i} className="cardtext">
+                                            <img
+                                                src={righticon}
+                                                className={`card${index + 1}righticon`}
+                                                alt={`Icon ${i + 1}`}
+                                                style={cardTextImageStyle}
+                                            />
+                                            {text}
+                                        </p>
+                                    )
+                            )}
+                            {/* {infoSection1.Information1 || infoSection1.Information2 || infoSection1.Information3 || infoSection1.Information4 || infoSection1.Information5 ? <div className="card-liner-inside"></div> : null} */}
+
+                            {/* {infoSection1.Information1 && (
+                    <p style={cardTextStyle} key="info1" className="cardtext">
+                      <img
+                        src={righticon}
+                        className={`card${index + 1}righticon`}
+                        alt="Icon 1"
+                        style={cardTextImageStyle}
+                      />
+                      {infoSection1.Information1}
+                    </p>
+                  )}
+                  {infoSection1.Information2 && (
+                    <p style={cardTextStyle} key="info2" className="cardtext">
+                      <img
+                        src={righticon}
+                        className={`card${index + 1}righticon`}
+                        alt="Icon 2"
+                        style={cardTextImageStyle}
+                      />
+                      {infoSection1.Information2}
+                    </p>
+                  )}
+                  {infoSection1.Information3 && (
+                    <p style={cardTextStyle} key="info3" className="cardtext">
+                      <img
+                        src={righticon}
+                        className={`card${index + 1}righticon`}
+                        alt="Icon 3"
+                        style={cardTextImageStyle}
+                      />
+                      {infoSection1.Information3}
+                    </p>
+                  )}
+                  {infoSection1.Information4 && (
+                    <p style={cardTextStyle} key="info4" className="cardtext">
+                      <img
+                        src={righticon}
+                        className={`card${index + 1}righticon`}
+                        alt="Icon 4"
+                        style={cardTextImageStyle}
+                      />
+                      {infoSection1.Information4}
+                    </p>
+                  )}
+                  {infoSection1.Information5 && (
+                    <p style={cardTextStyle} key="info5" className="cardtext">
+                      <img
+                        src={righticon}
+                        className={`card${index + 1}righticon`}
+                        alt="Icon 5"
+                        style={cardTextImageStyle}
+                      />
+                      {infoSection1.Information5}
+                    </p>
+                  )} */}
                             {Object.values(infoSection1).some((text) => text) && (
                                 <div className="card-liner-inside"></div>
                             )}
@@ -553,7 +656,7 @@ const MenuPage = () => {
 
                         <div className={`card${index + 1}-sec-2-text`}>
                             {/* Render Service Section */}
-                            {serviceSection.Service1 && (
+                            {serviceSection?.[serviceSection?.Field_Slug_service1] && (
                                 <p style={cardTextStyle}>
                                     <img
                                         src={plushicon}
@@ -561,34 +664,45 @@ const MenuPage = () => {
                                         alt="Add On Icon"
                                         style={cardTextImageStyle}
                                     />
-                                    {serviceSection.Service1}
+                                    {serviceSection?.[serviceSection?.Field_Slug_service1]}
                                 </p>
                             )}
-                            {serviceSection.Service1 && <div className="card-liner-inside-2"></div>}
+                            {serviceSection?.[serviceSection?.Field_Slug_service1] && (
+                                <div className="card-liner-inside-2"></div>
+                            )}
 
                             <div className={`card-${index + 1}-sec-3`}>
                                 {/* Render Monthly Fee */}
-                                {feesSection.Monthlyfee && (
+                                {/* {feesSection.Monthlyfee && (
+                      <p className={`card${index + 1}-sec-3-text1`}>
+                        {feesSection.Monthlyfee}
+                      </p>
+                    )} */}
+                                {feesSection?.[feesSection?.Field_Slug_monthlyfee] && (
                                     <p className={`card${index + 1}-sec-3-text1`}>
-                                        {feesSection.Monthlyfee}
+                                        {feesSection?.[feesSection?.Field_Slug_monthlyfee]}
                                     </p>
                                 )}
-                                {[feessection.Montlyfeecardtext1, feessection.Montlyfeecardtext2].map((text, i) => (
-                                    text && (
-                                        <p style={cardTextStyle} key={i} className='cardtext'>
-                                            <img
-                                                src={plushicon}
-                                                className={`card${index + 1}plushicon`}
-                                                alt="Add On Icon"
-                                                style={cardTextImageStyle}
-                                            />
-                                            {text}
-                                        </p>
-                                    )
-                                ))}
+                                {[
+                                    feesSection?.[feesSection?.Field_Slug_monthlyfeecardtext1],
+                                    feesSection?.[feesSection?.Field_Slug_monthlyfeecardtext2]
+                                ].map(
+                                    (text, i) =>
+                                        text && (
+                                            <p style={cardTextStyle} key={i} className="cardtext">
+                                                <img
+                                                    src={plushicon}
+                                                    className={`card${index + 1}plushicon`}
+                                                    alt="Add On Icon"
+                                                    style={cardTextImageStyle}
+                                                />
+                                                {text}
+                                            </p>
+                                        )
+                                )}
 
                                 {/* Render Service 2 */}
-                                {serviceSection.Service2 && (
+                                {serviceSection?.[serviceSection?.Field_Slug_service2] && (
                                     <p className={`card${index + 1}-sec-3-text`}>
                                         <img
                                             src={plushicon}
@@ -596,26 +710,60 @@ const MenuPage = () => {
                                             alt="Add On Icon"
                                             style={cardTextImageStyle}
                                         />
-                                        {serviceSection.Service2}
+                                        {serviceSection?.[serviceSection?.Field_Slug_service2]}
                                     </p>
                                 )}
                             </div>
-
                         </div>
-                        {purchaseButtonSection.Buttontext && (
+                        {/* style={{ position: 'absolute', bottom: '13px', left: '0', right: '0' }} */}
+                        {purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttontext] && (
+                            // {purchaseButtonSection.Buttontext && (
                             <div className="text-center purchase-btn">
+                                {/* <button
+                      role="link"
+                      className="btn w-50"
+                      style={{
+                        backgroundColor: purchaseButtonSection.Buttonbackgroundcolor || '#40bedd',
+                        color: purchaseButtonSection.Buttoncolor || '#ffffff',
+                      }}
+                    // onMouseOver={(e) => {
+                    //   e.target.style.backgroundColor = card.data.Buttonhovercolor || '#17bee8';
+                    // }}
+                    // onMouseOut={(e) => {
+                    //   e.target.style.backgroundColor = card.data.Buttonbackgroundcolor || '#40bedd';
+                    // }}
+    
+                    >
+                      {`${purchaseButtonSection.Buttontext} - ${purchaseButtonSection.Amount}`}
+                    </button> */}
+                                {/* {console.log(purchaseButtonSection.Stripid)} */}
                                 <button
                                     role="link"
                                     className="btn w-50"
                                     style={{
-                                        backgroundColor: purchaseButtonSection.Buttonbackgroundcolor || '#40bedd',
-                                        color: purchaseButtonSection.Buttoncolor || '#ffffff',
+                                        backgroundColor:
+                                            purchaseButtonSection.Buttonbackgroundcolor || "#40bedd",
+                                        color: purchaseButtonSection.Buttoncolor || "#ffffff",
                                     }}
-                                    onClick={() => handlePurchaseSubmit(card['data'].Packagename, purchaseButtonSection.Amount, purchaseButtonSection.Stripid)}
-                                >
-                                    {`${purchaseButtonSection.Buttontext} - $${purchaseButtonSection.Amount}`}
-                                </button>
+                                    // onMouseOver={(e) => {
+                                    //   e.target.style.backgroundColor = card.Buttonhovercolor || '#17bee8';
+                                    // }}
+                                    // onMouseOut={(e) => {
+                                    //   e.target.style.backgroundColor = card.Buttonbackgroundcolor || '#40bedd';
+                                    // }}
 
+                                    // {loading && <div className="loader"></div>}
+                                    onClick={() =>
+                                        handlePurchaseSubmit(
+                                            card?.data.Packagename,
+                                            purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_amount],
+                                            purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_stripid]
+                                        )
+                                    }
+                                >
+                                    {`${purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttontext]} - $${purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_amount]}`}
+                                    {/* {`${purchaseButtonSection.Buttontext} - $${purchaseButtonSection.Amount}`} */}
+                                </button>
                             </div>
                         )}
                     </div>
@@ -623,6 +771,8 @@ const MenuPage = () => {
             );
         });
     };
+
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         const newErrors = {};
@@ -729,17 +879,56 @@ const MenuPage = () => {
         <>
             <Navlayout />
             <Expired />
-            {/* {console.log(statu)} */}
+            {console.log("RRRRRRRRR")}
+            {console.log(currentMenu)}
             {currentMenu === 'About Us' && statu.page_status === 1 && topbardata.length > 0 ? (
+                // <section className="page-section" id="package_section">
+                //     <div className="container type-1">
+                //         <div className="row">
+                //             <div className="col-12">
+                //                 <div className="sec-8-heading">
+                //                     <h1 id="About-us">
+                //                         {/* {statu.about_us?.page_name} */}
+                //                         {statu.page_name}
+                //                     </h1>
+                //                 </div>
+                //             </div>
+                //         </div>
+
+                //         <div className="row" style={{ marginBottom: "6%" }}>
+                //             <div className="col-md-3">
+                //                 <div className="content-box">
+                //                     {/* {console.log(titles)} */}
+
+                //                     {titles.map((title, index) => (
+                //                         <div key={index}>
+                //                             {/* {console.log(title)} */}
+                //                             <h5 className="title-sm">{title}</h5>
+                //                             <p></p>
+                //                         </div>
+                //                     ))}
+                //                 </div>
+                //             </div>
+                //             <div className="col-md-9">
+                //                 <div className="content-box">
+                //                     {Array.isArray(description) ? (
+                //                         description.map((descItem, index) => (
+                //                             <p key={index}>{descItem}</p>
+                //                         ))
+                //                     ) : (
+                //                         <p>{description}</p>
+                //                     )}
+                //                 </div>
+                //             </div>
+                //         </div>
+                //     </div>
+                // </section>
                 <section className="page-section" id="package_section">
                     <div className="container type-1">
                         <div className="row">
                             <div className="col-12">
                                 <div className="sec-8-heading">
-                                    <h1 id="About-us">
-                                        {/* {statu.about_us?.page_name} */}
-                                        {statu.page_name}
-                                    </h1>
+                                    <h1 id="About-us">{statu.about_us?.page_name}</h1>
                                 </div>
                             </div>
                         </div>
@@ -775,31 +964,29 @@ const MenuPage = () => {
             ) : currentMenu === 'About Us' && statu.page_status === 0 ? (
                 <div className="text-center"> 404 Page Not Found</div>
             ) : null}
-            {/* {console.log(currentMenu === 'Our Products')} */}
+            {/* {console.log("TTTTTTTTTTTTTTT")}
+            {console.log(currentMenu === 'Our Products' && statu.page_status === 1 && topbardata.length > 0)} */}
+
 
             {currentMenu === 'Our Products' && statu.page_status === 1 && topbardata.length > 0 ? (
                 <section className="packages-sec" id="package_section">
-                    {/* {console.log(333)} */}
                     <div className="container mt-2">
                         <div className="waste-management-service-title">
-                            {/* <h4>{statu.our_products?.page_description}</h4> */}
-                            <h4>{statu.page_description}</h4>
-
+                            {console.log("SSSSS")}
+                            {console.log(statu)}
+                            <h4>{statu?.page_description}</h4>
                         </div>
                         <div className="row">{renderCards()}</div>
-                        {statu.page_status === 1 && (
-                            <div className="row mt-5">
-                                <div className="col-12">
-                                    <button
-                                        type="button"
-                                        onClick={() => navigate("/menu/contact-us")}
-                                        className="btn sky-blue-btn mb-5"
-                                    >
-                                        Contact Us
-                                    </button>
-                                </div>
-                            </div>
-                        )}
+                        <button
+                            type="button"
+                            className="btn sky-blue-btn"
+                            onClick={() => {
+                                const rawUrl = statu?.button_link;
+                                window.location.href = rawUrl;
+                            }}
+                        >
+                            {statu?.button_name}
+                        </button>
                     </div>
                 </section>
             ) : currentMenu === 'Our Products' && statu.page_status === 0 ? (
@@ -912,24 +1099,31 @@ const MenuPage = () => {
 
             {currentMenu === 'Who Use WA' && statu.page_status === 1 ? (
                 <section className="clients-section" id="clients_section">
-                    <div className="container slidercontainer">
+                    <div className="container sliderconatainer">
                         <h2 className="font-weight-light slider-heading text-center">
                             {statu.page_description}
                         </h2>
                         <div className="clients-grid">
                             {statu.post_store.map((item, index) => (
                                 <div key={item.Id} className="client-logo">
-                                    {item.data && item.data.Link ? (
-                                        <Link to={item.data.Link}>
+                                    {item.data && item?.data?.[item?.data?.Field_Slug_link] ? (
+                                        <Link to={item?.data?.[item?.data?.Field_Slug_link]}>
+                                            {/* {console.log("66666666666666666666666666")}
+                                        {console.log(item)} */}
+                                            {/* <Link to={item.data.Link}> */}
+                                            {/* {console.log("OOOOOOOOO")} */}
+                                            {/* {console.log(item?.data?.[item?.data?.Field_Slug_link])} */}
                                             <img
-                                                src={item.data.Image}
+                                                src={item?.data?.[item?.data?.Field_Slug_image]}
+                                                // src={item.data.Image}
                                                 alt={`Client ${index + 1}`}
                                                 className="client-image sliderimages"
                                             />
                                         </Link>
                                     ) : item.data ? (
                                         <img
-                                            src={item.data.Image}
+                                            src={item?.data?.[item?.data?.Field_Slug_imag]}
+                                            // src={item.data.Image}
                                             alt={`Client ${index + 1}`}
                                             className="client-image sliderimages"
                                         />
@@ -942,62 +1136,135 @@ const MenuPage = () => {
             ) : null}
 
 
-            {/* {currentMenu === 'Page Section' && statu.page_status === 1 && topbardata.length > 0 ? (
+            {currentMenu === 'Transforming Waste Industry' && statu.page_status === 1 && topbardata.length > 0 ? (
 
+                // <section className="page-section" id="transforming_section">
+                //     <div className="container p-5 transforming_section_container">
+                //         <div className="row">
+                //             <div className="col-md-12">
+                //                 <div className="transfo">
+
+                //                     <h5 className="text-center transforming ">
+                //                         {statu.page_description}
+                //                     </h5>
+                //                 </div>
+                //             </div>
+                //         </div>
+                //     </div>
+                //     <div className="container">
+                //         <div className="row p-5">
+                //             <div className="col-md-5">
+                //                 <h5 className="transfotext1 for-waste">
+                //                     {console.log(Transforming)}
+
+                //                     {Transforming.Pagesectiontitle1} <br />
+                //                     <b>{Transforming.Pagesectiontitle2}</b>
+                //                 </h5>
+
+                //                 <p className="transfotextdes1">
+                //                     {Transforming.Pagesectiondescription}
+                //                 </p>
+                //             </div>
+                //             <div className="col-md-2 stretch-line">
+
+                //                 <img
+                //                     src={statu.image}
+                //                     // src={homeimg}
+                //                     width="60px"
+                //                     className="strech"
+                //                     alt="strech"
+                //                 />
+                //             </div>
+                //             <div className="col-md-5">
+                //                 <h5 className="transfotext2 for-waste">
+
+                //                     {Transforming.Pagesectiontitle1} <br />
+                //                     <b>{Transforming.Pagesectiontitle2}</b>
+                //                 </h5>
+
+                //                 <p className="transfotextdes2">
+                //                     {Transforming.Pagesectiondescription}
+                //                 </p>
+                //                 <br />
+                //             </div>
+                //         </div>
+                //     </div>
+                // </section>
                 <section className="page-section" id="transforming_section">
                     <div className="container p-5 transforming_section_container">
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="transfo">
-
                                     <h5 className="text-center transforming ">
-                                        {statu.page_description}
+                                        {/* {console.log("UUUUUUUUUUUUUUUUUUUU")} */}
+                                        {/* {console.log(statu.image)} */}
+                                        {statu?.page_description}
                                     </h5>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className="container">
-                        <div className="row p-5">
-                            <div className="col-md-5">
-                                <h5 className="transfotext1 for-waste">
-                                    {console.log(Transforming)}
-
-                                    {Transforming.Pagesectiontitle1} <br />
-                                    <b>{Transforming.Pagesectiontitle2}</b>
-                                </h5>
-
-                                <p className="transfotextdes1">
-                                    {Transforming.Pagesectiondescription}
-                                </p>
-                            </div>
-                            <div className="col-md-2 stretch-line">
-
-                                <img
-                                    src={statu.image}
-                                    // src={homeimg}
-                                    width="60px"
-                                    className="strech"
-                                    alt="strech"
-                                />
-                            </div>
-                            <div className="col-md-5">
-                                <h5 className="transfotext2 for-waste">
-
-                                    {Transforming.Pagesectiontitle1} <br />
-                                    <b>{Transforming.Pagesectiontitle2}</b>
-                                </h5>
-
-                                <p className="transfotextdes2">
-                                    {Transforming.Pagesectiondescription}
-                                </p>
-                                <br />
-                            </div>
+                        <div className="row p-5 justify-content-center">
+                            {/* {console.log(Transforming[0]?.data[Transforming[0]?.data?.Field_Slug_pagesectiondescription])} */}
+                            {/* {console.log(Transforming[0]?.data?.Field_Slug_pagesectiondescription)} */}
+                            {Transforming[0]?.data && !Transforming[1]?.data && (
+                                <div className="col-md-8 text-center">
+                                    <h5 className="for-waste centered-text">
+                                        {Transforming[0]?.data?.PageSectionTitle1dgdfg} <br />
+                                        <b>{Transforming[0]?.data?.PageSectionTitle2dfgdfg}</b>
+                                    </h5>
+                                    <p className="transfotextdes1 centered-text">
+                                        {Transforming[0]?.data?.PageSectionDescriptionsdfsdf}
+                                    </p>
+                                </div>
+                            )}
+                            {Transforming[1]?.data && !Transforming[0]?.data && (
+                                <div className="col-md-8 text-center">
+                                    <h5 className="for-waste">
+                                        {Transforming[1]?.data?.PageSectionTitle1dgdfg} <br />
+                                        <b>{Transforming[1]?.data?.PageSectionTitle2dfgdfg}</b>
+                                    </h5>
+                                    <p className="transfotextdes2 centered-text">
+                                        {Transforming[1]?.data?.PageSectionDescriptionsdfsdf}
+                                    </p>
+                                </div>
+                            )}
+                            {Transforming[0]?.data && Transforming[1]?.data && (
+                                <>
+                                    <div className="col-md-5">
+                                        <h5 className="transfotext1 for-waste">
+                                            {Transforming[0]?.data?.PageSectionTitle1dgdfg} <br />
+                                            <b>{Transforming[0]?.data?.PageSectionTitle2dfgdfg}</b>
+                                        </h5>
+                                        <p className="transfotextdes1">
+                                            {Transforming[0]?.data?.PageSectionDescriptionsdfsdf}
+                                        </p>
+                                    </div>
+                                    <div className="col-md-2 stretch-line">
+                                        <img
+                                            src={statu?.image}
+                                            width="60px"
+                                            className="strech"
+                                            alt="strech"
+                                        />
+                                    </div>
+                                    <div className="col-md-5">
+                                        <h5 className="transfotext2 for-waste">
+                                            {Transforming[1]?.data?.PageSectionTitle1dgdfg} <br />
+                                            <b>{Transforming[1]?.data?.PageSectionTitle2dfgdfg}</b>
+                                        </h5>
+                                        <p className="transfotextdes2">
+                                            {Transforming[1]?.data?.PageSectionDescriptionsdfsdf}
+                                        </p>
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </div>
                 </section>
             ) : null
-            } */}
+            }
             {showLoginPopup && (
                 <Popup isOpen={showLoginPopup} onClose={toggleLoginPopup} onLoginSuccess={handleLoginSuccess} />
             )}

@@ -990,7 +990,7 @@ const Home = () => {
               <div className="row">
                 <div className="col-md-12">
                   <div className="transfo">
-                    <h5 className="text-center transforming ">
+                    <h5 className="text-center transforming">
                       {statu.transforming_waste_industry?.page_description}
                     </h5>
                   </div>
