@@ -952,22 +952,22 @@ const MenuPage = () => {
                             {Transforming[0]?.data && !Transforming[1]?.data && (
                                 <div className="col-md-8 text-center">
                                     <h5 className="for-waste centered-text">
-                                        {Transforming[0]?.data?.[Transforming[0]?.data?.field_slug_pagesectiontitle1]} <br />
-                                        <b>{Transforming[0]?.data?.[Transforming[0]?.data?.field_slug_pagesectiontitle2]}</b>
+                                        {Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle1]} <br />
+                                        <b>{Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle2]}</b>
                                     </h5>
                                     <p className="transfotextdes1 centered-text">
-                                        {Transforming[0]?.data?.[Transforming[0]?.data?.field_slug_pagesectiondescription]}
+                                        {Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiondescription]}
                                     </p>
                                 </div>
                             )}
                             {Transforming[1]?.data && !Transforming[0]?.data && (
                                 <div className="col-md-8 text-center">
                                     <h5 className="for-waste">
-                                        {Transforming[1]?.data?.[Transforming[1]?.data?.field_slug_pagesectiontitle1]} <br />
-                                        <b>{Transforming[1]?.data?.[Transforming[1]?.data?.field_slug_pagesectiontitle2]}</b>
+                                        {Transforming[1]?.data?.[Transforming[1]?.data?.Field_Slug_pagesectiontitle1]} <br />
+                                        <b>{Transforming[1]?.data?.[Transforming[1]?.data?.Field_Slug_pagesectiontitle2]}</b>
                                     </h5>
                                     <p className="transfotextdes2 centered-text">
-                                        {Transforming[1]?.data?.[Transforming[1]?.data?.field_slug_pagesectiondescription]}
+                                        {Transforming[1]?.data?.[Transforming[1]?.data?.Field_Slug_pagesectiondescription]}
                                     </p>
                                 </div>
                             )}
@@ -975,11 +975,11 @@ const MenuPage = () => {
                                 <>
                                     <div className="col-md-5">
                                         <h5 className="transfotext1 for-waste">
-                                            {Transforming[0]?.data?.[Transforming[0]?.data?.field_slug_pagesectiontitle1]} <br />
-                                            <b>{Transforming[0]?.data?.[Transforming[0]?.data?.field_slug_pagesectiontitle2]}</b>
+                                            {Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle1]} <br />
+                                            <b>{Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle2]}</b>
                                         </h5>
                                         <p className="transfotextdes1">
-                                            {Transforming[0]?.data?.[Transforming[0]?.data?.field_slug_pagesectiondescription]}
+                                            {Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiondescription]}
                                         </p>
                                     </div>
                                     <div className="col-md-2 stretch-line">
@@ -992,11 +992,11 @@ const MenuPage = () => {
                                     </div>
                                     <div className="col-md-5">
                                         <h5 className="transfotext2 for-waste">
-                                            {Transforming[1]?.data?.[Transforming[1]?.data?.field_slug_pagesectiontitle1]} <br />
-                                            <b>{Transforming[1]?.data?.[Transforming[1]?.data?.field_slug_pagesectiontitle2]}</b>
+                                            {Transforming[1]?.data?.[Transforming[1]?.data?.Field_Slug_pagesectiontitle1]} <br />
+                                            <b>{Transforming[1]?.data?.[Transforming[1]?.data?.Field_Slug_pagesectiontitle2]}</b>
                                         </h5>
                                         <p className="transfotextdes2">
-                                            {Transforming[1]?.data?.[Transforming[1]?.data?.field_slug_pagesectiondescription]}
+                                            {Transforming[1]?.data?.[Transforming[1]?.data?.Field_Slug_pagesectiondescription]}
                                         </p>
                                     </div>
                                 </>
