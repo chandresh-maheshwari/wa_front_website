@@ -214,6 +214,8 @@ const DepotForm = () => {
     // Validate Depot Postcode
     if (!formData.depotPostcode) {
       newErrors.depotPostcode = "Depot Postcode is required.";
+    }else if (/^\d{7}$/.test(formData.depotPostcode)) {
+      newErrors.depotPostcode = "Depot Postcode should not be exactly 7 digits.";
     }
 
     // Validate Depot Telephone (Phone number validation - exactly 10 digits)
@@ -452,7 +454,7 @@ const DepotForm = () => {
             <div className="p-4 content">
               <h5 className="title">Depot Details</h5>
               <p className="description">
-                Please fill your information so we can get in touch with you.
+                Please complete all sections.
               </p>
 
               <form onSubmit={handleSubmit} className="company-form">
@@ -528,7 +530,7 @@ const DepotForm = () => {
                     </div>
                   </div>
 
-                  <div className="form-group col-md-6">
+                  {/* <div className="form-group col-md-6">
                     <div className="input-with-icon">
                       <label className="label">Depot Permit No</label>
                       <Tooltip title="If the Depot has an environmental permit, add this here." arrow>
@@ -548,11 +550,10 @@ const DepotForm = () => {
                       />
                       {errors.depotPermitNo && <small className="text-danger">{errors.depotPermitNo}</small>}
                     </div>
-                  </div>
-                </div>
+                  </div> */}
 
-                <div className="form-row">
-                  <div className="form-group col-md-6">
+
+<div className="form-group col-md-6">
                     <div className="input-with-icon">
                       <label className="label">Depot Address 1</label>
                       <Tooltip title="Add the depot address" arrow>
@@ -574,6 +575,10 @@ const DepotForm = () => {
                       {/* {errors.depotAddress1 && <small className="text-danger">{errors.depotAddress1}</small>} */}
                     </div>
                   </div>
+                </div>
+
+                <div className="form-row">
+                  
 
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
@@ -596,8 +601,7 @@ const DepotForm = () => {
                       {/* {errors.depotAddress2 && <small className="text-danger">{errors.depotAddress2}</small>} */}
                     </div>
                   </div>
-                </div>
-                <div className="form-row">
+
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
                       <label className="label">Depot Address 3</label>
@@ -619,7 +623,8 @@ const DepotForm = () => {
                       {/* {errors.depotAddress3 && <small className="text-danger">{errors.depotAddress3}</small>} */}
                     </div>
                   </div>
-
+                </div>
+                <div className="form-row">                
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
                       <label className="label">Depot Address 4</label>
@@ -641,13 +646,10 @@ const DepotForm = () => {
                       {/* {errors.depotAddress4 && <small className="text-danger">{errors.depotAddress4}</small>} */}
                     </div>
                   </div>
-                </div>
-
-                <div className="form-row">
                   <div className="form-group col-md-6 ">
                     <div className="input-with-icon">
                       <label className="label">Depot Postcode</label>
-                      <Tooltip title="Add the depot postcode" arrow>
+                      <Tooltip title="Don't leave a space" arrow>
                         <FontAwesomeIcon
                           icon={faInfoCircle}
                           className="info-icon"
@@ -661,10 +663,16 @@ const DepotForm = () => {
                         name="depotPostcode"
                         value={formData.depotPostcode}
                         onChange={handleChange}
+                        maxLength={7}
                       />
                       {errors.depotPostcode && <small className="text-danger">{errors.depotPostcode}</small>}
                     </div>
                   </div>
+                </div>
+
+                <div className="form-row">
+                  
+                  
 
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
@@ -690,9 +698,6 @@ const DepotForm = () => {
                       {errors.countyId && <small className="text-danger">{errors.countyId}</small>}
                     </div>
                   </div>
-                </div>
-
-                <div className="form-row">
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
                       <label className="label">Telephone</label>
@@ -714,7 +719,9 @@ const DepotForm = () => {
                       {errors.depotTelephone && <small className="text-danger">{errors.depotTelephone}</small>}
                     </div>
                   </div>
+                </div>
 
+                <div className="form-row">
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
                       <label className="label">Depot Permit Tonnage Limit</label>
@@ -737,10 +744,11 @@ const DepotForm = () => {
                       {/* {errors.depotPermitTonnageLimit && <small className="text-danger">{errors.depotPermitTonnageLimit}</small>} */}
                     </div>
                   </div>
-
+                  <div className="form-group col-md-6">
+                  </div>
                 </div>
                 <div className="form-row">
-                  <div className="form-group col-md-6">
+                  {/* <div className="form-group col-md-6">
                     <div className="input-with-icon">
                       <label className="label">Include Tonnage Limit on Dashboard</label>
                       <Tooltip title="Tick if you wish to see tonnage limit in the dashboard." arrow>
@@ -753,9 +761,7 @@ const DepotForm = () => {
                     <div className="form-check">
                       <div className="field">
                         <input
-                          type="checkbox"
-                          // className={`form-check-input ${formErrors.companyActive ? "is-invalid" : ""
-                          //   }`}
+                          type="checkbox"                        
                           className='form-check-input'
                           id="includeTonnageLimitOnDashboard"
                           name="includeTonnageLimitOnDashboard"
@@ -773,17 +779,13 @@ const DepotForm = () => {
                           Confirm Include Tonnage Limit on Dashboard is Active
                         </label>
 
-                        {/* {formErrors.includeTonnageLimitOnDashboard && ( */}
                         <div className="invalid-feedback">
-                          {/* {formErrors.includeTonnageLimitOnDashboard} */}
                         </div>
-                        {/* )} */}
                       </div>
                     </div>
-                    {/* {errors.includeTonnageLimitonDashboard && <small className="text-danger">{errors.includeTonnageLimitonDashboard}</small>} */}
-                  </div>
+                  </div> */}
 
-                  <div className="form-group col-md-6">
+                  {/* <div className="form-group col-md-6">
                     <div className="input-with-icon">
                       <label className="label">Date From</label>
                       <Tooltip title="Select the start date" arrow>
@@ -803,13 +805,13 @@ const DepotForm = () => {
                       />
                       {errors.startDate && <small className="text-danger">{errors.startDate}</small>}
                     </div>
-                  </div>
+                  </div> */}
 
 
                 </div>
 
                 <div className="form-row">
-                  <div className="form-group col-md-6">
+                  {/* <div className="form-group col-md-6">
                     <div className="input-with-icon">
                       <label className="label">Date End</label>
                       <Tooltip title="Select the end date" arrow>
@@ -829,7 +831,7 @@ const DepotForm = () => {
                       />
                       {errors.endDate && <small className="text-danger">{errors.endDate}</small>}
                     </div>
-                  </div>
+                  </div> */}
                   <div className="form-group col-md-6">
                   </div>
                 </div>

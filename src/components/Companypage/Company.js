@@ -469,7 +469,7 @@ const Company = () => {
             <div className="p-4 content ">
               <h5 className="title">Company Details</h5>
               <p className="description">
-                Please fill your information so we can get in touch with you.
+                Please complete all sections.
               </p>
 
               <form onSubmit={handleSubmit} className="company-form">
