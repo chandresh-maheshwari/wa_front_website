@@ -903,7 +903,7 @@ export default new (class AuthApi {
           // product_name: productName,
           // amount: parseFloat(amount),
           // email: email,
-          price_id,
+          price_id: price_id,
           trail_days: trail_days,
         },
         {

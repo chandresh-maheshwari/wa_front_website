@@ -454,10 +454,10 @@ const Home = () => {
     setShowLoginPopup(!showLoginPopup);
   };
 
-  const handlePurchaseSubmit = async (productName, amount, price_id, trail_days) => {
-    // console.log(productName);
-    // console.log(amount);
+  const handlePurchaseSubmit = async (price_id, trail_days) => {
+    // console.log("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
     // console.log(price_id);
+    // console.log(trail_days);
     const token = localStorage.getItem("WAauthToken");
     if (!token) {
       // Swal.fire({
@@ -804,7 +804,10 @@ const Home = () => {
                 >
                   {`${purchaseButtonSection.Buttontext} - ${purchaseButtonSection.Amount}`}
                 </button> */}
-                {/* {console.log(purchaseButtonSection.Stripid)} */}
+                {console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")}
+                {console.log(purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_stripid])}
+                {console.log(purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_trialdays])}
+
                 <button
                   role="link"
                   className="btn w-50"
@@ -823,9 +826,9 @@ const Home = () => {
                   // {loading && <div className="loader"></div>}
                   onClick={() =>
                     handlePurchaseSubmit(
-                      card?.data.Packagename,
-                      purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_amount],
-                      purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_stripid]
+                      // card?.data.Packagename,
+                      purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_stripid],
+                      purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_trialdays]
                     )
                   }
                 >
