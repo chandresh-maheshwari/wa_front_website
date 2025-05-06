@@ -533,11 +533,13 @@ const Home = () => {
       // }
 
 
-      const response = await Authapi.createsub(
+      // const response = await Authapi.createsub(
 
-        price_id,
+      //   price_id,
 
-      );
+      // );
+
+      const response = await Authapi.createsub(price_id, trail_days);
 
 
       window.location.href = response.checkout_url;
