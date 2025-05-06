@@ -649,7 +649,7 @@ const DepotForm = () => {
                   <div className="form-group col-md-6 ">
                     <div className="input-with-icon">
                       <label className="label">Depot Postcode</label>
-                      <Tooltip title="Don't leave a space" arrow>
+                      <Tooltip title="Maximum 7 leave digit will be allow" arrow>
                         <FontAwesomeIcon
                           icon={faInfoCircle}
                           className="info-icon"
