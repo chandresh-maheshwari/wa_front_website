@@ -254,9 +254,14 @@ const Home = () => {
       title: "Submitting...",
       html: "Please wait while we process your request.",
       allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      },
+      imageUrl: "https://example.com/your-loading-image.gif", // Replace with your image URL
+      imageWidth: 100,
+      imageHeight: 100,
+      imageAlt: "Loading...",
+      showConfirmButton: false,
+      // didOpen: () => {
+      //   Swal.showLoading();
+      // },
     });
 
     try {
@@ -436,7 +441,12 @@ const Home = () => {
     setShowLoginPopup(!showLoginPopup);
   };
 
-  const handlePurchaseSubmit = async (productName, amount, price_id,trail_days) => {
+  const handlePurchaseSubmit = async (
+    productName,
+    amount,
+    price_id,
+    trail_days
+  ) => {
     // console.log(productName);
     // console.log(amount);
     // console.log(price_id);
@@ -451,8 +461,8 @@ const Home = () => {
       //   cancelButtonText: "Cancel",
       // }).then((result) => {
       //   if (result.isConfirmed) {
-          // Show the login popup when "OK" is clicked
-          toggleLoginPopup();
+      // Show the login popup when "OK" is clicked
+      toggleLoginPopup();
       //   }
       // });
       return;
@@ -483,21 +493,42 @@ const Home = () => {
       });
 
       // Replace the fetch call with the Authapi function
-      const response = await Authapi.createCheckoutSession(
-        productName,
-        amount,
-        email,
-        price_id,
-        trail_days,
-      );
+      //     const response = await Authapi.createCheckoutSession(
+      //       productName,
+      //       amount,
+      //       email,
+      //       price_id,
+      //       trail_days,
+      //     );
 
-      if (!response.status) {
-        throw new Error(
-          response.message || "Failed to create checkout session"
-        );
-      }
+      //     if (!response.status) {
+      //       throw new Error(
+      //         response.message || "Failed to create checkout session"
+      //       );
+      //     }
 
-      window.location.href = response.url;
+      //     window.location.href = response.url;
+      //   } catch (error) {
+      //     console.error("Purchase Error:", error);
+      //     Swal.fire({
+      //       icon: "error",
+      //       title: "Payment Error",
+      //       text:
+      //         error.message ||
+      //         "There was an error processing your payment. Please try again.",
+      //       background: "#f8f9fa",
+      //       showConfirmButton: true,
+      //       confirmButtonText: "OK",
+      //     });
+      //     // }
+      //   } finally {
+      //     setLoading(false);
+      //   }
+      // };
+      // Replace the fetch call with the Authapi function
+      const response = await Authapi.createsub(price_id, trail_days);
+
+      window.location.href = response.checkout_url;
     } catch (error) {
       console.error("Purchase Error:", error);
       Swal.fire({
@@ -1313,7 +1344,7 @@ const Home = () => {
                             <input
                               className="form-control"
                               name={`field${index}`}
-                              type={item.Data.Type} 
+                              type={item.Data.Type}
                               onChange={(e) => handleInputChange(e, index)}
                             />
                           )}
