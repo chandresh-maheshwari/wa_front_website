@@ -20,10 +20,19 @@ import Login from "../components/Login/Login";
 import { Outlet } from "react-router-dom";
 import Navlayout from "./NavLayout";
 import Expired from "../components/CheckTokenExpier";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 
 const stripePromise = loadStripe(
   "pk_test_51P4GXaAvL6Jnl0r3yHDSV2zN0JrGRt2UFxn217kqw9JFFBXe4K1n5xZHGfsKaIicVfUBAP5ch0TBIO8C8cI3ijQv00bNWJynzK"
 );
+
+const carouselResponsive = {
+  superLargeDesktop: { breakpoint: { max: 4000, min: 1200 }, items: 1 },
+  desktop: { breakpoint: { max: 1200, min: 992 }, items: 1 },
+  tablet: { breakpoint: { max: 992, min: 768 }, items: 1 },
+  mobile: { breakpoint: { max: 768, min: 0 }, items: 1 }
+};
 
 const Home = () => {
   const cardTextStyle = {
@@ -871,119 +880,123 @@ const Home = () => {
         condition: statu.home_section?.status === 1,
         ordering: statu.home_section?.ordering || 0,
         content: (
-          <section className="homesection">
-            <div className="container">
-              <div className="home">
-                <div className="row">
-                  <div className="col-sm-2">
-                    {/* {console.log(homesection.Tell_me_more_button_section?.Homesectionbuttontitle)} */}
-                    {/* {(() => {
-                        const homesectionTitleKey = homesection?.Field_Slug_homesectiontitle2;
-                        const capitalizedKey = homesectionTitleKey
-                          ? homesectionTitleKey.charAt(0).toUpperCase() + homesectionTitleKey.slice(1)
-                          : ''; 
-                       return test =  homesection?.[capitalizedKey]; 
-                      })()} */}
-                    {/* <img
-                      src={test}
-                      // src={homesection?.Homesectionimage}
-                      alt="homeimg"
-                      className="homeimg"
-                    /> */}
-                    {test()}
-                  </div>
-                  <div className="col-sm-10">
-                    <div className="homefont">
-                      {/* {console.log(homesection)} */}
-                      {/* <h4>
-                        {/* {homesection?.Homesectiontitle} 
-                        {(() => {
-                          // console.log("DTATATATATATTTATA");
-                          console.log(homesection?.Field_Slug_homesectiontitle1);
-                          const homesectionTitleKey = homesection?.Field_Slug_homesectiontitle;
-                          // console.log(homesectionTitleKey);
-
-                          // const capitalizedKey = homesectionTitleKey
-                          //   ? homesectionTitleKey.charAt(0).toUpperCase() + homesectionTitleKey.slice(1)
-                          //   : '';
-                          //   console.log(homesection?.[capitalizedKey]);
-                          // return homesection?.[capitalizedKey];
-                        })()}
-                        {homesection?.[homesectionTitleKey]}
-                      </h4> */}
-
-                      <h4>
-                        {/* {(() => {
-                          console.log(homesection?.Field_Slug_homesectiontitle1);
-                          const homesectionTitleKey = homesection?.Field_Slug_homesectiontitle;                         
-                        })()}
-                        {homesection?.[homesectionTitleKey]} */}
-                        {homesection?.[homesection?.Field_Slug_homesectiontitle]}
-
-                      </h4>
+          statu.home_section?.post_store?.length > 1 ? (
+            <section className="homesection">
+              <div className="container">
+                <Carousel
+                  responsive={carouselResponsive}
+                  infinite={true}
+                  autoPlay={true}
+                  autoPlaySpeed={3000}
+                  showDots={statu.home_section.post_store.length > 1}
+                  arrows={false}
+                >
+                  {statu.home_section.post_store.map((post, idx) => {
+                    // const data = post.data;
+                    // console.log(statu.home_section.post_store);
+                    // console.log(idx);
+                    const postData = statu.home_section.post_store[idx].data;
+                    // console.log(postData?.[postData?.Field_Slug_homesectiontitle]);
+                    return (
+                      <div className="home">
+                        <div className="row">
+                          <div className="col-sm-2">
+                            <img
+                              src={postData?.[postData?.Field_Slug_homesectionimage]}
+                              alt="homeimg"
+                              className="homeimg"
+                            />
+                          </div>
+                          <div className="col-sm-10">
+                            <div className="homefont">
+                              <h4>
+                                {postData?.[postData?.Field_Slug_homesectiontitle]}
+                              </h4>
+                            </div>
+                            <p
+                              className="home-p-font"
+                              style={{
+                                color: "rgb(173, 173, 173)",
+                                maxWidth: "46%",
+                                marginBottom: "27px",
+                              }}
+                            >
+                              {postData?.[postData?.Field_Slug_homesectiondescription]}
+                            </p>
+                            <button
+                              type="button"
+                              className="btn"
+                              id="tellmemore"
+                              style={{
+                                backgroundColor: postData?.TellMeMoreButtonSection?.[postData?.TellMeMoreButtonSection?.Field_Slug_homesectionbuttonbackgroundcolor],
+                                color: postData?.TellMeMoreButtonSection?.[postData?.TellMeMoreButtonSection?.Field_Slug_homesectionbuttontextcolor],
+                              }}
+                              onClick={() => {
+                                const rawUrl = statu?.home_section?.button_link;
+                                window.location.href = rawUrl;
+                              }}
+                            >
+                              {postData?.TellMeMoreButtonSection?.[postData?.TellMeMoreButtonSection?.Field_Slug_homesectionbuttontitle]}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                    
+                  })}
+                </Carousel>
+              </div>
+            </section>
+          ) : (
+            // Single post, show as is
+            <section className="homesection">
+              <div className="container">
+                <div className="home">
+                  <div className="row">
+                    <div className="col-sm-2">
+                      <img
+                        src={homesection?.[homesection?.Field_Slug_homesectionimage]}
+                        alt="homeimg"
+                        className="homeimg"
+                      />
                     </div>
-                    <p
-                      className="home-p-font"
-                      style={{
-                        Color: "rgb(173, 173, 173)",
-                        maxWidth: "46%",
-                        marginBottom: "27px",
-                      }}
-                    >
-                      {/* {(() => {
-                        const homesectionDescriptionKey = homesection?.Field_Slug_homesectiondescription;
-                        const capitalizedKey = homesectionDescriptionKey
-                          ? homesectionDescriptionKey.charAt(0).toUpperCase() + homesectionDescriptionKey.slice(1)
-                          : '';
-                        return homesection?.[capitalizedKey];
-                      })()} */}
-
-                      {/* {homesection?.Homesectiondescription} */}
-                      {homesection?.[homesection?.Field_Slug_homesectiondescription]}
-                    </p>
-                    <button
-                      type="button"
-                      className="btn"
-                      id="tellmemore"
-                      style={{
-                        backgroundColor: homesection?.TellMeMoreButtonSection?.[homesection?.TellMeMoreButtonSection?.Field_Slug_homesectionbuttonbackgroundcolor],
-                        color: homesection?.TellMeMoreButtonSection?.[homesection?.TellMeMoreButtonSection?.Field_Slug_homesectionbuttontextcolor],
-                      }}
-                      onClick={() => {
-                        const rawUrl = statu?.home_section?.button_link;
-
-                        // const rawUrl = statu.who_use_wa?.button_link;
-                        // const formattedUrl = rawUrl?.startsWith('http') ? rawUrl : `https://${rawUrl}`;
-                        window.location.href = rawUrl;
-                      }}
-                    >
-                      {/* {console.log(homesection.TellMeMoreButtonSection)} */}
-                      {homesection?.TellMeMoreButtonSection?.[homesection?.TellMeMoreButtonSection?.Field_Slug_homesectionbuttontitle]}
-                    </button>
-
-                    {/* {(() => {
-                        console.log("DTATATATATATTTATA");
-                        console.log(homesection?.Field_Slug_homesectiontitle1);
-                        const homesectionTitleKey = homesection?.Field_Slug_homesectiontitle;
-                        console.log(homesectionTitleKey);
-
-                        const capitalizedKey = homesectionTitleKey
-                          ? homesectionTitleKey.charAt(0).toUpperCase() + homesectionTitleKey.slice(1)
-                          : '';
-                        console.log(homesection?.[capitalizedKey]);
-                        return homesection?.[capitalizedKey];
-                      })()} */}
-                    {/* {
-                        homesection.Tell_me_more_button_section
-                          ?.Homesectionbuttontitle
-                      } */}
-                    {/* </button> */}
-                    {/* {console.log(homesection.HomeSectionTitle)} */}
+                    <div className="col-sm-10">
+                      <div className="homefont">
+                        <h4>
+                          {homesection?.[homesection?.Field_Slug_homesectiontitle]}
+                        </h4>
+                      </div>
+                      <p
+                        className="home-p-font"
+                        style={{
+                          color: "rgb(173, 173, 173)",
+                          maxWidth: "46%",
+                          marginBottom: "27px",
+                        }}
+                      >
+                        {homesection?.[homesection?.Field_Slug_homesectiondescription]}
+                      </p>
+                      <button
+                        type="button"
+                        className="btn"
+                        id="tellmemore"
+                        style={{
+                          backgroundColor: homesection?.TellMeMoreButtonSection?.[homesection?.TellMeMoreButtonSection?.Field_Slug_homesectionbuttonbackgroundcolor],
+                          color: homesection?.TellMeMoreButtonSection?.[homesection?.TellMeMoreButtonSection?.Field_Slug_homesectionbuttontextcolor],
+                        }}
+                        onClick={() => {
+                          const rawUrl = statu?.home_section?.button_link;
+                          window.location.href = rawUrl;
+                        }}
+                      >
+                        {homesection?.TellMeMoreButtonSection?.[homesection?.TellMeMoreButtonSection?.Field_Slug_homesectionbuttontitle]}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
+          )
         ),
       },
       {
@@ -1087,39 +1100,60 @@ const Home = () => {
             <div className="container-fluid">
               <div className="row">
                 <div className="col-md-12">
-                  <div className="sec-3-text">
-                    {/* {console.log(statu.quote_section_1?.post_store[0].data?.[statu.quote_section_1?.post_store[0].data?.Field_Slug_quotesectionimage])} */}
-                    <img
-                      // src={
-                      //   statu.qute_section_1?.post_store[0]?.Qutesectionimage
-                      // }
-                      src={
-                        // statu.quote_section_1?.post_store[0]["data"]
-                        //   .Quotesectionimage
-                        statu.quote_section_1?.post_store[0].data?.[statu.quote_section_1?.post_store[0].data?.Field_Slug_quotesectionimage]
-                      }
-                      className="quoteimage1"
-                      alt="quoteimage1"
-                    />
-                  </div>
-                  <div className="sec-3-text2">
-                    <p className="text-light">
-                      {
-                        statu.quote_section_1?.post_store[0].data?.[statu.quote_section_1?.post_store[0].data?.Field_Slug_quotesectiontitle]
-                      }{" "}
-                      <br />
-                      <span
-                        className="text-secondary"
-                        style={{ fontSize: "medium" }}
-                      >
-                        {
-                          // statu.quote_section_1?.post_store[0]["data"]
-                          //   ?.Quotesectiondescription
-                          statu.quote_section_1?.post_store[0].data?.[statu.quote_section_1?.post_store[0].data?.Field_Slug_quotesectiondescription]
-                        }
-                      </span>
-                    </p>
-                  </div>
+                  {statu.quote_section_1?.post_store?.length > 1 ? (
+                    <Carousel
+                      responsive={carouselResponsive}
+                      infinite={true}
+                      autoPlay={true}
+                      autoPlaySpeed={3000}
+                      showDots={statu.quote_section_1.post_store.length > 1}
+                      arrows={false}
+                    >
+                      {statu.quote_section_1.post_store.map((post, idx) => (
+                        <div key={idx}>
+                          <div className="sec-3-text">
+                            <img
+                              src={post.data?.[post.data?.Field_Slug_quotesectionimage]}
+                              className="quoteimage1"
+                              alt="quoteimage1"
+                            />
+                          </div>
+                          <div className="sec-3-text2">
+                            <p className="text-light">
+                              {post.data?.[post.data?.Field_Slug_quotesectiontitle]} <br />
+                              <span
+                                className="text-secondary"
+                                style={{ fontSize: "medium" }}
+                              >
+                                {post.data?.[post.data?.Field_Slug_quotesectiondescription]}
+                              </span>
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </Carousel>
+                  ) : (
+                    <div>
+                      <div className="sec-3-text">
+                        <img
+                          src={statu.quote_section_1?.post_store[0].data?.[statu.quote_section_1?.post_store[0].data?.Field_Slug_quotesectionimage]}
+                          className="quoteimage1"
+                          alt="quoteimage1"
+                        />
+                      </div>
+                      <div className="sec-3-text2">
+                        <p className="text-light">
+                          {statu.quote_section_1?.post_store[0].data?.[statu.quote_section_1?.post_store[0].data?.Field_Slug_quotesectiontitle]} <br />
+                          <span
+                            className="text-secondary"
+                            style={{ fontSize: "medium" }}
+                          >
+                            {statu.quote_section_1?.post_store[0].data?.[statu.quote_section_1?.post_store[0].data?.Field_Slug_quotesectiondescription]}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -1134,40 +1168,60 @@ const Home = () => {
             <div className="container-fluid">
               <div className="row">
                 <div className="col-md-12">
-                  <div className="sec-3-text">
-                    <img
-                      src={
-                        // statu.quote_section_2?.post_store[0]["data"]
-                        //   ?.Quotesectionimage
-                        statu.quote_section_2?.post_store[0].data?.[statu.quote_section_2?.post_store[0].data?.Field_Slug_quotesectionimage]
-
-                      }
-                      className="quoteimage1"
-                      alt="quoteimage1"
-                    />
-                  </div>
-                  <div className="sec-3-text2">
-                    <p className="text-light">
-                      {
-                        // statu.quote_section_2?.post_store[0]["data"]
-                        //   ?.Quotesectiontitle
-                        statu.quote_section_2?.post_store[0].data?.[statu.quote_section_2?.post_store[0].data?.Field_Slug_quotesectiontitle]
-
-                      }{" "}
-                      <br />
-                      <span
-                        className="text-secondary"
-                        style={{ fontSize: "medium" }}
-                      >
-                        {
-                          // statu.quote_section_2?.post_store[0]["data"]
-                          //   ?.Quotesectiondescription
-                          statu.quote_section_2?.post_store[0].data?.[statu.quote_section_2?.post_store[0].data?.Field_Slug_quotesectiondescription]
-
-                        }
-                      </span>
-                    </p>
-                  </div>
+                  {statu.quote_section_2?.post_store?.length > 1 ? (
+                    <Carousel
+                      responsive={carouselResponsive}
+                      infinite={true}
+                      autoPlay={true}
+                      autoPlaySpeed={3000}
+                      showDots={statu.quote_section_2.post_store.length > 1}
+                      arrows={false}
+                    >
+                      {statu.quote_section_2.post_store.map((post, idx) => (
+                        <div key={idx}>
+                          <div className="sec-3-text">
+                            <img
+                              src={post.data?.[post.data?.Field_Slug_quotesectionimage]}
+                              className="quoteimage1"
+                              alt="quoteimage1"
+                            />
+                          </div>
+                          <div className="sec-3-text2">
+                            <p className="text-light">
+                              {post.data?.[post.data?.Field_Slug_quotesectiontitle]} <br />
+                              <span
+                                className="text-secondary"
+                                style={{ fontSize: "medium" }}
+                              >
+                                {post.data?.[post.data?.Field_Slug_quotesectiondescription]}
+                              </span>
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </Carousel>
+                  ) : (
+                    <div>
+                      <div className="sec-3-text">
+                        <img
+                          src={statu.quote_section_2?.post_store[0].data?.[statu.quote_section_2?.post_store[0].data?.Field_Slug_quotesectionimage]}
+                          className="quoteimage1"
+                          alt="quoteimage1"
+                        />
+                      </div>
+                      <div className="sec-3-text2">
+                        <p className="text-light">
+                          {statu.quote_section_2?.post_store[0].data?.[statu.quote_section_2?.post_store[0].data?.Field_Slug_quotesectiontitle]} <br />
+                          <span
+                            className="text-secondary"
+                            style={{ fontSize: "medium" }}
+                          >
+                            {statu.quote_section_2?.post_store[0].data?.[statu.quote_section_2?.post_store[0].data?.Field_Slug_quotesectiondescription]}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
