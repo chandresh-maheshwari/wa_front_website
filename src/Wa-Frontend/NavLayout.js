@@ -1,4 +1,5 @@
-import { Outlet, Link } from "react-router-dom";
+import './Wa-Frontend.css';
+import { Outlet, Link, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from 'react';
 import Authapi from '../Authapi';
@@ -9,6 +10,7 @@ import Swal from 'sweetalert2';
 
 const Navlayout = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [topbardata, setTopbardata] = useState([]);
     const [userData, setUserData] = useState(null); 
     const [statu, setStatus] = useState([]);
@@ -21,6 +23,7 @@ const Navlayout = () => {
     const allowedPageNames = Array.isArray(pagegetnav)
         ? pagegetnav.map(item => item.page_name)
         : [];
+    const [isLoading, setIsLoading] = useState(false);
 
     const renderContactUsButtons = () => {
         return Object.entries(buttonData).map(([buttonNum, data]) => {
@@ -181,6 +184,11 @@ const Navlayout = () => {
         };
     }, []);
 
+    const handleMenuClick = (to, state) => {
+        setIsLoading(true);
+        navigate(to, { state });
+    };
+
     const renderMenuItems = () => {
         if (!Array.isArray(topbardata)) {
             return null;
@@ -195,15 +203,17 @@ const Navlayout = () => {
                         </div>
                     )}
                     <li className="nav-item">
-                        <Link
+                        <button
                             className="nav-link"
                             id="menu-item"
-                            to={`/menu/${item.replace(/\s+/g, '-').toLowerCase()}`}
-                            // to={`https://${item}`}
-                            state={{ menuName: item }}
+                            style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}
+                            onClick={() => handleMenuClick(
+                                `/menu/${item.replace(/\s+/g, '-').toLowerCase()}`,
+                                { menuName: item }
+                            )}
                         >
                             {item}
-                        </Link>
+                        </button>
                     </li>
                 </div>
             ));
@@ -211,8 +221,8 @@ const Navlayout = () => {
 
     const renderLoginButton = () => {
         return Object.entries(buttonData).map(([buttonNum, data]) => {
-            console.log("DATA=>");
-            console.log(data[data?.Field_Slug_buttontitle2]);
+            // console.log("DATA=>");
+            // console.log(data[data?.Field_Slug_buttontitle2]);
             if (isLoggedIn && data[data?.Field_Slug_buttontitle2] === 'Login') {
                 return null;
             }
@@ -238,51 +248,77 @@ const Navlayout = () => {
         });
     };
     
+    useEffect(() => {
+        setIsLoading(true);
+        const timeout = setTimeout(() => setIsLoading(false), 700); // 700ms fake loading
+        return () => clearTimeout(timeout);
+    }, [location]);
+
     return (
         <>
-            <nav className="navbar navbar-expand-lg navbar-light bg-white" id="menu">
-                <div className="container">
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                            {renderMenuItems()}
-                        </ul>
-                        <form className="d-flex">
-                            {renderContactUsButtons()} 
-                            {!isLoggedIn && renderLoginButton()}
-                        </form>
-                        {isLoggedIn && userData && (
-                            <div className="user-dropdown-container" ref={dropdownRef} style={{color:'white'}}>
-                                <div className="user-icon" onClick={toggleDropdown}>
-                                    {userData.avatar ? (
-                                        <img src={userData.avatar} alt="User Avatar" className="user-avatar" />
-                                    ) : (
-                                        <FaUserCircle size={30} />
-                                    )}
-                                    <span className="user-name">{userData.username}</span>
-                                    {isDropdownOpen ? <MdArrowDropUp /> : <MdArrowDropDown />}
-                                </div>
+            {isLoading && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0, left: 0, right: 0, bottom: 0,
+                    // background: 'rgba(255,255,255,0.7)',
+                    background: 'rgba(0,0,0,0.3)',
 
-{/* {console.log(isDropdownOpen)} */}
-                                {isDropdownOpen && (
-                                    <div className="dropdown-menu">
-                                        <button onClick={handleViewProfile}>View Profile</button>
-                                        <button onClick={handleEditProfile}>Edit Profile</button>
-                                        {/* <button onClick={handleDashboard}>Go to dashboard</button> */}
-                                        <button onClick={handleLogout}>Logout</button>
-                                    </div>
-                                )}
-                            </div>
-                        )}
+                    zIndex: 2000,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backdropFilter: 'blur(2px)'
+                }}>
+                    <div className="spinner-border text-primary" role="status">
+                        <span className="visually-hidden">Loading...</span>
                     </div>
                 </div>
-            </nav>
-            {showLoginPopup && (
-                <Popup isOpen={showLoginPopup} onClose={toggleLoginPopup} onLoginSuccess={handleLoginSuccess} />
             )}
-            <Outlet />
+            <div style={isLoading ? { filter: 'blur(2px)' } : {}}>
+                <nav className="navbar navbar-expand-lg navbar-light bg-white" id="menu">
+                    <div className="container">
+                        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span className="navbar-toggler-icon"></span>
+                        </button>
+                        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                                {renderMenuItems()}
+                            </ul>
+                            <form className="d-flex">
+                                {renderContactUsButtons()} 
+                                {!isLoggedIn && renderLoginButton()}
+                            </form>
+                            {isLoggedIn && userData && (
+                                <div className="user-dropdown-container" ref={dropdownRef} style={{color:'white'}}>
+                                    <div className="user-icon" onClick={toggleDropdown}>
+                                        {userData.avatar ? (
+                                            <img src={userData.avatar} alt="User Avatar" className="user-avatar" />
+                                        ) : (
+                                            <FaUserCircle size={30} />
+                                        )}
+                                        <span className="user-name">{userData.username}</span>
+                                        {isDropdownOpen ? <MdArrowDropUp /> : <MdArrowDropDown />}
+                                    </div>
+
+{/* {console.log(isDropdownOpen)} */}
+                                    {isDropdownOpen && (
+                                        <div className="dropdown-menu">
+                                            <button onClick={handleViewProfile}>View Profile</button>
+                                            <button onClick={handleEditProfile}>Edit Profile</button>
+                                            {/* <button onClick={handleDashboard}>Go to dashboard</button> */}
+                                            <button onClick={handleLogout}>Logout</button>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </nav>
+                {showLoginPopup && (
+                    <Popup isOpen={showLoginPopup} onClose={toggleLoginPopup} onLoginSuccess={handleLoginSuccess} />
+                )}
+                <Outlet />
+            </div>
         </>
     );
 };

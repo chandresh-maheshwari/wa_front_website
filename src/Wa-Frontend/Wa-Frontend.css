@@ -91,6 +91,7 @@ body {
 .line {
     color: white;
     font-weight: 500;
+    margin: 10px;
 }
 
 #contact {

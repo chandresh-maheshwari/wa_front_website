@@ -32,6 +32,7 @@ const MenuPage = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [showLoginPopup, setShowLoginPopup] = useState(false);
     const [Transforming, setTransforming] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
 
 
     const navigate = useNavigate();
@@ -189,6 +190,7 @@ const MenuPage = () => {
     }, [currentMenu]);
 
     const fetchData = async () => {
+        setIsLoading(true);
         try {
             const response = await Authapi.dynamicpageget(currentMenu);
             if (response.status === true) {
@@ -214,66 +216,13 @@ const MenuPage = () => {
             } else {
                 navigate("/Nopage");
             }
-        }
-        // try {
-        //     const response = await Authapi.Alldynamicpageget(currentMenu);
-        //     // console.log(response.results.contact_us.ordering)
-
-        //     // console.log(response.results)
-        //     if (response.status === true) {
-        //         ls("data", response.results);
-
-        //         // console.log(response.results)
-        //         setStatus(response.results);
-        //         setHomesection(response.results.home_section.post_store[0]['Data']);
-        //         setTransforming(response.results.page_section.post_store[0]['Data']);
-        //         // console.log(response.results.about_us.post_store);
-        //         // const dynamicTitles = response.results.about_us.post_store.flatMap(
-        //         //   (post) =>
-        //         //     Object.keys(post)
-        //         //       .filter((key) => key.startsWith("Title"))
-        //         //       .map((key) => post[key])
-        //         //     );
-        //         // console.log(dynamicTitles);
-        //         // setTitles(dynamicTitles);
-        //         // const dynamicDescriptions =
-        //         //   response.results.about_us.post_store.flatMap((post) =>
-        //         //     Object.keys(post)
-        //         //       .filter((key) => key.startsWith("Description"))
-        //         //       .map((key) => post[key])
-        //         //   );
-        //         // setDescription(dynamicDescriptions);
-        //         // console.log(response.results.about_us.post_store);
-
-        //         // Extract Titles
-        //         const dynamicTitles = response.results.about_us.post_store.flatMap(
-        //             (post) =>
-        //                 Object.keys(post.Data)  // Access 'Data' property directly
-        //                     .filter((key) => key.startsWith("Title"))  // Filter by keys that start with 'Title'
-        //                     .map((key) => post.Data[key])  // Get the corresponding value for each 'Title'
-        //         );
-
-        //         // console.log(dynamicTitles);
-        //         setTitles(dynamicTitles);
-
-        //         // Extract Descriptions
-        //         const dynamicDescriptions = response.results.about_us.post_store.flatMap((post) =>
-        //             Object.keys(post.Data)  // Access 'Data' property directly
-        //                 .filter((key) => key.startsWith("Description"))  // Filter by keys that start with 'Description'
-        //                 .map((key) => post.Data[key])  // Get the corresponding value for each 'Description'
-        //         );
-
-        //         setDescription(dynamicDescriptions);
-
-        //     } else {
-        //         console.error("Invalid response structure:", response);
-        //     }
-        // } 
-        catch (error) {
+        } catch (error) {
             if (error.status === 404) {
                 navigate("/Nopage");
             }
             console.log(error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -294,213 +243,6 @@ const MenuPage = () => {
         }
         setErrors(newErrors);
     };
-
-    // const renderCards = () => {
-    //     // console.log(4444444444444444444444444444444444444444444444444444444444444444444444);
-    //     // console.log(statu.our_products?.post_store);
-    //     return statu.post_store.map((card, index) => {
-    //         // Destructure and extract relevant fields from the Data object
-    //         // console.log(card.data.Information_section_1)
-    //         const feesSection3 = card.data.Fees_section_3 || {};
-    //         const infoSection1 = card.data.Information_section_1 || {};
-    //         const serviceSection2 = card.data.Service_section_2 || {};
-    //         const feessection3 = card.data.Fees_section_3 || {};
-    //         const purchaseButtonSection = card.data.Purchase_button_section_4 || {};
-
-    //         // Check if there's any content to display (excluding the Field_slug values)
-    //         const hasContent =
-    //             infoSection1.Information1 ||
-    //             infoSection1.Information2 ||
-    //             infoSection1.Information3 ||
-    //             infoSection1.Information4 ||
-    //             infoSection1.Information5 ||
-    //             serviceSection2.Service1 ||
-    //             serviceSection2.Service2 ||
-    //             feesSection3.Monthlyfee ||
-    //             feessection3.Montlyfeecardtext1 ||
-    //             feessection3.Montlyfeecardtext1 ||
-    //             purchaseButtonSection.Amount ||
-    //             purchaseButtonSection.Buttonbackgroundcolor ||
-    //             purchaseButtonSection.Buttoncolor ||
-    //             purchaseButtonSection.Buttontext;
-
-    //         if (!hasContent) return null;
-
-    //         return (
-    //             <div className={`col-lg-4`} id={`card${index + 1}`} key={card.Id}>
-    //                 <div className={`card-liner-card-${index + 1}`} id="card-liner-card"></div>
-    //                 <div className={`card${index + 1} card`}>
-    //                     {/* {console.log(card['Data'].Modelsectionpackagesection)} */}
-    //                     {/* <span className="medaltype">{card.Post_name}</span> */}
-    //                     <span className="medaltype">{card['data'].Modelsectionpackagesection}</span>
-    //                     <div className={`card${index + 1}-text`}>
-    //                         {/* Render Information Section */}
-    //                         {/* {console.log(infoSection1)} */}
-    //                         {[infoSection1.Information1, infoSection1.Information2, infoSection1.Information3, infoSection1.Information4, infoSection1.Information5].map((text, i) => (
-    //                             text && (
-    //                                 <p style={cardTextStyle} key={i} className='cardtext'>
-    //                                     <img src={righticon} className={`card${index + 1}righticon`} alt={`Icon ${i + 1}`} style={cardTextImageStyle} />
-    //                                     {text}
-    //                                 </p>
-    //                             )
-    //                         ))}
-    //                         {/* {infoSection1.Information1 || infoSection1.Information2 || infoSection1.Information3 || infoSection1.Information4 || infoSection1.Information5 ? <div className="card-liner-inside"></div> : null} */}
-
-    //                         {/* {infoSection1.Information1 && (
-    //                 <p style={cardTextStyle} key="info1" className="cardtext">
-    //                   <img
-    //                     src={righticon}
-    //                     className={`card${index + 1}righticon`}
-    //                     alt="Icon 1"
-    //                     style={cardTextImageStyle}
-    //                   />
-    //                   {infoSection1.Information1}
-    //                 </p>
-    //               )}
-    //               {infoSection1.Information2 && (
-    //                 <p style={cardTextStyle} key="info2" className="cardtext">
-    //                   <img
-    //                     src={righticon}
-    //                     className={`card${index + 1}righticon`}
-    //                     alt="Icon 2"
-    //                     style={cardTextImageStyle}
-    //                   />
-    //                   {infoSection1.Information2}
-    //                 </p>
-    //               )}
-    //               {infoSection1.Information3 && (
-    //                 <p style={cardTextStyle} key="info3" className="cardtext">
-    //                   <img
-    //                     src={righticon}
-    //                     className={`card${index + 1}righticon`}
-    //                     alt="Icon 3"
-    //                     style={cardTextImageStyle}
-    //                   />
-    //                   {infoSection1.Information3}
-    //                 </p>
-    //               )}
-    //               {infoSection1.Information4 && (
-    //                 <p style={cardTextStyle} key="info4" className="cardtext">
-    //                   <img
-    //                     src={righticon}
-    //                     className={`card${index + 1}righticon`}
-    //                     alt="Icon 4"
-    //                     style={cardTextImageStyle}
-    //                   />
-    //                   {infoSection1.Information4}
-    //                 </p>
-    //               )}
-    //               {infoSection1.Information5 && (
-    //                 <p style={cardTextStyle} key="info5" className="cardtext">
-    //                   <img
-    //                     src={righticon}
-    //                     className={`card${index + 1}righticon`}
-    //                     alt="Icon 5"
-    //                     style={cardTextImageStyle}
-    //                   />
-    //                   {infoSection1.Information5}
-    //                 </p>
-    //               )} */}
-    //                         {Object.values(infoSection1).some((text) => text) && (
-    //                             <div className="card-liner-inside"></div>
-    //                         )}
-    //                     </div>
-
-    //                     <div className={`card${index + 1}-sec-2-text`}>
-    //                         {/* Render Service Section */}
-    //                         {serviceSection2.Service1 && (
-    //                             <p style={cardTextStyle}>
-    //                                 <img
-    //                                     src={plushicon}
-    //                                     className={`card${index + 1}plushicon`}
-    //                                     alt="Add On Icon"
-    //                                     style={cardTextImageStyle}
-    //                                 />
-    //                                 {serviceSection2.Service1}
-    //                             </p>
-    //                         )}
-    //                         {serviceSection2.Service1 && <div className="card-liner-inside-2"></div>}
-
-    //                         <div className={`card-${index + 1}-sec-3`}>
-    //                             {/* Render Monthly Fee */}
-    //                             {feesSection3.Monthlyfee && (
-    //                                 <p className={`card${index + 1}-sec-3-text1`}>
-    //                                     {feesSection3.Monthlyfee}
-    //                                 </p>
-    //                             )}
-    //                             {[feessection3.Montlyfeecardtext1, feessection3.Montlyfeecardtext2].map((text, i) => (
-    //                                 text && (
-    //                                     <p style={cardTextStyle} key={i} className='cardtext'>
-    //                                         <img
-    //                                             src={plushicon}
-    //                                             className={`card${index + 1}plushicon`}
-    //                                             alt="Add On Icon"
-    //                                             style={cardTextImageStyle}
-    //                                         />
-    //                                         {text}
-    //                                     </p>
-    //                                 )
-    //                             ))}
-
-    //                             {/* Render Service 2 */}
-    //                             {serviceSection2.Service2 && (
-    //                                 <p className={`card${index + 1}-sec-3-text`}>
-    //                                     <img
-    //                                         src={plushicon}
-    //                                         className={`card${index + 1}plushicon`}
-    //                                         alt="Add On Icon"
-    //                                         style={cardTextImageStyle}
-    //                                     />
-    //                                     {serviceSection2.Service2}
-    //                                 </p>
-    //                             )}
-    //                         </div>
-
-    //                     </div>
-    //                     {/* style={{ position: 'absolute', bottom: '13px', left: '0', right: '0' }} */}
-    //                     {purchaseButtonSection.Buttontext && (
-    //                         <div className="text-center purchase-btn">
-    //                             {/* <button
-    //                                 role="link"
-    //                                 className="btn w-50"
-    //                                 style={{
-    //                                     backgroundColor: purchaseButtonSection.Buttonbackgroundcolor || '#40bedd',
-    //                                     color: purchaseButtonSection.Buttoncolor || '#ffffff',
-    //                                 }}
-    //                             // onMouseOver={(e) => {
-    //                             //   e.target.style.backgroundColor = card.data.Buttonhovercolor || '#17bee8';
-    //                             // }}
-    //                             // onMouseOut={(e) => {
-    //                             //   e.target.style.backgroundColor = card.data.Buttonbackgroundcolor || '#40bedd';
-    //                             // }}
-
-    //                             > */}
-    //                             <button
-    //                                 role="link"
-    //                                 className="btn w-50"
-    //                                 style={{
-    //                                     backgroundColor: purchaseButtonSection.Buttonbackgroundcolor || '#40bedd',
-    //                                     color: purchaseButtonSection.Buttoncolor || '#ffffff',
-    //                                 }}
-    //                                 // onMouseOver={(e) => {
-    //                                 //   e.target.style.backgroundColor = card.Buttonhovercolor || '#17bee8';
-    //                                 // }}
-    //                                 // onMouseOut={(e) => {
-    //                                 //   e.target.style.backgroundColor = card.Buttonbackgroundcolor || '#40bedd';
-    //                                 // }}
-
-    //                                 onClick={() => handlePurchaseSubmit(card['data'].Modelsectionpackagesection, purchaseButtonSection.Amount, purchaseButtonSection.Stripid)}
-    //                             >
-    //                                 {`${purchaseButtonSection.Buttontext} - ${purchaseButtonSection.Amount}`}
-    //                             </button>
-    //                         </div>
-    //                     )}
-    //                 </div>
-    //             </div>
-    //         );
-    //     });
-    // };
-
 
     const renderCards = () => {
         // console.log("XXXXXXXXXXXXXXXXX");
@@ -758,288 +500,307 @@ const MenuPage = () => {
         <>
             <Navlayout />
             <Expired />
-            {/* {console.log(statu)} */}
-            {currentMenu === 'About Us' && statu.page_status === 1 && topbardata.length > 0 ? (
-                <section className="page-section" id="package_section">
-                    <div className="container type-1">
-                        <div className="row">
-                            <div className="col-12">
-                                <div className="sec-8-heading">
-                                    <h1 id="About-us">
-                                        {/* {statu.about_us?.page_name} */}
-                                        {statu.page_name}
-                                    </h1>
+            {isLoading ? (
+                <div style={{
+                    position: 'fixed',
+                    top: 0, left: 0, right: 0, bottom: 0,
+                    // background: 'rgba(200,200,200,0.5)',
+                    background: 'rgba(0,0,0,0.3)',
+                    zIndex: 2000,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backdropFilter: 'blur(1px)'
+                }}>
+                    <div className="spinner-border text-primary" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            ) : (
+                <>
+                    {/* {console.log(statu)} */}
+                    {currentMenu === 'About Us' && statu.page_status === 1 && topbardata.length > 0 ? (
+                        <section className="page-section" id="package_section">
+                            <div className="container type-1">
+                                <div className="row">
+                                    <div className="col-12">
+                                        <div className="sec-8-heading">
+                                            <h1 id="About-us">
+                                                {/* {statu.about_us?.page_name} */}
+                                                {statu.page_name}
+                                            </h1>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="row" style={{ marginBottom: "6%" }}>
+                                    <div className="col-md-3">
+                                        <div className="content-box">
+                                            {/* {console.log(titles)} */}
+
+                                            {titles.map((title, index) => (
+                                                <div key={index}>
+                                                    {/* {console.log(title)} */}
+                                                    <h5 className="title-sm">{title}</h5>
+                                                    <p></p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div className="col-md-9">
+                                        <div className="content-box">
+                                            {Array.isArray(description) ? (
+                                                description.map((descItem, index) => (
+                                                    <p key={index}>{descItem}</p>
+                                                ))
+                                            ) : (
+                                                <p>{description}</p>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                        </section>
+                    ) : currentMenu === 'About Us' && statu.page_status === 0 ? (
+                        <div className="text-center"> 404 Page Not Found</div>
+                    ) : null}
+
+                    {currentMenu === 'Our Products' && statu.page_status === 1 && topbardata.length > 0 ? (
+                        <section className="packages-sec" id="package_section">
+                            <div className="container mt-2">
+                                <div className="waste-management-service-title">
+                                    <h4>{statu.page_description}</h4>
+
+                                </div>
+                                <div className="row">{renderCards()}</div>
+                                {statu.page_status === 1 && (
+                                    <div className="row mt-5">
+                                        <div className="col-12">
+                                            <button
+                                                type="button"
+                                                onClick={() => navigate("/menu/contact-us")}
+                                                className="btn sky-blue-btn mb-5"
+                                            >
+                                                Contact Us
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </section>
+                    ) : currentMenu === 'Our Products' && statu.page_status === 0 ? (
+                        <div className="text-center"> 404 Page Not Found</div>
+                    ) : null}
+
+                    {currentMenu === 'Contact Us' && statu.page_status === 1 && topbardata.length > 0 ? (
+                        <section className="lets-talk-sec" id="package_section">
+                        <div className="container" id="sec-10">
+                          <div className="contactusswction">
+                            <form id="contactForm">
+                              <div className="row ">
+                                <div className="col-12">
+                                  <h4 className="letstallktitle">
+                                    {statu?.post_store[0].data?.[statu?.post_store[0].data?.Field_Slug_title]}
+                                  </h4>
+                                  <div className="inputgroup">
+                                    {statu?.post_store[0].data?.[statu?.post_store[0].data?.Field_Slug_description]}
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="row">
+                                {statu?.post_store.map((item, index) => (
+                                  <div className="col-md-6" key={index}>
+                                    <div className="inputgroup">
+                                      <label>{item.data?.[item.data?.Field_Slug_label]}</label>
+                                      {item.data?.[item.data?.Field_Slug_type] === "Textarea" ? (
+    
+                                        <textarea
+                                          className="form-control"
+                                          name={`field${index}`}
+                                          rows="4"
+                                          onChange={(e) => handleInputChange(e, index)}
+                                        />
+                                      ) : (
+                                        <input
+                                          className="form-control"
+                                          name={`field${index}`}
+                                          type={item.data.Type}
+                                          onChange={(e) => handleInputChange(e, index)}
+                                        />
+                                      )}
+    
+                                      {errors[`label${index}`] && (
+                                        <span style={{ color: "red" }}>
+                                          {errors[`label${index}`]}
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </form>
+    
+                            <div className="row mt-3 ">
+                              <div className="col-12">
+                                <button
+                                  type="submit"
+                                  onClick={handleSubmit}
+                                  className="btn w-auto sky-blue-btn-sendmeasge"
+                                >
+                                  {/* Send my message */}
+                                  {statu?.button_name}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
                         </div>
+                      </section>
+                    ) : null
+                    }
 
-                        <div className="row" style={{ marginBottom: "6%" }}>
-                            <div className="col-md-3">
-                                <div className="content-box">
-                                    {/* {console.log(titles)} */}
-
-                                    {titles.map((title, index) => (
-                                        <div key={index}>
-                                            {/* {console.log(title)} */}
-                                            <h5 className="title-sm">{title}</h5>
-                                            <p></p>
+                    {/* {console.log(currentMenu)} */}
+                    {currentMenu === 'Who Use WA' && statu.page_status === 1 ? (
+                        <section className="clients-section" id="clients_section">
+                            <div className="container sliderconatainer">
+                            <h2 className="font-weight-light slider-heading text-center">
+                            {statu.page_description}</h2>
+                                <div className="clients-grid">
+                                    {statu.post_store.map((item, index) => (
+                                        <div key={item.Id} className="client-logo">
+                                            {item.data && item.data.Link ? (
+                                                <Link to={item.data.Link}>
+                                                    <img
+                                                        src={item.data.Image}
+                                                        alt={`Client ${index + 1}`}
+                                                        className="client-image sliderimages"
+                                                    />
+                                                </Link>
+                                            ) : item.data ? (
+                                                <img
+                                                    src={item.data.Image}
+                                                    alt={`Client ${index + 1}`}
+                                                    className="client-image sliderimages"
+                                                />
+                                            ) : null}
                                         </div>
                                     ))}
                                 </div>
                             </div>
-                            <div className="col-md-9">
-                                <div className="content-box">
-                                    {Array.isArray(description) ? (
-                                        description.map((descItem, index) => (
-                                            <p key={index}>{descItem}</p>
-                                        ))
-                                    ) : (
-                                        <p>{description}</p>
+                        </section>
+                    ) : null} 
+
+
+                    {currentMenu === 'Who Use WA' && statu.page_status === 1 ? (
+                        <section className="clients-section" id="clients_section">
+                            <div className="container sliderconatainer">
+                                <h2 className="font-weight-light slider-heading text-center">
+                                    {statu.page_description}
+                                </h2>
+                                <div className="clients-grid">
+                                    {statu.post_store.map((item, index) => (
+                                        <div key={item.Id} className="client-logo">
+                                            {item.data && item.data.Link ? (
+                                                <Link to={item.data.Link}>
+                                                    <img
+                                                        src={item.data.Image}
+                                                        alt={`Client ${index + 1}`}
+                                                        className="client-image sliderimages"
+                                                    />
+                                                </Link>
+                                            ) : item.data ? (
+                                                <img
+                                                    src={item.data.Image}
+                                                    alt={`Client ${index + 1}`}
+                                                    className="client-image sliderimages"
+                                                />
+                                            ) : null}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </section>
+                    ) : null}
+
+
+                    {currentMenu === 'Transforming Waste Industry' && statu.page_status === 1 && topbardata.length > 0 ? (
+                        <section className="page-section" id="transforming_section">
+                            <div className="container p-5 transforming_section_container">
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <div className="transfo">
+                                            <h5 className="text-center transforming ">
+                                                {statu?.page_description}
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="container">
+                                <div className="row p-5 justify-content-center">
+                                    {Transforming[0]?.data && !Transforming[1]?.data && (
+                                        <div className="col-md-8 text-center">
+                                            <h5 className="for-waste centered-text">
+                                                {Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle1]} <br />
+                                                <b>{Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle2]}</b>
+                                            </h5>
+                                            <p className="transfotextdes1 centered-text">
+                                                {Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiondescription]}
+                                            </p>
+                                        </div>
+                                    )}
+                                    {Transforming[1]?.data && !Transforming[0]?.data && (
+                                        <div className="col-md-8 text-center">
+                                            <h5 className="for-waste">
+                                                {Transforming[1]?.data?.[Transforming[1]?.data?.Field_Slug_pagesectiontitle1]} <br />
+                                                <b>{Transforming[1]?.data?.[Transforming[1]?.data?.Field_Slug_pagesectiontitle2]}</b>
+                                            </h5>
+                                            <p className="transfotextdes2 centered-text">
+                                                {Transforming[1]?.data?.[Transforming[1]?.data?.Field_Slug_pagesectiondescription]}
+                                            </p>
+                                        </div>
+                                    )}
+                                    {Transforming[0]?.data && Transforming[1]?.data && (
+                                        <>
+                                            <div className="col-md-5">
+                                                <h5 className="transfotext1 for-waste">
+                                                    {Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle1]} <br />
+                                                    <b>{Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle2]}</b>
+                                                </h5>
+                                                <p className="transfotextdes1">
+                                                    {Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiondescription]}
+                                                </p>
+                                            </div>
+                                            <div className="col-md-2 stretch-line">
+                                                <img
+                                                    src={statu?.image}
+                                                    width="60px"
+                                                    className="strech"
+                                                    alt="strech"
+                                                />
+                                            </div>
+                                            <div className="col-md-5">
+                                                <h5 className="transfotext2 for-waste">
+                                                    {Transforming[1]?.data?.[Transforming[1]?.data?.Field_Slug_pagesectiontitle1]} <br />
+                                                    <b>{Transforming[1]?.data?.[Transforming[1]?.data?.Field_Slug_pagesectiontitle2]}</b>
+                                                </h5>
+                                                <p className="transfotextdes2">
+                                                    {Transforming[1]?.data?.[Transforming[1]?.data?.Field_Slug_pagesectiondescription]}
+                                                </p>
+                                            </div>
+                                        </>
                                     )}
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </section>
-            ) : currentMenu === 'About Us' && statu.page_status === 0 ? (
-                <div className="text-center"> 404 Page Not Found</div>
-            ) : null}
+                        </section>
+                    ) : null}
 
-            {currentMenu === 'Our Products' && statu.page_status === 1 && topbardata.length > 0 ? (
-                <section className="packages-sec" id="package_section">
-                    <div className="container mt-2">
-                        <div className="waste-management-service-title">
-                            <h4>{statu.page_description}</h4>
-
-                        </div>
-                        <div className="row">{renderCards()}</div>
-                        {statu.page_status === 1 && (
-                            <div className="row mt-5">
-                                <div className="col-12">
-                                    <button
-                                        type="button"
-                                        onClick={() => navigate("/menu/contact-us")}
-                                        className="btn sky-blue-btn mb-5"
-                                    >
-                                        Contact Us
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </section>
-            ) : currentMenu === 'Our Products' && statu.page_status === 0 ? (
-                <div className="text-center"> 404 Page Not Found</div>
-            ) : null}
-
-            {currentMenu === 'Contact Us' && statu.page_status === 1 && topbardata.length > 0 ? (
-                <section className="lets-talk-sec" id="package_section">
-                <div className="container" id="sec-10">
-                  <div className="contactusswction">
-                    <form id="contactForm">
-                      <div className="row ">
-                        <div className="col-12">
-                          <h4 className="letstallktitle">
-                            {statu?.post_store[0].data?.[statu?.post_store[0].data?.Field_Slug_title]}
-                          </h4>
-                          <div className="inputgroup">
-                            {statu?.post_store[0].data?.[statu?.post_store[0].data?.Field_Slug_description]}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="row">
-                        {statu?.post_store.map((item, index) => (
-                          <div className="col-md-6" key={index}>
-                            <div className="inputgroup">
-                              <label>{item.data?.[item.data?.Field_Slug_label]}</label>
-                              {item.data?.[item.data?.Field_Slug_type] === "Textarea" ? (
-    
-                                <textarea
-                                  className="form-control"
-                                  name={`field${index}`}
-                                  rows="4"
-                                  onChange={(e) => handleInputChange(e, index)}
-                                />
-                              ) : (
-                                <input
-                                  className="form-control"
-                                  name={`field${index}`}
-                                  type={item.data.Type}
-                                  onChange={(e) => handleInputChange(e, index)}
-                                />
-                              )}
-    
-                              {errors[`label${index}`] && (
-                                <span style={{ color: "red" }}>
-                                  {errors[`label${index}`]}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </form>
-    
-                    <div className="row mt-3 ">
-                      <div className="col-12">
-                        <button
-                          type="submit"
-                          onClick={handleSubmit}
-                          className="btn w-auto sky-blue-btn-sendmeasge"
-                        >
-                          {/* Send my message */}
-                          {statu?.button_name}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </section>
-            ) : null
-            }
-
-            {/* {console.log(currentMenu)} */}
-            {/* {currentMenu === 'Who Use WA' && statu.page_status === 1 ? (
-                <section className="clients-section" id="clients_section">
-                    <div className="container sliderconatainer">
-                    <h2 className="font-weight-light slider-heading text-center">
-                    {statu.page_description}</h2>
-                        <div className="clients-grid">
-                            {statu.post_store.map((item, index) => (
-                                <div key={item.Id} className="client-logo">
-                                    {item.data && item.data.Link ? (
-                                        <Link to={item.data.Link}>
-                                            <img
-                                                src={item.data.Image}
-                                                alt={`Client ${index + 1}`}
-                                                className="client-image sliderimages"
-                                            />
-                                        </Link>
-                                    ) : item.data ? (
-                                        <img
-                                            src={item.data.Image}
-                                            alt={`Client ${index + 1}`}
-                                            className="client-image sliderimages"
-                                        />
-                                    ) : null}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            ) : null}  */}
-
-
-            {currentMenu === 'Who Use WA' && statu.page_status === 1 ? (
-                <section className="clients-section" id="clients_section">
-                    <div className="container slidercontainer">
-                        <h2 className="font-weight-light slider-heading text-center">
-                            {statu.page_description}
-                        </h2>
-                        <div className="clients-grid">
-                            {statu.post_store.map((item, index) => (
-                                <div key={item.Id} className="client-logo">
-                                    {item.data && item.data.Link ? (
-                                        <Link to={item.data.Link}>
-                                            <img
-                                                src={item.data.Image}
-                                                alt={`Client ${index + 1}`}
-                                                className="client-image sliderimages"
-                                            />
-                                        </Link>
-                                    ) : item.data ? (
-                                        <img
-                                            src={item.data.Image}
-                                            alt={`Client ${index + 1}`}
-                                            className="client-image sliderimages"
-                                        />
-                                    ) : null}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            ) : null}
-
-
-            {currentMenu === 'Transforming Waste Industry' && statu.page_status === 1 && topbardata.length > 0 ? (
-                <section className="page-section" id="transforming_section">
-                    <div className="container p-5 transforming_section_container">
-                        <div className="row">
-                            <div className="col-md-12">
-                                <div className="transfo">
-                                    <h5 className="text-center transforming ">
-                                        {statu?.page_description}
-                                    </h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="container">
-                        <div className="row p-5 justify-content-center">
-                            {Transforming[0]?.data && !Transforming[1]?.data && (
-                                <div className="col-md-8 text-center">
-                                    <h5 className="for-waste centered-text">
-                                        {Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle1]} <br />
-                                        <b>{Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle2]}</b>
-                                    </h5>
-                                    <p className="transfotextdes1 centered-text">
-                                        {Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiondescription]}
-                                    </p>
-                                </div>
-                            )}
-                            {Transforming[1]?.data && !Transforming[0]?.data && (
-                                <div className="col-md-8 text-center">
-                                    <h5 className="for-waste">
-                                        {Transforming[1]?.data?.[Transforming[1]?.data?.Field_Slug_pagesectiontitle1]} <br />
-                                        <b>{Transforming[1]?.data?.[Transforming[1]?.data?.Field_Slug_pagesectiontitle2]}</b>
-                                    </h5>
-                                    <p className="transfotextdes2 centered-text">
-                                        {Transforming[1]?.data?.[Transforming[1]?.data?.Field_Slug_pagesectiondescription]}
-                                    </p>
-                                </div>
-                            )}
-                            {Transforming[0]?.data && Transforming[1]?.data && (
-                                <>
-                                    <div className="col-md-5">
-                                        <h5 className="transfotext1 for-waste">
-                                            {Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle1]} <br />
-                                            <b>{Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle2]}</b>
-                                        </h5>
-                                        <p className="transfotextdes1">
-                                            {Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiondescription]}
-                                        </p>
-                                    </div>
-                                    <div className="col-md-2 stretch-line">
-                                        <img
-                                            src={statu?.image}
-                                            width="60px"
-                                            className="strech"
-                                            alt="strech"
-                                        />
-                                    </div>
-                                    <div className="col-md-5">
-                                        <h5 className="transfotext2 for-waste">
-                                            {Transforming[1]?.data?.[Transforming[1]?.data?.Field_Slug_pagesectiontitle1]} <br />
-                                            <b>{Transforming[1]?.data?.[Transforming[1]?.data?.Field_Slug_pagesectiontitle2]}</b>
-                                        </h5>
-                                        <p className="transfotextdes2">
-                                            {Transforming[1]?.data?.[Transforming[1]?.data?.Field_Slug_pagesectiondescription]}
-                                        </p>
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                    </div>
-                </section>
-            ) : null}
-
-            {showLoginPopup && (
-                <Popup isOpen={showLoginPopup} onClose={toggleLoginPopup} onLoginSuccess={handleLoginSuccess} />
+                    {showLoginPopup && (
+                        <Popup isOpen={showLoginPopup} onClose={toggleLoginPopup} onLoginSuccess={handleLoginSuccess} />
+                    )}
+                    <Outlet />
+                </>
             )}
-            <Outlet />
-
         </>
     );
 };

@@ -813,9 +813,9 @@ const Home = () => {
                 >
                   {`${purchaseButtonSection.Buttontext} - ${purchaseButtonSection.Amount}`}
                 </button> */}
-                {console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")}
+                {/* {console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")}
                 {console.log(purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_stripid])}
-                {console.log(purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_trialdays])}
+                {console.log(purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_trialdays])} */}
 
                 <button
                   role="link"
