@@ -506,7 +506,38 @@ const Company = () => {
                     </div>
 
                   </div>
-                  <div className="form-group col-md-6 mb-4">
+                  <div className="form-group col-md-6">
+                    <div className="input-with-icon">
+                      <label className="label" htmlFor="contractName">
+                        Company Contact Name
+                      </label>
+                      <Tooltip title="Add the name of the main contact" arrow>
+                        <FontAwesomeIcon
+                          icon={faInfoCircle}
+                          className="info-icon"
+                        />
+                      </Tooltip>
+                    </div>
+                    <div className="field">
+                      <input
+                        type="text"
+                        className={`form-control company ${formErrors.contractName ? "is-invalid" : ""
+                          }`}
+                        id="contractName"
+                        name="contractName"
+                        value={formData.contractName}
+                        onChange={handleInputChange}
+                        required
+                        placeholder="Company Contact Name"
+                      />
+                      {formErrors.contractName && (
+                        <div className="invalid-feedback">
+                          {formErrors.contractName}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  {/* <div className="form-group col-md-6 mb-4">
                     <div className="input-with-icon">
                       <label className="label" htmlFor="mainIndustry">
                         Company's Main Industry
@@ -529,10 +560,10 @@ const Company = () => {
                         styles={customSelectStyles}
                       />
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
-                <div className="form-row">
+                {/* <div className="form-row">
                   <div className="form-group col-md-6  mb-4">
                     <div className="input-with-icon">
                       <label className="label" htmlFor="mainActivity">
@@ -570,16 +601,6 @@ const Company = () => {
                         />
                       </Tooltip>
                     </div>
-                    {/* <Select
-                      className="form-control company"
-                      options={subActivityOptions}
-                      value={formData.subActivity}
-                      onChange={handleSubActivityChange}
-                      placeholder="Select Sub Activity"
-                      isSearchable
-                      isDisabled={!formData.mainActivity}
-                     
-                    /> */}
                     <div className="field">
                       <Select
                         className="searchable_dropdown"
@@ -593,7 +614,7 @@ const Company = () => {
                       />
                     </div>
                   </div>
-                </div>
+                </div> */}
 
                 {isSicCodeVisible && (
                   <div className="form-group col-md-6">
@@ -623,37 +644,6 @@ const Company = () => {
                 <div className="form-row">
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
-                      <label className="label" htmlFor="contractName">
-                        Company Contact Name
-                      </label>
-                      <Tooltip title="Add the name of the main contact" arrow>
-                        <FontAwesomeIcon
-                          icon={faInfoCircle}
-                          className="info-icon"
-                        />
-                      </Tooltip>
-                    </div>
-                    <div className="field">
-                      <input
-                        type="text"
-                        className={`form-control company ${formErrors.contractName ? "is-invalid" : ""
-                          }`}
-                        id="contractName"
-                        name="contractName"
-                        value={formData.contractName}
-                        onChange={handleInputChange}
-                        required
-                        placeholder="Company Contact Name"
-                      />
-                      {formErrors.contractName && (
-                        <div className="invalid-feedback">
-                          {formErrors.contractName}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <div className="form-group col-md-6">
-                    <div className="input-with-icon">
                       <label className="label">Company Postcode</label>
                       <Tooltip title="Please add the postcode for your company's registered office, that appears on the Companies House website." arrow>
                         <FontAwesomeIcon
@@ -680,9 +670,6 @@ const Company = () => {
                       )}
                     </div>
                   </div>
-                </div>
-
-                <div className="form-row">
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
                       <label className="label">Address Line 1</label>
@@ -705,7 +692,9 @@ const Company = () => {
                       />
                     </div>
                   </div>
+                </div>
 
+                <div className="form-row">
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
                       <label className="label">Address Line 2</label>
@@ -728,9 +717,6 @@ const Company = () => {
                       />
                     </div>
                   </div>
-                </div>
-
-                <div className="form-row">
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
                       <label className="label">Address Line 3</label>
@@ -753,6 +739,10 @@ const Company = () => {
                       />
                     </div>
                   </div>
+                </div>
+
+                <div className="form-row">
+
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
                       <label className="label">Address Line 4</label>
@@ -775,9 +765,7 @@ const Company = () => {
                       />
                     </div>
                   </div>
-                </div>
 
-                <div className="form-row">
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
                       <label className="label" htmlFor="contactNumber">
@@ -809,6 +797,10 @@ const Company = () => {
                       )}
                     </div>
                   </div>
+                </div>
+
+                <div className="form-row">
+                  
 
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
@@ -842,9 +834,6 @@ const Company = () => {
                       )}
                     </div>
                   </div>
-                </div>
-
-                <div className="form-row">
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
                       <label className="label">Company Active</label>
@@ -888,6 +877,10 @@ const Company = () => {
                     </div>
                   </div>
                 </div>
+
+                {/* <div className="form-row">
+                  
+                </div> */}
               </form>
             </div>
           )}
