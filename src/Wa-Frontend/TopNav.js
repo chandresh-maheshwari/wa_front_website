@@ -41,9 +41,10 @@ const TopNav = () => {
                                     <img src={topbardata.Top_bar_logo_section?.Logoimage} className="wa-logo" alt="wa-logo" /></Link> */}
                                     {/* {console.log(topbardata)}                        */}
 
+                                    <div className="logo-div">
                                     <Link to={topbardata?.TopBarLogoSection?.[topbardata?.TopBarLogoSection?.Field_Slug_logolink]}>
                                     <img src={topbardata?.TopBarLogoSection?.[topbardata?.TopBarLogoSection?.Field_Slug_logoimage]} className="wa-logo" alt="wa-logo" /></Link>
-
+                                    </div>
                                     {/* <a
                                         href={
                                             topbardata?.TopBarLogoSection?.[topbardata?.TopBarLogoSection?.Field_Slug_logolink]?.startsWith('http')

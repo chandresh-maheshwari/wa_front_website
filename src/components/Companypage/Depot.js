@@ -42,7 +42,7 @@ const DepotForm = () => {
     depotPostcode: "",
     countyId: "",
     depotTelephone: "",
-    depotPermitTonnageLimit: "",
+    // depotPermitTonnageLimit: "",
     includeTonnageLimitonDashboard: "",
     startDate: "",
     endDate: "",
@@ -256,7 +256,7 @@ const DepotForm = () => {
         depot_postcode: formData.depotPostcode,
         county_id: formData.countyId,
         depot_telephone: formData.depotTelephone,
-        depot_permit_tonnage_limit: formData.depotPermitTonnageLimit,
+        // depot_permit_tonnage_limit: formData.depotPermitTonnageLimit,
         include_tonnage_limit_on_dashboard: formData.includeTonnageLimitOnDashboard,
         start_date_tonnage_material: formData.startDate,
         end_date_tonnage_material: formData.endDate,
@@ -317,7 +317,7 @@ const DepotForm = () => {
           depotPostcode: response.depots.depot_postcode || "",
           countyId: response.depots.county_id || "",
           depotTelephone: response.depots.depot_telephone || "",
-          depotPermitTonnageLimit: response.depots.depot_permit_tonnage_limit || "",
+          // depotPermitTonnageLimit: response.depots.depot_permit_tonnage_limit || "",
           includeTonnageLimitOnDashboard: response.depots.include_tonnage_limit_on_dashboard || "",
           startDate: response.depots.start_date_tonnage_material || "",
           endDate: response.depots.end_date_tonnage_material || "",
@@ -721,7 +721,7 @@ const DepotForm = () => {
                   </div>
                 </div>
 
-                <div className="form-row">
+                {/* <div className="form-row">
                   <div className="form-group col-md-6">
                     <div className="input-with-icon">
                       <label className="label">Depot Permit Tonnage Limit</label>
@@ -732,7 +732,6 @@ const DepotForm = () => {
                         />
                       </Tooltip>
                     </div>
-                    {/* {console.log(formData.depotPermitTonnageLimit)} */}
                     <div className="field">
                       <input
                         className="form-control company"
@@ -741,12 +740,11 @@ const DepotForm = () => {
                         value={formData.depotPermitTonnageLimit}
                         onChange={handleChange}
                       />
-                      {/* {errors.depotPermitTonnageLimit && <small className="text-danger">{errors.depotPermitTonnageLimit}</small>} */}
                     </div>
                   </div>
                   <div className="form-group col-md-6">
                   </div>
-                </div>
+                </div> */}
                 <div className="form-row">
                   {/* <div className="form-group col-md-6">
                     <div className="input-with-icon">

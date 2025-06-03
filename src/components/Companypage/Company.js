@@ -33,9 +33,9 @@ const Company = () => {
     contactNumber: "",
     email: "",
     postcode: "",
-    mainIndustry: null,
-    mainActivity: null,
-    subActivity: null,
+    // mainIndustry: null, //WORKING code  FOR DROPDOWN MAIN INDUSTRY
+    // mainActivity: null, //WORKING code  FOR DROPDOWN MAIN ACTIVITY
+    // subActivity: null, //WORKING code  FOR DROPDOWN SUB ACTIVITY
     sicCode: "",
     addressLine1: "",
     addressLine2: "",
@@ -44,9 +44,9 @@ const Company = () => {
   });
   const [activeStep, setActiveStep] = useState(0);
   const [hasSetupCompleted, setHasSetupCompleted] = useState(false);
-  const [mainIndustryOptions, setMainIndustryOptions] = useState([]);
-  const [mainActivityOptions, setMainActivityOptions] = useState([]);
-  const [subActivityOptions, setSubActivityOptions] = useState([]);
+  // const [mainIndustryOptions, setMainIndustryOptions] = useState([]); //WORKING STARTE FOR DROPDOWN MAIN INDUSTRY
+  // const [mainActivityOptions, setMainActivityOptions] = useState([]); //WORKING STARTE FOR DROPDOWN MAIN ACTIVITY
+  // const [subActivityOptions, setSubActivityOptions] = useState([]); //WORKING STARTE FOR DROPDOWN SUB ACTIVITY
   const [loading, setLoading] = useState(false);
 
 
@@ -186,69 +186,78 @@ const Company = () => {
     }
   }, [location.state]);
 
-  useEffect(() => {
-    const fetchMainIndustryOptions = async () => {
-      try {
-        const data = await Authapi.mainIndustry();
-        const options = data.map((industry) => ({
-          value: industry.id,
-          label: industry.name,
-        }));
-        setMainIndustryOptions(options);
-      } catch (error) {
-        console.error("Error fetching main industry options:", error);
-      }
-    };
+  // WORKING CODE FOR FETCHING DATA OF MAIN INDUSTRY DROPDOWN 020625 START
+  // useEffect(() => {
+  //   const fetchMainIndustryOptions = async () => {
+  //     try {
+  //       const data = await Authapi.mainIndustry();
+  //       const options = data.map((industry) => ({
+  //         value: industry.id,
+  //         label: industry.name,
+  //       }));
+  //       setMainIndustryOptions(options);
+  //     } catch (error) {
+  //       console.error("Error fetching main industry options:", error);
+  //     }
+  //   };
 
-    fetchMainIndustryOptions();
-  }, []);
+  //   fetchMainIndustryOptions();
+  // }, []);
+  // WORKING CODE FOR FETCHING DATA OF MAIN INDUSTRY DROPDOWN 020625 END
 
-  const handleMainIndustryChange = async (selected) => {
-    setFormData({
-      ...formData,
-      mainIndustry: selected,
-      mainActivity: null,
-      subActivity: null,
-    });
-    setMainActivityOptions([]);
-    setSubActivityOptions([]);
 
-    try {
-      const data = await Authapi.getMainActivity(selected.value);
-      const options = data.map((activity) => ({
-        value: activity.id,
-        label: activity.name,
-      }));
-      setMainActivityOptions(options);
-    } catch (error) {
-      console.error("Error fetching main activities:", error);
-    }
-  };
+  // WORKING CODE FOR handle chnage OF MAIN INDUSTRY DROPDOWN 020625 START
+  // const handleMainIndustryChange = async (selected) => {
+  //   setFormData({
+  //     ...formData,
+  //     mainIndustry: selected,
+  //     mainActivity: null,
+  //     subActivity: null,
+  //   });
+  //   setMainActivityOptions([]);
+  //   setSubActivityOptions([]);
 
-  const handleMainActivityChange = async (selected) => {
-    setFormData({ ...formData, mainActivity: selected, subActivity: null });
-    setSubActivityOptions([]);
+  //   try {
+  //     const data = await Authapi.getMainActivity(selected.value);
+  //     const options = data.map((activity) => ({
+  //       value: activity.id,
+  //       label: activity.name,
+  //     }));
+  //     setMainActivityOptions(options);
+  //   } catch (error) {
+  //     console.error("Error fetching main activities:", error);
+  //   }
+  // };
+  // WORKING CODE FOR handle chnage OF MAIN INDUSTRY DROPDOWN 020625 END
 
-    try {
-      const data = await Authapi.getSubActivity(selected.value);
-      const options = data.map((subActivity) => ({
-        value: subActivity.id,
-        label: subActivity.name,
-        sic_code: subActivity.sic_code,
-      }));
-      setSubActivityOptions(options);
-    } catch (error) {
-      console.error("Error fetching sub activities:", error);
-    }
-  };
+  // WORKING CODE FOR handle chnage OF MAIN ctivity DROPDOWN 020625 START
 
-  const handleSubActivityChange = (selected) => {
-    setFormData({
-      ...formData,
-      subActivity: selected,
-      sicCode: selected ? selected.sic_code : "",
-    });
-  };
+  // const handleMainActivityChange = async (selected) => {
+  //   setFormData({ ...formData, mainActivity: selected, subActivity: null });
+  //   setSubActivityOptions([]);
+
+  //   try {
+  //     const data = await Authapi.getSubActivity(selected.value);
+  //     const options = data.map((subActivity) => ({
+  //       value: subActivity.id,
+  //       label: subActivity.name,
+  //       sic_code: subActivity.sic_code,
+  //     }));
+  //     setSubActivityOptions(options);
+  //   } catch (error) {
+  //     console.error("Error fetching sub activities:", error);
+  //   }
+  // };
+  // WORKING CODE FOR handle chnage OF MAIN Activity DROPDOWN 020625 END
+
+  // WORKING CODE FOR handle chnage OF SUB Activity DROPDOWN 020625 END
+  // const handleSubActivityChange = (selected) => {
+  //   setFormData({
+  //     ...formData,
+  //     subActivity: selected,
+  //     sicCode: selected ? selected.sic_code : "",
+  //   });
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();

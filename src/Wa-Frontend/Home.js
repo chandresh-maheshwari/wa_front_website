@@ -59,6 +59,7 @@ const Home = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [pendingPurchaseData, setPendingPurchaseData] = useState(null);
 
   useEffect(() => {
     if (sliderRef) {
@@ -464,29 +465,15 @@ const Home = () => {
   };
 
   const handlePurchaseSubmit = async (price_id, trail_days) => {
-    // console.log("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
-    // console.log(price_id);
-    // console.log(trail_days);
     const token = localStorage.getItem("WAauthToken");
     if (!token) {
-      // Swal.fire({
-      //   icon: "warning",
-      //   title: "Please Log In",
-      //   text: "You need to be logged in to make a purchase.",
-      //   showConfirmButton: true,
-      //   showCancelButton: true,
-      //   cancelButtonText: "Cancel",
-      // }).then((result) => {
-      //   if (result.isConfirmed) {
-      // Show the login popup when "OK" is clicked
+      // Store purchase intent in localStorage
+      localStorage.setItem('purchaseIntent', JSON.stringify({ price_id, trail_days }));
       toggleLoginPopup();
-      //   }
-      // });
       return;
     }
     setLoading(true);
     try {
-      // Get user email first
       let email = userEmail;
       if (!email) {
         email = await getUserEmail();
@@ -509,48 +496,7 @@ const Home = () => {
         },
       });
 
-      // Replace the fetch call with the Authapi function
-      //   const response = await Authapi.createCheckoutSession(
-      //     productName,
-      //     amount,
-      //     email,
-      //     price_id
-      //   );
-
-      //   if (!response.status) {
-      //     throw new Error(
-      //       response.message || "Failed to create checkout session"
-      //     );
-      //   }
-
-      //   window.location.href = response.url;
-      // } catch (error) {
-      //   console.error("Purchase Error:", error);
-      //   Swal.fire({
-      //     icon: "error",
-      //     title: "Payment Error",
-      //     text:
-      //       error.message ||
-      //       "There was an error processing your payment. Please try again.",
-      //     background: "#f8f9fa",
-      //     showConfirmButton: true,
-      //     confirmButtonText: "OK",
-      //   });
-      //   // }
-      // } finally {
-      //   setLoading(false);
-      // }
-
-
-      // const response = await Authapi.createsub(
-
-      //   price_id,
-
-      // );
-
       const response = await Authapi.createsub(price_id, trail_days);
-
-
       window.location.href = response.checkout_url;
     } catch (error) {
       console.error("Purchase Error:", error);
@@ -564,20 +510,26 @@ const Home = () => {
         showConfirmButton: true,
         confirmButtonText: "OK",
       });
-      // }
     } finally {
       setLoading(false);
     }
   };
 
   const handleLoginSuccess = (data) => {
-    // setUserdata(data);
     setIsLoggedIn(true);
-    // setIsDropdownOpen(true);
     localStorage.setItem("isLoggedIn", "true");
     localStorage.setItem("userdata", JSON.stringify(data));
     setShowLoginPopup(false);
-    // console.log('Login successful:', data);
+
+    // Check for purchase intent
+    const purchaseIntent = localStorage.getItem('purchaseIntent');
+    if (purchaseIntent) {
+      const { price_id, trail_days } = JSON.parse(purchaseIntent);
+      // Clear the purchase intent
+      localStorage.removeItem('purchaseIntent');
+      // Proceed with purchase
+      handlePurchaseSubmit(price_id, trail_days);
+    }
   };
 
   const renderCards = () => {
