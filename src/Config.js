@@ -59,14 +59,13 @@ export default {
     mainIndustry : "api/mainIndustry",
     getMainActivity: "api/getMainActivity",
     getSubActivity: "api/getSubActivity",
-
+    getPriceDetails: "api/get-price-details",
     getDistrictCouncildata: "api/get-district-council",
     getOrigindata: "api/get-origin",
     getJobTypedata: "api/get-job-types",
     getSubContractCompanydata: "api/subcontract_company",
     userSiteDetails: "api/user_details_site_job_store",
     getUserSitedetail : "api/user_latest_site_and_job_get",
-
     createsub:"api/checkout",
   },
 };

@@ -60,6 +60,7 @@ const Home = () => {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [loading, setLoading] = useState(false);
   const [pendingPurchaseData, setPendingPurchaseData] = useState(null);
+  const [priceDetails, setPriceDetails] = useState({});
 
   useEffect(() => {
     if (sliderRef) {
@@ -74,7 +75,46 @@ const Home = () => {
   useEffect(() => {
     fetchdata();
   }, []);
-  // console.log(statu)
+
+  useEffect(() => {
+    const fetchAllPriceDetails = async () => {
+      if (statu.our_products?.post_store) {
+        const pricePromises = statu.our_products.post_store.map(async (card) => {
+          const purchaseButtonSection = card.data.PurchaseButton || {};
+          const priceId = purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_stripid];
+          
+          if (priceId) {
+            try {
+              const details = await fetchPriceDetails(priceId);
+              if (details) {
+                setPriceDetails(prev => ({
+                  ...prev,
+                  [priceId]: details
+                }));
+              }
+            } catch (error) {
+              console.error('Error fetching price details:', error);
+            }
+          }
+        });
+
+        await Promise.all(pricePromises);
+      }
+    };
+
+    fetchAllPriceDetails();
+  }, [statu.our_products?.post_store]);
+
+  const fetchPriceDetails = async (priceId) => {
+    try {
+      const response = await Authapi.fetchPriceDetails(priceId);
+      return response;
+    } catch (error) {
+      console.error('Error fetching price details:', error);
+      return null;
+    }
+  };
+
   const fetchdata = async () => {
     try {
       const response = await Authapi.Alldynamicpageget();
@@ -154,40 +194,6 @@ const Home = () => {
       console.log(error);
     }
   };
-
-  // const fetchdata = async () => {
-  //     try {
-  //         const response = await Authapi.Alldynamicpageget();
-
-  //         // Sort the results based on the ordering number
-  //         const sortedResults = response.results.sort((a, b) => a.orderingNumber - b.orderingNumber);
-  //         console.log(sortedResults); // Log the sorted results
-
-  //         if (response.status === true) {
-  //             ls("data", sortedResults);
-  //             setStatus(sortedResults);
-  //             setHomesection(sortedResults.home_section.post_store[0]);
-  //             setTransforming(sortedResults.transforming_waste_industry.post_store);
-
-  //             const dynamicTitles = sortedResults.about_us.post_store.flatMap(post =>
-  //                 Object.keys(post)
-  //                     .filter(key => key.startsWith('Title'))
-  //                     .map(key => post[key])
-  //             );
-  //             setTitles(dynamicTitles);
-  //             const dynamicDescriptions = sortedResults.about_us.post_store.flatMap(post =>
-  //                 Object.keys(post)
-  //                     .filter(key => key.startsWith('Description'))
-  //                     .map(key => post[key])
-  //             );
-  //             setDescription(dynamicDescriptions);
-  //         } else {
-  //             console.error('Invalid response structure:', response);
-  //         }
-  //     } catch (error) {
-  //         console.log(error);
-  //     }
-  // };
 
   const handlePlayPause = () => {
     setIsPlaying(!isPlaying);
@@ -322,102 +328,6 @@ const Home = () => {
     }
   };
 
-  // const renderCards = () => {
-  //   // console.log(statu.our_products?.post_store)
-  //   return statu.our_products?.post_store.map((card, index) => {
-  //     const hasContent =
-  //       card.Title1 ||
-  //       card.Cardtext1 ||
-  //       card.Cardtext2 ||
-  //       card.Cardtext3 ||
-  //       card.Cardtext4 ||
-  //       card.Cardtext5 ||
-  //       card.Cardtextlight1 ||
-  //       card.Montlyfeetext ||
-  //       card.Montlyfeecardtext1 ||
-  //       card.Montlyfeecardtext2;
-  //     if (!hasContent) return null;
-
-  //     return (
-  //       <div className={`col-lg-4`} id={`card${index + 1}`} key={card.id}>
-  //         <div
-  //           className={`card-liner-card-${index + 1}`}
-  //           id="card-liner-card"
-  //         ></div>
-  //         <div className={`card${index + 1} card `}>
-  //           {card.Title1 && <span className="medaltype">{card.Title1}</span>}
-  //           <div className={`card${index + 1}-text`}>
-  //             {[
-  //               card.Cardtext1,
-  //               card.Cardtext2,
-  //               card.Cardtext3,
-  //               card.Cardtext4,
-  //               card.Cardtext5,
-  //             ].map(
-  //               (text, i) =>
-  //                 text && (
-  //                   <p style={cardTextStyle} key={i} className="cardtext">
-  //                     <img
-  //                       src={righticon}
-  //                       className={`card${index + 1}righticon`}
-  //                       alt={`Icon ${i + 1}`}
-  //                       style={cardTextImageStyle}
-  //                     />
-  //                     {text}
-  //                   </p>
-  //                 )
-  //             )}
-  //             {card.Cardtext1 ||
-  //               card.Cardtext2 ||
-  //               card.Cardtext3 ||
-  //               card.Cardtext4 ||
-  //               card.Cardtext5 ? (
-  //               <div className="card-liner-inside"></div>
-  //             ) : null}
-  //           </div>
-  //           <div className={`card${index + 1}-sec-2-text`}>
-  //             {card.Cardtextlight1 && (
-  //               <p style={cardTextStyle}>
-  //                 <img
-  //                   src={plushicon}
-  //                   className={`card${index + 1}plushicon`}
-  //                   alt="Add On Icon"
-  //                   style={cardTextImageStyle}
-  //                 />
-  //                 {card.Cardtextlight1}
-  //               </p>
-  //             )}
-  //             {card.Cardtextlight1 ? (
-  //               <div className="card-liner-inside-2"></div>
-  //             ) : null}
-  //             <div className={`card-${index + 1}-sec-3`}>
-  //               {card.Montlyfeetext && (
-  //                 <p className={`card${index + 1}-sec-3-text1`}>
-  //                   {card.Montlyfeetext}
-  //                 </p>
-  //               )}
-  //               {[card.Montlyfeecardtext1, card.Montlyfeecardtext2].map(
-  //                 (text, i) =>
-  //                   text && (
-  //                     <p className={`card${index + 1}-sec-3-text`} key={i}>
-  //                       <img
-  //                         src={plushicon}
-  //                         className={`card${index + 1}plushicon`}
-  //                         alt={`Icon ${i + 1}`}
-  //                         style={cardTextImageStyle}
-  //                       />
-  //                       {text}
-  //                     </p>
-  //                   )
-  //               )}
-  //             </div>
-  //           </div>
-  //         </div>
-  //       </div>
-  //     );
-  //   });
-  // };
-
   function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -533,39 +443,17 @@ const Home = () => {
   };
 
   const renderCards = () => {
-    // console.log(statu.our_products?.post_store);
     return statu.our_products?.post_store.map((card, index) => {
-      // Destructure and extract relevant fields from the data object
-      // const feesSection = card.data.Fees_section || {};
-      // const infoSection1 = card.data.Package_info || {};
-      // const serviceSection = card.data.Package_services || {};
-      // const feessection = card.data.Fees_section || {};
-      // const purchaseButtonSection = card.data.Purchase_button || {};
-      // console.log(card);
       const feesSection = card.data.FeesSection || {};
       const infoSection1 = card.data.PackageInfo || {};
       const serviceSection = card.data.PackageServices || {};
       const purchaseButtonSection = card.data.PurchaseButton || {};
 
-      // Check if there's any content to display (excluding the Field_slug values)
-      const hasContent =
-        // infoSection1.Information1 ||
-        // infoSection1.Information2 ||
-        // infoSection1.Information3 ||
-        // infoSection1.Information4 ||
-        // infoSection1.Information5 ||
-        // serviceSection.Service1 ||
-        // serviceSection.Service2 ||
-        // feesSection.Monthlyfee ||
-        // feesSection.Montlyfeecardtext1 ||
-        // feesSection.Montlyfeecardtext1 ||
-        // purchaseButtonSection.Amount ||
-        // purchaseButtonSection.Buttonbackgroundcolor ||
-        // purchaseButtonSection.Buttoncolor ||
-        // purchaseButtonSection.Buttontext;
+      // Get the price ID from the purchase button section
+      const priceId = purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_stripid];
 
-        // console.log("TTTTTTTTTTTTTT");
-        // console.log(infoSection1?.[infoSection1?.Field_Slug_information1]);
+      // Check if there's any content to display
+      const hasContent =
         infoSection1?.[infoSection1?.Field_Slug_information1] ||
         infoSection1?.[infoSection1?.Field_Slug_information2] ||
         infoSection1?.[infoSection1?.Field_Slug_information3] ||
@@ -583,6 +471,12 @@ const Home = () => {
 
       if (!hasContent) return null;
 
+      // Modify the button text to use the fetched amount
+      const buttonText = purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttontext];
+      const amount = priceDetails[priceId]?.amount 
+        ? (priceDetails[priceId].amount / 100).toFixed(2) // Convert cents to dollars
+        : purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_amount];
+
       return (
         <div className={`col-lg-4`} id={`card${index + 1}`} key={card.Id}>
           <div
@@ -590,18 +484,9 @@ const Home = () => {
             id="card-liner-card"
           ></div>
           <div className={`card${index + 1} card`}>
-            {/* {console.log(card['data'].Modelsectionpackagesection)} */}
-            {/* <span className="medaltype">{card.Post_name}</span> */}
             <span className="medaltype">{card?.data?.[card?.data?.Field_Slug_packagename]}</span>
-            {/* <span className="medaltype">{card["data"].Packagename}</span> */}
             <div className={`card${index + 1}-text`}>
-              {/* Render Information Section */}
               {[
-                // infoSection1.Information1,
-                // infoSection1.Information2,
-                // infoSection1.Information3,
-                // infoSection1.Information4,
-                // infoSection1.Information5,
                 infoSection1?.[infoSection1?.Field_Slug_information1],
                 infoSection1?.[infoSection1?.Field_Slug_information2],
                 infoSection1?.[infoSection1?.Field_Slug_information3],
@@ -621,70 +506,12 @@ const Home = () => {
                     </p>
                   )
               )}
-              {/* {infoSection1.Information1 || infoSection1.Information2 || infoSection1.Information3 || infoSection1.Information4 || infoSection1.Information5 ? <div className="card-liner-inside"></div> : null} */}
-
-              {/* {infoSection1.Information1 && (
-                <p style={cardTextStyle} key="info1" className="cardtext">
-                  <img
-                    src={righticon}
-                    className={`card${index + 1}righticon`}
-                    alt="Icon 1"
-                    style={cardTextImageStyle}
-                  />
-                  {infoSection1.Information1}
-                </p>
-              )}
-              {infoSection1.Information2 && (
-                <p style={cardTextStyle} key="info2" className="cardtext">
-                  <img
-                    src={righticon}
-                    className={`card${index + 1}righticon`}
-                    alt="Icon 2"
-                    style={cardTextImageStyle}
-                  />
-                  {infoSection1.Information2}
-                </p>
-              )}
-              {infoSection1.Information3 && (
-                <p style={cardTextStyle} key="info3" className="cardtext">
-                  <img
-                    src={righticon}
-                    className={`card${index + 1}righticon`}
-                    alt="Icon 3"
-                    style={cardTextImageStyle}
-                  />
-                  {infoSection1.Information3}
-                </p>
-              )}
-              {infoSection1.Information4 && (
-                <p style={cardTextStyle} key="info4" className="cardtext">
-                  <img
-                    src={righticon}
-                    className={`card${index + 1}righticon`}
-                    alt="Icon 4"
-                    style={cardTextImageStyle}
-                  />
-                  {infoSection1.Information4}
-                </p>
-              )}
-              {infoSection1.Information5 && (
-                <p style={cardTextStyle} key="info5" className="cardtext">
-                  <img
-                    src={righticon}
-                    className={`card${index + 1}righticon`}
-                    alt="Icon 5"
-                    style={cardTextImageStyle}
-                  />
-                  {infoSection1.Information5}
-                </p>
-              )} */}
               {Object.values(infoSection1).some((text) => text) && (
                 <div className="card-liner-inside"></div>
               )}
             </div>
 
             <div className={`card${index + 1}-sec-2-text`}>
-              {/* Render Service Section */}
               {serviceSection?.[serviceSection?.Field_Slug_service1] && (
                 <p style={cardTextStyle}>
                   <img
@@ -701,12 +528,6 @@ const Home = () => {
               )}
 
               <div className={`card-${index + 1}-sec-3`}>
-                {/* Render Monthly Fee */}
-                {/* {feesSection.Monthlyfee && (
-                  <p className={`card${index + 1}-sec-3-text1`}>
-                    {feesSection.Monthlyfee}
-                  </p>
-                )} */}
                 {feesSection?.[feesSection?.Field_Slug_monthlyfee] && (
                   <p className={`card${index + 1}-sec-3-text1`}>
                     {feesSection?.[feesSection?.Field_Slug_monthlyfee]}
@@ -730,7 +551,6 @@ const Home = () => {
                     )
                 )}
 
-                {/* Render Service 2 */}
                 {serviceSection?.[serviceSection?.Field_Slug_service2] && (
                   <p className={`card${index + 1}-sec-3-text`}>
                     <img
@@ -744,31 +564,8 @@ const Home = () => {
                 )}
               </div>
             </div>
-            {/* style={{ position: 'absolute', bottom: '13px', left: '0', right: '0' }} */}
             {purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttontext] && (
-              // {purchaseButtonSection.Buttontext && (
               <div className="text-center purchase-btn">
-                {/* <button
-                  role="link"
-                  className="btn w-50"
-                  style={{
-                    backgroundColor: purchaseButtonSection.Buttonbackgroundcolor || '#40bedd',
-                    color: purchaseButtonSection.Buttoncolor || '#ffffff',
-                  }}
-                // onMouseOver={(e) => {
-                //   e.target.style.backgroundColor = card.data.Buttonhovercolor || '#17bee8';
-                // }}
-                // onMouseOut={(e) => {
-                //   e.target.style.backgroundColor = card.data.Buttonbackgroundcolor || '#40bedd';
-                // }}
-
-                >
-                  {`${purchaseButtonSection.Buttontext} - ${purchaseButtonSection.Amount}`}
-                </button> */}
-                {/* {console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")}
-                {console.log(purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_stripid])}
-                {console.log(purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_trialdays])} */}
-
                 <button
                   role="link"
                   className="btn w-50"
@@ -777,24 +574,14 @@ const Home = () => {
                       purchaseButtonSection.Buttonbackgroundcolor || "#40bedd",
                     color: purchaseButtonSection.Buttoncolor || "#ffffff",
                   }}
-                  // onMouseOver={(e) => {
-                  //   e.target.style.backgroundColor = card.Buttonhovercolor || '#17bee8';
-                  // }}
-                  // onMouseOut={(e) => {
-                  //   e.target.style.backgroundColor = card.Buttonbackgroundcolor || '#40bedd';
-                  // }}
-
-                  // {loading && <div className="loader"></div>}
                   onClick={() =>
                     handlePurchaseSubmit(
-                      // card?.data.Packagename,
                       purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_stripid],
                       purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_trialdays]
                     )
                   }
                 >
-                  {`${purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttontext]} - $${purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_amount]}`}
-                  {/* {`${purchaseButtonSection.Buttontext} - $${purchaseButtonSection.Amount}`} */}
+                  {`${buttonText} - $${amount}`}
                 </button>
               </div>
             )}
@@ -805,24 +592,15 @@ const Home = () => {
   };
 
   const test = () => {
-
     const homesectionImageKey = homesection?.Field_Slug_homesectionimage;
-    // const capitalizedKey = homesectionImageKey
-    //   // ? homesectionImageKey.charAt(0).toUpperCase() + homesectionImageKey.slice(1)
-    //   // : '';
-    // console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-    // console.log(capitalizedKey);
-
     const test1 = homesection?.[homesectionImageKey];
     return (
       <>
         <img
           src={test1}
-          // src={homesection?.Homesectionimage}
           alt="homeimg"
           className="homeimg"
         />
-
       </>
     );
   }
@@ -844,11 +622,7 @@ const Home = () => {
                   arrows={false}
                 >
                   {statu.home_section.post_store.map((post, idx) => {
-                    // const data = post.data;
-                    // console.log(statu.home_section.post_store);
-                    // console.log(idx);
                     const postData = statu.home_section.post_store[idx].data;
-                    // console.log(postData?.[postData?.Field_Slug_homesectiontitle]);
                     return (
                       <div className="home">
                         <div className="row">
@@ -894,13 +668,11 @@ const Home = () => {
                         </div>
                       </div>
                     );
-                    
                   })}
                 </Carousel>
               </div>
             </section>
           ) : (
-            // Single post, show as is
             <section className="homesection">
               <div className="container">
                 <div className="home">
@@ -969,19 +741,13 @@ const Home = () => {
             </div>
             <div className="container">
               <div className="row p-5 justify-content-center">
-                {/* {console.log(Transforming[0]?.data[Transforming[0]?.data?.Field_Slug_pagesectiondescription])} */}
-
-                {/* {console.log(Transforming[0]?.data?.Field_Slug_pagesectiondescription)} */}
                 {Transforming[0]?.data && !Transforming[1]?.data && (
                   <div className="col-md-8 text-center">
                     <h5 className="for-waste centered-text">
-                      {/* {Transforming[0]?.data?.Pagesectiontitle1} <br />
-                      <b>{Transforming[0]?.data?.Pagesectiontitle2}</b> */}
                       {Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle1]} <br />
                       <b>{Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle2]}</b>
                     </h5>
                     <p className="transfotextdes1 centered-text">
-                      {/* {Transforming[0]?.data?.Pagesectiondescription} */}
                       {Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiondescription]}
                     </p>
                   </div>
@@ -989,15 +755,11 @@ const Home = () => {
                 {Transforming[1]?.data && !Transforming[0]?.data && (
                   <div className="col-md-8 text-center">
                     <h5 className="for-waste">
-                      {/* {Transforming[1]?.data?.Pagesectiontitle1} <br />
-                      <b>{Transforming[1]?.data?.Pagesectiontitle2}</b> */}
                       {Transforming[1]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle1]} <br />
                       <b>{Transforming[1]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle2]}</b>
                     </h5>
                     <p className="transfotextdes2 centered-text">
-                      {/* {Transforming[1]?.data?.Pagesectiondescription} */}
                       {Transforming[1]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiondescription]}
-
                     </p>
                   </div>
                 )}
@@ -1005,15 +767,11 @@ const Home = () => {
                   <>
                     <div className="col-md-5">
                       <h5 className="transfotext1 for-waste">
-                        {/* {Transforming[0]?.data?.Pagesectiontitle1} <br />
-                        <b>{Transforming[0]?.data?.Pagesectiontitle2}</b> */}
                         {Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle1]} <br />
                         <b>{Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle2]}</b>
                       </h5>
                       <p className="transfotextdes1">
-                        {/* {Transforming[0]?.data?.Pagesectiondescription} */}
                         {Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiondescription]}
-
                       </p>
                     </div>
                     <div className="col-md-2 stretch-line">
@@ -1026,15 +784,11 @@ const Home = () => {
                     </div>
                     <div className="col-md-5">
                       <h5 className="transfotext2 for-waste">
-                        {/* {Transforming[1]?.data?.Pagesectiontitle1} <br />
-                        <b>{Transforming[1]?.data?.Pagesectiontitle2}</b> */}
                         {Transforming[1]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle1]} <br />
                         <b>{Transforming[1]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle2]}</b>
                       </h5>
                       <p className="transfotextdes2">
-                        {/* {Transforming[1]?.data?.Pagesectiondescription} */}
                         {Transforming[1]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiondescription]}
-
                       </p>
                     </div>
                   </>
@@ -1190,45 +944,6 @@ const Home = () => {
                 <h4>{statu.our_products?.page_description}</h4>
               </div>
               <div className="row">{renderCards()}</div>
-              {/* {statu.contact_us?.page_status === 1 && (
-              <div className="row mt-5">
-                <div className="col-12">
-                  {/* <button
-                      type="button"
-                      onClick={() => navigate("/menu/contact-us")}
-                      className="btn sky-blue-btn"
-                    > 
-                  <button
-                    type="button"
-                    // onClick={() => navigate(`${statu.contact_us?.button_link}`)}
-                    className="btn sky-blue-btn"
-                    onClick={() => {
-                      const rawUrl = statu.who_use_wa?.button_link;
-                      // const formattedUrl = rawUrl?.startsWith('http') ? rawUrl : `https://${rawUrl}`;
-                      window.location.href = rawUrl;
-                    }}
-                  >
-                    {statu.contact_us?.button_name}
-                    {/* Contact Us *
-                  </button>
-                </div>
-              </div>
-            )} */}
-              {/* <button
-                    type="button"
-                    // onClick={() => navigate(`${statu.contact_us?.button_link}`)}
-                    className="btn sky-blue-btn"
-                    onClick={() => {
-                      const rawUrl = statu.our_products?.button_link;
-                      // const formattedUrl = rawUrl?.startsWith('http') ? rawUrl : `https://${rawUrl}`;
-                      window.location.href = rawUrl;
-                    }}
-                  >
-                    {statu.our_products?.button_name}
-                    {/* Contact Us 
-                  </button> */}
-
-
               <button
                 type="button"
                 className="btn sky-blue-btn"
@@ -1243,83 +958,6 @@ const Home = () => {
           </section>
         ),
       },
-      // {
-      //   condition: statu.why_choose_wa?.status === 1,
-      //   ordering: statu.why_choose_wa?.ordering || 0,
-      //   content: (
-      //     <section className="why_choose_section">
-      //       <div className="container p-5">
-      //         <div className="row">
-      //           <div className="col-md-12">
-      //             <div className="transfo">
-      //               <h5 className="text-center">
-      //                 {statu.why_choose_wa?.page_description}
-      //               </h5>
-      //             </div>
-      //           </div>
-      //         </div>
-      //       </div>
-
-      //       <div className="container type-2">
-      //         <div className="row justify-content-center">
-      //           {statu.why_choose_wa?.post_store.map((item, index) => {
-      //             const postCount = statu.why_choose_wa?.post_store.length;
-      //             const isSinglePost = postCount === 1;
-      //             const isTwoPosts = postCount === 2;
-      //             const isThreePosts = postCount === 3;
-
-      //             return (
-      //               <div
-      //                 className={`col ${isSinglePost ? "col-12" : "col-md-6 col-sm-6 col-xs-3"
-      //                   } 
-      //                               ${isSinglePost ? "center-text no-border" : ""
-      //                   } 
-      //                               ${isTwoPosts ? "no-bottom-border" : ""} 
-      //                               ${isThreePosts ? "no-top-right-border" : ""} 
-      //                               ${isThreePosts && index === 2 ? "mx-auto" : ""
-      //                   } 
-      //                               ${index % 2 === 0 ? "text-end" : "text-start"
-      //                   }`}
-      //                 key={item.id}
-      //               >
-      //                 <h5
-      //                   className={`for-waste ${isTwoPosts ? "margin-top-5" : ""
-      //                     } ${isSinglePost ? "center-text" : ""}`}
-      //                 >
-      //                   {/* {console.log(item.data[item.data.Field_Slug_title])} */}
-      //                   {/* {item["data"].Title} */}
-      //                   {item.data[item.data.Field_Slug_title]}
-      //                 </h5>
-      //                 <p
-      //                   style={{ marginTop: "25px" }}
-      //                   className={isSinglePost ? "center-text" : ""}
-      //                 >
-      //                   {/* {item["data"].Description.split("\r\n").map(
-      //                       (line, i) => (
-      //                         <React.Fragment key={i}>
-      //                           {line}
-      //                           <br />
-      //                         </React.Fragment>
-      //                       )
-      //                     )} */}
-      //                     {console.log(item)}
-      //                   {item.data[item.data.Field_Slug_description].split("\r\n").map(
-      //                     (line, i) => (
-      //                       <React.Fragment key={i}>
-      //                         {line}
-      //                         <br />
-      //                       </React.Fragment>
-      //                     )
-      //                   )}
-      //                 </p>
-      //               </div>
-      //             );
-      //           })}
-      //         </div>
-      //       </div>
-      //     </section>
-      //   ),
-      // },
       {
         condition: statu.who_use_wa?.status === 1,
         ordering: statu.who_use_wa?.ordering || 0,
@@ -1329,9 +967,6 @@ const Home = () => {
               <div className="sliderconatainer">
                 <h2 className="font-weight-light slider-heading text-center">
                   {statu.who_use_wa?.page_description}
-                  {/* {console.log(statu.why_section?.post_store[0]['data'])} */}
-                  {/* {console.log(statu.why_section?.post_store)} */}
-                  {/* {console.log(statu.why_section?.post_store[0]['data'])} */}
                 </h2>
                 <div className="slider-container">
                   {isPlaying ? "" : ""}
@@ -1342,12 +977,9 @@ const Home = () => {
                     >
                       {statu.who_use_wa?.post_store.map((item, index) => (
                         <div key={item.id}>
-                          {/* {console.log(item['data'].Image)} */}
                           <Link to={item?.data?.[item?.data?.Field_Slug_link]}>
-                            {/* <Link to={item["data"].Link}> */}
                             <img
                               src={item?.data?.[item?.data?.Field_Slug_image]}
-                              // src={item["data"].Image}
                               className="sliderimages"
                               alt={`Logo ${index + 1}`}
                             />
@@ -1356,22 +988,15 @@ const Home = () => {
                       ))}
                     </Slider>
                   </div>
-                  {/* {console.log(statu.who_use_wa.button_name)} */}
                   <button
                     type="submit"
-                    // onClick={() => navigate(`${statu?.who_use_wa?.button_link}`)}
-                    // onClick={() => navigate("/OurProducts")}
                     className="btn w-auto blue-btn-Find-out-More"
                     onClick={() => {
                       const rawUrl = statu.who_use_wa?.button_link;
-                      // const formattedUrl = rawUrl?.startsWith('http') ? rawUrl : `https://${rawUrl}`;
                       window.location.href = rawUrl;
                     }}
                   >
                     {statu?.who_use_wa?.button_name}
-                    {/* Find out More */}
-
-
                   </button>
                 </div>
               </div>
@@ -1386,78 +1011,19 @@ const Home = () => {
           <section className="tellmemore">
             <div className="container">
               <h4 className="tellmemoretitle">
-                {/* {console.log(statu.tell_me_more_section.post_store[0]['data'].Button_setting.Buttontext)} */}
-                {/* {statu.tell_me_more_section?.post_store[0]["data"]?.Title} */}
                 {statu.tell_me_more_section?.post_store[0].data?.[statu.tell_me_more_section?.post_store[0].data?.Field_Slug_title]}
-
               </h4>
               <div className="row">
                 <div className="col-12">
-                  {/* Old Code Start */}
-                  {/* <button
-                    type="submit"
-                    className="btn w-auto sky-blue-btn-tellmemore"
-                    style={{
-                      backgroundColor: statu.tell_me_more_section?.post_store[0]['data']?.Buttonbackgroundcolor || '#40bedd',
-                      color: statu.tell_me_more_section?.post_store[0]['data']?.Buttontextcolor || '#ffffff',
-                    }}>
-                    {statu.tell_me_more_section?.post_store[0]['data']?.Buttontext}
-                  </button> */}
-                  {/* Old Code Start */}
-
-                  {/* New Code Start */}
-                  {/* <button
-                    type="submit"
-                    className="btn w-auto sky-blue-btn-tellmemore"
-                    style={{
-                      backgroundColor:
-                        statu.tell_me_more_section?.post_store[0]["data"]
-                          ?.Button_setting.Buttonbackgroundcolor || "#40bedd",
-                      color:
-                        statu.tell_me_more_section?.post_store[0]["data"]
-                          ?.Button_setting.Buttontextcolor || "#ffffff",
-                    }}
-                  >
-                    {
-                      statu.tell_me_more_section?.post_store[0]["data"]
-                        ?.Button_setting.Buttontext
-                    }
-                  </button> */}
-                  {/* New Code new */}
-                  {/* <button
-                    type="submit"
-                    className="btn w-auto sky-blue-btn-tellmemore"
-                    style={{
-                      backgroundColor:
-                        // statu.tell_me_more_section?.post_store[0]["data"]
-                        //   ?.Button_setting.Buttonbackgroundcolor || "#40bedd",
-                   statu.tell_me_more_section?.post_store[0].data?.ButtonSetting?.[statu.tell_me_more_section?.post_store[0].data?.ButtonSetting?.Field_Slug_buttonbackgroundcolor]
-                   || "#40bedd",
-                      color:
-                        // statu.tell_me_more_section?.post_store[0]["data"]
-                        // ?.Button_setting.Buttontextcolor || "#ffffff",
-                        statu.tell_me_more_section?.post_store[0].data?.ButtonSetting?.[statu.tell_me_more_section?.post_store[0].data?.ButtonSetting?.Field_Slug_buttontextcolor]
-                        || "#ffffff",
-                    }}
-                  >
-                    {
-                      // statu.tell_me_more_section?.post_store[0]["data"]
-                      //   ?.Button_setting.Buttontext
-                      statu.tell_me_more_section?.post_store[0].data?.ButtonSetting?.[statu.tell_me_more_section?.post_store[0].data?.ButtonSetting?.Field_Slug_buttontext]
-
-                    }
-                  </button> */}
                   <button
                     type="submit"
                     className="btn w-auto sky-blue-btn-tellmemore"
                     style={{
                       backgroundColor: "#40bedd",
                       color: "#ffffff",
-
                     }}
                     onClick={() => {
                       const rawUrl = statu.tell_me_more_section?.button_link;
-                      // const formattedUrl = rawUrl?.startsWith('http') ? rawUrl : `https://${rawUrl}`;
                       window.location.href = rawUrl;
                     }}
                   >
@@ -1486,11 +1052,8 @@ const Home = () => {
               <div className="row" style={{ marginBottom: "6%" }}>
                 <div className="col-md-3">
                   <div className="content-box">
-                    {/* {console.log(titles)} */}
-
                     {titles.map((title, index) => (
                       <div key={index}>
-                        {/* {console.log(title)} */}
                         <h5 className="title-sm">{title}</h5>
                         <p></p>
                       </div>
@@ -1524,11 +1087,9 @@ const Home = () => {
                   <div
                     className="parallax-img"
                     style={{
-                      backgroundImage: `url(${statu.page_image_section?.image})`, // GET IMAGE FORM PAGE
-                      // backgroundImage: `url(${statu.page_image_section?.post_store?.[0]?.['data'].Image})`, // GET IMAGE FROM POST
+                      backgroundImage: `url(${statu.page_image_section?.image})`,
                     }}
                   >
-                    {/* {console.log("Image URL:", statu.page_image_section?.image)} */}
                   </div>
                 </div>
               </div>
@@ -1547,64 +1108,21 @@ const Home = () => {
                   <div className="row ">
                     <div className="col-12">
                       <h4 className="letstallktitle">
-                        {/* {console.log(statu.contact_us)} */}
-                        {/* {statu.contact_us?.post_store[0]?.Title} */}
-                        {/* {statu.contact_us?.post_store[0]["data"]?.Title} */}
                         {statu.contact_us?.post_store[0].data?.[statu.contact_us?.post_store[0].data?.Field_Slug_title]}
-                        {/* {statu?.contact_us?.page_name} */}
                       </h4>
                       <div className="inputgroup">
-                        {/* {statu.contact_us?.post_store[0]["data"]?.Description} */}
                         {statu.contact_us?.post_store[0].data?.[statu.contact_us?.post_store[0].data?.Field_Slug_description]}
-                        {/* {statu?.contact_us?.page_description} */}
                       </div>
                     </div>
                   </div>
 
-                  {/* <div className="row">
-                    {statu.contact_us?.post_store.map((item, index) => (
-                      <div className="col-md-6" key={index}>
-                        <div className="inputgroup">
-                          <label>{item.data.Label}</label>
-
-                          {item.data.Label === "Tell us what you need" ? (
-                            <textarea
-                              className="form-control"
-                              name={`field${index}`}
-                              rows="4"
-                              onChange={(e) => handleInputChange(e, index)}
-                            />
-                          ) : (
-                            <input
-                              className="form-control"
-                              name={`field${index}`}
-                              type={item.data.Type} // ✅ Keep the original input type
-                              onChange={(e) => handleInputChange(e, index)}
-                            />
-                          )}
-
-                          {errors[`label${index}`] && (
-                            <span style={{ color: "red" }}>
-                              {errors[`label${index}`]}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div> */}
                   <div className="row">
                     {statu.contact_us?.post_store.map((item, index) => (
                       <div className="col-md-6" key={index}>
                         <div className="inputgroup">
-                          {/* <label>{item.data.Label}</label> */}
                           <label>{item.data?.[item.data?.Field_Slug_label]}</label>
 
-                          {/* {console.log(item.data.Label, item.data.Type)} */}
-
-                          {/* {item.data.Label === "Tell us what you need" ? ( */}
-                          {/* {console.log(item.data?.[item.data?.Field_Slug_type])} */}
                           {item.data?.[item.data?.Field_Slug_type] === "Textarea" ? (
-
                             <textarea
                               className="form-control"
                               name={`field${index}`}
@@ -1629,43 +1147,6 @@ const Home = () => {
                       </div>
                     ))}
                   </div>
-
-                  {/* <div className="row">
-                    {statu.contact_us?.post_store.map((item, index) => (
-                      <div className="col-md-6" key={index}>
-                        <div className="inputgroup">
-                          <label>{item.Label}</label>
-                          {item.Label === "Tell us what you need" ? (
-                            <textarea
-                              className="form-control"
-                              name={`field${index}`}
-                              rows="4"
-                              onChange={(e) => handleInputChange(e, index)}
-                            />
-                          ) : item.type === "tel" ? (
-                            <input
-                              className="form-control"
-                              name={`field${index}`}
-                              type="tel"
-                              onChange={(e) => handleInputChange(e, index)}
-                            />
-                          ) : (
-                            <input
-                              className="form-control"
-                              name={`field${index}`}
-                              type={item.Type}
-                              onChange={(e) => handleInputChange(e, index)}
-                            />
-                          )}
-                          {errors[`label${index}`] && (
-                            <span style={{ color: "red" }}>
-                              {errors[`label${index}`]}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div> */}
                 </form>
 
                 <div className="row mt-3 ">
@@ -1675,7 +1156,6 @@ const Home = () => {
                       onClick={handleSubmit}
                       className="btn w-auto sky-blue-btn-sendmeasge"
                     >
-                      {/* Send my message */}
                       {statu.contact_us?.button_name}
                     </button>
                   </div>
@@ -1716,7 +1196,6 @@ const Home = () => {
 
 const Popup = ({ isOpen, onClose, onLoginSuccess }) => {
   if (!isOpen) return null;
-  // console.log("Popup is call");
   return (
     <div className="popup-overlay  " style={popupOverlayStyles}>
       <div className="popup-content" style={popupContentStyles}>

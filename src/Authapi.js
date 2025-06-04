@@ -1120,6 +1120,30 @@ export default new (class AuthApi {
     }
   }
 
+  async getPriceDetails(priceId) {
+    try {
+      const url = `${Config.waapiurl}${Config.authApis.getPriceDetails}?price_id=${priceId}`;
+      this.setHeaders("get");
+      const response = await axios.get(url, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("API Error:", error);
+      throw error;
+    }
+  }
 
+  async fetchPriceDetails(priceId) {
+    try {
+      const response = await this.getPriceDetails(priceId);
+      return response;
+    } catch (error) {
+      console.error('Error fetching price details:', error);
+      return null;
+    }
+  }
 
 })();
