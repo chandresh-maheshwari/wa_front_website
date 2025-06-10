@@ -728,8 +728,8 @@ body {
 }
 
 .sky-blue-btn-tellmemore {
-    /* color: #fff !important; */
-    /* background-color: #2c9dd4 !important; */
+    color: #fff !important;
+    background-color: #2c9dd4 !important;
     /* font-size: 20px !important; */
     /* font-weight: 700 !important; */
     font-weight: bold;
@@ -1587,4 +1587,124 @@ body.scrolled-down::-webkit-scrollbar-thumb {
     object-fit: cover;
     object-position: center;
 
+}
+
+/* New classes for NavLayout.js */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+}
+
+.blur-content {
+    filter: blur(2px);
+}
+
+.menu-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.user-dropdown-container {
+    color: white;
+}
+
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.popup-content {
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Card text styles */
+.card-text-container {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  font-size: medium;
+}
+
+.card-text-image {
+  margin-right: 10px;
+}
+
+/* Home section styles */
+.home-description {
+  color: rgb(173, 173, 173);
+  max-width: 46%;
+  margin-bottom: 27px;
+}
+
+/* Quote section styles */
+.quote-description {
+  font-size: medium;
+}
+
+/* About section styles */
+.about-section-row {
+  margin-bottom: 6%;
+}
+
+/* Error message styles */
+.error-message {
+  color: red;
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+
+/* Popup styles */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.popup-content {
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Purchase button styles */
+.purchase-button {
+  background-color: #40bedd;
+  color: #ffffff;
+}
+
+/* Parallax image styles */
+.parallax-image {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }

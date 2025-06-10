@@ -35,16 +35,6 @@ const carouselResponsive = {
 };
 
 const Home = () => {
-  const cardTextStyle = {
-    display: "flex",
-    alignItems: "center",
-    margin: "0",
-    fontSize: "medium",
-  };
-
-  const cardTextImageStyle = {
-    marginRight: "10px",
-  };
   const navigate = useNavigate();
   const [isPlaying, setIsPlaying] = useState(true);
   const [sliderRef, setSliderRef] = useState(null);
@@ -495,12 +485,11 @@ const Home = () => {
               ].map(
                 (text, i) =>
                   text && (
-                    <p style={cardTextStyle} key={i} className="cardtext">
+                    <p className="card-text-container cardtext" key={i}>
                       <img
                         src={righticon}
-                        className={`card${index + 1}righticon`}
+                        className={`card${index + 1}righticon card-text-image`}
                         alt={`Icon ${i + 1}`}
-                        style={cardTextImageStyle}
                       />
                       {text}
                     </p>
@@ -513,12 +502,11 @@ const Home = () => {
 
             <div className={`card${index + 1}-sec-2-text`}>
               {serviceSection?.[serviceSection?.Field_Slug_service1] && (
-                <p style={cardTextStyle}>
+                <p className="card-text-container cardtext">
                   <img
                     src={plushicon}
-                    className={`card${index + 1}plushicon`}
+                    className={`card${index + 1}plushicon card-text-image`}
                     alt="Add On Icon"
-                    style={cardTextImageStyle}
                   />
                   {serviceSection?.[serviceSection?.Field_Slug_service1]}
                 </p>
@@ -539,12 +527,11 @@ const Home = () => {
                 ].map(
                   (text, i) =>
                     text && (
-                      <p style={cardTextStyle} key={i} className="cardtext">
+                      <p className="card-text-container cardtext" key={i}>
                         <img
                           src={plushicon}
-                          className={`card${index + 1}plushicon`}
+                          className={`card${index + 1}plushicon card-text-image`}
                           alt="Add On Icon"
-                          style={cardTextImageStyle}
                         />
                         {text}
                       </p>
@@ -555,9 +542,8 @@ const Home = () => {
                   <p className={`card${index + 1}-sec-3-text`}>
                     <img
                       src={plushicon}
-                      className={`card${index + 1}plushicon`}
+                      className={`card${index + 1}plushicon card-text-image`}
                       alt="Add On Icon"
-                      style={cardTextImageStyle}
                     />
                     {serviceSection?.[serviceSection?.Field_Slug_service2]}
                   </p>
@@ -567,13 +553,7 @@ const Home = () => {
             {purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttontext] && (
               <div className="text-center purchase-btn">
                 <button
-                  role="link"
-                  className="btn w-50"
-                  style={{
-                    backgroundColor:
-                      purchaseButtonSection.Buttonbackgroundcolor || "#40bedd",
-                    color: purchaseButtonSection.Buttoncolor || "#ffffff",
-                  }}
+                  className="btn w-50 purchase-button"
                   onClick={() =>
                     handlePurchaseSubmit(
                       purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_stripid],
@@ -639,14 +619,7 @@ const Home = () => {
                                 {postData?.[postData?.Field_Slug_homesectiontitle]}
                               </h4>
                             </div>
-                            <p
-                              className="home-p-font"
-                              style={{
-                                color: "rgb(173, 173, 173)",
-                                maxWidth: "46%",
-                                marginBottom: "27px",
-                              }}
-                            >
+                            <p className="home-p-font home-description">
                               {postData?.[postData?.Field_Slug_homesectiondescription]}
                             </p>
                             <button
@@ -690,14 +663,7 @@ const Home = () => {
                           {homesection?.[homesection?.Field_Slug_homesectiontitle]}
                         </h4>
                       </div>
-                      <p
-                        className="home-p-font"
-                        style={{
-                          color: "rgb(173, 173, 173)",
-                          maxWidth: "46%",
-                          marginBottom: "27px",
-                        }}
-                      >
+                      <p className="home-p-font home-description">
                         {homesection?.[homesection?.Field_Slug_homesectiondescription]}
                       </p>
                       <button
@@ -827,10 +793,7 @@ const Home = () => {
                           <div className="sec-3-text2">
                             <p className="text-light">
                               {post.data?.[post.data?.Field_Slug_quotesectiontitle]} <br />
-                              <span
-                                className="text-secondary"
-                                style={{ fontSize: "medium" }}
-                              >
+                              <span className="text-secondary quote-description">
                                 {post.data?.[post.data?.Field_Slug_quotesectiondescription]}
                               </span>
                             </p>
@@ -850,10 +813,7 @@ const Home = () => {
                       <div className="sec-3-text2">
                         <p className="text-light">
                           {statu.quote_section_1?.post_store[0].data?.[statu.quote_section_1?.post_store[0].data?.Field_Slug_quotesectiontitle]} <br />
-                          <span
-                            className="text-secondary"
-                            style={{ fontSize: "medium" }}
-                          >
+                          <span className="text-secondary quote-description">
                             {statu.quote_section_1?.post_store[0].data?.[statu.quote_section_1?.post_store[0].data?.Field_Slug_quotesectiondescription]}
                           </span>
                         </p>
@@ -895,10 +855,7 @@ const Home = () => {
                           <div className="sec-3-text2">
                             <p className="text-light">
                               {post.data?.[post.data?.Field_Slug_quotesectiontitle]} <br />
-                              <span
-                                className="text-secondary"
-                                style={{ fontSize: "medium" }}
-                              >
+                              <span className="text-secondary quote-description">
                                 {post.data?.[post.data?.Field_Slug_quotesectiondescription]}
                               </span>
                             </p>
@@ -918,10 +875,7 @@ const Home = () => {
                       <div className="sec-3-text2">
                         <p className="text-light">
                           {statu.quote_section_2?.post_store[0].data?.[statu.quote_section_2?.post_store[0].data?.Field_Slug_quotesectiontitle]} <br />
-                          <span
-                            className="text-secondary"
-                            style={{ fontSize: "medium" }}
-                          >
+                          <span className="text-secondary quote-description">
                             {statu.quote_section_2?.post_store[0].data?.[statu.quote_section_2?.post_store[0].data?.Field_Slug_quotesectiondescription]}
                           </span>
                         </p>
@@ -1018,10 +972,10 @@ const Home = () => {
                   <button
                     type="submit"
                     className="btn w-auto sky-blue-btn-tellmemore"
-                    style={{
-                      backgroundColor: "#40bedd",
-                      color: "#ffffff",
-                    }}
+                    // style={{
+                    //   backgroundColor: "#40bedd",
+                    //   color: "#ffffff",
+                    // }}
                     onClick={() => {
                       const rawUrl = statu.tell_me_more_section?.button_link;
                       window.location.href = rawUrl;
@@ -1049,7 +1003,7 @@ const Home = () => {
                 </div>
               </div>
 
-              <div className="row" style={{ marginBottom: "6%" }}>
+              <div className="row about-section-row">
                 <div className="col-md-3">
                   <div className="content-box">
                     {titles.map((title, index) => (
@@ -1085,7 +1039,7 @@ const Home = () => {
               <div className="row">
                 <div className="col-12 p-0">
                   <div
-                    className="parallax-img"
+                    className="parallax-image"
                     style={{
                       backgroundImage: `url(${statu.page_image_section?.image})`,
                     }}
@@ -1139,7 +1093,7 @@ const Home = () => {
                           )}
 
                           {errors[`label${index}`] && (
-                            <span style={{ color: "red" }}>
+                            <span className="error-message">
                               {errors[`label${index}`]}
                             </span>
                           )}
@@ -1197,32 +1151,12 @@ const Home = () => {
 const Popup = ({ isOpen, onClose, onLoginSuccess }) => {
   if (!isOpen) return null;
   return (
-    <div className="popup-overlay  " style={popupOverlayStyles}>
-      <div className="popup-content" style={popupContentStyles}>
+    <div className="popup-overlay">
+      <div className="popup-content">
         <Login onLoginSuccess={onLoginSuccess} onClose={onClose} />
       </div>
     </div>
   );
-};
-
-const popupOverlayStyles = {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  backgroundColor: "rgba(0, 0, 0, 0.5)",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  zIndex: 1000,
-  overflowY: "auto",
-};
-
-const popupContentStyles = {
-  backgroundColor: "white",
-  borderRadius: "5px",
-  boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
 };
 
 export default Home;

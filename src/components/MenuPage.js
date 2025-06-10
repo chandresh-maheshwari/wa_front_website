@@ -37,18 +37,6 @@ const MenuPage = () => {
 
     const navigate = useNavigate();
 
-    const cardTextStyle = {
-        display: 'flex',
-        alignItems: 'center',
-        margin: '0',
-        fontSize: "medium",
-    };
-
-    const cardTextImageStyle = {
-        marginRight: '10px',
-    };
-
-
     const getUserEmail = async () => {
         try {
             const token = ls.get("WAauthToken");
@@ -63,7 +51,7 @@ const MenuPage = () => {
                     'Authorization': `Bearer ${token}`,
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
-                },
+                }
             });
 
             console.log("API Response:", response);
@@ -290,12 +278,11 @@ const MenuPage = () => {
                   ].map(
                     (text, i) =>
                       text && (
-                        <p style={cardTextStyle} key={i} className="cardtext">
+                        <p className="card-text-container cardtext" key={i}>
                           <img
                             src={righticon}
-                            className={`card${index + 1}righticon`}
+                            className={`card${index + 1}righticon card-text-image`}
                             alt={`Icon ${i + 1}`}
-                            style={cardTextImageStyle}
                           />
                           {text}
                         </p>
@@ -310,12 +297,11 @@ const MenuPage = () => {
                 <div className={`card${index + 1}-sec-2-text`}>
                   {/* Render Service Section */}
                   {serviceSection?.[serviceSection?.Field_Slug_service1] && (
-                    <p style={cardTextStyle}>
+                    <p className="card-text-container">
                       <img
                         src={plushicon}
-                        className={`card${index + 1}plushicon`}
+                        className={`card${index + 1}plushicon card-text-image`}
                         alt="Add On Icon"
-                        style={cardTextImageStyle}
                       />
                       {serviceSection?.[serviceSection?.Field_Slug_service1]}
                     </p>
@@ -337,12 +323,11 @@ const MenuPage = () => {
                     ].map(
                       (text, i) =>
                         text && (
-                          <p style={cardTextStyle} key={i} className="cardtext">
+                          <p className="card-text-container cardtext" key={i}>
                             <img
                               src={plushicon}
-                              className={`card${index + 1}plushicon`}
+                              className={`card${index + 1}plushicon card-text-image`}
                               alt="Add On Icon"
-                              style={cardTextImageStyle}
                             />
                             {text}
                           </p>
@@ -354,9 +339,8 @@ const MenuPage = () => {
                       <p className={`card${index + 1}-sec-3-text`}>
                         <img
                           src={plushicon}
-                          className={`card${index + 1}plushicon`}
+                          className={`card${index + 1}plushicon card-text-image`}
                           alt="Add On Icon"
-                          style={cardTextImageStyle}
                         />
                         {serviceSection?.[serviceSection?.Field_Slug_service2]}
                       </p>
@@ -367,13 +351,7 @@ const MenuPage = () => {
                   <div className="text-center purchase-btn">                  
                     <button
                       role="link"
-                      className="btn w-50"
-                      style={{
-                        backgroundColor:
-                          purchaseButtonSection.Buttonbackgroundcolor || "#40bedd",
-                        color: purchaseButtonSection.Buttoncolor || "#ffffff",
-                      }}
-     
+                      className="btn w-50 purchase-button"
                       onClick={() =>
                         handlePurchaseSubmit(
                           card?.data.Packagename,
@@ -501,17 +479,7 @@ const MenuPage = () => {
             <Navlayout />
             <Expired />
             {isLoading ? (
-                <div style={{
-                    position: 'fixed',
-                    top: 0, left: 0, right: 0, bottom: 0,
-                    // background: 'rgba(200,200,200,0.5)',
-                    background: 'rgba(0,0,0,0.3)',
-                    zIndex: 2000,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backdropFilter: 'blur(1px)'
-                }}>
+                <div className="loading-overlay">
                     <div className="spinner-border text-primary" role="status">
                         <span className="visually-hidden">Loading...</span>
                     </div>
@@ -533,7 +501,7 @@ const MenuPage = () => {
                                     </div>
                                 </div>
 
-                                <div className="row" style={{ marginBottom: "6%" }}>
+                                <div className="row about-section-row">
                                     <div className="col-md-3">
                                         <div className="content-box">
                                             {/* {console.log(titles)} */}
@@ -631,7 +599,7 @@ const MenuPage = () => {
                                       )}
     
                                       {errors[`label${index}`] && (
-                                        <span style={{ color: "red" }}>
+                                        <span className="error-message">
                                           {errors[`label${index}`]}
                                         </span>
                                       )}
@@ -660,37 +628,6 @@ const MenuPage = () => {
                     }
 
                     {/* {console.log(currentMenu)} */}
-                    {currentMenu === 'Who Use WA' && statu.page_status === 1 ? (
-                        <section className="clients-section" id="clients_section">
-                            <div className="container sliderconatainer">
-                            <h2 className="font-weight-light slider-heading text-center">
-                            {statu.page_description}</h2>
-                                <div className="clients-grid">
-                                    {statu.post_store.map((item, index) => (
-                                        <div key={item.Id} className="client-logo">
-                                            {item.data && item.data.Link ? (
-                                                <Link to={item.data.Link}>
-                                                    <img
-                                                        src={item.data.Image}
-                                                        alt={`Client ${index + 1}`}
-                                                        className="client-image sliderimages"
-                                                    />
-                                                </Link>
-                                            ) : item.data ? (
-                                                <img
-                                                    src={item.data.Image}
-                                                    alt={`Client ${index + 1}`}
-                                                    className="client-image sliderimages"
-                                                />
-                                            ) : null}
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </section>
-                    ) : null} 
-
-
                     {currentMenu === 'Who Use WA' && statu.page_status === 1 ? (
                         <section className="clients-section" id="clients_section">
                             <div className="container sliderconatainer">
@@ -810,32 +747,12 @@ const Popup = ({ isOpen, onClose, onLoginSuccess }) => {
     if (!isOpen) return null;
     console.log("Popup is call")
     return (
-        <div className="popup-overlay" style={popupOverlayStyles}>
-            <div className="popup-content" style={popupContentStyles}>
+        <div className="popup-overlay">
+            <div className="popup-content">
                 <Login onLoginSuccess={onLoginSuccess} onClose={onClose} />
             </div>
         </div>
     );
-};
-
-const popupOverlayStyles = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1000,
-    overflowY: 'auto',
-};
-
-const popupContentStyles = {
-    backgroundColor: 'white',
-    borderRadius: '5px',
-    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
 };
 
 export default MenuPage;

@@ -66,7 +66,7 @@ const TopNav = () => {
                                         {/* <p className='partoflife'> {topbardata.Mts_group_section?.Title}</p> 
                                         <p className='mtsgroup' style={{ color: "rgb(173, 173, 173);" }}>{topbardata.Mts_group_section?.Description}</p> */}
                                         <p className='partoflife'> {topbardata?.MTSGroupSection?.[topbardata?.MTSGroupSection?.Field_Slug_title]}</p>
-                                        <p className='mtsgroup' style={{ color: "rgb(173, 173, 173);" }}>{topbardata?.MTSGroupSection?.[topbardata?.MTSGroupSection?.Field_Slug_description]}</p>
+                                        <p className='mtsgroup'>{topbardata?.MTSGroupSection?.[topbardata?.MTSGroupSection?.Field_Slug_description]}</p>
                                     </div>
                                 </div>
                                 {/* {console.log(topbardata.Mts_group_section?.Sidelogoimage)}                                 */}

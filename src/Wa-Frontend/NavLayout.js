@@ -257,24 +257,13 @@ const Navlayout = () => {
     return (
         <>
             {isLoading && (
-                <div style={{
-                    position: 'fixed',
-                    top: 0, left: 0, right: 0, bottom: 0,
-                    // background: 'rgba(255,255,255,0.7)',
-                    background: 'rgba(0,0,0,0.3)',
-
-                    zIndex: 2000,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backdropFilter: 'blur(2px)'
-                }}>
+                <div className="loading-overlay">
                     <div className="spinner-border text-primary" role="status">
                         <span className="visually-hidden">Loading...</span>
                     </div>
                 </div>
             )}
-            <div style={isLoading ? { filter: 'blur(2px)' } : {}}>
+            <div className={isLoading ? "blur-content" : ""}>
                 <nav className="navbar navbar-expand-lg navbar-light bg-white" id="menu">
                     <div className="container">
                         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -289,7 +278,7 @@ const Navlayout = () => {
                                 {!isLoggedIn && renderLoginButton()}
                             </form>
                             {isLoggedIn && userData && (
-                                <div className="user-dropdown-container" ref={dropdownRef} style={{color:'white'}}>
+                                <div className="user-dropdown-container" ref={dropdownRef}>
                                     <div className="user-icon" onClick={toggleDropdown}>
                                         {userData.avatar ? (
                                             <img src={userData.avatar} alt="User Avatar" className="user-avatar" />
@@ -300,12 +289,10 @@ const Navlayout = () => {
                                         {isDropdownOpen ? <MdArrowDropUp /> : <MdArrowDropDown />}
                                     </div>
 
-{/* {console.log(isDropdownOpen)} */}
                                     {isDropdownOpen && (
                                         <div className="dropdown-menu">
                                             <button onClick={handleViewProfile}>View Profile</button>
                                             <button onClick={handleEditProfile}>Edit Profile</button>
-                                            {/* <button onClick={handleDashboard}>Go to dashboard</button> */}
                                             <button onClick={handleLogout}>Logout</button>
                                         </div>
                                     )}
@@ -327,32 +314,12 @@ const Popup = ({ isOpen, onClose, onLoginSuccess }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="popup-overlay" style={popupOverlayStyles}>
-            <div className="popup-content" style={popupContentStyles}>
+        <div className="popup-overlay">
+            <div className="popup-content">
                 <Login onLoginSuccess={onLoginSuccess} onClose={onClose} />
             </div>
         </div>
     );
-};
-
-const popupOverlayStyles = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1000,
-    overflowY: 'auto',
-};
-
-const popupContentStyles = {
-    backgroundColor: 'white',   
-    borderRadius: '5px',   
-    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
 };
 
 export default Navlayout;
