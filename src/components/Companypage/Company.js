@@ -325,10 +325,15 @@ const Company = () => {
               ...formErrors,
               contactNumber: "Phone Number is required",
             });
-          } else if (value.length !== 12) {
+          } else if (value.length < 10) {
             setFormErrors({
               ...formErrors,
-              contactNumber: "Phone Number must be exactly 12 digits",
+              contactNumber: "Phone Number must be at least 10 digits",
+            });
+          } else if (value.length > 12) {
+            setFormErrors({
+              ...formErrors,
+              contactNumber: "Phone Number must not exceed 12 digits",
             });
           } else {
             setFormErrors({ ...formErrors, contactNumber: "" });
@@ -373,8 +378,11 @@ const Company = () => {
     if (!formData.contactNumber) {
       errors.contactNumber = "Company Telephone is required.";
       isValid = false;
-    } else if (!/^\d{12}$/.test(formData.contactNumber)) {
-      errors.contactNumber = "Company Telephone must be 12 digits.";
+    } else if (formData.contactNumber.length < 10) {
+      errors.contactNumber = "Company Telephone must be at least 10 digits.";
+      isValid = false;
+    } else if (formData.contactNumber.length > 12) {
+      errors.contactNumber = "Company Telephone must not exceed 12 digits.";
       isValid = false;
     }
     if (!formData.postcode) {

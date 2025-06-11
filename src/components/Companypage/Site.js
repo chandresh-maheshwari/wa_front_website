@@ -80,10 +80,10 @@ const VehicleForm = () => {
             ...errors,
             site_phone_no: "Site Telephone is required"
           });
-        } else if (value.length !== 12) {
+        } else if (value.length < 10) {
           setErrors({
             ...errors,
-            site_phone_no: "Phone number must be exactly 12 digits"
+            site_phone_no: "Phone number must be at least 10 digits"
           });
         } else {
           setErrors({ ...errors, site_phone_no: "" });
@@ -97,29 +97,17 @@ const VehicleForm = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    // Validate all required fields
-    if (!formData.vehicle_type_id)
-      newErrors.vehicle_type_id = "Vehicle Type is required";
-    if (!formData.vehicle_description)
-      newErrors.vehicle_description = "Vehicle Description is required";
-    if (!formData.driver_name)
-      newErrors.driver_name = "Driver Name is required";
-    if (!formData.vehicle_name)
-      newErrors.vehicle_name = "Carrier Name is required";
-
     // Phone number validation
     if (!formData.site_phone_no) {
       newErrors.site_phone_no = "Site Telephone is required.";
-    } else if (!/^\d{12}$/.test(formData.site_phone_no)) {
-      newErrors.site_phone_no = "Phone number must be 12 digits.";
+    } else if (!/^\d{10,12}$/.test(formData.site_phone_no)) {
+      newErrors.site_phone_no = "Phone number must be between 10 and 12 digits.";
     }
 
-    if (!formData.vehicle_license_expire_date)
-      newErrors.vehicle_license_expire_date = "Carrier's License Expiry Date is required";
-    if (!formData.vehicle_license)
-      newErrors.vehicle_license = "Carrier License No is required";
-    if (!formData.fuel_type_id)
-      newErrors.fuel_type_id = "Fuel Type is required";
+    // Only validate required fields
+    if (!formData.site_name) {
+      newErrors.site_name = "Site Name is required";
+    }
 
     setErrors(newErrors);
 
@@ -447,9 +435,9 @@ const VehicleForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // if (!validateForm()) return; // Ensure the form is valid before proceeding
-
-    const vehicleOwnerValue = formData.vehicle_owner === "contract_name" ? 1 : 2;
+    if (!validateForm()) {
+      return;
+    }
 
     try {
       setLoading(true);
@@ -480,21 +468,17 @@ const VehicleForm = () => {
       // Check if the request was successful
       if (response.status === 200 || response?.data?.success) {
         setLoading(false);
-        sessionStorage.setItem("successMessage", "Vehicle Setup Complete! Your vehicle has been successfully registered.");
+        sessionStorage.setItem("successMessage", "Site and Job Details have been successfully saved.");
         navigate("/success");
-        // });
       } else {
         setLoading(false);
         throw new Error(response?.message || "Failed to submit Site and Job Details");
       }
     } catch (error) {
       setLoading(false);
-      // console.error("Vehicle submission error:", error);
-      // { console.log(error.message) }
       Swal.fire({
         icon: "error",
         title: "Submission Failed",
-        // text: error.error,
         text: error?.response?.data?.message || error.message || "Failed to submit Site and Job Details. Please try again.",
         confirmButtonText: "OK",
       });
