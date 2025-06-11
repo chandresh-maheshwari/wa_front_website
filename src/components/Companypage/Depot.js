@@ -167,12 +167,25 @@ const DepotForm = () => {
     const { name, value } = e.target;
     setErrors({ ...errors, [name]: "" }); // Clear the error for that field
 
-    // Phone number validation: only numbers and up to 10 digits allowed
+    // Phone number validation: only numbers and up to 12 digits allowed
     if (name === "depotTelephone") {
-      if (/^\d{0,10}$/.test(value)) {
-        setFormData({ ...formData, [name]: value }); // Update formData with the value
+      if (/^\d{0,12}$/.test(value)) {
+        setFormData({ ...formData, [name]: value });
+        
+        if (value.length === 0) {
+          setErrors({
+            ...errors,
+            depotTelephone: "Depot Telephone is required"
+          });
+        } else if (value.length !== 12) {
+          setErrors({
+            ...errors,
+            depotTelephone: "Phone number must be exactly 12 digits"
+          });
+        } else {
+          setErrors({ ...errors, depotTelephone: "" });
+        }
       }
-      validateForm(); // Call the validation after updating phone number
     } else {
       setFormData({ ...formData, [name]: value }); // Update formData for other fields
     }
@@ -221,8 +234,8 @@ const DepotForm = () => {
     // Validate Depot Telephone (Phone number validation - exactly 10 digits)
     if (!formData.depotTelephone) {
       newErrors.depotTelephone = "Depot Telephone is required.";
-    } else if (!/^\d{10}$/.test(formData.depotTelephone)) {
-      newErrors.depotTelephone = "Phone number must be 10 digits.";
+    } else if (!/^\d{12}$/.test(formData.depotTelephone)) {
+      newErrors.depotTelephone = "Phone number must be 12 digits.";
     }
 
     // Validate Depot Address

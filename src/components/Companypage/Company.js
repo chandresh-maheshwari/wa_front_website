@@ -317,22 +317,22 @@ const Company = () => {
     setFormErrors({ ...formErrors, [name]: "" });
 
     if (name === "contactNumber") {
-      if (/^\d{0,10}$/.test(value)) {
+      if (/^\d{0,12}$/.test(value)) {
         setFormData({ ...formData, [name]: value });
 
-        if (value.length === 0) {
-          setFormErrors({
-            ...formErrors,
-            contactNumber: "Phone Number is required",
-          });
-        } else if (value.length !== 10) {
-          setFormErrors({
-            ...formErrors,
-            contactNumber: "Phone Number must be exactly 10 digits",
-          });
-        } else {
-          setFormErrors({ ...formErrors, contactNumber: "" });
-        }
+          if (value.length === 0) {
+            setFormErrors({
+              ...formErrors,
+              contactNumber: "Phone Number is required",
+            });
+          } else if (value.length !== 12) {
+            setFormErrors({
+              ...formErrors,
+              contactNumber: "Phone Number must be exactly 12 digits",
+            });
+          } else {
+            setFormErrors({ ...formErrors, contactNumber: "" });
+          }
       }
     } else {
       setFormData({ ...formData, [name]: value });
@@ -373,8 +373,8 @@ const Company = () => {
     if (!formData.contactNumber) {
       errors.contactNumber = "Company Telephone is required.";
       isValid = false;
-    } else if (!/^\d{10}$/.test(formData.contactNumber)) {
-      errors.contactNumber = "Company Telephone must be 10 digits.";
+    } else if (!/^\d{12}$/.test(formData.contactNumber)) {
+      errors.contactNumber = "Company Telephone must be 12 digits.";
       isValid = false;
     }
     if (!formData.postcode) {
@@ -797,7 +797,7 @@ const Company = () => {
                         value={formData.contactNumber}
                         onChange={handleInputChange}
                         required
-                        placeholder="Company Telephone"
+                        placeholder="Company Telephone"   
                       />
                       {formErrors.contactNumber && (
                         <div className="invalid-feedback">
