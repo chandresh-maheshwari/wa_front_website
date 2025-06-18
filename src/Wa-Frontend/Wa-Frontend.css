@@ -2,6 +2,13 @@
 
 body {
     font-family: 'Open Sans', serif;
+    box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
 }
 
 .row {
@@ -142,17 +149,11 @@ body {
 }
 
 .homeimg {
-    max-width: 142%;
-    width: 107%;
+    max-width: 100%;
+    width: 100%;
+    height: auto;
 }
 
-#tellmemore {
-    background-color: #2c9dd4;
-    color: white;
-    margin-right: 12px;
-    font-weight: bolder;
-    margin-left: 6%;
-}
 
 .for-wasteAccount {
     color: #2C9DD4;
@@ -226,7 +227,8 @@ body {
 
 .stretch-line>img {
     position: absolute;
-    bottom: 159px;
+    /* bottom: 159px; */
+    bottom: 125px;
 }
 
 /* firstqute */
@@ -257,22 +259,7 @@ body {
     font-size: 23px;
 }
 
-.quoteimage1 {
-    /* position: absolute;
-    margin-top: 2%;
-    left: 63%;
-    margin-left: -229px;
-    cursor: pointer;
-    max-width: 10%;
-    width: 5%; */
-    position: absolute;
-    margin-top: -6%;
-    left: 63%;
-    margin-left: -229px;
-    cursor: pointer;
-    max-width: 10%;
-    width: 5%;
-}
+
 
 /* medalsection */
 
@@ -329,8 +316,8 @@ body {
     /* font-size: 21px !important; */
     font-weight: 800 !important;
     border-radius: 6px !important;
-    margin-top: 3% !important;
-    margin-left: 45%;
+    margin-top: 5% !important;
+    /* margin-left: 45%; */
     /* padding-left: 4%;
     padding-right: 4%;
     margin-bottom: 8%; */
@@ -712,32 +699,10 @@ body {
 }
 
 /* tellme more */
-.tellmemore {
-    background-color: #f0f5f3;
-}
 
-.tellmemoretitle {
-    color: #113b4f;
-    font-size: 37px;
-    font-weight: 900;
-    text-align: center;
-    margin-right: auto;
-    margin-left: auto;
-    max-width: 88%;
-    padding: 10%;
-}
 
-.sky-blue-btn-tellmemore {
-    color: #fff !important;
-    background-color: #2c9dd4 !important;
-    /* font-size: 20px !important; */
-    /* font-weight: 700 !important; */
-    font-weight: bold;
 
-    border-radius: 5px !important;
-    margin-top: -12% !important;
-    margin-left: 45%;
-}
+
 
 /* aboutus section */
 #About-us {
@@ -1021,7 +986,7 @@ footer #footer {
     font-weight: bold;
     border-radius: 5px !important;
     margin-top: 7% !important;
-    margin-left: 45%;
+    /* margin-left: 45%; */
 }
 
 .slick-slider .slick-track,
@@ -1596,7 +1561,7 @@ body.scrolled-down::-webkit-scrollbar-thumb {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0,0,0,0.3);
+    background: rgba(0, 0, 0, 0.3);
     z-index: 2000;
     display: flex;
     align-items: center;
@@ -1641,70 +1606,187 @@ body.scrolled-down::-webkit-scrollbar-thumb {
 
 /* Card text styles */
 .card-text-container {
-  display: flex;
-  align-items: center;
-  margin: 0;
-  font-size: medium;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    font-size: medium;
 }
 
 .card-text-image {
-  margin-right: 10px;
+    margin-right: 10px;
 }
 
 /* Home section styles */
 .home-description {
-  color: rgb(173, 173, 173);
-  max-width: 46%;
-  margin-bottom: 27px;
+    color: rgb(173, 173, 173);
+    max-width: 46%;
+    margin-bottom: 27px;
 }
 
 /* Quote section styles */
 .quote-description {
-  font-size: medium;
+    font-size: medium;
 }
 
 /* About section styles */
 .about-section-row {
-  margin-bottom: 6%;
+    margin-bottom: 6%;
 }
 
 /* Error message styles */
 .error-message {
-  color: red;
-  font-size: 0.9em;
-  margin-top: 5px;
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
 }
 
 /* Popup styles */
 .popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  overflow-y: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    overflow-y: auto;
 }
 
 .popup-content {
-  background-color: white;
-  border-radius: 5px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Purchase button styles */
 .purchase-button {
-  background-color: #40bedd;
-  color: #ffffff;
+    background-color: #40bedd;
+    color: #ffffff;
 }
 
 /* Parallax image styles */
 .parallax-image {
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+@media only screen and (min-device-width : 320px) and (max-device-width :900px) {
+
+    /* Styles */
+    #navbarSupportedContent {
+        z-index: 1;
+    }
+
+    #navbarSupportedContent ul {
+        padding: 12px 23px;
+    }
+
+    #navbarSupportedContent ul div {
+        padding: 12px;
+    }
+
+    .dropdown-menu {
+        position: relative;
+        top: 0;
+        right: 0;
+    }
+}
+
+@media only screen and (min-device-width : 765px) and (max-device-width :1000px) {
+
+    .navbar-toggler {
+        background-color: #fff;
+    }
+
+    .dropdown-menu {
+        position: relative;
+        top: 0;
+        right: 0;
+    }
+}
+
+.quoteimage1 {
+    /* position: absolute;
+    margin-top: 2%;
+    left: 63%;
+    margin-left: -229px;
+    cursor: pointer;
+    max-width: 10%;
+    width: 5%; */
+    position: absolute;
+    margin-top: -6%;
+    /* left: 63%; */
+    /* margin-left: -229px; */
+    cursor: pointer;
+    max-width: 10%;
+    width: 5%;
+    display: block;
+    margin: auto;
+    /* width: 50%; */
+    top: 8%;
+
+
+}
+
+.quote-sec-1,
+.quote-sec-2 {
+    display: flex;
+    justify-content: center;
+}
+
+.contact-us-package {
+    display: flex;
+    justify-content: center;
+}
+
+.sky-blue-btn-tellmemore-div {
+    display: flex;
+    justify-content: center;
+}
+
+.blue-btn-Find-out-More-div {
+    display: flex;
+    justify-content: center;
+}
+
+#tellmemore {
+    background-color: #2c9dd4;
+    color: white;
+    margin-right: 12px;
+    font-weight: bolder;
+    margin-left: 6%;
+}
+
+.tellmemore {
+    background-color: #f0f5f3;
+  /* background-color: #23e99a; */
+    padding-bottom: 5%;
+}
+
+.tellmemoretitle {
+    color: #113b4f;
+    font-size: 37px;
+    font-weight: 900;
+    text-align: center;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 88%;
+    padding: 10% 10% 5% 10%;
+}
+
+.sky-blue-btn-tellmemore {
+    color: #fff !important;
+    background-color: #2c9dd4 !important;
+    /* font-size: 20px !important; */
+    /* font-weight: 700 !important; */
+    font-weight: bold;
+
+    border-radius: 5px !important;
+    /* margin-top: -12% !important; */
+    /* margin-left: 45%; */
 }

@@ -34,6 +34,7 @@ const carouselResponsive = {
   mobile: { breakpoint: { max: 768, min: 0 }, items: 1 }
 };
 
+
 const Home = () => {
   const navigate = useNavigate();
   const [isPlaying, setIsPlaying] = useState(true);
@@ -515,7 +516,7 @@ const Home = () => {
                 <div className="card-liner-inside-2"></div>
               )}
 
-              <div className={`card-${index + 1}-sec-3`}>
+              <div className={`card-${index + 1}-sec-3 card${index + 1}-text`}>
                 {feesSection?.[feesSection?.Field_Slug_monthlyfee] && (
                   <p className={`card${index + 1}-sec-3-text1`}>
                     {feesSection?.[feesSection?.Field_Slug_monthlyfee]}
@@ -596,7 +597,7 @@ const Home = () => {
                 <Carousel
                   responsive={carouselResponsive}
                   infinite={true}
-                  autoPlay={true}
+                  // autoPlay={true}
                   autoPlaySpeed={3000}
                   showDots={statu.home_section.post_store.length > 1}
                   arrows={false}
@@ -776,14 +777,14 @@ const Home = () => {
                     <Carousel
                       responsive={carouselResponsive}
                       infinite={true}
-                      autoPlay={true}
-                      autoPlaySpeed={3000}
+                      // autoPlay={true}
+                      // autoPlaySpeed={3000}
                       showDots={statu.quote_section_1.post_store.length > 1}
                       arrows={false}
                     >
                       {statu.quote_section_1.post_store.map((post, idx) => (
                         <div key={idx}>
-                          <div className="sec-3-text">
+                          <div className="sec-3-text quote-sec-1">
                             <img
                               src={post.data?.[post.data?.Field_Slug_quotesectionimage]}
                               className="quoteimage1"
@@ -845,7 +846,7 @@ const Home = () => {
                     >
                       {statu.quote_section_2.post_store.map((post, idx) => (
                         <div key={idx}>
-                          <div className="sec-3-text">
+                          <div className="sec-3-text quote-sec-2">
                             <img
                               src={post.data?.[post.data?.Field_Slug_quotesectionimage]}
                               className="quoteimage1"
@@ -898,6 +899,7 @@ const Home = () => {
                 <h4>{statu.our_products?.page_description}</h4>
               </div>
               <div className="row">{renderCards()}</div>
+              <div className="contact-us-package">
               <button
                 type="button"
                 className="btn sky-blue-btn"
@@ -908,6 +910,7 @@ const Home = () => {
               >
                 {statu.our_products?.button_name}
               </button>
+              </div>
             </div>
           </section>
         ),
@@ -942,6 +945,7 @@ const Home = () => {
                       ))}
                     </Slider>
                   </div>
+                  <div className="blue-btn-Find-out-More-div">
                   <button
                     type="submit"
                     className="btn w-auto blue-btn-Find-out-More"
@@ -952,6 +956,7 @@ const Home = () => {
                   >
                     {statu?.who_use_wa?.button_name}
                   </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -967,8 +972,11 @@ const Home = () => {
               <h4 className="tellmemoretitle">
                 {statu.tell_me_more_section?.post_store[0].data?.[statu.tell_me_more_section?.post_store[0].data?.Field_Slug_title]}
               </h4>
-              <div className="row">
-                <div className="col-12">
+              
+            </div>
+            {/* <div className="row"> */}
+                {/* <div className="col-12 sky-blue-btn-tellmemore-div"> */}
+                <div className="sky-blue-btn-tellmemore-div">
                   <button
                     type="submit"
                     className="btn w-auto sky-blue-btn-tellmemore"
@@ -984,8 +992,7 @@ const Home = () => {
                     {statu.tell_me_more_section?.button_name}
                   </button>
                 </div>
-              </div>
-            </div>
+              {/* </div> */}
           </section>
         ),
       },

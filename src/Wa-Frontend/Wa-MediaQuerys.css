@@ -1,5 +1,12 @@
 /*************************************Media query for multiple device ****************************************************/
 
+@media only screen and (min-width: 300px) and (max-width: 600px) {
+   .homeimg {
+        max-width: 39% !important;
+        width: 32% !important;
+    }
+}
+
 /* Media query for mobaile  divice beetween 300 to 765 */
 @media only screen and (min-width: 300px) and (max-width: 765px) {
 
@@ -11,7 +18,7 @@
 
 
     }
- 
+
     .line {
         display: none;
     }
@@ -22,25 +29,25 @@
 
     /* home mediaquery */
     .homeimg {
-        max-width: 39% !important;
-        width: 32% !important;
+        /* max-width: 39% !important;
+        width: 32% !important; */
     }
 
     .homefont>h4 {
-        font-size: 11px;
-        margin-left: 42%;
-        margin-top: -29%;
+        font-size: 18px;
+        /* margin-left: 42%;
+        margin-top: -29%; */
 
     }
 
     .home-p-font {
         max-width: 68% !important;
-        font-size: 8px;
-        margin-left: 46%;
+        /* font-size: 8px;
+        margin-left: 46%; */
     }
 
     #tellmemore {
-        margin-left: 45%;
+        /* margin-left: 45%; */
     }
 
     /* section2 */
@@ -87,13 +94,14 @@
         margin-top: 9%;
 
     }
-    .plus
-    {
+
+    .plus {
         margin-top: 10%;
 
     }
+
     .sky-blue-btn {
-        margin-left: 32%;
+        /* margin-left: 32%; */
     }
 
     .qute1 {
@@ -106,29 +114,32 @@
 
     .stretch-line>img {
         position: absolute;
-        bottom: 290px;
+        /* bottom: 270px; */
+        /* bottom: 298px; */
+        bottom: 282px;
         z-index: -18;
         margin-bottom: -38%;
     }
-    .sliderimages
-    {
+
+    .sliderimages {
         width: 62% !important;
         height: 41.61% !important;
         margin-left: 19px;
     }
-    .slick-prev
-    {
+
+    .slick-prev {
         z-index: 1;
     }
+
     .sky-blue-btn-tellmemore {
         color: #fff !important;
         background-color: #2c9dd4 !important;
-        font-size: 14px !important;
-        font-weight: 500 !important;
-        border-radius: 2px !important;
+        /* font-size: 14px !important; */
+        font-weight: bold;
+        border-radius: 5px !important;
         margin-top: -1% !important;
-        margin-left: 36%;
-        margin-bottom: 14%;
+        /* margin-left: 36%; */
+        margin-bottom: 10%;
     }
 
     .parallax-img {
@@ -166,15 +177,16 @@
     .content-box p {
         font-size: small;
     }
-    .transfotext2
-    {
+
+    .transfotext2 {
         margin-top: 20%;
 
     }
+
     /* qutesection */
     .sec-3-text2 {
         text-align: center;
-        margin-top: 40%;
+        margin-top: 20%;
         max-width: 91%;
         margin-left: auto;
         margin-right: auto;
@@ -183,8 +195,8 @@
 
     .quoteimage1 {
         position: absolute;
-        margin-top: 8%;
-        margin-left: -24%;
+        /* margin-top: 8%; */
+        /* margin-left: -24%; */
         cursor: pointer;
         max-width: 16%;
         width: 21%;
@@ -192,7 +204,7 @@
 
     .blue-btn-Find-out-More {
 
-        margin-left: 25%;
+        /* margin-left: 25%; */
         font-size: 18px !important;
 
     }
@@ -267,10 +279,10 @@
         font-size: 14px !important;
         font-weight: 800 !important;
         border-radius: 10px !important;
-        margin-top: 25% !important;
-        margin-left: 32%;
-        padding-left: 8%;
-        padding-right: 10%;
+        margin-top: 15% !important;
+        /* margin-left: 32%; */
+        /* padding-left: 8%;
+        padding-right: 10%; */
     }
 
 
@@ -352,6 +364,7 @@
         margin-left: 64%;
 
     }
+
     .toptext {
         margin-top: 0%;
     }
@@ -403,29 +416,32 @@
 @media only screen and (min-width: 410px) and (max-width: 440px) {
     .stretch-line>img {
         position: absolute;
-        bottom: 224px;
+        bottom: 180px;
         z-index: -18;
         margin-bottom: -8%;
     }
+
     .wa-logo {
         max-width: 51%;
         margin-left: -2%;
     }
+
     .container.type-2 {
         max-width: 800px;
         margin-bottom: 19%;
     }
+
     .card-3-sec-3 {
         padding-left: 34px;
-      
+
     }
 
     /* qutesection */
     .quoteimage1 {
         position: absolute;
-        margin-top: 8%;
-        left: 95%;
-        margin-left: -229px;
+        /* margin-top: 8%; */
+        /* left: 95%; */
+        /* margin-left: -229px; */
         cursor: pointer;
     }
 
@@ -456,7 +472,8 @@
         margin-top: -17%;
         margin-bottom: 2%;
     }
-    }
+}
+
 /* media query for tab */
 @media (min-width: 819px) and (max-width: 821px) {
     .wa-logo {
@@ -483,10 +500,11 @@
         transition: all 0.5s ease;
         width: 44%;
     }
-    .navbar-nav
-    {
+
+    .navbar-nav {
         padding: 10%;
     }
+
     .navbar-collapse.show {
         transform: translateX(0);
     }
@@ -495,16 +513,17 @@
         background-color: white;
         border: none !important;
     }
-    #contact
-    {
+
+    #contact {
         margin-left: 11%;
     }
+
     #login {
-       
+
         margin-left: -6% !important;
     }
-    .card3
-    {
+
+    .card3 {
         height: 560px !important;
     }
 }
@@ -540,7 +559,7 @@
 
     .stretch-line>img {
         position: absolute;
-        bottom: 234px;
+        bottom: 195px;
     }
 
     .stretch-line:before {
@@ -554,23 +573,26 @@
         height: 159px;
         margin-top: 81px;
     }
-    .card2-sec-3-text1
-    {
+
+    .card2-sec-3-text1 {
         margin-left: 22%;
     }
+
     .card2-sec-3-text {
         margin-bottom: 6%;
         margin-left: 10%;
     }
+
     .quoteimage1 {
         position: absolute;
-        margin-top: 2%;
-        left: 72%;
-        margin-left: -229px;
+        /* margin-top: 2%; */
+        /* left: 72%; */
+        /* margin-left: -229px; */
         cursor: pointer;
         max-width: 36%;
         width: 11%;
     }
+
     .card3-text>p {
 
         padding-left: 64px;
@@ -612,12 +634,12 @@
     }
 
     .quoteimage1 {
-        margin-top: 4%;
+        /* margin-top: 4%; */
     }
 
     /* qutesection */
     .quoteimage1 {
-        left: 74%;
+        /* left: 74%; */
     }
 
     .sec-3-text2 {
@@ -636,21 +658,31 @@
     }
 
     .sky-blue-btn-tellmemore {
-        color: #fff !important;
+        /* color: #fff !important;
         background-color: #2c9dd4 !important;
         font-size: 30px !important;
         font-weight: 500 !important;
         border-radius: 2px !important;
         margin-top: 0% !important;
-        margin-left: 36%;
+        margin-bottom: 8%; */
+
+
+        color: #fff !important;
+        background-color: #2c9dd4 !important;
+        /* font-size: 30px !important; */
+        /* font-weight: 500 !important; */
+        border-radius: 5px !important;
+        margin-top: 0% !important;
+        font-weight: bold;
+        /* margin-left: 36%; */
         margin-bottom: 8%;
 
     }
 
     .sky-blue-btn {
 
-        font-size: 32px !important;
-        margin-left: 33%;
+        /* font-size: 32px !important; */
+        /* margin-left: 33%; */
     }
 
     .transfo>h5 {
@@ -681,10 +713,11 @@
         height: 54.61px !important;
         margin-left: 81px !important;
     }
-    .plus
-    {
+
+    .plus {
         margin-top: 10%;
     }
+
     .topcontent {
         max-width: 191%;
         margin-left: -16%;
@@ -709,7 +742,7 @@
     }
 
     .blue-btn-Find-out-More {
-        margin-left: 39%;
+        /* margin-left: 39%; */
     }
 
     .get-touch {
@@ -820,7 +853,7 @@
     }
 
     .blue-btn-Find-out-More {
-        margin-left: 29%;
+        /* margin-left: 29%; */
     }
 
     .mail-link {
@@ -828,14 +861,18 @@
         margin-left: 9%;
     }
 }
-@media screen and (width: 1024px),screen and (height: 1366px) {
+
+@media screen and (width: 1024px),
+screen and (height: 1366px) {
     .toptext {
         margin-top: 7%;
     }
+
     .card-liner-card-3 {
-     
+
         margin-left: -4%;
     }
+
     .card1,
     .card2,
     .card3 {
@@ -866,7 +903,7 @@
     }
 
     .blue-btn-Find-out-More {
-        margin-left: 37%;
+        /* margin-left: 37%; */
     }
 
     .sec-3-text2 {
@@ -970,9 +1007,9 @@
 
     .quoteimage1 {
         position: absolute;
-        margin-top: 3%;
-        left: 73%;
-        margin-left: -299px;
+        /* margin-top: 3%; */
+        /* left: 73%; */
+        /* margin-left: -299px; */
         cursor: pointer;
         max-width: 12%;
         width: 8%;
@@ -1013,14 +1050,16 @@
         margin-top: -22%;
         margin-bottom: 2%;
     }
-    #title3.title-sm::after
-    {
+
+    #title3.title-sm::after {
         margin-left: 121%;
 
     }
+
     .toptext {
         margin-top: 3%;
     }
+
     .topcontent {
         max-width: 78% !important;
         margin-left: 11% !important;
