@@ -114,7 +114,7 @@ const SuccessPage = () => {
           <img src="/sucsess.png" alt="Success" className="success-image" />
           <h5 className="submittitle"><b>Account Created Successfully !</b></h5>
           {/* <p>Redirecting you in {count} sec </p> */}
-          <div className="mt-4">Please wait to be redirected to your Waste Accountant Dashboard : <span className={timer > 5 ? "normal" : "warning"}>{timer}</span></div>
+          {/* <div className="mt-4">Please wait to be redirected to your Waste Accountant Dashboard : <span className={timer > 5 ? "normal" : "warning"}>{timer}</span></div> */}
           {/* <div>Wait to redirect dashboard : <span className={timer > 5 ? "normal" : "warning"}>{timer}</span></div> */}
           {/* <div className="countdown-timer">
             Wait to redirect dashboard: <span className={timer > 5 ? "normal" : "warning"}>{timer}</span>

@@ -420,6 +420,10 @@ body {
     border-radius: 0px;
 }
 
+.card {
+    min-height: 570px !important;
+}
+
 .card2>span {
     font-weight: 800;
     font-size: 30px;
