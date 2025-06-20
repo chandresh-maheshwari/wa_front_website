@@ -49,7 +49,7 @@ const SuccessPage = () => {
   // }
 
 
-  const [timer, setTimer] = React.useState(10);
+  const [timer, setTimer] = React.useState(3);
   const id = React.useRef(null);
   const clear = () => {
     window.clearInterval(id.current);
