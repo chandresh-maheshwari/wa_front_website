@@ -163,7 +163,7 @@ const Company = () => {
             addressLine4: company.company_address_4 || "",
             contactNumber: company.company_tel || "",
             email: company.company_email || "",
-            companyActive: company.company_active || "",
+            // companyActive: company.company_active || "",
           });
         } else {
           console.log(response.message);
@@ -271,7 +271,7 @@ const Company = () => {
           company_email: formData.email,
           company_tel: formData.contactNumber,
           company_postcode: formData.postcode,
-          company_active: formData.companyActive ? 1 : 0,
+          // company_active: formData.companyActive ? 1 : 0,
           sic_code: formData.sicCode,
           company_address_1: formData.addressLine1,
           company_address_2: formData.addressLine2,
@@ -405,10 +405,10 @@ const Company = () => {
       isValid = false;
     }
 
-    if (!formData.companyActive) {
-      errors.companyActive = "You must confirm the company is active";
-      isValid = false;
-    }
+    // if (!formData.companyActive) {
+    //   errors.companyActive = "You must confirm the company is active";
+    //   isValid = false;
+    // }
 
     setFormErrors(errors);
     return isValid;
@@ -851,7 +851,8 @@ const Company = () => {
                       )}
                     </div>
                   </div>
-                  <div className="form-group col-md-6">
+                   <div className="form-group col-md-6"></div>
+                  {/* <div className="form-group col-md-6">
                     <div className="input-with-icon">
                       <label className="label">Company Active</label>
                       <Tooltip title="Tick this box so that your company is visible in Waste Accountant." arrow>
@@ -892,7 +893,7 @@ const Company = () => {
                         )}
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* <div className="form-row">
