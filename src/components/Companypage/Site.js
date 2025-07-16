@@ -33,7 +33,7 @@ const VehicleForm = () => {
     job_code: "",
     job_type_id: "",
     client_name: "",
-    purchase_order: "",
+    // purchase_order: "",
     job_description: "",
     job_code: "",
   });
@@ -54,19 +54,19 @@ const VehicleForm = () => {
   const [SubContractCompany, setSubContractCompanyData] = useState([]);
   const [loading, setLoading] = useState(false);
 
- // Add Code For loader 
-    const Loader = () => (
-      <div className="loader-overlay">
-        <RotatingLines
-          strokeColor="grey"
-          strokeWidth="5"
-          animationDuration="0.75"
-          width="96"
-          visible={true}
-        />
-      </div>
-    );
-    
+  // Add Code For loader 
+  const Loader = () => (
+    <div className="loader-overlay">
+      <RotatingLines
+        strokeColor="grey"
+        strokeWidth="5"
+        animationDuration="0.75"
+        width="96"
+        visible={true}
+      />
+    </div>
+  );
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setErrors({ ...errors, [name]: "" });
@@ -74,7 +74,7 @@ const VehicleForm = () => {
     if (name === "site_phone_no") {
       if (/^\d{0,12}$/.test(value)) {
         setFormData({ ...formData, [name]: value });
-        
+
         if (value.length === 0) {
           setErrors({
             ...errors,
@@ -413,7 +413,7 @@ const VehicleForm = () => {
             job_code: response.site_job.job_code || "",
             job_type_id: response.site_job.job_type_id || "",
             client_name: response.site_job.client_name || "",
-            purchase_order: response.site_job.purchase_order || "",
+            // purchase_order: response.site_job.purchase_order || "",
             job_description: response.site_job.job_description || "",
             job_code: response.site_job.job_code || "",
           });
@@ -460,7 +460,7 @@ const VehicleForm = () => {
         job_code: formData.job_code,
         job_type_id: formData.job_type_id,
         client_name: formData.client_name,
-        purchase_order: formData.purchase_order,
+        // purchase_order: formData.purchase_order,
         job_description: formData.job_description,
         job_code: formData.job_code,
       });
@@ -970,7 +970,7 @@ const VehicleForm = () => {
                 </div>
               </div>
 
-              <div className="form-group col-md-6">
+              {/* <div className="form-group col-md-6">
                 <div className="input-with-icon">
                   <label className="label">Purchase Order</label>
                   <Tooltip title="Add Order" arrow>
@@ -989,9 +989,7 @@ const VehicleForm = () => {
                     onChange={handleChange}
                   />
                 </div>
-              </div>
-            </div>
-            <div className="form-row">
+              </div> */}
               <div className="form-group col-md-6">
                 <div className="input-with-icon">
                   <label className="label">Description</label>
@@ -1015,6 +1013,10 @@ const VehicleForm = () => {
                   )}
                 </div>
               </div>
+
+            </div>
+            {/* <div className="form-row">
+
               <div className="form-group col-md-6">
                 <div className="input-with-icon">
                   <label className="label">Subcontractor Company</label>
@@ -1039,8 +1041,9 @@ const VehicleForm = () => {
                   {errors.SubContractCompany && <small className="text-danger">{errors.SubContractCompany}</small>}
                 </div>
               </div>
-            </div>
-
+              <div className="form-group col-md-6">
+              </div>
+            </div> */}
           </form>
         </div>
       </div>
