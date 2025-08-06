@@ -1794,3 +1794,8 @@ body.scrolled-down::-webkit-scrollbar-thumb {
     /* margin-top: -12% !important; */
     /* margin-left: 45%; */
 }
+.purchase-button:hover, #button1:hover, #tellmemore:hover, .Contact-us-package:hover, .blue-btn-Find-out-More:hover, .sky-blue-btn-tellmemore:hover, .sky-blue-btn-sendmeasge:hover {
+    color: black !important;
+    border-color: #79d7ed !important;
+    background-color: #fff !important;
+}

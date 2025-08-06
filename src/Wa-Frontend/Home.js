@@ -424,7 +424,7 @@ const Home = () => {
       });
 
       const response = await Authapi.createsub(price_id, trail_days);
-      // window.location.href = response.checkout_url;
+      window.location.href = response.checkout_url;
     } catch (error) {
       console.error("Purchase Error:", error);
       Swal.fire({
@@ -931,7 +931,7 @@ const Home = () => {
               <div className="contact-us-package">
               <button
                 type="button"
-                className="btn sky-blue-btn"
+                className="btn sky-blue-btn Contact-us-package"
                 onClick={() => {
                   const rawUrl = statu.our_products?.button_link;
                   window.location.href = rawUrl;
