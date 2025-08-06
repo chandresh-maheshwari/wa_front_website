@@ -78,6 +78,9 @@ const Contract = () => {
       try {
         const response = await Authapi.getLatestCompanyDetails();
         if (response.status === "success") {
+          // console.log("TEst");
+          // console.log(response);
+          // console.log(response.data.company_id);
           setFormData((prev) => ({
             ...prev,
             companyName: response.data.company_name || "",
@@ -141,6 +144,8 @@ const Contract = () => {
     if (!validateForm()) return;
     try {
       setLoading(true);
+      // console.log(formData);
+      // console.log(formData.companyId);
       const response = await Authapi.submitContractDetails({
         company_id: formData.companyId,
         company_name: formData.companyName,

@@ -47,6 +47,8 @@ const Home = () => {
   const [errors, setErrors] = useState({});
   const [statu, setStatus] = useState({});
   const [userEmail, setUserEmail] = useState(null);
+  const [userRole, setUserRole] = useState(null);
+  // const [userRoleData, setUserData] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -331,7 +333,7 @@ const Home = () => {
 
       if (!token) {
         // console.log("No auth token found");
-        return;
+        return {};
       }
 
       const response = await Authapi.getUser({
@@ -342,16 +344,19 @@ const Home = () => {
         },
       });
 
-      // console.log("API Response:", response);
+      console.log("API Response:", response);
 
       const email =
         response?.data?.user?.email || response?.user?.email || response?.email;
-
+      const Role= response?.user?.user_type_id;
+      
       console.log("Extracted Email:", email);
-
+      console.log("Extracted Email:", Role);
+      
+      setUserRole(Role);
       if (email) {
         setUserEmail(email);
-        return email;
+        return { email, Role }; // Return both
       } else {
         // console.log("Email not found in response structure");
         // console.log("Response structure:", JSON.stringify(response, null, 2));
@@ -376,8 +381,13 @@ const Home = () => {
     setLoading(true);
     try {
       let email = userEmail;
+      // console.log(email);
+      let Role = userRole
+      ;
       if (!email) {
-        email = await getUserEmail();
+        const result = await getUserEmail();
+        email = result.email;
+        Role = result.Role;
         if (!email) {
           Swal.fire({
             icon: "error",
@@ -386,6 +396,22 @@ const Home = () => {
           });
           return;
         }
+      }
+      console.log("AAAAAAAAAAAAAAAAAAAAAAA");
+      console.log(email);
+      console.log(Role);
+      if (Role !== 2) {
+        Swal.fire({
+          icon: "warning",
+          title: "Access Denied",
+          text: "You are not the right user to access this feature.",
+          confirmButtonText: "OK",
+        });
+        setLoading(false);
+        setUserRole(null);
+        setUserEmail(null);
+
+        return;
       }
       Swal.fire({
         title: "Processing...",
@@ -398,7 +424,7 @@ const Home = () => {
       });
 
       const response = await Authapi.createsub(price_id, trail_days);
-      window.location.href = response.checkout_url;
+      // window.location.href = response.checkout_url;
     } catch (error) {
       console.error("Purchase Error:", error);
       Swal.fire({
@@ -419,8 +445,11 @@ const Home = () => {
   const handleLoginSuccess = (data) => {
     setIsLoggedIn(true);
     localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("userdata", JSON.stringify(data));
+    localStorage.setItem("userData", JSON.stringify(data)); // Fixed key to match NavLayout
     setShowLoginPopup(false);
+
+    // Notify other components of login
+    window.dispatchEvent(new Event('userLogin'));
 
     // Check for purchase intent
     const purchaseIntent = localStorage.getItem('purchaseIntent');

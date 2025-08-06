@@ -70,6 +70,23 @@ const Navlayout = () => {
 
         fetchData();
         hardik();
+
+        // Listen for login event
+        const handleUserLogin = () => {
+            const updatedUserData = localStorage.getItem('userData');
+            const updatedLoginStatus = localStorage.getItem('isLoggedIn');
+            if (updatedUserData && updatedLoginStatus === 'true') {
+                setUserData(JSON.parse(updatedUserData));
+                setIsLoggedIn(true);
+            } else {
+                setUserData(null);
+                setIsLoggedIn(false);
+            }
+        };
+        window.addEventListener('userLogin', handleUserLogin);
+        return () => {
+            window.removeEventListener('userLogin', handleUserLogin);
+        };
     }, []);
 
     const hardik = async () => {
