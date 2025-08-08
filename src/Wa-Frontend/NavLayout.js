@@ -151,6 +151,7 @@ const Navlayout = () => {
             localStorage.removeItem('WAauthToken');
             Swal.fire("Logged Out", "You have been logged out successfully!", "success"); 
             navigate('/');
+            
         } catch (error) {
             console.error('Logout failed:', error);
         }
