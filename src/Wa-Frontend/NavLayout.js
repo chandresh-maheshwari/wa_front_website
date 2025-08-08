@@ -168,6 +168,7 @@ const Navlayout = () => {
             localStorage.removeItem('WAauthToken');
             Swal.fire("Logged Out", "You have been logged out successfully!", "success"); 
             navigate('/');
+            
         } catch (error) {
             console.error('Logout failed:', error);
         }
@@ -180,6 +181,14 @@ const Navlayout = () => {
 
     const handleEditProfile = () => {
         navigate('/');
+    };
+
+     const handleMyAccount = () => {
+          const userData = localStorage.getItem("userData");
+      const dynamicHost = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
+      const token = localStorage.getItem("WAauthToken");
+      window.location.href = `${dynamicHost}/admin/user/dashboard/?token=${token}`;
+        // navigate('/');
     };
 
     // const handleDashboard = async () => {
@@ -310,6 +319,7 @@ const Navlayout = () => {
                                         <div className="dropdown-menu">
                                             <button onClick={handleViewProfile}>View Profile</button>
                                             <button onClick={handleEditProfile}>Edit Profile</button>
+                                            <button onClick={handleMyAccount}>My Account</button>
                                             <button onClick={handleLogout}>Logout</button>
                                         </div>
                                     )}
