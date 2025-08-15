@@ -168,6 +168,9 @@ const Navlayout = () => {
             localStorage.removeItem('WAauthToken');
             Swal.fire("Logged Out", "You have been logged out successfully!", "success"); 
             navigate('/');
+            // const dynamicHost = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
+            // window.location.href = `${dynamicHost}/admin/login/`;
+
             
         } catch (error) {
             console.error('Logout failed:', error);
@@ -187,7 +190,7 @@ const Navlayout = () => {
           const userData = localStorage.getItem("userData");
       const dynamicHost = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
       const token = localStorage.getItem("WAauthToken");
-      window.location.href = `${dynamicHost}/admin/user/dashboard/?token=${token}`;
+      window.location.href = `${dynamicHost}/admin/dashboard/`;
         // navigate('/');
     };
 
