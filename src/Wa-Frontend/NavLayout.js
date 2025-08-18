@@ -184,10 +184,12 @@ const Navlayout = () => {
     };
 
      const handleMyAccount = () => {
-          const userData = localStorage.getItem("userData");
-      const dynamicHost = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
+        const dynamicHost = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
       const token = localStorage.getItem("WAauthToken");
-      window.location.href = `${dynamicHost}/admin/user/dashboard/?token=${token}`;
+      console.log(`OUTPUT`);
+      console.log(`${token}`);
+      console.log(`${dynamicHost}/admin/user/dashboard/?token=${token}`);
+    //   window.location.href = `${dynamicHost}/admin/user/dashboard/?token=${token}`;
         // navigate('/');
     };
 

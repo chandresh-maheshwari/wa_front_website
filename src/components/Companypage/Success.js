@@ -63,7 +63,6 @@ const SuccessPage = () => {
 
   const userData = localStorage.getItem("userData");
 
- console.log(userData);
       const parsedData = JSON.parse(userData);
     //  const username = parsedData.username;
     //  const pass =  parsedData.password;
@@ -76,9 +75,13 @@ const SuccessPage = () => {
       //   password: parsedData.password
       // }).toString();
       // console.log(dynamicHost);
+      
       const dynamicHost = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
       const token = localStorage.getItem("WAauthToken");
-      window.location.href = `${dynamicHost}/admin/user/dashboard/?token=${token}`;
+      console.log(`OUTPUT`);
+      console.log(`${token}`);
+      console.log(`${dynamicHost}/admin/user/dashboard/?token=${token}`);
+      // window.location.href = `${dynamicHost}/admin/user/dashboard/?token=${token}`;
       // window.location.href = `http://walara.localhost.com/admin/user/dashboard/?token=${localStorage.getItem("WAauthToken")}`;
             // window.location.href = 'http://walara.localhost.com/admin/xyz'; 
 
