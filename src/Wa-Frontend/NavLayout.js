@@ -189,7 +189,7 @@ const Navlayout = () => {
       console.log(`OUTPUT`);
       console.log(`${token}`);
       console.log(`${dynamicHost}/admin/user/dashboard/?token=${token}`);
-    //   window.location.href = `${dynamicHost}/admin/user/dashboard/?token=${token}`;
+      window.location.href = `${dynamicHost}/admin/user/dashboard/?token=${token}`;
         // navigate('/');
     };
 

@@ -81,7 +81,7 @@ const SuccessPage = () => {
       console.log(`OUTPUT`);
       console.log(`${token}`);
       console.log(`${dynamicHost}/admin/user/dashboard/?token=${token}`);
-      // window.location.href = `${dynamicHost}/admin/user/dashboard/?token=${token}`;
+      window.location.href = `${dynamicHost}/admin/user/dashboard/?token=${token}`;
       // window.location.href = `http://walara.localhost.com/admin/user/dashboard/?token=${localStorage.getItem("WAauthToken")}`;
             // window.location.href = 'http://walara.localhost.com/admin/xyz'; 
 
