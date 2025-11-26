@@ -319,7 +319,7 @@ const Navlayout = () => {
                                         <div className="dropdown-menu">
                                             <button onClick={handleViewProfile}>View Profile</button>
                                             <button onClick={handleEditProfile}>Edit Profile</button>
-                                            <button onClick={handleMyAccount}>My Account</button>
+                                            <button onClick={handleMyAccount}>Go to Admin Dashboard</button>
                                             <button onClick={handleLogout}>Logout</button>
                                         </div>
                                     )}
