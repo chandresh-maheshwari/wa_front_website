@@ -9,10 +9,15 @@ export default {
   //   : "https://front.wasteaccountant.com/",
 
 
-  apiurl: process.env.NODE_ENV === "development"
-    ? "http://wa_front.localhost.com/"
+  // apiurl: process.env.NODE_ENV === "development"
+  //   ? "http://wa_front.localhost.com/"
+  //   // : "https://hrmsapi.cherrypiksoftware.com/",
+  //   : "https://front.wasteaccountant.com/",
+
+    apiurl: process.env.NODE_ENV === "development"
+    ? "http://walara.localhost.com/admin/"
     // : "https://hrmsapi.cherrypiksoftware.com/",
-    : "https://front.wasteaccountant.com/",
+    : "https://laravel.wasteaccountant.com/admin/",
 
   waapiurl: process.env.NODE_ENV === "development"
     ? "http://walara.localhost.com/admin/"
