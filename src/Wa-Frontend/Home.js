@@ -34,6 +34,13 @@ const carouselResponsive = {
   mobile: { breakpoint: { max: 768, min: 0 }, items: 1 }
 };
 
+// Helper to return posts ordered by their `ordering` field
+const getOrderedPosts = (section) => {
+  if (!section || !Array.isArray(section.post_store)) return [];
+  return [...section.post_store].sort(
+    (a, b) => (a.ordering || 0) - (b.ordering || 0)
+  );
+};
 
 const Home = () => {
   const navigate = useNavigate();
@@ -75,7 +82,7 @@ const Home = () => {
         const pricePromises = statu.our_products.post_store.map(async (card) => {
           const purchaseButtonSection = card.data.PurchaseButton || {};
           const priceId = purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_stripid];
-          
+
           if (priceId) {
             try {
               const details = await fetchPriceDetails(priceId);
@@ -120,9 +127,15 @@ const Home = () => {
         // console.log(response.results.transforming_waste_industry.post_store[0]['data'].Pagesectiontitle1)
         setStatus(response.results);
         setHomesection(response.results.home_section.post_store[0]["data"]);
-        setTransforming(
+        // Ensure transforming posts are ordered
+        const transformingPosts = Array.isArray(
           response.results.transforming_waste_industry.post_store
-        );
+        )
+          ? [...response.results.transforming_waste_industry.post_store].sort(
+              (a, b) => (a.ordering || 0) - (b.ordering || 0)
+            )
+          : [];
+        setTransforming(transformingPosts);
         // console.log(Transforming);
         // const dynamicTitles = response.results.about_us.post_store.flatMap(
         //   (post) =>
@@ -150,13 +163,20 @@ const Home = () => {
         // );
         // Extract Titles OLD CODE END
 
-        const dynamicTitles = response.results.about_us.post_store.flatMap(
-          (post) => {
-            const data = post.data;
-            const titleKey = data.Field_Slug_title; // This gives 'Title'
-            return data[titleKey] ? [data[titleKey]] : [];
-          }
-        );
+        // Use ordered posts for About Us section
+        const orderedAboutPosts = Array.isArray(
+          response.results.about_us.post_store
+        )
+          ? [...response.results.about_us.post_store].sort(
+              (a, b) => (a.ordering || 0) - (b.ordering || 0)
+            )
+          : [];
+
+        const dynamicTitles = orderedAboutPosts.flatMap((post) => {
+          const data = post.data;
+          const titleKey = data.Field_Slug_title; // This gives 'Title'
+          return data[titleKey] ? [data[titleKey]] : [];
+        });
 
         // console.log(dynamicTitles);
         setTitles(dynamicTitles);
@@ -170,13 +190,11 @@ const Home = () => {
         //         .map((key) => post.data[key]) // Get the corresponding value for each 'Description'
         //   );
         // Extract Descriptions OLD CODE END
-        const dynamicDescriptions = response.results.about_us.post_store.flatMap(
-          (post) => {
-            const data = post.data;
-            const descriptionKey = data.Field_Slug_description; // e.g., 'Description'
-            return data[descriptionKey] ? [data[descriptionKey]] : [];
-          }
-        );
+        const dynamicDescriptions = orderedAboutPosts.flatMap((post) => {
+          const data = post.data;
+          const descriptionKey = data.Field_Slug_description; // e.g., 'Description'
+          return data[descriptionKey] ? [data[descriptionKey]] : [];
+        });
 
 
         setDescription(dynamicDescriptions);
@@ -348,11 +366,11 @@ const Home = () => {
 
       const email =
         response?.data?.user?.email || response?.user?.email || response?.email;
-      const Role= response?.user?.user_type_id;
-      
+      const Role = response?.user?.user_type_id;
+
       console.log("Extracted Email:", email);
       console.log("Extracted Email:", Role);
-      
+
       setUserRole(Role);
       if (email) {
         setUserEmail(email);
@@ -383,7 +401,7 @@ const Home = () => {
       let email = userEmail;
       // console.log(email);
       let Role = userRole
-      ;
+        ;
       if (!email) {
         const result = await getUserEmail();
         email = result.email;
@@ -462,8 +480,9 @@ const Home = () => {
     }
   };
 
-  const renderCards = () => {
-    return statu.our_products?.post_store.map((card, index) => {
+  const renderCards = (orderedPosts) => {
+    const posts = orderedPosts || statu.our_products?.post_store || [];
+    return posts.map((card, index) => {
       const feesSection = card.data.FeesSection || {};
       const infoSection1 = card.data.PackageInfo || {};
       const serviceSection = card.data.PackageServices || {};
@@ -493,7 +512,7 @@ const Home = () => {
 
       // Modify the button text to use the fetched amount
       const buttonText = purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttontext];
-      const amount = priceDetails[priceId]?.amount 
+      const amount = priceDetails[priceId]?.amount
         ? (priceDetails[priceId].amount / 100).toFixed(2) // Convert cents to dollars
         : purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_amount];
 
@@ -615,12 +634,23 @@ const Home = () => {
     );
   }
   const renderSections = () => {
+    // Pre-sort all section posts by their `ordering` field
+    const orderedHomePosts = getOrderedPosts(statu.home_section);
+    const orderedTransformingPosts = Transforming;
+    const orderedQuoteSection1Posts = getOrderedPosts(statu.quote_section_1);
+    const orderedQuoteSection2Posts = getOrderedPosts(statu.quote_section_2);
+    const orderedOurProductsPosts = getOrderedPosts(statu.our_products);
+    const orderedWhyChoosePosts = getOrderedPosts(statu.why_choose_wa);
+    const orderedWhoUseWAPosts = getOrderedPosts(statu.who_use_wa);
+    const orderedTellMeMorePosts = getOrderedPosts(statu.tell_me_more_section);
+    const orderedContactUsPosts = getOrderedPosts(statu.contact_us);
+
     const sections = [
       {
         condition: statu.home_section?.status === 1,
         ordering: statu.home_section?.ordering || 0,
         content: (
-          statu.home_section?.post_store?.length > 1 ? (
+          orderedHomePosts.length > 1 ? (
             <section className="homesection">
               <div className="container">
                 <Carousel
@@ -628,11 +658,11 @@ const Home = () => {
                   infinite={true}
                   // autoPlay={true}
                   autoPlaySpeed={3000}
-                  showDots={statu.home_section.post_store.length > 1}
+                  showDots={orderedHomePosts.length > 1}
                   arrows={false}
                 >
-                  {statu.home_section.post_store.map((post, idx) => {
-                    const postData = statu.home_section.post_store[idx].data;
+                  {orderedHomePosts.map((post, idx) => {
+                    const postData = post.data;
                     return (
                       <div className="home">
                         <div className="row">
@@ -737,37 +767,37 @@ const Home = () => {
             </div>
             <div className="container">
               <div className="row p-5 justify-content-center">
-                {Transforming[0]?.data && !Transforming[1]?.data && (
+                {orderedTransformingPosts[0]?.data && !orderedTransformingPosts[1]?.data && (
                   <div className="col-md-8 text-center">
                     <h5 className="for-waste centered-text">
-                      {Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle1]} <br />
-                      <b>{Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle2]}</b>
+                      {orderedTransformingPosts[0]?.data?.[orderedTransformingPosts[0]?.data?.Field_Slug_pagesectiontitle1]} <br />
+                      <b>{orderedTransformingPosts[0]?.data?.[orderedTransformingPosts[0]?.data?.Field_Slug_pagesectiontitle2]}</b>
                     </h5>
                     <p className="transfotextdes1 centered-text">
-                      {Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiondescription]}
+                      {orderedTransformingPosts[0]?.data?.[orderedTransformingPosts[0]?.data?.Field_Slug_pagesectiondescription]}
                     </p>
                   </div>
                 )}
-                {Transforming[1]?.data && !Transforming[0]?.data && (
+                {orderedTransformingPosts[1]?.data && !orderedTransformingPosts[0]?.data && (
                   <div className="col-md-8 text-center">
                     <h5 className="for-waste">
-                      {Transforming[1]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle1]} <br />
-                      <b>{Transforming[1]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle2]}</b>
+                      {orderedTransformingPosts[1]?.data?.[orderedTransformingPosts[0]?.data?.Field_Slug_pagesectiontitle1]} <br />
+                      <b>{orderedTransformingPosts[1]?.data?.[orderedTransformingPosts[0]?.data?.Field_Slug_pagesectiontitle2]}</b>
                     </h5>
                     <p className="transfotextdes2 centered-text">
-                      {Transforming[1]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiondescription]}
+                      {orderedTransformingPosts[1]?.data?.[orderedTransformingPosts[0]?.data?.Field_Slug_pagesectiondescription]}
                     </p>
                   </div>
                 )}
-                {Transforming[0]?.data && Transforming[1]?.data && (
+                {orderedTransformingPosts[0]?.data && orderedTransformingPosts[1]?.data && (
                   <>
                     <div className="col-md-5">
                       <h5 className="transfotext1 for-waste">
-                        {Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle1]} <br />
-                        <b>{Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle2]}</b>
+                        {orderedTransformingPosts[0]?.data?.[orderedTransformingPosts[0]?.data?.Field_Slug_pagesectiontitle1]} <br />
+                        <b>{orderedTransformingPosts[0]?.data?.[orderedTransformingPosts[0]?.data?.Field_Slug_pagesectiontitle2]}</b>
                       </h5>
                       <p className="transfotextdes1">
-                        {Transforming[0]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiondescription]}
+                        {orderedTransformingPosts[0]?.data?.[orderedTransformingPosts[0]?.data?.Field_Slug_pagesectiondescription]}
                       </p>
                     </div>
                     <div className="col-md-2 stretch-line">
@@ -780,11 +810,11 @@ const Home = () => {
                     </div>
                     <div className="col-md-5">
                       <h5 className="transfotext2 for-waste">
-                        {Transforming[1]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle1]} <br />
-                        <b>{Transforming[1]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiontitle2]}</b>
+                        {orderedTransformingPosts[1]?.data?.[orderedTransformingPosts[0]?.data?.Field_Slug_pagesectiontitle1]} <br />
+                        <b>{orderedTransformingPosts[1]?.data?.[orderedTransformingPosts[0]?.data?.Field_Slug_pagesectiontitle2]}</b>
                       </h5>
                       <p className="transfotextdes2">
-                        {Transforming[1]?.data?.[Transforming[0]?.data?.Field_Slug_pagesectiondescription]}
+                        {orderedTransformingPosts[1]?.data?.[orderedTransformingPosts[0]?.data?.Field_Slug_pagesectiondescription]}
                       </p>
                     </div>
                   </>
@@ -802,16 +832,16 @@ const Home = () => {
             <div className="container-fluid">
               <div className="row">
                 <div className="col-md-12">
-                  {statu.quote_section_1?.post_store?.length > 1 ? (
+                  {orderedQuoteSection1Posts.length > 1 ? (
                     <Carousel
                       responsive={carouselResponsive}
                       infinite={true}
                       // autoPlay={true}
                       // autoPlaySpeed={3000}
-                      showDots={statu.quote_section_1.post_store.length > 1}
+                      showDots={orderedQuoteSection1Posts.length > 1}
                       arrows={false}
                     >
-                      {statu.quote_section_1.post_store.map((post, idx) => (
+                      {orderedQuoteSection1Posts.map((post, idx) => (
                         <div key={idx}>
                           <div className="sec-3-text quote-sec-1">
                             <img
@@ -835,16 +865,32 @@ const Home = () => {
                     <div>
                       <div className="sec-3-text">
                         <img
-                          src={statu.quote_section_1?.post_store[0].data?.[statu.quote_section_1?.post_store[0].data?.Field_Slug_quotesectionimage]}
+                          src={
+                            orderedQuoteSection1Posts[0]?.data?.[
+                              orderedQuoteSection1Posts[0]?.data
+                                ?.Field_Slug_quotesectionimage
+                            ]
+                          }
                           className="quoteimage1"
                           alt="quoteimage1"
                         />
                       </div>
                       <div className="sec-3-text2">
                         <p className="text-light">
-                          {statu.quote_section_1?.post_store[0].data?.[statu.quote_section_1?.post_store[0].data?.Field_Slug_quotesectiontitle]} <br />
+                          {
+                            orderedQuoteSection1Posts[0]?.data?.[
+                              orderedQuoteSection1Posts[0]?.data
+                                ?.Field_Slug_quotesectiontitle
+                            ]
+                          }{" "}
+                          <br />
                           <span className="text-secondary quote-description">
-                            {statu.quote_section_1?.post_store[0].data?.[statu.quote_section_1?.post_store[0].data?.Field_Slug_quotesectiondescription]}
+                            {
+                              orderedQuoteSection1Posts[0]?.data?.[
+                                orderedQuoteSection1Posts[0]?.data
+                                  ?.Field_Slug_quotesectiondescription
+                              ]
+                            }
                           </span>
                         </p>
                       </div>
@@ -864,16 +910,16 @@ const Home = () => {
             <div className="container-fluid">
               <div className="row">
                 <div className="col-md-12">
-                  {statu.quote_section_2?.post_store?.length > 1 ? (
+                  {orderedQuoteSection2Posts.length > 1 ? (
                     <Carousel
                       responsive={carouselResponsive}
                       infinite={true}
                       autoPlay={true}
                       autoPlaySpeed={3000}
-                      showDots={statu.quote_section_2.post_store.length > 1}
+                      showDots={orderedQuoteSection2Posts.length > 1}
                       arrows={false}
                     >
-                      {statu.quote_section_2.post_store.map((post, idx) => (
+                      {orderedQuoteSection2Posts.map((post, idx) => (
                         <div key={idx}>
                           <div className="sec-3-text quote-sec-2">
                             <img
@@ -897,16 +943,32 @@ const Home = () => {
                     <div>
                       <div className="sec-3-text">
                         <img
-                          src={statu.quote_section_2?.post_store[0].data?.[statu.quote_section_2?.post_store[0].data?.Field_Slug_quotesectionimage]}
+                          src={
+                            orderedQuoteSection2Posts[0]?.data?.[
+                              orderedQuoteSection2Posts[0]?.data
+                                ?.Field_Slug_quotesectionimage
+                            ]
+                          }
                           className="quoteimage1"
                           alt="quoteimage1"
                         />
                       </div>
                       <div className="sec-3-text2">
                         <p className="text-light">
-                          {statu.quote_section_2?.post_store[0].data?.[statu.quote_section_2?.post_store[0].data?.Field_Slug_quotesectiontitle]} <br />
+                          {
+                            orderedQuoteSection2Posts[0]?.data?.[
+                              orderedQuoteSection2Posts[0]?.data
+                                ?.Field_Slug_quotesectiontitle
+                            ]
+                          }{" "}
+                          <br />
                           <span className="text-secondary quote-description">
-                            {statu.quote_section_2?.post_store[0].data?.[statu.quote_section_2?.post_store[0].data?.Field_Slug_quotesectiondescription]}
+                            {
+                              orderedQuoteSection2Posts[0]?.data?.[
+                                orderedQuoteSection2Posts[0]?.data
+                                  ?.Field_Slug_quotesectiondescription
+                              ]
+                            }
                           </span>
                         </p>
                       </div>
@@ -927,18 +989,61 @@ const Home = () => {
               <div className="waste-management-service-title">
                 <h4>{statu.our_products?.page_description}</h4>
               </div>
-              <div className="row">{renderCards()}</div>
+              <div className="row">{renderCards(orderedOurProductsPosts)}</div>
               <div className="contact-us-package">
-              <button
-                type="button"
-                className="btn sky-blue-btn Contact-us-package"
-                onClick={() => {
-                  const rawUrl = statu.our_products?.button_link;
-                  window.location.href = rawUrl;
-                }}
-              >
-                {statu.our_products?.button_name}
-              </button>
+                <button
+                  type="button"
+                  className="btn sky-blue-btn Contact-us-package"
+                  onClick={() => {
+                    const rawUrl = statu.our_products?.button_link;
+                    window.location.href = rawUrl;
+                  }}
+                >
+                  {statu.our_products?.button_name}
+                </button>
+              </div>
+            </div>
+          </section>
+        ),
+      },
+      {
+        condition: statu.why_choose_wa?.status === 1,
+        ordering: statu.why_choose_wa?.ordering || 0,
+        content: (
+          // <p>sdsd</p>
+          <section className="why_choose_section">
+            <div className="container p-5">
+              <div className="row">
+                <div className="col-md-12">
+                  <div className="transfo">
+                    <h5 className="text-center">
+                      {statu.why_choose_wa?.page_description}
+                    </h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="container type-2">
+              <div className="row">
+                {orderedWhyChoosePosts.map((item, index) => (
+                  <div
+                    className={`col col-md-6 col-sm-6 col-xs-3 ${index % 2 === 0 ? "text-end" : "text-start"
+                      }`}
+                    key={item.id}
+                  >
+                    {/* {console.log(item['Data'].Title1)} */}
+                    <h5 className="for-waste">{item['data'].Title}</h5>
+                    <p style={{ marginTop: "25px" }}>
+                      {item['data'].Description.split("\r\n").map((line, i) => (
+                        <React.Fragment key={i}>
+                          {line}
+                          <br />
+                        </React.Fragment>
+                      ))}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
           </section>
@@ -961,7 +1066,7 @@ const Home = () => {
                       ref={(slider) => setSliderRef(slider)}
                       {...settings}
                     >
-                      {statu.who_use_wa?.post_store.map((item, index) => (
+                      {orderedWhoUseWAPosts.map((item, index) => (
                         <div key={item.id}>
                           <Link to={item?.data?.[item?.data?.Field_Slug_link]}>
                             <img
@@ -975,16 +1080,16 @@ const Home = () => {
                     </Slider>
                   </div>
                   <div className="blue-btn-Find-out-More-div">
-                  <button
-                    type="submit"
-                    className="btn w-auto blue-btn-Find-out-More"
-                    onClick={() => {
-                      const rawUrl = statu.who_use_wa?.button_link;
-                      window.location.href = rawUrl;
-                    }}
-                  >
-                    {statu?.who_use_wa?.button_name}
-                  </button>
+                    <button
+                      type="submit"
+                      className="btn w-auto blue-btn-Find-out-More"
+                      onClick={() => {
+                        const rawUrl = statu.who_use_wa?.button_link;
+                        window.location.href = rawUrl;
+                      }}
+                    >
+                      {statu?.who_use_wa?.button_name}
+                    </button>
                   </div>
                 </div>
               </div>
@@ -999,29 +1104,31 @@ const Home = () => {
           <section className="tellmemore">
             <div className="container">
               <h4 className="tellmemoretitle">
-                {statu.tell_me_more_section?.post_store[0].data?.[statu.tell_me_more_section?.post_store[0].data?.Field_Slug_title]}
+                {orderedTellMeMorePosts[0]?.data?.[
+                  orderedTellMeMorePosts[0]?.data?.Field_Slug_title
+                ]}
               </h4>
-              
+
             </div>
             {/* <div className="row"> */}
-                {/* <div className="col-12 sky-blue-btn-tellmemore-div"> */}
-                <div className="sky-blue-btn-tellmemore-div">
-                  <button
-                    type="submit"
-                    className="btn w-auto sky-blue-btn-tellmemore"
-                    // style={{
-                    //   backgroundColor: "#40bedd",
-                    //   color: "#ffffff",
-                    // }}
-                    onClick={() => {
-                      const rawUrl = statu.tell_me_more_section?.button_link;
-                      window.location.href = rawUrl;
-                    }}
-                  >
-                    {statu.tell_me_more_section?.button_name}
-                  </button>
-                </div>
-              {/* </div> */}
+            {/* <div className="col-12 sky-blue-btn-tellmemore-div"> */}
+            <div className="sky-blue-btn-tellmemore-div">
+              <button
+                type="submit"
+                className="btn w-auto sky-blue-btn-tellmemore"
+                // style={{
+                //   backgroundColor: "#40bedd",
+                //   color: "#ffffff",
+                // }}
+                onClick={() => {
+                  const rawUrl = statu.tell_me_more_section?.button_link;
+                  window.location.href = rawUrl;
+                }}
+              >
+                {statu.tell_me_more_section?.button_name}
+              </button>
+            </div>
+            {/* </div> */}
           </section>
         ),
       },
@@ -1098,16 +1205,21 @@ const Home = () => {
                   <div className="row ">
                     <div className="col-12">
                       <h4 className="letstallktitle">
-                        {statu.contact_us?.post_store[0].data?.[statu.contact_us?.post_store[0].data?.Field_Slug_title]}
+                        {orderedContactUsPosts[0]?.data?.[
+                          orderedContactUsPosts[0]?.data?.Field_Slug_title
+                        ]}
                       </h4>
                       <div className="inputgroup">
-                        {statu.contact_us?.post_store[0].data?.[statu.contact_us?.post_store[0].data?.Field_Slug_description]}
+                        {orderedContactUsPosts[0]?.data?.[
+                          orderedContactUsPosts[0]?.data
+                            ?.Field_Slug_description
+                        ]}
                       </div>
                     </div>
                   </div>
 
                   <div className="row">
-                    {statu.contact_us?.post_store.map((item, index) => (
+                    {orderedContactUsPosts.map((item, index) => (
                       <div className="col-md-6" key={index}>
                         <div className="inputgroup">
                           <label>{item.data?.[item.data?.Field_Slug_label]}</label>
