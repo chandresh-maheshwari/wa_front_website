@@ -76,7 +76,7 @@ const TopNav = () => {
                             </div>
                         </div>
                     </div>
-                    <div class="topbarline"></div>
+                    <div className="topbarline"></div>
                 </div>
             ) : ("")
             }

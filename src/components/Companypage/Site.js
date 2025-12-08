@@ -551,7 +551,7 @@ const VehicleForm = () => {
           </p>
 
           <form onSubmit={handleSubmit}>
-            <label class="section-datatable-title">Add Site</label>
+            <label className="section-datatable-title">Add Site</label>
 
             <div className="form-row">
               <div className="form-group col-md-6">
@@ -891,7 +891,7 @@ const VehicleForm = () => {
               </div>
             </div>
 
-            <label class="section-datatable-title">Add Job</label>
+            <label className="section-datatable-title">Add Job</label>
 
             <div className="form-row">
 
@@ -1053,7 +1053,7 @@ const VehicleForm = () => {
           className="btn btn-secondary prevbtn"
           onClick={handlePreviousClick}
         ><Tooltip title="Click 'Previous' to go back and Update your Depot details." arrow>
-            Previous Step
+            <span>Previous Step</span>
           </Tooltip>
         </button>
 
@@ -1066,7 +1066,7 @@ const VehicleForm = () => {
             title="Click 'Submit' to save the forwarding facility details."
             arrow
           >
-            Submit
+            <span>Submit</span>
           </Tooltip>
         </button>
       </div>

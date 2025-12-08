@@ -84,7 +84,7 @@ const Contract = () => {
           setFormData((prev) => ({
             ...prev,
             companyName: response.data.company_name || "",
-            companyId: response.data.company_id || "",
+            companyId: response.data.id || "",
           }));
         }
       } catch (error) {
@@ -357,7 +357,7 @@ const Contract = () => {
           className="btn btn-secondary prevbtn"
           onClick={handlePreviousClick}>
           <Tooltip title="Click 'Previous' to go back and Update your company details." arrow>
-            Previous Step
+             <span>Previous Step</span>
           </Tooltip>
         </button>
 
@@ -366,7 +366,7 @@ const Contract = () => {
           onClick={handleSubmit}
           className="btn next btn-primary"
         ><Tooltip title="Click 'Submit' to save your contract details." arrow>
-            Next Step
+         <span>Next Step</span>
           </Tooltip></button>
       </div>
 

@@ -918,7 +918,7 @@ const Company = () => {
           className="btn next btn-primary"
         >
           <Tooltip title="Click 'Submit' to save your company details." arrow>
-            Next Step
+          <span>Next Step</span>
           </Tooltip>{" "}
         </button>
       </div>

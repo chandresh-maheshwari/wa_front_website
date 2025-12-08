@@ -251,9 +251,9 @@ const DepotForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // alert("sdfsdf");
-    if (!validateForm()) return;
-    // console.log(formData);
+    // console.log("Ttttttttttttttttttttt");
     // console.log(formData.contractId);
+    if (!validateForm()) return;
     try {
       setLoading(true);
       const response = await Authapi.submitDepotDetails({
@@ -857,7 +857,7 @@ const DepotForm = () => {
           className="btn btn-secondary prevbtn"
           onClick={handlePreviousClick}
         ><Tooltip title="Click 'Previous' to go back and Update your contract details." arrow>
-            Previous Step
+              <span>Previous Step</span>
           </Tooltip>
         </button>
 
@@ -866,7 +866,7 @@ const DepotForm = () => {
           onClick={handleSubmit}
           className="btn next btn-primary"
         ><Tooltip title="Click 'Submit' to save your depot details" arrow>
-            Next Step
+            <span>Next Step</span>
           </Tooltip> </button>
       </div>
     </>
