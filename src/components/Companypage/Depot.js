@@ -319,8 +319,8 @@ const DepotForm = () => {
         // console.log();
         setFormData({
           depotTypeId: response.depots.depot_type_id || "",
-          contractId: response.depots.contract_id || "",
-          contractName: response.depots.contract_name || "",
+          // contractId: response.depots.contract_id || "",
+          // contractName: response.depots.contract_name || "",
           depotName: response.depots.depot_name || "",
           depotPermitNo: response.depots.depot_permit_no || "",
           depotAddress1: response.depots.depot_address_1 || "",
