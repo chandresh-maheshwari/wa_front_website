@@ -114,15 +114,16 @@ const Contract = () => {
         }
 
         // Company API
-        const companyRes = await Authapi.getLatestCompanyDetails();
+        
+        // const companyRes = await Authapi.getLatestCompanyDetails();
 
-        if (companyRes.status === "success") {
-          setFormData(prev => ({
-            ...prev,
-            companyName: companyRes.data.company_name || prev.companyName,
-            companyId: companyRes.data.id || prev.companyId,
-          }));
-        }
+        // if (companyRes.status === "success") {
+        //   setFormData(prev => ({
+        //     ...prev,
+        //     companyName: companyRes.data.company_name || prev.companyName,
+        //     companyId: companyRes.data.id || prev.companyId,
+        //   }));
+        // }
 
       } catch (e) {
         console.error("Error loading data:", e);
@@ -132,6 +133,24 @@ const Contract = () => {
     loadData();
 
   }, []);
+
+
+    useEffect(() => {
+      const loadDataOfCompany = async () => {
+       const companyRes = await Authapi.getLatestCompanyDetails();
+
+        if (companyRes.status === "success") {
+          setFormData(prev => ({
+            ...prev,
+            companyName: companyRes.data.company_name || prev.companyName,
+            companyId: companyRes.data.id || prev.companyId,
+          }));
+        }
+      }
+      loadDataOfCompany();
+  }, []);
+
+
 
 
   const validateForm = () => {
