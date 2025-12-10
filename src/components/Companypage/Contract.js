@@ -41,75 +41,39 @@ const Contract = () => {
     </div>
   );
 
-  useEffect(() => {
-    const message = sessionStorage.getItem("successMessage");
-    if (message) {
-      setSuccessMessage(message);
-      // Clear the message after it's displayed
-      sessionStorage.removeItem("successMessage");
+  // useEffect(() => {
+  //   const message = sessionStorage.getItem("successMessage");
+  //   if (message) {
+  //     setSuccessMessage(message);
+  //     // Clear the message after it's displayed
+  //     sessionStorage.removeItem("successMessage");
 
-      // Remove the success message after 30 seconds
-      setTimeout(() => {
-        setSuccessMessage("");
-      }, 50000); // 30 seconds timeout
-    }
-    const fetchContractDetails = async () => {
-      try {
-        const response = await Authapi.getLatestContractDetails();
-        if (response.status === true) {
-          setFormData((prev) => ({
-            ...prev,
-            contractName: response.contract.contract_name || "",
-            companyId: response.contract.company_id || "",
-            companyName: response.contract.company_name || "",
-            contractId: response.contract.id || "",
-          }));
-        }
-      } catch (error) {
-        console.error("Error fetching contract details:", error);
-      }
-    };
-    fetchContractDetails();
-  }, []);
+  //     // Remove the success message after 30 seconds
+  //     setTimeout(() => {
+  //       setSuccessMessage("");
+  //     }, 50000); // 30 seconds timeout
+  //   }
+  //   const fetchContractDetails = async () => {
+  //     try {
+  //       const response = await Authapi.getLatestContractDetails();
+  //       if (response.status === true) {
+  //         setFormData((prev) => ({
+  //           ...prev,
+  //           contractName: response.contract.contract_name || "",
+  //           companyId: response.contract.company_id || "",
+  //           companyName: response.contract.company_name || "",
+  //           contractId: response.contract.id || "",
+  //         }));
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching contract details:", error);
+  //     }
+  //   };
+  //   fetchContractDetails();
+  // }, []);
 
 
-  useEffect(() => {
-    const fetchCompanyDetails = async () => {
-      try {
-        const response = await Authapi.getLatestCompanyDetails();
-        if (response.status === "success") {
-          // console.log("TEst");
-          // console.log(response);
-          // console.log(response.data.company_id);
-          setFormData((prev) => ({
-            ...prev,
-            companyName: response.data.company_name || "",
-            companyId: response.data.id || "",
-          }));
-        }
-      } catch (error) {
-        console.error("Error fetching company details:", error);
-      }
-    };
 
-    const fetchContractDetails = async () => {
-      try {
-        const response = await Authapi.getLatestContractDetails();
-        if (response.status === "success") {
-          setFormData((prev) => ({
-            ...prev,
-            contractName: response.contract.contract_name || "",
-            contractId: response.contract.id || "",
-          }));
-        }
-      } catch (error) {
-        console.error("Error fetching contract details:", error);
-      }
-    };
-
-    fetchCompanyDetails();
-    fetchContractDetails();
-  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -120,6 +84,55 @@ const Contract = () => {
     }));
 
   };
+  useEffect(() => {
+
+    const loadData = async () => {
+      try {
+
+        const message = sessionStorage.getItem("successMessage");
+        if (message) {
+          setSuccessMessage(message);
+          // Clear the message after it's displayed
+          sessionStorage.removeItem("successMessage");
+
+          // Remove the success message after 30 seconds
+          setTimeout(() => {
+            setSuccessMessage("");
+          }, 10000); // 30 seconds timeout
+        }
+        // Contract API
+        const contractRes = await Authapi.getLatestContractDetails();
+
+        if (contractRes.status === true || contractRes.status === "success") {
+          setFormData(prev => ({
+            ...prev,
+            contractName: contractRes.contract.contract_name || "",
+            contractId: contractRes.contract.id || "",
+            companyId: contractRes.contract.company_id || "",
+            companyName: contractRes.contract.company_name || "",
+          }));
+        }
+
+        // Company API
+        const companyRes = await Authapi.getLatestCompanyDetails();
+
+        if (companyRes.status === "success") {
+          setFormData(prev => ({
+            ...prev,
+            companyName: companyRes.data.company_name || prev.companyName,
+            companyId: companyRes.data.id || prev.companyId,
+          }));
+        }
+
+      } catch (e) {
+        console.error("Error loading data:", e);
+      }
+    };
+
+    loadData();
+
+  }, []);
+
 
   const validateForm = () => {
     const newErrors = {};
@@ -357,7 +370,7 @@ const Contract = () => {
           className="btn btn-secondary prevbtn"
           onClick={handlePreviousClick}>
           <Tooltip title="Click 'Previous' to go back and Update your company details." arrow>
-             <span>Previous Step</span>
+            <span>Previous Step</span>
           </Tooltip>
         </button>
 
@@ -366,7 +379,7 @@ const Contract = () => {
           onClick={handleSubmit}
           className="btn next btn-primary"
         ><Tooltip title="Click 'Submit' to save your contract details." arrow>
-         <span>Next Step</span>
+            <span>Next Step</span>
           </Tooltip></button>
       </div>
 

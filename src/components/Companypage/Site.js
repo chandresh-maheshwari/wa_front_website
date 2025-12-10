@@ -389,14 +389,25 @@ const VehicleForm = () => {
 
 
       try {
+        const message = sessionStorage.getItem("successMessage");
+        if (message) {
+          setSuccessMessage(message);
+          // Clear the message after it's displayed
+          sessionStorage.removeItem("successMessage");
+
+          // Remove the success message after 30 seconds
+          setTimeout(() => {
+            setSuccessMessage("");
+          }, 10000); // 30 seconds timeout
+        }
         // console.log(formData.contract_id);
         const response = await Authapi.getUserSitedetail(formData.contract_id);
         if (response?.status === 200 && response?.site_job) {
           // console.log("AAAAAAAAAAAAAAAAAAAAAAAA");
           // console.log(response.site_job.site_name);
           setFormData({
-            contract_id: response.site_job.contract_id || "",
-            contract_name: response.site_job.contract_name || "",
+            // contract_id: response.site_job.contract_id || "",
+            // contract_name: response.site_job.contract_name || "",
             site_name: response.site_job.site_name || "",
             site_description: response.site_job.site_description || "",
             site_address_1: response.site_job.site_address_1 || "",
@@ -575,7 +586,7 @@ const VehicleForm = () => {
                     className="form-control company"
                     id="contract_name"
                     name="contract_name"
-                    value={formData.contract_name || ""}
+                    value={formData.contract_name}
                     // placeholder="Contract Name"
                     disabled
                   />
