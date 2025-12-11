@@ -20,7 +20,7 @@ import Stepper from "react-stepper-horizontal";
 import Select from "react-select";
 
 
-import { RotatingLines } from "react-loader-spinner";
+// Using a single overlay spinner for consistency
 
 const Company = () => {
   const navigate = useNavigate();
@@ -47,7 +47,8 @@ const Company = () => {
   // const [mainIndustryOptions, setMainIndustryOptions] = useState([]); //WORKING STARTE FOR DROPDOWN MAIN INDUSTRY
   // const [mainActivityOptions, setMainActivityOptions] = useState([]); //WORKING STARTE FOR DROPDOWN MAIN ACTIVITY
   // const [subActivityOptions, setSubActivityOptions] = useState([]); //WORKING STARTE FOR DROPDOWN SUB ACTIVITY
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // submit loader
+  const [initialLoading, setInitialLoading] = useState(true); // page-load loader
 
 
   // CODE FOR VALIDATION 26-02-25 START
@@ -65,14 +66,8 @@ const Company = () => {
 
   // Add Code For loader 
   const Loader = () => (
-    <div className="loader-overlay">
-      <RotatingLines
-        strokeColor="grey"
-        strokeWidth="5"
-        animationDuration="0.75"
-        width="96"
-        visible={true}
-      />
+    <div className="loader-overlay single-loader">
+      <div className="spinner-border text-primary" role="status" aria-label="Loading" />
     </div>
   );
 
@@ -148,9 +143,12 @@ const Company = () => {
   }, [location, navigate]);
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchDataForCompanyDetail = async () => {
       try {
         const response = await Authapi.getusercompanydetail();
+        if (!isMounted) return;
         if (response.status === 200) {
           const company = response.company;
           setFormData({
@@ -170,10 +168,16 @@ const Company = () => {
         }
       } catch (error) {
         console.error("Error fetching company details:", error);
+      } finally {
+        if (isMounted) setInitialLoading(false);
       }
     };
 
     fetchDataForCompanyDetail();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -445,6 +449,7 @@ const Company = () => {
     <>
       <Navlayout />
       <Expired />
+      {(loading || initialLoading) && <Loader />}
       {/* <h1 className="header">Company</h1>
       <p className="firstcontent">
         Please fill the form below to set up a company! Add as many details as
@@ -477,7 +482,6 @@ const Company = () => {
             <li id="step-4">Finish</li>
           </ul>
         </div> */}
-        {loading && <Loader />}
         <br />
         <div className="pro-under-border"></div>
 

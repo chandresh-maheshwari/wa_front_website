@@ -33,115 +33,244 @@ const MenuPage = () => {
     const [showLoginPopup, setShowLoginPopup] = useState(false);
     const [Transforming, setTransforming] = useState({});
     const [isLoading, setIsLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [userRole, setUserRole] = useState(null);
+    const [isFrontCreated, setIsFrontCreated] = useState(null);
+
+
 
 
     const navigate = useNavigate();
 
+    // const getUserEmail = async () => {
+    //     try {
+    //         const token = ls.get("WAauthToken");
+
+    //         if (!token) {
+    //             console.log("No auth token found");
+    //             return;
+    //         }
+
+    //         const response = await Authapi.getUser({
+    //             headers: {
+    //                 'Authorization': `Bearer ${token}`,
+    //                 'Accept': 'application/json',
+    //                 'Content-Type': 'application/json'
+    //             }
+    //         });
+
+    //         console.log("API Response:", response);
+
+    //         const email = response?.data?.user?.email ||
+    //             response?.user?.email ||
+    //             response?.email;
+
+    //         console.log("Extracted Email:", email);
+
+    //         if (email) {
+    //             setUserEmail(email);
+    //             return email;
+    //         } else {
+    //             console.log("Email not found in response structure");
+    //             console.log("Response structure:", JSON.stringify(response, null, 2));
+    //         }
+
+    //     } catch (error) {
+    //         console.error("Error in getUserEmail:", error);
+    //     }
+    // };
+
     const getUserEmail = async () => {
         try {
-            const token = ls.get("WAauthToken");
-
-            if (!token) {
-                console.log("No auth token found");
-                return;
-            }
-
-            const response = await Authapi.getUser({
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            console.log("API Response:", response);
-
-            const email = response?.data?.user?.email ||
-                response?.user?.email ||
-                response?.email;
-
-            console.log("Extracted Email:", email);
-
-            if (email) {
-                setUserEmail(email);
-                return email;
-            } else {
-                console.log("Email not found in response structure");
-                console.log("Response structure:", JSON.stringify(response, null, 2));
-            }
-
+          const token = ls.get("WAauthToken");
+    
+          if (!token) {
+            // console.log("No auth token found");
+            return {};
+          }
+    
+          const response = await Authapi.getUser({
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          });
+    
+          console.log("API Response:", response);
+    
+          const email =
+            response?.data?.user?.email || response?.user?.email || response?.email;
+          const Role = response?.user?.user_type_id;
+          const is_front_created = response?.user?.is_front_created;
+    
+          console.log("Extracted Email:", email);
+          console.log("Extracted Email:", Role);
+    
+          setUserRole(Role);
+          setIsFrontCreated(is_front_created);
+          if (email) {
+            setUserEmail(email);
+            return { email, Role, is_front_created }; // Return both
+          } else {
+            // console.log("Email not found in response structure");
+            // console.log("Response structure:", JSON.stringify(response, null, 2));
+          }
         } catch (error) {
-            console.error("Error in getUserEmail:", error);
+          console.error("Error in getUserEmail:", error);
         }
-    };
+      };
     const toggleLoginPopup = () => {
         setShowLoginPopup(!showLoginPopup);
     };
 
-    const handlePurchaseSubmit = async (productName, amount, stripid) => {
+    // const handlePurchaseSubmit = async (productName, amount, stripid) => {
+    //     const token = localStorage.getItem("WAauthToken");
+    //     if (!token) {
+    //         Swal.fire({
+    //             icon: 'warning',
+    //             title: 'Please Log In',
+    //             text: 'You need to be logged in to make a purchase.',
+    //             showConfirmButton: true,
+    //             showCancelButton: true,
+    //             cancelButtonText: 'Cancel'
+    //         }).then((result) => {
+    //             if (result.isConfirmed) {
+    //                 // Show the login popup when "OK" is clicked
+    //                 toggleLoginPopup();
+    //             }
+    //         });
+    //         return;
+    //     }
+
+    //     try {
+    //         // Get user email first
+    //         let email = userEmail;
+    //         if (!email) {
+    //             email = await getUserEmail();
+    //             if (!email) {
+    //                 Swal.fire({
+    //                     icon: 'error',
+    //                     title: 'Error',
+    //                     text: 'Could not retrieve user email. Please try again.',
+    //                 });
+    //                 return;
+    //             }
+    //         }
+    //         Swal.fire({
+    //             title: 'Processing...',
+    //             text: 'Please wait while we set up your payment.',
+    //             allowOutsideClick: false,
+    //             showConfirmButton: false,
+    //             didOpen: () => {
+    //                 Swal.showLoading();
+    //             }
+    //         });
+
+    //         // Replace the fetch call with the Authapi function
+    //         const response = await Authapi.createCheckoutSession(productName, amount, email);
+
+    //         if (!response.status) {
+    //             throw new Error(response.message || 'Failed to create checkout session');
+    //         }
+
+    //         window.location.href = response.url;
+
+    //     } catch (error) {
+    //         console.error("Purchase Error:", error);
+    //         Swal.fire({
+    //             icon: 'error',
+    //             title: 'Payment Error',
+    //             text: error.message || 'There was an error processing your payment. Please try again.',
+    //             background: '#f8f9fa',
+    //             showConfirmButton: true,
+    //             confirmButtonText: 'OK'
+    //         });
+    //     }
+    // };
+    const handlePurchaseSubmit = async (price_id, trail_days) => {
         const token = localStorage.getItem("WAauthToken");
         if (!token) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Please Log In',
-                text: 'You need to be logged in to make a purchase.',
-                showConfirmButton: true,
-                showCancelButton: true,
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Show the login popup when "OK" is clicked
-                    toggleLoginPopup();
-                }
-            });
+            // Store purchase intent in localStorage
+            localStorage.setItem('purchaseIntent', JSON.stringify({ price_id, trail_days }));
+            toggleLoginPopup();
             return;
         }
-
+        setLoading(true);
         try {
-            // Get user email first
+            console.log("submit");
+            console.log(userEmail);
             let email = userEmail;
+            let Role = userRole
+            let is_front_created = isFrontCreated
+                ;
             if (!email) {
-                email = await getUserEmail();
+                const result = await getUserEmail();
+                console.log("testing");
+                console.log(result);
+                email = result.email;
+                Role = result.Role;
+                is_front_created = result.is_front_created;
                 if (!email) {
                     Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Could not retrieve user email. Please try again.',
+                        icon: "error",
+                        title: "Error",
+                        text: "Could not retrieve user email. Please try again.",
                     });
                     return;
                 }
             }
+            console.log("AAAAAAAAAAAAAAAAAAAAAAA");
+            // console.log(8);
+            // console.log(Role !== 2);
+            // console.log(is_front_created);
+            // console.log(is_front_created === 0);
+            // console.log(8 !== 2 || is_front_created === 0);
+            console.log("BBBBBBBBBBBBBBBBBBB");
+
+            // if (Role !== 2) {
+            if (Role !== 2 || is_front_created === 0) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Access Denied",
+                    text: "You are not the right user to access this feature.",
+                    confirmButtonText: "OK",
+                });
+                setLoading(false);
+                setUserRole(null);
+                setUserEmail(null);
+
+                return;
+            }
             Swal.fire({
-                title: 'Processing...',
-                text: 'Please wait while we set up your payment.',
+                title: "Processing...",
+                text: "Please wait while we set up your payment.",
                 allowOutsideClick: false,
                 showConfirmButton: false,
                 didOpen: () => {
                     Swal.showLoading();
-                }
+                },
             });
 
-            // Replace the fetch call with the Authapi function
-            const response = await Authapi.createCheckoutSession(productName, amount, email);
-
-            if (!response.status) {
-                throw new Error(response.message || 'Failed to create checkout session');
-            }
-
-            window.location.href = response.url;
-
+            const response = await Authapi.createsub(price_id, trail_days);
+            window.location.href = response.checkout_url;
         } catch (error) {
             console.error("Purchase Error:", error);
             Swal.fire({
-                icon: 'error',
-                title: 'Payment Error',
-                text: error.message || 'There was an error processing your payment. Please try again.',
-                background: '#f8f9fa',
+                icon: "error",
+                title: "Payment Error",
+                text:
+                    error.message ||
+                    "There was an error processing your payment. Please try again.",
+                background: "#f8f9fa",
                 showConfirmButton: true,
-                confirmButtonText: 'OK'
+                confirmButtonText: "OK",
             });
+        } finally {
+            setLoading(false);
         }
     };
+
     const handleLoginSuccess = (data) => {
         // setUserData(data);
         setIsLoggedIn(true);
@@ -236,139 +365,139 @@ const MenuPage = () => {
         // console.log("XXXXXXXXXXXXXXXXX");
         // console.log(statu?.post_store);
         return statu?.post_store.map((card, index) => {
-          const feesSection = card.data.FeesSection || {};
-          const infoSection1 = card.data.PackageInfo || {};
-          const serviceSection = card.data.PackageServices || {};
-          const purchaseButtonSection = card.data.PurchaseButton || {};
-    
-          const hasContent =   
-            infoSection1?.[infoSection1?.Field_Slug_information1] ||
-            infoSection1?.[infoSection1?.Field_Slug_information2] ||
-            infoSection1?.[infoSection1?.Field_Slug_information3] ||
-            infoSection1?.[infoSection1?.Field_Slug_information4] ||
-            infoSection1?.[infoSection1?.Field_Slug_information5] ||
-            serviceSection?.[serviceSection?.Field_Slug_service1] ||
-            serviceSection?.[serviceSection?.Field_Slug_service2] ||
-            feesSection?.[feesSection?.Field_Slug_monthlyfee] ||
-            feesSection?.[feesSection?.Field_Slug_monthlyfeecardtext1] ||
-            feesSection?.[feesSection?.Field_Slug_monthlyfeecardtext2] ||
-            purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_amount] ||
-            purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttonbackgroundcolor] ||
-            purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttoncolor] ||
-            purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttontext];
-    
-          if (!hasContent) return null;
-    
-          return (
-            <div className={`col-lg-4`} id={`card${index + 1}`} key={card.Id}>
-              <div
-                className={`card-liner-card-${index + 1}`}
-                id="card-liner-card"
-              ></div>
-              <div className={`card${index + 1} card`}>
-                <span className="medaltype">{card?.data?.[card?.data?.Field_Slug_packagename]}</span>
-                <div className={`card${index + 1}-text`}>
-                  {/* Render Information Section */}
-                  {[           
-                    infoSection1?.[infoSection1?.Field_Slug_information1],
-                    infoSection1?.[infoSection1?.Field_Slug_information2],
-                    infoSection1?.[infoSection1?.Field_Slug_information3],
-                    infoSection1?.[infoSection1?.Field_Slug_information4],
-                    infoSection1?.[infoSection1?.Field_Slug_information5],
-                  ].map(
-                    (text, i) =>
-                      text && (
-                        <p className="card-text-container cardtext" key={i}>
-                          <img
-                            src={righticon}
-                            className={`card${index + 1}righticon card-text-image`}
-                            alt={`Icon ${i + 1}`}
-                          />
-                          {text}
-                        </p>
-                      )
-                  )}
-               
-                  {Object.values(infoSection1).some((text) => text) && (
-                    <div className="card-liner-inside"></div>
-                  )}
+            const feesSection = card.data.FeesSection || {};
+            const infoSection1 = card.data.PackageInfo || {};
+            const serviceSection = card.data.PackageServices || {};
+            const purchaseButtonSection = card.data.PurchaseButton || {};
+
+            const hasContent =
+                infoSection1?.[infoSection1?.Field_Slug_information1] ||
+                infoSection1?.[infoSection1?.Field_Slug_information2] ||
+                infoSection1?.[infoSection1?.Field_Slug_information3] ||
+                infoSection1?.[infoSection1?.Field_Slug_information4] ||
+                infoSection1?.[infoSection1?.Field_Slug_information5] ||
+                serviceSection?.[serviceSection?.Field_Slug_service1] ||
+                serviceSection?.[serviceSection?.Field_Slug_service2] ||
+                feesSection?.[feesSection?.Field_Slug_monthlyfee] ||
+                feesSection?.[feesSection?.Field_Slug_monthlyfeecardtext1] ||
+                feesSection?.[feesSection?.Field_Slug_monthlyfeecardtext2] ||
+                purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_amount] ||
+                purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttonbackgroundcolor] ||
+                purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttoncolor] ||
+                purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttontext];
+
+            if (!hasContent) return null;
+
+            return (
+                <div className={`col-lg-4`} id={`card${index + 1}`} key={card.Id}>
+                    <div
+                        className={`card-liner-card-${index + 1}`}
+                        id="card-liner-card"
+                    ></div>
+                    <div className={`card${index + 1} card`}>
+                        <span className="medaltype">{card?.data?.[card?.data?.Field_Slug_packagename]}</span>
+                        <div className={`card${index + 1}-text`}>
+                            {/* Render Information Section */}
+                            {[
+                                infoSection1?.[infoSection1?.Field_Slug_information1],
+                                infoSection1?.[infoSection1?.Field_Slug_information2],
+                                infoSection1?.[infoSection1?.Field_Slug_information3],
+                                infoSection1?.[infoSection1?.Field_Slug_information4],
+                                infoSection1?.[infoSection1?.Field_Slug_information5],
+                            ].map(
+                                (text, i) =>
+                                    text && (
+                                        <p className="card-text-container cardtext" key={i}>
+                                            <img
+                                                src={righticon}
+                                                className={`card${index + 1}righticon card-text-image`}
+                                                alt={`Icon ${i + 1}`}
+                                            />
+                                            {text}
+                                        </p>
+                                    )
+                            )}
+
+                            {Object.values(infoSection1).some((text) => text) && (
+                                <div className="card-liner-inside"></div>
+                            )}
+                        </div>
+
+                        <div className={`card${index + 1}-sec-2-text`}>
+                            {/* Render Service Section */}
+                            {serviceSection?.[serviceSection?.Field_Slug_service1] && (
+                                <p className="card-text-container">
+                                    <img
+                                        src={plushicon}
+                                        className={`card${index + 1}plushicon card-text-image`}
+                                        alt="Add On Icon"
+                                    />
+                                    {serviceSection?.[serviceSection?.Field_Slug_service1]}
+                                </p>
+                            )}
+                            {serviceSection?.[serviceSection?.Field_Slug_service1] && (
+                                <div className="card-liner-inside-2"></div>
+                            )}
+
+                            <div className={`card-${index + 1}-sec-3`}>
+
+                                {feesSection?.[feesSection?.Field_Slug_monthlyfee] && (
+                                    <p className={`card${index + 1}-sec-3-text1`}>
+                                        {feesSection?.[feesSection?.Field_Slug_monthlyfee]}
+                                    </p>
+                                )}
+                                {[
+                                    feesSection?.[feesSection?.Field_Slug_monthlyfeecardtext1],
+                                    feesSection?.[feesSection?.Field_Slug_monthlyfeecardtext2]
+                                ].map(
+                                    (text, i) =>
+                                        text && (
+                                            <p className="card-text-container cardtext" key={i}>
+                                                <img
+                                                    src={plushicon}
+                                                    className={`card${index + 1}plushicon card-text-image`}
+                                                    alt="Add On Icon"
+                                                />
+                                                {text}
+                                            </p>
+                                        )
+                                )}
+
+                                {/* Render Service 2 */}
+                                {serviceSection?.[serviceSection?.Field_Slug_service2] && (
+                                    <p className={`card${index + 1}-sec-3-text`}>
+                                        <img
+                                            src={plushicon}
+                                            className={`card${index + 1}plushicon card-text-image`}
+                                            alt="Add On Icon"
+                                        />
+                                        {serviceSection?.[serviceSection?.Field_Slug_service2]}
+                                    </p>
+                                )}
+                            </div>
+                        </div>
+                        {purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttontext] && (
+                            <div className="text-center purchase-btn">
+                                <button
+                                    role="link"
+                                    className="btn w-50 purchase-button"
+                                    onClick={() =>
+                                        handlePurchaseSubmit(
+                                            card?.data.Packagename,
+                                            purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_amount],
+                                            purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_stripid]
+                                        )
+                                    }
+                                >
+                                    {`${purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttontext]} - $${purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_amount]}`}
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
-    
-                <div className={`card${index + 1}-sec-2-text`}>
-                  {/* Render Service Section */}
-                  {serviceSection?.[serviceSection?.Field_Slug_service1] && (
-                    <p className="card-text-container">
-                      <img
-                        src={plushicon}
-                        className={`card${index + 1}plushicon card-text-image`}
-                        alt="Add On Icon"
-                      />
-                      {serviceSection?.[serviceSection?.Field_Slug_service1]}
-                    </p>
-                  )}
-                  {serviceSection?.[serviceSection?.Field_Slug_service1] && (
-                    <div className="card-liner-inside-2"></div>
-                  )}
-    
-                  <div className={`card-${index + 1}-sec-3`}>
-               
-                    {feesSection?.[feesSection?.Field_Slug_monthlyfee] && (
-                      <p className={`card${index + 1}-sec-3-text1`}>
-                        {feesSection?.[feesSection?.Field_Slug_monthlyfee]}
-                      </p>
-                    )}
-                    {[
-                      feesSection?.[feesSection?.Field_Slug_monthlyfeecardtext1],
-                      feesSection?.[feesSection?.Field_Slug_monthlyfeecardtext2]
-                    ].map(
-                      (text, i) =>
-                        text && (
-                          <p className="card-text-container cardtext" key={i}>
-                            <img
-                              src={plushicon}
-                              className={`card${index + 1}plushicon card-text-image`}
-                              alt="Add On Icon"
-                            />
-                            {text}
-                          </p>
-                        )
-                    )}
-    
-                    {/* Render Service 2 */}
-                    {serviceSection?.[serviceSection?.Field_Slug_service2] && (
-                      <p className={`card${index + 1}-sec-3-text`}>
-                        <img
-                          src={plushicon}
-                          className={`card${index + 1}plushicon card-text-image`}
-                          alt="Add On Icon"
-                        />
-                        {serviceSection?.[serviceSection?.Field_Slug_service2]}
-                      </p>
-                    )}
-                  </div>
-                </div>
-                {purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttontext] && (
-                  <div className="text-center purchase-btn">                  
-                    <button
-                      role="link"
-                      className="btn w-50 purchase-button"
-                      onClick={() =>
-                        handlePurchaseSubmit(
-                          card?.data.Packagename,
-                          purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_amount],
-                          purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_stripid]
-                        )
-                      }
-                    >
-                      {`${purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttontext]} - $${purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_amount]}`}
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          );
+            );
         });
-      };
+    };
 
 
 
@@ -543,11 +672,11 @@ const MenuPage = () => {
                                 <div className="row">{renderCards()}</div>
                                 {statu.page_status === 1 && (
                                     <div className="row mt-5">
-                                        <div className="col-12">
+                                        <div className="col-12 contact-us-package">
                                             <button
                                                 type="button"
                                                 onClick={() => navigate("/menu/contact-us")}
-                                                className="btn sky-blue-btn mb-5"
+                                                className="btn sky-blue-btn mb-5 contact-us-package"
                                             >
                                                 Contact Us
                                             </button>
@@ -562,68 +691,68 @@ const MenuPage = () => {
 
                     {currentMenu === 'Contact Us' && statu.page_status === 1 && topbardata.length > 0 ? (
                         <section className="lets-talk-sec" id="package_section">
-                        <div className="container" id="sec-10">
-                          <div className="contactusswction">
-                            <form id="contactForm">
-                              <div className="row ">
-                                <div className="col-12">
-                                  <h4 className="letstallktitle">
-                                    {statu?.post_store[0].data?.[statu?.post_store[0].data?.Field_Slug_title]}
-                                  </h4>
-                                  <div className="inputgroup">
-                                    {statu?.post_store[0].data?.[statu?.post_store[0].data?.Field_Slug_description]}
-                                  </div>
-                                </div>
-                              </div>
+                            <div className="container" id="sec-10">
+                                <div className="contactusswction">
+                                    <form id="contactForm">
+                                        <div className="row ">
+                                            <div className="col-12">
+                                                <h4 className="letstallktitle">
+                                                    {statu?.post_store[0].data?.[statu?.post_store[0].data?.Field_Slug_title]}
+                                                </h4>
+                                                <div className="inputgroup">
+                                                    {statu?.post_store[0].data?.[statu?.post_store[0].data?.Field_Slug_description]}
+                                                </div>
+                                            </div>
+                                        </div>
 
-                              <div className="row">
-                                {statu?.post_store.map((item, index) => (
-                                  <div className="col-md-6" key={index}>
-                                    <div className="inputgroup">
-                                      <label>{item.data?.[item.data?.Field_Slug_label]}</label>
-                                      {item.data?.[item.data?.Field_Slug_type] === "Textarea" ? (
-    
-                                        <textarea
-                                          className="form-control"
-                                          name={`field${index}`}
-                                          rows="4"
-                                          onChange={(e) => handleInputChange(e, index)}
-                                        />
-                                      ) : (
-                                        <input
-                                          className="form-control"
-                                          name={`field${index}`}
-                                          type={item.data.Type}
-                                          onChange={(e) => handleInputChange(e, index)}
-                                        />
-                                      )}
-    
-                                      {errors[`label${index}`] && (
-                                        <span className="error-message">
-                                          {errors[`label${index}`]}
-                                        </span>
-                                      )}
+                                        <div className="row">
+                                            {statu?.post_store.map((item, index) => (
+                                                <div className="col-md-6" key={index}>
+                                                    <div className="inputgroup">
+                                                        <label>{item.data?.[item.data?.Field_Slug_label]}</label>
+                                                        {item.data?.[item.data?.Field_Slug_type] === "Textarea" ? (
+
+                                                            <textarea
+                                                                className="form-control"
+                                                                name={`field${index}`}
+                                                                rows="4"
+                                                                onChange={(e) => handleInputChange(e, index)}
+                                                            />
+                                                        ) : (
+                                                            <input
+                                                                className="form-control"
+                                                                name={`field${index}`}
+                                                                type={item.data.Type}
+                                                                onChange={(e) => handleInputChange(e, index)}
+                                                            />
+                                                        )}
+
+                                                        {errors[`label${index}`] && (
+                                                            <span className="error-message">
+                                                                {errors[`label${index}`]}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </form>
+
+                                    <div className="row mt-3 ">
+                                        <div className="col-12">
+                                            <button
+                                                type="submit"
+                                                onClick={handleSubmit}
+                                                className="btn w-auto sky-blue-btn-sendmeasge"
+                                            >
+                                                {/* Send my message */}
+                                                {statu?.button_name}
+                                            </button>
+                                        </div>
                                     </div>
-                                  </div>
-                                ))}
-                              </div>
-                            </form>
-    
-                            <div className="row mt-3 ">
-                              <div className="col-12">
-                                <button
-                                  type="submit"
-                                  onClick={handleSubmit}
-                                  className="btn w-auto sky-blue-btn-sendmeasge"
-                                >
-                                  {/* Send my message */}
-                                  {statu?.button_name}
-                                </button>
-                              </div>
+                                </div>
                             </div>
-                          </div>
-                        </div>
-                      </section>
+                        </section>
                     ) : null
                     }
 

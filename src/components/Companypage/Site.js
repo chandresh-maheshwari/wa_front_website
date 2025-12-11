@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import customSelectStyles from "../../CustomSelectStyles";
 import Select from "react-select";
-import { RotatingLines } from "react-loader-spinner";
+// Single overlay spinner for loading states
 
 
 const VehicleForm = () => {
@@ -52,18 +52,13 @@ const VehicleForm = () => {
   const [origin, setOriginData] = useState([]);
   const [jobtype, setJobTypeData] = useState([]);
   const [SubContractCompany, setSubContractCompanyData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // submit loader
+  const [initialLoading, setInitialLoading] = useState(true); // page-load loader
 
   // Add Code For loader 
   const Loader = () => (
-    <div className="loader-overlay">
-      <RotatingLines
-        strokeColor="grey"
-        strokeWidth="5"
-        animationDuration="0.75"
-        width="96"
-        visible={true}
-      />
+    <div className="loader-overlay single-loader">
+      <div className="spinner-border text-primary" role="status" aria-label="Loading" />
     </div>
   );
 
@@ -191,14 +186,7 @@ const VehicleForm = () => {
     }
   };
 
-  useEffect(() => {
-    // getUserDepotTypeName();
-    getcountyName();
-    getDistrictCouncildata();
-    getOrigindata();
-    getJobTypedata();
-    getSubContractCompanydata();
-  }, []);
+  // initial data loading handled in unified effect below
 
   const getcountyName = async () => {
 
@@ -211,95 +199,159 @@ const VehicleForm = () => {
       setCountyTypes(options);
     } catch (error) {
       console.error("Failed to fetch county names:", error);
+      throw error;
     }
   };
 
 
   const getDistrictCouncildata = async () => {
     try {
-      // alert(21123);
-      // console.log("asdasdasd");
       const data = await Authapi.getDistrictCouncildata();
-      // console.log("Fuel types data:", data);
       if (data && data.length > 0) {
-        // setFuelTypes(response);
         const options = data.map((districtCouncil) => ({
           value: districtCouncil.id,
           label: districtCouncil.name,
         }));
         setDistrictCouncilData(options);
       } else {
-        console.warn("No fuel types data received");
+        console.warn("No district council data received");
       }
     } catch (error) {
-      console.error("Failed to fetch fuel types:", error);
+      console.error("Failed to fetch district council data:", error);
+      throw error;
     }
   };
 
   const getOrigindata = async () => {
     try {
-      // alert(21123);
-      // console.log("asdasdasd");
       const data = await Authapi.getOrigindata();
-      // console.log("Fuel types data:", data);
       if (data && data.length > 0) {
-        // setFuelTypes(response);
         const options = data.map((origin) => ({
           value: origin.id,
           label: origin.name,
         }));
         setOriginData(options);
       } else {
-        console.warn("No fuel types data received");
+        console.warn("No origin data received");
       }
     } catch (error) {
-      console.error("Failed to fetch fuel types:", error);
+      console.error("Failed to fetch origin data:", error);
+      throw error;
     }
   };
 
   const getJobTypedata = async () => {
     try {
-      // alert(21123);
-      // console.log("asdasdasd");
       const data = await Authapi.getJobTypedata();
-      // console.log("Fuel types data:", data);
       if (data && data.length > 0) {
-        // setFuelTypes(response);
         const options = data.map((origin) => ({
           value: origin.id,
           label: origin.job_type_name,
         }));
         setJobTypeData(options);
       } else {
-        console.warn("No fuel types data received");
+        console.warn("No job type data received");
       }
     } catch (error) {
-      console.error("Failed to fetch fuel types:", error);
+      console.error("Failed to fetch job type data:", error);
+      throw error;
     }
   };
 
 
   const getSubContractCompanydata = async () => {
     try {
-      // alert(21123);
-      // console.log("asdasdasd");
       const data = await Authapi.getSubContractCompanydata();
-      // console.log("Fuel types data:", data);
       if (data && data.length > 0) {
-        // setFuelTypes(response);
         const options = data.map((subcontractcompany) => ({
           value: subcontractcompany.id,
           label: subcontractcompany.company_name,
         }));
         setSubContractCompanyData(options);
       } else {
-        console.warn("No fuel types data received");
+        console.warn("No subcontract company data received");
       }
     } catch (error) {
-      console.error("Failed to fetch fuel types:", error);
+      console.error("Failed to fetch subcontract company data:", error);
+      throw error;
     }
   };
 
+  const fetchContractDetails = async () => {
+    const response = await Authapi.getUserContractdetail();
+    if (response.status === 200 && response.contract) {
+      setFormData((prevData) => ({
+        ...prevData,
+        contract_id: response.contract.id || "",
+        contract_name: response.contract.contract_name || "",
+      }));
+      return response.contract.id || "";
+    }
+    return "";
+  };
+
+  const fetchUserSitedetail = async (contractId) => {
+    if (!contractId) return;
+    const response = await Authapi.getUserSitedetail(contractId);
+    if (response?.status === 200 && response?.site_job) {
+      setFormData((prev) => ({
+        ...prev,
+        site_name: response.site_job.site_name || "",
+        site_description: response.site_job.site_description || "",
+        site_address_1: response.site_job.site_address_1 || "",
+        site_address_2: response.site_job.site_address_2 || "",
+        site_address_3: response.site_job.site_address_3 || "",
+        site_address_4: response.site_job.site_address_4 || "",
+        site_phone_no: response.site_job.site_phone_no || "",
+        site_email: response.site_job.site_email || "",
+        site_postcode: response.site_job.site_postcode || "",
+        district_council_id: response.site_job.district_council_id || "",
+        county_id: response.site_job.county_id || "",
+        origin_id: response.site_job.origin_id || "",
+        job_code: response.site_job.job_code || "",
+        job_type_id: response.site_job.job_type_id || "",
+        client_name: response.site_job.client_name || "",
+        job_description: response.site_job.job_description || "",
+      }));
+    }
+  };
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadAll = async () => {
+      try {
+        const contractId = await fetchContractDetails();
+
+        await Promise.allSettled([
+          getcountyName(),
+          getDistrictCouncildata(),
+          getOrigindata(),
+          getJobTypedata(),
+          getSubContractCompanydata(),
+          fetchUserSitedetail(contractId),
+        ]);
+
+        const message = sessionStorage.getItem("successMessage");
+        if (message) {
+          setSuccessMessage(message);
+          sessionStorage.removeItem("successMessage");
+          setTimeout(() => {
+            if (isMounted) setSuccessMessage("");
+          }, 10000);
+        }
+      } catch (err) {
+        console.error("Initial load error:", err);
+      } finally {
+        if (isMounted) setInitialLoading(false);
+      }
+    };
+
+    loadAll();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
   // const fetchFuelTypes = async () => {
   //   try {
   //     const data = await Authapi.getfualtypesdata();
@@ -356,91 +408,7 @@ const VehicleForm = () => {
   //   }
   // };
 
-  useEffect(() => {
-    const fetchContractDetails = async () => {
-      try {
-        // console.log(formData);
-        const response = await Authapi.getUserContractdetail();
-        // console.log("Contract details:", response);
-
-        if (response.status === 200 && response.contract) {
-          // Update the formData with contract_id
-          setFormData((prevData) => ({
-            ...prevData,
-            contract_id: response.contract.id || "", // Correct contract ID mapping
-            contract_name: response.contract.contract_name || "", // Correct contract ID mapping
-          }));
-          // console.log(formData);
-        } else {
-          console.warn("No contract data received");
-        }
-      } catch (error) {
-        console.error("Failed to fetch contract details:", error);
-      }
-    };
-
-    fetchContractDetails();
-  }, []);
-
-
-  useEffect(() => {
-    const getUserSitedetail = async () => {
-      // console.log(formData);
-
-
-      try {
-        const message = sessionStorage.getItem("successMessage");
-        if (message) {
-          setSuccessMessage(message);
-          // Clear the message after it's displayed
-          sessionStorage.removeItem("successMessage");
-
-          // Remove the success message after 30 seconds
-          setTimeout(() => {
-            setSuccessMessage("");
-          }, 10000); // 30 seconds timeout
-        }
-        // console.log(formData.contract_id);
-        const response = await Authapi.getUserSitedetail(formData.contract_id);
-        if (response?.status === 200 && response?.site_job) {
-          // console.log("AAAAAAAAAAAAAAAAAAAAAAAA");
-          // console.log(response.site_job.site_name);
-          setFormData({
-            // contract_id: response.site_job.contract_id || "",
-            // contract_name: response.site_job.contract_name || "",
-            site_name: response.site_job.site_name || "",
-            site_description: response.site_job.site_description || "",
-            site_address_1: response.site_job.site_address_1 || "",
-            site_address_2: response.site_job.site_address_2 || "",
-            site_address_3: response.site_job.site_address_3 || "",
-            site_address_4: response.site_job.site_address_4 || "",
-            site_phone_no: response.site_job.site_phone_no || "",
-            site_email: response.site_job.site_email || "",
-            site_postcode: response.site_job.site_postcode || "",
-            district_council_id: response.site_job.district_council_id || "",
-            county_id: response.site_job.county_id || "",
-            origin_id: response.site_job.origin_id || "",
-
-            job_code: response.site_job.job_code || "",
-            job_type_id: response.site_job.job_type_id || "",
-            client_name: response.site_job.client_name || "",
-            // purchase_order: response.site_job.purchase_order || "",
-            job_description: response.site_job.job_description || "",
-            job_code: response.site_job.job_code || "",
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching Site and Job Details:", error);
-      }
-    };
-
-    //   getUserSitedetail();
-    // }, []);
-
-    if (formData.contract_id) {  // Only fetch site details if contract_id is available
-      getUserSitedetail();
-    }
-  }, [formData.contract_id]);
+  // unified initial load in effect below
 
 
   const handleSubmit = async (e) => {
@@ -527,7 +495,7 @@ const VehicleForm = () => {
     <>
       <Navlayout />
       <Expired />
-      {loading && <Loader />}
+      {(loading || initialLoading) && <Loader />}
 
       <div className="container mb-0 mt-5">
         {successMessage && (
@@ -622,7 +590,7 @@ const VehicleForm = () => {
               <div className="form-group col-md-6">
                 <div className="input-with-icon">
                   <label className="label">Description</label>
-                  <Tooltip title="Enter a description for the vehicle" arrow>
+                  <Tooltip title="Enter a description for the Site" arrow>
                     <FontAwesomeIcon
                       icon={faInfoCircle}
                       className="info-icon"
@@ -945,7 +913,7 @@ const VehicleForm = () => {
                     // value={formData.vehicle_type_id}
                     value={jobtype.find(option => option.value === formData.job_type_id)}
                     onChange={handleJobTypeChange}
-                    placeholder="Select Vehicle Type"
+                    placeholder="Select Job Type"
                     isSearchable
                     styles={customSelectStyles}
                   />
@@ -1074,7 +1042,7 @@ const VehicleForm = () => {
           className="btn next btn-primary final-submit"
         >
           <Tooltip
-            title="Click 'Submit' to save the forwarding facility details."
+            title="Click 'Submit' to save the Site details."
             arrow
           >
             <span>Submit</span>

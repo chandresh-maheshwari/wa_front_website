@@ -55,6 +55,7 @@ const Home = () => {
   const [statu, setStatus] = useState({});
   const [userEmail, setUserEmail] = useState(null);
   const [userRole, setUserRole] = useState(null);
+  const [isFrontCreated, setIsFrontCreated] = useState(null);
   // const [userRoleData, setUserData] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
@@ -367,14 +368,16 @@ const Home = () => {
       const email =
         response?.data?.user?.email || response?.user?.email || response?.email;
       const Role = response?.user?.user_type_id;
+      const is_front_created = response?.user?.is_front_created;
 
       console.log("Extracted Email:", email);
       console.log("Extracted Email:", Role);
 
       setUserRole(Role);
+      setIsFrontCreated(is_front_created);
       if (email) {
         setUserEmail(email);
-        return { email, Role }; // Return both
+        return { email, Role, is_front_created }; // Return both
       } else {
         // console.log("Email not found in response structure");
         // console.log("Response structure:", JSON.stringify(response, null, 2));
@@ -401,11 +404,15 @@ const Home = () => {
       let email = userEmail;
       // console.log(email);
       let Role = userRole
+      let is_front_created = isFrontCreated
         ;
       if (!email) {
         const result = await getUserEmail();
+        console.log("testing");
+        console.log(result);
         email = result.email;
         Role = result.Role;
+        is_front_created = result.is_front_created;
         if (!email) {
           Swal.fire({
             icon: "error",
@@ -416,9 +423,15 @@ const Home = () => {
         }
       }
       console.log("AAAAAAAAAAAAAAAAAAAAAAA");
-      console.log(email);
-      console.log(Role);
-      if (Role !== 2) {
+      // console.log(8);
+      // console.log(Role !== 2);
+      // console.log(is_front_created);
+      // console.log(is_front_created === 0);
+      // console.log(8 !== 2 || is_front_created === 0);
+      console.log("BBBBBBBBBBBBBBBBBBB");
+
+      // if (Role !== 2) {
+      if (Role !== 2 || is_front_created === 0) {
         Swal.fire({
           icon: "warning",
           title: "Access Denied",

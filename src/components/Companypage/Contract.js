@@ -11,7 +11,7 @@ import Navlayout from "../../Wa-Frontend/NavLayout";
 import Tooltip from '@mui/material/Tooltip';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-import { RotatingLines } from "react-loader-spinner";
+// Using a simple Bootstrap spinner to avoid multiple overlapping loaders
 
 
 const Contract = () => {
@@ -25,19 +25,14 @@ const Contract = () => {
   });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // submit loader
+  const [initialLoading, setInitialLoading] = useState(true); // page-load loader
 
 
   // Add Code For loader 
   const Loader = () => (
-    <div className="loader-overlay">
-      <RotatingLines
-        strokeColor="grey"
-        strokeWidth="5"
-        animationDuration="0.75"
-        width="96"
-        visible={true}
-      />
+    <div className="loader-overlay single-loader">
+      <div className="spinner-border text-primary" role="status" aria-label="Loading" />
     </div>
   );
 
@@ -85,69 +80,99 @@ const Contract = () => {
 
   };
   useEffect(() => {
+    let isMounted = true;
 
     const loadData = async () => {
-      try {
+      const applyCompany = (res) => {
+        const companyData =
+          res?.data?.data ||
+          res?.data?.company ||
+          res?.data ||
+          res?.company ||
+          res;
 
+        const isOk =
+          res?.status === "success" ||
+          res?.status === true ||
+          res?.status === 200 ||
+          !!companyData;
+
+        if (!isOk || !companyData) return false;
+
+        if (!isMounted) return false;
+
+        setFormData((prev) => ({
+          ...prev,
+          companyName:
+            companyData.company_name ||
+            companyData.companyName ||
+            companyData.name ||
+            prev.companyName,
+          companyId:
+            companyData.id ||
+            companyData.company_id ||
+            companyData.companyId ||
+            prev.companyId,
+        }));
+        return true;
+      };
+
+      try {
         const message = sessionStorage.getItem("successMessage");
         if (message) {
           setSuccessMessage(message);
-          // Clear the message after it's displayed
           sessionStorage.removeItem("successMessage");
-
-          // Remove the success message after 30 seconds
           setTimeout(() => {
-            setSuccessMessage("");
-          }, 10000); // 30 seconds timeout
-        }
-        // Contract API
-        const contractRes = await Authapi.getLatestContractDetails();
-
-        if (contractRes.status === true || contractRes.status === "success") {
-          setFormData(prev => ({
-            ...prev,
-            contractName: contractRes.contract.contract_name || "",
-            contractId: contractRes.contract.id || "",
-            companyId: contractRes.contract.company_id || "",
-            companyName: contractRes.contract.company_name || "",
-          }));
+            if (isMounted) setSuccessMessage("");
+          }, 10000);
         }
 
-        // Company API
-        
-        // const companyRes = await Authapi.getLatestCompanyDetails();
+        const [contractRes, latestCompanyRes, fallbackCompanyRes] = await Promise.allSettled([
+          Authapi.getLatestContractDetails(),
+          Authapi.getLatestCompanyDetails(),
+          Authapi.getusercompanydetail(),
+        ]);
 
-        // if (companyRes.status === "success") {
-        //   setFormData(prev => ({
-        //     ...prev,
-        //     companyName: companyRes.data.company_name || prev.companyName,
-        //     companyId: companyRes.data.id || prev.companyId,
-        //   }));
-        // }
+        if (contractRes.status === "fulfilled") {
+          const res = contractRes.value;
+          if (res?.status === true || res?.status === "success" || res?.status === 200) {
+            if (isMounted) {
+              setFormData((prev) => ({
+                ...prev,
+                contractName: res.contract?.contract_name || prev.contractName,
+                contractId: res.contract?.id || prev.contractId,
+                companyId: res.contract?.company_id || prev.companyId,
+                companyName: res.contract?.company_name || prev.companyName,
+              }));
+            }
+          }
+        } else {
+          console.error("Error loading contract:", contractRes.reason);
+        }
 
+        // try primary then fallback
+        if (latestCompanyRes.status === "fulfilled") {
+          const applied = applyCompany(latestCompanyRes.value);
+          if (!applied && fallbackCompanyRes.status === "fulfilled") {
+            applyCompany(fallbackCompanyRes.value);
+          }
+        } else if (fallbackCompanyRes.status === "fulfilled") {
+          applyCompany(fallbackCompanyRes.value);
+        } else {
+          console.error("Error loading company:", latestCompanyRes.reason || fallbackCompanyRes.reason);
+        }
       } catch (e) {
         console.error("Error loading data:", e);
+      } finally {
+        if (isMounted) setInitialLoading(false);
       }
     };
 
     loadData();
 
-  }, []);
-
-
-    useEffect(() => {
-      const loadDataOfCompany = async () => {
-       const companyRes = await Authapi.getLatestCompanyDetails();
-
-        if (companyRes.status === "success") {
-          setFormData(prev => ({
-            ...prev,
-            companyName: companyRes.data.company_name || prev.companyName,
-            companyId: companyRes.data.id || prev.companyId,
-          }));
-        }
-      }
-      loadDataOfCompany();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
 
@@ -293,7 +318,7 @@ const Contract = () => {
     <>
       <Navlayout />
       <Expired />
-      {loading && <Loader />}
+      {(loading || initialLoading) && <Loader />}
 
       <div className="container mb-0 mt-5">
         {successMessage && (

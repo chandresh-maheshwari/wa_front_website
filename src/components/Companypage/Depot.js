@@ -13,7 +13,7 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import "./Depot.css";
 import customSelectStyles from "../../CustomSelectStyles";
 import Select from "react-select";
-import { RotatingLines } from "react-loader-spinner";
+// Single overlay spinner for loading states
 
 const DepotForm = () => {
   //   const [formData, setFormData] = useState({
@@ -58,18 +58,13 @@ const DepotForm = () => {
   const [countytypes, setCountyTypes] = useState([]);
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // submit loader
+  const [initialLoading, setInitialLoading] = useState(true); // page-load loader
 
     // Add Code For loader 
     const Loader = () => (
-      <div className="loader-overlay">
-        <RotatingLines
-          strokeColor="grey"
-          strokeWidth="5"
-          animationDuration="0.75"
-          width="96"
-          visible={true}
-        />
+      <div className="loader-overlay single-loader">
+        <div className="spinner-border text-primary" role="status" aria-label="Loading" />
       </div>
     );
 
@@ -88,12 +83,9 @@ const DepotForm = () => {
       }
     } catch (error) {
       console.error("Failed to fetch fuel types:", error);
+      throw error;
     }
   };
-  useEffect(() => {
-    getUserDepotTypeName();
-    getcountyName();
-  }, []);
 
   const handleDepotTypeChange = (selectedOption) => {
     setFormData({ ...formData, depotTypeId: selectedOption ? selectedOption.value : "" });
@@ -118,6 +110,52 @@ const DepotForm = () => {
       setCountyTypes(options);
     } catch (error) {
       console.error("Failed to fetch county names:", error);
+      throw error;
+    }
+  };
+
+  const fetchLatestContract = async () => {
+    try {
+      const response = await Authapi.getLatestContractDetails();
+      if (response.status === true || response.status === 200 || response.status === "success") {
+        setFormData((prev) => ({
+          ...prev,
+          contractName: response.contract?.contract_name || prev.contractName || "",
+          contractId: response.contract?.id || prev.contractId || "",
+        }));
+      }
+    } catch (error) {
+      console.error("Error fetching contract details:", error);
+      throw error;
+    }
+  };
+
+  const fetchDepotDetail = async () => {
+    try {
+      const response = await Authapi.getUserDepotdetail();
+      if (response.status === 200) {
+        setFormData((prev) => ({
+          ...prev, // keep any values already populated
+          depotTypeId: response.depots.depot_type_id || "",
+          contractId: response.depots.contract_id || prev.contractId || "",
+          contractName: response.depots.contract_name || prev.contractName || "",
+          depotName: response.depots.depot_name || "",
+          depotPermitNo: response.depots.depot_permit_no || "",
+          depotAddress1: response.depots.depot_address_1 || "",
+          depotAddress2: response.depots.depot_address_2 || "",
+          depotAddress3: response.depots.depot_address_3 || "",
+          depotAddress4: response.depots.depot_address_4 || "",
+          depotPostcode: response.depots.depot_postcode || "",
+          countyId: response.depots.county_id || "",
+          depotTelephone: response.depots.depot_telephone || "",
+          includeTonnageLimitOnDashboard: response.depots.include_tonnage_limit_on_dashboard || "",
+          startDate: response.depots.start_date_tonnage_material || "",
+          endDate: response.depots.end_date_tonnage_material || "",
+        }));
+      }
+    } catch (error) {
+      console.error("Error fetching depot details:", error);
+      throw error;
     }
   };
 
@@ -141,22 +179,7 @@ const DepotForm = () => {
       const { formData } = location.state;
       setFormData(formData);
     }
-
-    const fetchContractDetails = async () => {
-      try {
-        const response = await Authapi.getLatestContractDetails();
-        if (response.status === true) {
-          setFormData((prev) => ({
-            ...prev,
-            contractName: response.contract.contract_name || "",
-            contractId: response.contract.id || "",
-          }));
-        }
-      } catch (error) {
-        console.error("Error fetching contract details:", error);
-      }
-    };
-    fetchContractDetails();
+    // data fetching handled in loadAll effect
   }, []);
 
   // const handleChange = (e) => {
@@ -190,6 +213,28 @@ const DepotForm = () => {
       setFormData({ ...formData, [name]: value }); // Update formData for other fields
     }
   };
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadAll = async () => {
+      try {
+        await Promise.allSettled([
+          getUserDepotTypeName(),
+          getcountyName(),
+          fetchLatestContract(),
+          fetchDepotDetail(),
+        ]);
+      } finally {
+        if (isMounted) setInitialLoading(false);
+      }
+    };
+
+    loadAll();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const validateForm = () => {
     const newErrors = {};
@@ -304,45 +349,7 @@ const DepotForm = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      // if (location.state && location.state.formData) {
-
-      //   setFormData({
-      //     ...location.state.formData,
-      //   });
-      // } else {
-
-      const response = await Authapi.getUserDepotdetail();
-      if (response.status === 200) {
-        // console.log("TESTING");
-        // console.log();
-        setFormData({
-          depotTypeId: response.depots.depot_type_id || "",
-          // contractId: response.depots.contract_id || "",
-          // contractName: response.depots.contract_name || "",
-          depotName: response.depots.depot_name || "",
-          depotPermitNo: response.depots.depot_permit_no || "",
-          depotAddress1: response.depots.depot_address_1 || "",
-          depotAddress2: response.depots.depot_address_2 || "",
-          depotAddress3: response.depots.depot_address_3 || "",
-          depotAddress4: response.depots.depot_address_4 || "",
-          depotPostcode: response.depots.depot_postcode || "",
-          countyId: response.depots.county_id || "",
-          depotTelephone: response.depots.depot_telephone || "",
-          // depotPermitTonnageLimit: response.depots.depot_permit_tonnage_limit || "",
-          includeTonnageLimitOnDashboard: response.depots.include_tonnage_limit_on_dashboard || "",
-          startDate: response.depots.start_date_tonnage_material || "",
-          endDate: response.depots.end_date_tonnage_material || "",
-          // dateAddress: response.depots.depot_address_1 || "",
-        });
-        // }
-      }
-    };
-
-    fetchData();
-    // }, [location.state]);
-  }, []);
+  // data fetch handled in loadAll effect
 
 
   useEffect(() => {
@@ -436,7 +443,7 @@ const DepotForm = () => {
         Please fill the form below to set up a Depot! Add as many details as
         required and proceed.
       </p> */}
-      {loading && <Loader />}
+      {(loading || initialLoading) && <Loader />}
 
       <div className="container mb-0 mt-5">
         {successMessage && (
@@ -514,7 +521,6 @@ const DepotForm = () => {
                         type="text"
                         name="contractName"
                         value={formData.contractName}
-                        onChange={handleDepotTypeChange}
                         disabled />
                       {errors.contractName && <small className="text-danger">{errors.contractName}</small>}
                     </div>
