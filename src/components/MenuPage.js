@@ -82,44 +82,44 @@ const MenuPage = () => {
 
     const getUserEmail = async () => {
         try {
-          const token = ls.get("WAauthToken");
-    
-          if (!token) {
-            // console.log("No auth token found");
-            return {};
-          }
-    
-          const response = await Authapi.getUser({
-            headers: {
-              Authorization: `Bearer ${token}`,
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-          });
-    
-          console.log("API Response:", response);
-    
-          const email =
-            response?.data?.user?.email || response?.user?.email || response?.email;
-          const Role = response?.user?.user_type_id;
-          const is_front_created = response?.user?.is_front_created;
-    
-          console.log("Extracted Email:", email);
-          console.log("Extracted Email:", Role);
-    
-          setUserRole(Role);
-          setIsFrontCreated(is_front_created);
-          if (email) {
-            setUserEmail(email);
-            return { email, Role, is_front_created }; // Return both
-          } else {
-            // console.log("Email not found in response structure");
-            // console.log("Response structure:", JSON.stringify(response, null, 2));
-          }
+            const token = ls.get("WAauthToken");
+
+            if (!token) {
+                // console.log("No auth token found");
+                return {};
+            }
+
+            const response = await Authapi.getUser({
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+            });
+
+            console.log("API Response:", response);
+
+            const email =
+                response?.data?.user?.email || response?.user?.email || response?.email;
+            const Role = response?.user?.user_type_id;
+            const is_front_created = response?.user?.is_front_created;
+
+            console.log("Extracted Email:", email);
+            console.log("Extracted Email:", Role);
+
+            setUserRole(Role);
+            setIsFrontCreated(is_front_created);
+            if (email) {
+                setUserEmail(email);
+                return { email, Role, is_front_created }; // Return both
+            } else {
+                // console.log("Email not found in response structure");
+                // console.log("Response structure:", JSON.stringify(response, null, 2));
+            }
         } catch (error) {
-          console.error("Error in getUserEmail:", error);
+            console.error("Error in getUserEmail:", error);
         }
-      };
+    };
     const toggleLoginPopup = () => {
         setShowLoginPopup(!showLoginPopup);
     };
@@ -234,7 +234,9 @@ const MenuPage = () => {
                     icon: "warning",
                     title: "Access Denied",
                     // text: "You are not the right user to access this feature.",
-                    text: "You are not authenticate user, please logout and signup / login as company user.",
+                    // text: "You are not authenticate user. please logout and signup / login as company user.",
+                    html: `You are not authenticate user.<br>
+                            Please logout and signup / login as company user.`,
                     confirmButtonText: "OK",
                 });
                 setLoading(false);

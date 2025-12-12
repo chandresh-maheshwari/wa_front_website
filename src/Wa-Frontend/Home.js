@@ -133,8 +133,8 @@ const Home = () => {
           response.results.transforming_waste_industry.post_store
         )
           ? [...response.results.transforming_waste_industry.post_store].sort(
-              (a, b) => (a.ordering || 0) - (b.ordering || 0)
-            )
+            (a, b) => (a.ordering || 0) - (b.ordering || 0)
+          )
           : [];
         setTransforming(transformingPosts);
         // console.log(Transforming);
@@ -169,8 +169,8 @@ const Home = () => {
           response.results.about_us.post_store
         )
           ? [...response.results.about_us.post_store].sort(
-              (a, b) => (a.ordering || 0) - (b.ordering || 0)
-            )
+            (a, b) => (a.ordering || 0) - (b.ordering || 0)
+          )
           : [];
 
         const dynamicTitles = orderedAboutPosts.flatMap((post) => {
@@ -436,7 +436,9 @@ const Home = () => {
           icon: "warning",
           title: "Access Denied",
           // text: "You are not the right user to access this feature.",
-          text: "You are not authenticate user, please logout and signup / login as company user.",
+          // text: "You are not authenticate user.\n please logout and signup / login as company user.",
+          html: `You are not authenticate user.<br>
+                  Please logout and signup / login as company user.`,
           confirmButtonText: "OK",
         });
         setLoading(false);
@@ -881,8 +883,8 @@ const Home = () => {
                         <img
                           src={
                             orderedQuoteSection1Posts[0]?.data?.[
-                              orderedQuoteSection1Posts[0]?.data
-                                ?.Field_Slug_quotesectionimage
+                            orderedQuoteSection1Posts[0]?.data
+                              ?.Field_Slug_quotesectionimage
                             ]
                           }
                           className="quoteimage1"
@@ -893,16 +895,16 @@ const Home = () => {
                         <p className="text-light">
                           {
                             orderedQuoteSection1Posts[0]?.data?.[
-                              orderedQuoteSection1Posts[0]?.data
-                                ?.Field_Slug_quotesectiontitle
+                            orderedQuoteSection1Posts[0]?.data
+                              ?.Field_Slug_quotesectiontitle
                             ]
                           }{" "}
                           <br />
                           <span className="text-secondary quote-description">
                             {
                               orderedQuoteSection1Posts[0]?.data?.[
-                                orderedQuoteSection1Posts[0]?.data
-                                  ?.Field_Slug_quotesectiondescription
+                              orderedQuoteSection1Posts[0]?.data
+                                ?.Field_Slug_quotesectiondescription
                               ]
                             }
                           </span>
@@ -959,8 +961,8 @@ const Home = () => {
                         <img
                           src={
                             orderedQuoteSection2Posts[0]?.data?.[
-                              orderedQuoteSection2Posts[0]?.data
-                                ?.Field_Slug_quotesectionimage
+                            orderedQuoteSection2Posts[0]?.data
+                              ?.Field_Slug_quotesectionimage
                             ]
                           }
                           className="quoteimage1"
@@ -971,16 +973,16 @@ const Home = () => {
                         <p className="text-light">
                           {
                             orderedQuoteSection2Posts[0]?.data?.[
-                              orderedQuoteSection2Posts[0]?.data
-                                ?.Field_Slug_quotesectiontitle
+                            orderedQuoteSection2Posts[0]?.data
+                              ?.Field_Slug_quotesectiontitle
                             ]
                           }{" "}
                           <br />
                           <span className="text-secondary quote-description">
                             {
                               orderedQuoteSection2Posts[0]?.data?.[
-                                orderedQuoteSection2Posts[0]?.data
-                                  ?.Field_Slug_quotesectiondescription
+                              orderedQuoteSection2Posts[0]?.data
+                                ?.Field_Slug_quotesectiondescription
                               ]
                             }
                           </span>
