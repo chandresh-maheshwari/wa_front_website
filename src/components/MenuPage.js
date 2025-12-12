@@ -233,7 +233,8 @@ const MenuPage = () => {
                 Swal.fire({
                     icon: "warning",
                     title: "Access Denied",
-                    text: "You are not the right user to access this feature.",
+                    // text: "You are not the right user to access this feature.",
+                    text: "You are not authenticate user, please logout and signup / login as company user.",
                     confirmButtonText: "OK",
                 });
                 setLoading(false);
