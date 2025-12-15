@@ -9,7 +9,7 @@ import ls from 'local-storage';
 import Login from '../components/Login/Login';
 import { Navigate } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
-import Expired from "../components/CheckTokenExpier";
+// import Expired from "../components/CheckTokenExpier";
 import Navlayout from '../Wa-Frontend/NavLayout';
 const stripePromise = loadStripe('pk_test_51P4GXaAvL6Jnl0r3yHDSV2zN0JrGRt2UFxn217kqw9JFFBXe4K1n5xZHGfsKaIicVfUBAP5ch0TBIO8C8cI3ijQv00bNWJynzK');
 
@@ -612,7 +612,7 @@ const MenuPage = () => {
     return (
         <>
             <Navlayout />
-            <Expired />
+            {/* <Expired /> //working code for check token expire  */}
             {isLoading ? (
                 <div className="loading-overlay">
                     <div className="spinner-border text-primary" role="status">
@@ -667,6 +667,10 @@ const MenuPage = () => {
                     ) : currentMenu === 'About Us' && statu.page_status === 0 ? (
                         <div className="text-center"> 404 Page Not Found</div>
                     ) : null}
+                    {console.log(currentMenu)}
+                    {console.log(statu.page_status)}
+                    {console.log(topbardata.length)}
+                    {console.log(currentMenu === 'Our Products' && statu.page_status === 1 && topbardata.length > 0)}
 
                     {currentMenu === 'Our Products' && statu.page_status === 1 && topbardata.length > 0 ? (
                         <section className="packages-sec" id="package_section">

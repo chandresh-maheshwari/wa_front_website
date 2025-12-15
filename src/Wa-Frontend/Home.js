@@ -19,7 +19,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import Login from "../components/Login/Login";
 import { Outlet } from "react-router-dom";
 import Navlayout from "./NavLayout";
-import Expired from "../components/CheckTokenExpier";
+// import Expired from "../components/CheckTokenExpier"; //working code for check token expire
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
@@ -1297,7 +1297,7 @@ const Home = () => {
   return (
     <>
       <Navlayout />
-      <Expired />
+      {/* <Expired /> //working code for check token expire */}
 
       {renderSections()}
       {showLoginPopup && (

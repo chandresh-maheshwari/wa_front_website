@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 // import { Stepper, Step } from "react-form-stepper";
 import Stepper from "react-stepper-horizontal";
 import "./Company.css";
-import Expired from "../CheckTokenExpier";
+// import Expired from "../CheckTokenExpier"; //working code for check token expire
 import Navlayout from "../../Wa-Frontend/NavLayout";
 import Tooltip from "@mui/material/Tooltip";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -399,7 +399,7 @@ const VehicleForm = () => {
   return (
     <>
       <Navlayout />
-      <Expired />
+      {/* <Expired />  //working code for check token expire */}
       <div className="container mb-0 mt-5">
         {successMessage && (
           <div className="alert alert-success" role="alert">

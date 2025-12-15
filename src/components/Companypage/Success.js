@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import "./Company.css"; // Assuming you have a CSS file for styling
 // import { Stepper, Step } from "react-form-stepper";
 import Stepper from 'react-stepper-horizontal';
-import Expired from '../CheckTokenExpier';
+// import Expired from '../CheckTokenExpier'; //working code for check token expire
 import Navlayout from "../../Wa-Frontend/NavLayout";
 import { useNavigate } from "react-router-dom";
 
@@ -101,7 +101,7 @@ const SuccessPage = () => {
   return (
     <div>
       <Navlayout />
-      <Expired />
+      {/* <Expired /> //working code for check token expire */}
    
       <div className="company-setup-container abcd mt-5">
         <div className="container stepper-connector-fifth-child stepper-connector">

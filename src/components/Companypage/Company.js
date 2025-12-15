@@ -8,7 +8,7 @@ import Tooltip from '@mui/material/Tooltip';
 import customSelectStyles from "../../CustomSelectStyles";
 import Authapi from "../../Authapi";
 
-import Expired from "../CheckTokenExpier";
+// import Expired from "../CheckTokenExpier"; //working code for check token expire
 import Navlayout from "../../Wa-Frontend/NavLayout";
 // import Tooltip from "@mui/material/Tooltip";
 
@@ -448,7 +448,7 @@ const Company = () => {
   return (
     <>
       <Navlayout />
-      <Expired />
+      {/* <Expired />//working code for check token expire */}
       {(loading || initialLoading) && <Loader />}
       {/* <h1 className="header">Company</h1>
       <p className="firstcontent">

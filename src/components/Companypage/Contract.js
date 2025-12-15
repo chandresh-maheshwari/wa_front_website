@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 // import { Stepper, Step } from "react-form-stepper";
 import "./Contract.css";
 import Stepper from 'react-stepper-horizontal';
-import Expired from '../CheckTokenExpier';
+// import Expired from '../CheckTokenExpier'; //working code for check token expire
 import Navlayout from "../../Wa-Frontend/NavLayout";
 import Tooltip from '@mui/material/Tooltip';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -317,7 +317,7 @@ const Contract = () => {
   return (
     <>
       <Navlayout />
-      <Expired />
+      {/* <Expired /> //working code for check token expire */}
       {(loading || initialLoading) && <Loader />}
 
       <div className="container mb-0 mt-5">

@@ -5,7 +5,7 @@ import Authapi from "../../Authapi";
 import Swal from "sweetalert2";
 // import { Stepper, Step } from "react-form-stepper";
 import Stepper from 'react-stepper-horizontal';
-import Expired from '../CheckTokenExpier';
+// import Expired from '../CheckTokenExpier'; //working code for check token expire
 import Navlayout from "../../Wa-Frontend/NavLayout";
 import Tooltip from '@mui/material/Tooltip';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -437,7 +437,7 @@ const DepotForm = () => {
   return (
     <>
       <Navlayout />
-      <Expired />
+      {/* <Expired /> //working code for check token expire */}
       {/* <h1 className="header">Depot</h1>
       <p className="firstcontent">
         Please fill the form below to set up a Depot! Add as many details as

@@ -211,6 +211,7 @@ const Navlayout = () => {
     }, []);
 
     const handleMenuClick = (to, state) => {
+        console.log(to);
         setIsLoading(true);
         navigate(to, { state });
     };
