@@ -312,6 +312,7 @@ const MenuPage = () => {
     const fetchData = async () => {
         setIsLoading(true);
         try {
+            console.log("ssssssss");
             const response = await Authapi.dynamicpageget(currentMenu);
             if (response.status === true) {
                 // console.log(response.page.post_store);
@@ -337,6 +338,8 @@ const MenuPage = () => {
                 navigate("/Nopage");
             }
         } catch (error) {
+            console.log("ttttttttt");
+
             if (error.status === 404) {
                 navigate("/Nopage");
             }
