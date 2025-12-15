@@ -291,6 +291,7 @@ const MenuPage = () => {
                 .map(word => word.charAt(0).toUpperCase() + word.slice(1))
                 .join(' ');
 
+        console.log("Menu Title");
         console.log(menuTitle);
         setCurrentMenu(menuTitle);
     }, [location, menuName]);
@@ -315,33 +316,43 @@ const MenuPage = () => {
             console.log("ssssssss");
             const response = await Authapi.dynamicpageget(currentMenu);
             if (response.status === true) {
-                // console.log(response.page.post_store);
-                setTopbardata(response.page.post_store || []);
-                setTransforming(response.page.post_store);
+                // Ensure deterministic order for all inner-page sections
+                const orderedPosts = Array.isArray(response.page.post_store)
+                    ? [...response.page.post_store].sort(
+                        (a, b) => (a.ordering || 0) - (b.ordering || 0)
+                    )
+                    : [];
 
-                setStatus(response.page);
-                const dynamicTitles = response.page.post_store.flatMap(post =>
-                    // console.log(post);
-                    Object.keys(post.data)
-                        .filter(key => key.startsWith('Title'))
-                        .map(key => post.data[key])
-                );
+                setTopbardata(orderedPosts || []);
+                setTransforming(orderedPosts);
+
+                // Preserve other page fields while applying ordered posts
+                setStatus({
+                    ...response.page,
+                    post_store: orderedPosts,
+                });
+
+                const dynamicTitles = orderedPosts.flatMap(post => {
+                    const data = post.data;
+                    const titleKey = data.Field_Slug_title;
+                    return data[titleKey] ? [data[titleKey]] : [];
+                });
                 setTitles(dynamicTitles);
 
-                const dynamicDescriptions = response.page.post_store.flatMap(post =>
-                    Object.keys(post.data)
-                        .filter(key => key.startsWith('Description'))
-                        .map(key => post.data[key])
-                );
+                const dynamicDescriptions = orderedPosts.flatMap(post => {
+                    const data = post.data;
+                    const descriptionKey = data.Field_Slug_description;
+                    return data[descriptionKey] ? [data[descriptionKey]] : [];
+                });
                 setDescription(dynamicDescriptions);
             } else {
-                navigate("/Nopage");
+                // navigate("/Nopage");
             }
         } catch (error) {
             console.log("ttttttttt");
 
             if (error.status === 404) {
-                navigate("/Nopage");
+                // navigate("/Nopage");
             }
             console.log(error);
         } finally {
@@ -368,13 +379,13 @@ const MenuPage = () => {
     };
 
     const renderCards = () => {
-        // console.log("XXXXXXXXXXXXXXXXX");
-        // console.log(statu?.post_store);
-        return statu?.post_store.map((card, index) => {
+        // Use index-based styling classes so layout stays consistent with existing CSS
+        return (statu?.post_store || []).map((card, index) => {
             const feesSection = card.data.FeesSection || {};
             const infoSection1 = card.data.PackageInfo || {};
             const serviceSection = card.data.PackageServices || {};
             const purchaseButtonSection = card.data.PurchaseButton || {};
+            const cardNumber = index + 1;
 
             const hasContent =
                 infoSection1?.[infoSection1?.Field_Slug_information1] ||
@@ -395,14 +406,14 @@ const MenuPage = () => {
             if (!hasContent) return null;
 
             return (
-                <div className={`col-lg-4`} id={`card${index + 1}`} key={card.Id}>
+                <div className="col-lg-4" id={`card${cardNumber}`} key={card.Id || cardNumber}>
                     <div
-                        className={`card-liner-card-${index + 1}`}
+                        className={`card-liner-card-${cardNumber}`}
                         id="card-liner-card"
                     ></div>
-                    <div className={`card${index + 1} card`}>
+                    <div className={`card${cardNumber} card`}>
                         <span className="medaltype">{card?.data?.[card?.data?.Field_Slug_packagename]}</span>
-                        <div className={`card${index + 1}-text`}>
+                        <div className={`card${cardNumber}-text`}>
                             {/* Render Information Section */}
                             {[
                                 infoSection1?.[infoSection1?.Field_Slug_information1],
@@ -416,7 +427,7 @@ const MenuPage = () => {
                                         <p className="card-text-container cardtext" key={i}>
                                             <img
                                                 src={righticon}
-                                                className={`card${index + 1}righticon card-text-image`}
+                                                className={`card${cardNumber}righticon card-text-image`}
                                                 alt={`Icon ${i + 1}`}
                                             />
                                             {text}
@@ -429,13 +440,13 @@ const MenuPage = () => {
                             )}
                         </div>
 
-                        <div className={`card${index + 1}-sec-2-text`}>
+                        <div className={`card${cardNumber}-sec-2-text`}>
                             {/* Render Service Section */}
                             {serviceSection?.[serviceSection?.Field_Slug_service1] && (
-                                <p className="card-text-container">
+                                <p className="card-text-container cardtext">
                                     <img
                                         src={plushicon}
-                                        className={`card${index + 1}plushicon card-text-image`}
+                                        className={`card${cardNumber}plushicon card-text-image`}
                                         alt="Add On Icon"
                                     />
                                     {serviceSection?.[serviceSection?.Field_Slug_service1]}
@@ -445,10 +456,9 @@ const MenuPage = () => {
                                 <div className="card-liner-inside-2"></div>
                             )}
 
-                            <div className={`card-${index + 1}-sec-3`}>
-
+                            <div className={`card-${cardNumber}-sec-3 card${cardNumber}-text`}>
                                 {feesSection?.[feesSection?.Field_Slug_monthlyfee] && (
-                                    <p className={`card${index + 1}-sec-3-text1`}>
+                                    <p className={`card${cardNumber}-sec-3-text1`}>
                                         {feesSection?.[feesSection?.Field_Slug_monthlyfee]}
                                     </p>
                                 )}
@@ -461,7 +471,7 @@ const MenuPage = () => {
                                             <p className="card-text-container cardtext" key={i}>
                                                 <img
                                                     src={plushicon}
-                                                    className={`card${index + 1}plushicon card-text-image`}
+                                                    className={`card${cardNumber}plushicon card-text-image`}
                                                     alt="Add On Icon"
                                                 />
                                                 {text}
@@ -471,10 +481,10 @@ const MenuPage = () => {
 
                                 {/* Render Service 2 */}
                                 {serviceSection?.[serviceSection?.Field_Slug_service2] && (
-                                    <p className={`card${index + 1}-sec-3-text`}>
+                                    <p className={`card${cardNumber}-sec-3-text`}>
                                         <img
                                             src={plushicon}
-                                            className={`card${index + 1}plushicon card-text-image`}
+                                            className={`card${cardNumber}plushicon card-text-image`}
                                             alt="Add On Icon"
                                         />
                                         {serviceSection?.[serviceSection?.Field_Slug_service2]}
@@ -489,9 +499,8 @@ const MenuPage = () => {
                                     className="btn w-50 purchase-button"
                                     onClick={() =>
                                         handlePurchaseSubmit(
-                                            card?.data.Packagename,
-                                            purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_amount],
-                                            purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_stripid]
+                                            purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_stripid],
+                                            purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_trialdays]
                                         )
                                     }
                                 >
@@ -763,8 +772,47 @@ const MenuPage = () => {
                                 </div>
                             </div>
                         </section>
-                    ) : null
-                    }
+                    ) : null}
+
+                    {currentMenu === 'Why Choose WA' && statu.page_status === 1 && topbardata.length > 0 ? (
+                        <section className="why_choose_section">
+                            <div className="container p-5">
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <div className="transfo">
+                                            <h5 className="text-center">
+                                                {statu.page_description}
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="container type-2">
+                                <div className="row">
+                                    {(statu.post_store || []).map((item, index) => (
+                                        <div
+                                            className={`col col-md-6 col-sm-6 col-xs-3 ${index % 2 === 0 ? "text-end" : "text-start"
+                                                }`}
+                                            key={item.id || index}
+                                        >
+                                            <h5 className="for-waste">{item.data?.Title}</h5>
+                                            <p style={{ marginTop: "25px" }}>
+                                                {item.data?.Description
+                                                    ?.split("\r\n")
+                                                    .map((line, i) => (
+                                                        <span key={i}>
+                                                            {line}
+                                                            <br />
+                                                        </span>
+                                                    ))}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </section>
+                    ) : null}
 
                     {/* {console.log(currentMenu)} */}
                     {currentMenu === 'Who Use WA' && statu.page_status === 1 ? (
