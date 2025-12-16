@@ -462,19 +462,42 @@ const Home = () => {
 
       try {
         const subscriptionCheck = await Authapi.checkUserSubscription();
-        
-        // Check if user has subscription
-        // The API should return hasSubscription: true if user exists in subscription table
-        // Handle different possible response formats
-        const hasSubscription = 
-          subscriptionCheck?.hasSubscription === true || 
+
+        // Normalize subscription payload
+        const subscription =
+          subscriptionCheck?.subscription ||
+          subscriptionCheck?.data?.subscription ||
+          subscriptionCheck?.data ||
+          null;
+
+        // Determine hasSubscription from multiple possible flags
+        const hasSubscription =
+          subscriptionCheck?.hasSubscription === true ||
           subscriptionCheck?.status === true ||
           subscriptionCheck?.data?.hasSubscription === true ||
-          (subscriptionCheck?.data && subscriptionCheck?.data?.user_id) ||
-          (subscriptionCheck?.subscription && subscriptionCheck?.subscription?.user_id);
+          (!!subscription && !!subscription.user_id);
 
-        if (hasSubscription) {
-          // User has subscription, redirect directly to company page
+        // Trial handling: if trial_ends_at is present and still in future, treat as active
+        const trialEndsAt =
+          subscription?.trial_ends_at ||
+          subscription?.trial_end ||
+          subscription?.trialEndsAt;
+
+        let isTrialActive = false;
+        if (trialEndsAt) {
+          const trialEndDate = new Date(trialEndsAt);
+          const today = new Date();
+          if (!isNaN(trialEndDate.getTime()) && trialEndDate >= today) {
+            isTrialActive = true;
+          }
+        }
+
+        // Treat active/trialing status as valid
+        const isStatusActive =
+          subscription?.status === "active" || subscription?.status === "trialing";
+
+        if (hasSubscription && (isTrialActive || isStatusActive)) {
+          // User has active subscription or active trial, go to company page
           Swal.close();
           navigate("/company");
           setLoading(false);
@@ -569,9 +592,13 @@ const Home = () => {
 
       // Modify the button text to use the fetched amount
       const buttonText = purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttontext];
-      const amount = priceDetails[priceId]?.amount
+      // const amount = priceDetails[priceId]?.amount
+      //   ? (priceDetails[priceId].amount / 100).toFixed(2) // Convert cents to dollars
+      //   : purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_amount];
+
+       const amount = priceDetails[priceId]?.amount
         ? (priceDetails[priceId].amount / 100).toFixed(2) // Convert cents to dollars
-        : purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_amount];
+        : 0 ;
 
       return (
         <div className={`col-lg-4`} id={`card${index + 1}`} key={card.Id}>
