@@ -477,29 +477,81 @@ const Home = () => {
           subscriptionCheck?.data?.hasSubscription === true ||
           (!!subscription && !!subscription.user_id);
 
-        // Trial handling: if trial_ends_at is present and still in future, treat as active
+        // Evaluate subscription validity (active or trial and not ended)
         const trialEndsAt =
           subscription?.trial_ends_at ||
           subscription?.trial_end ||
           subscription?.trialEndsAt;
+        const endsAt = subscription?.ends_at || subscription?.ended_at;
+        const stripeStatus = subscription?.stripe_status || subscription?.status;
 
-        let isTrialActive = false;
-        if (trialEndsAt) {
-          const trialEndDate = new Date(trialEndsAt);
-          const today = new Date();
-          if (!isNaN(trialEndDate.getTime()) && trialEndDate >= today) {
-            isTrialActive = true;
-          }
-        }
-
-        // Treat active/trialing status as valid
+        const today = new Date();
+        const isTrialActive =
+          trialEndsAt && !isNaN(new Date(trialEndsAt).getTime()) && new Date(trialEndsAt) >= today;
         const isStatusActive =
-          subscription?.status === "active" || subscription?.status === "trialing";
+          stripeStatus === "active" ||
+          stripeStatus === "trialing" ||
+          stripeStatus === "active_trialing";
+        const isEnded =
+          endsAt && !isNaN(new Date(endsAt).getTime()) && new Date(endsAt) <= today;
 
-        if (hasSubscription && (isTrialActive || isStatusActive)) {
-          // User has active subscription or active trial, go to company page
+        const hasValidSubscription = hasSubscription && (isTrialActive || isStatusActive) && !isEnded;
+
+        if (hasValidSubscription) {
+          // User has active subscription or active trial; decide where to resume based on existing data
+          let nextPath = "/company";
+
+          try {
+            const [companyRes, contractRes, depotRes] = await Promise.allSettled([
+              Authapi.getusercompanydetail(),
+              Authapi.getUserContractdetail(),
+              Authapi.getUserDepotdetail(),
+            ]);
+
+            const isOk = (res) =>
+              res &&
+              (res.status === 200 || res.status === true || res.status === "success");
+
+            const hasCompany =
+              companyRes.status === "fulfilled" &&
+              isOk(companyRes.value) &&
+              !!(
+                companyRes.value?.company ||
+                companyRes.value?.companies ||
+                companyRes.value?.data
+              );
+
+            const hasContract =
+              contractRes.status === "fulfilled" &&
+              isOk(contractRes.value) &&
+              !!(
+                contractRes.value?.contract ||
+                contractRes.value?.contracts ||
+                contractRes.value?.data
+              );
+
+            const hasDepot =
+              depotRes.status === "fulfilled" &&
+              isOk(depotRes.value) &&
+              !!(
+                depotRes.value?.depots ||
+                depotRes.value?.depot ||
+                depotRes.value?.data
+              );
+
+            if (hasCompany && hasContract && hasDepot) {
+              nextPath = "/site";
+            } else if (hasCompany && hasContract) {
+              nextPath = "/depot";
+            } else if (hasCompany) {
+              nextPath = "/contract";
+            }
+          } catch (progressCheckError) {
+            console.error("Progress check failed, defaulting to company page", progressCheckError);
+          }
+
           Swal.close();
-          navigate("/company");
+          navigate(nextPath);
           setLoading(false);
           return;
         }

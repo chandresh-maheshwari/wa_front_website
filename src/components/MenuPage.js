@@ -36,6 +36,7 @@ const MenuPage = () => {
     const [loading, setLoading] = useState(false);
     const [userRole, setUserRole] = useState(null);
     const [isFrontCreated, setIsFrontCreated] = useState(null);
+    const [priceDetails, setPriceDetails] = useState({});
 
 
 
@@ -192,49 +193,42 @@ const MenuPage = () => {
         const token = localStorage.getItem("WAauthToken");
         if (!token) {
             // Store purchase intent in localStorage
-            localStorage.setItem('purchaseIntent', JSON.stringify({ price_id, trail_days }));
+            localStorage.setItem("purchaseIntent", JSON.stringify({ price_id, trail_days }));
             toggleLoginPopup();
             return;
         }
+
         setLoading(true);
+
         try {
-            console.log("submit");
-            console.log(userEmail);
             let email = userEmail;
-            let Role = userRole
-            let is_front_created = isFrontCreated
-                ;
+            let Role = userRole;
+            let is_front_created = isFrontCreated;
+
             if (!email) {
                 const result = await getUserEmail();
                 console.log("testing");
                 console.log(result);
-                email = result.email;
-                Role = result.Role;
-                is_front_created = result.is_front_created;
+                email = result?.email;
+                Role = result?.Role;
+                is_front_created = result?.is_front_created;
+
                 if (!email) {
                     Swal.fire({
                         icon: "error",
                         title: "Error",
                         text: "Could not retrieve user email. Please try again.",
                     });
+                    setLoading(false);
                     return;
                 }
             }
-            console.log("AAAAAAAAAAAAAAAAAAAAAAA");
-            // console.log(8);
-            // console.log(Role !== 2);
-            // console.log(is_front_created);
-            // console.log(is_front_created === 0);
-            // console.log(8 !== 2 || is_front_created === 0);
-            console.log("BBBBBBBBBBBBBBBBBBB");
 
-            // if (Role !== 2) {
+            // Restrict access if user is not the correct role or has not created front
             if (Role !== 2 || is_front_created === 0) {
                 Swal.fire({
                     icon: "warning",
                     title: "Access Denied",
-                    // text: "You are not the right user to access this feature.",
-                    // text: "You are not authenticate user. please logout and signup / login as company user.",
                     html: `You are not authenticate user.<br>
                             Please logout and signup / login as company user.`,
                     confirmButtonText: "OK",
@@ -242,9 +236,122 @@ const MenuPage = () => {
                 setLoading(false);
                 setUserRole(null);
                 setUserEmail(null);
-
                 return;
             }
+
+            // ---------------- Subscription check logic (from Home.js) ----------------
+            try {
+                const subscriptionCheck = await Authapi.checkUserSubscription();
+
+                // Normalize subscription payload
+                const subscription =
+                    subscriptionCheck?.subscription ||
+                    subscriptionCheck?.data?.subscription ||
+                    subscriptionCheck?.data ||
+                    null;
+
+                // Determine hasSubscription from multiple possible flags
+                const hasSubscription =
+                    subscriptionCheck?.hasSubscription === true ||
+                    subscriptionCheck?.status === true ||
+                    subscriptionCheck?.data?.hasSubscription === true ||
+                    (!!subscription && !!subscription.user_id);
+
+                // Evaluate subscription validity (active or trial and not ended)
+                const trialEndsAt =
+                    subscription?.trial_ends_at ||
+                    subscription?.trial_end ||
+                    subscription?.trialEndsAt;
+                const endsAt = subscription?.ends_at || subscription?.ended_at;
+                const stripeStatus = subscription?.stripe_status || subscription?.status;
+
+                const today = new Date();
+                const isTrialActive =
+                    trialEndsAt &&
+                    !isNaN(new Date(trialEndsAt).getTime()) &&
+                    new Date(trialEndsAt) >= today;
+                const isStatusActive =
+                    stripeStatus === "active" ||
+                    stripeStatus === "trialing" ||
+                    stripeStatus === "active_trialing";
+                const isEnded =
+                    endsAt &&
+                    !isNaN(new Date(endsAt).getTime()) &&
+                    new Date(endsAt) <= today;
+
+                const hasValidSubscription =
+                    hasSubscription && (isTrialActive || isStatusActive) && !isEnded;
+
+                if (hasValidSubscription) {
+                    // User has active subscription or active trial; decide where to resume based on existing data
+                    let nextPath = "/company";
+
+                    try {
+                        const [companyRes, contractRes, depotRes] = await Promise.allSettled([
+                            Authapi.getusercompanydetail(),
+                            Authapi.getUserContractdetail(),
+                            Authapi.getUserDepotdetail(),
+                        ]);
+
+                        const isOk = (res) =>
+                            res &&
+                            (res.status === 200 ||
+                                res.status === true ||
+                                res.status === "success");
+
+                        const hasCompany =
+                            companyRes.status === "fulfilled" &&
+                            isOk(companyRes.value) &&
+                            !!(
+                                companyRes.value?.company ||
+                                companyRes.value?.companies ||
+                                companyRes.value?.data
+                            );
+
+                        const hasContract =
+                            contractRes.status === "fulfilled" &&
+                            isOk(contractRes.value) &&
+                            !!(
+                                contractRes.value?.contract ||
+                                contractRes.value?.contracts ||
+                                contractRes.value?.data
+                            );
+
+                        const hasDepot =
+                            depotRes.status === "fulfilled" &&
+                            isOk(depotRes.value) &&
+                            !!(
+                                depotRes.value?.depots ||
+                                depotRes.value?.depot ||
+                                depotRes.value?.data
+                            );
+
+                        if (hasCompany && hasContract && hasDepot) {
+                            nextPath = "/site";
+                        } else if (hasCompany && hasContract) {
+                            nextPath = "/depot";
+                        } else if (hasCompany) {
+                            nextPath = "/contract";
+                        }
+                    } catch (progressCheckError) {
+                        console.error(
+                            "Progress check failed, defaulting to company page",
+                            progressCheckError
+                        );
+                    }
+
+                    navigate(nextPath);
+                    setLoading(false);
+                    return;
+                }
+            } catch (subscriptionError) {
+                console.error(
+                    "Subscription check failed in MenuPage, continuing to checkout",
+                    subscriptionError
+                );
+            }
+            // -------------------------------------------------------------------------
+
             Swal.fire({
                 title: "Processing...",
                 text: "Please wait while we set up your payment.",
@@ -378,6 +485,45 @@ const MenuPage = () => {
         setErrors(newErrors);
     };
 
+    const fetchPriceDetails = async (priceId) => {
+        try {
+            const response = await Authapi.fetchPriceDetails(priceId);
+            return response;
+        } catch (error) {
+            console.error("Error fetching price details:", error);
+            return null;
+        }
+    };
+
+    useEffect(() => {
+        const fetchAllPriceDetails = async () => {
+            if (currentMenu === 'Our Products' && statu?.post_store) {
+                const pricePromises = statu.post_store.map(async (card) => {
+                    const purchaseButtonSection = card.data.PurchaseButton || {};
+                    const priceId = purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_stripid];
+
+                    if (priceId) {
+                        try {
+                            const details = await fetchPriceDetails(priceId);
+                            if (details) {
+                                setPriceDetails((prev) => ({
+                                    ...prev,
+                                    [priceId]: details,
+                                }));
+                            }
+                        } catch (error) {
+                            console.error("Error fetching price details:", error);
+                        }
+                    }
+                });
+
+                await Promise.all(pricePromises);
+            }
+        };
+
+        fetchAllPriceDetails();
+    }, [currentMenu, statu?.post_store]);
+
     const renderCards = () => {
         // Use index-based styling classes so layout stays consistent with existing CSS
         return (statu?.post_store || []).map((card, index) => {
@@ -386,6 +532,8 @@ const MenuPage = () => {
             const serviceSection = card.data.PackageServices || {};
             const purchaseButtonSection = card.data.PurchaseButton || {};
             const cardNumber = index + 1;
+
+            const priceId = purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_stripid];
 
             const hasContent =
                 infoSection1?.[infoSection1?.Field_Slug_information1] ||
@@ -404,6 +552,12 @@ const MenuPage = () => {
                 purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttontext];
 
             if (!hasContent) return null;
+
+            const buttonText =
+                purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttontext];
+            const amount = priceDetails[priceId]?.amount
+                ? (priceDetails[priceId].amount / 100).toFixed(2)
+                : 0;
 
             return (
                 <div className="col-lg-4" id={`card${cardNumber}`} key={card.Id || cardNumber}>
@@ -504,7 +658,7 @@ const MenuPage = () => {
                                         )
                                     }
                                 >
-                                    {`${purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_buttontext]} - $${purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_amount]}`}
+                                    {`${buttonText} - $${amount}`}
                                 </button>
                             </div>
                         )}

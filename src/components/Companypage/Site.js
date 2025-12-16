@@ -321,6 +321,61 @@ const VehicleForm = () => {
 
     const loadAll = async () => {
       try {
+        // Require an active subscription before allowing access
+        try {
+        const subscriptionCheck = await Authapi.checkUserSubscription();
+        const subscription =
+          subscriptionCheck?.subscription ||
+          subscriptionCheck?.data?.subscription ||
+          subscriptionCheck?.data ||
+          null;
+        const hasSubscription =
+          subscriptionCheck?.hasSubscription === true ||
+          subscriptionCheck?.status === true ||
+          subscriptionCheck?.data?.hasSubscription === true ||
+          (!!subscription && !!subscription.user_id);
+
+        const trialEndsAt =
+          subscription?.trial_ends_at ||
+          subscription?.trial_end ||
+          subscription?.trialEndsAt;
+        const endsAt = subscription?.ends_at || subscription?.ended_at;
+        const stripeStatus = subscription?.stripe_status || subscription?.status;
+        const today = new Date();
+        const isTrialActive =
+          trialEndsAt &&
+          !isNaN(new Date(trialEndsAt).getTime()) &&
+          new Date(trialEndsAt) >= today;
+        const isStatusActive =
+          stripeStatus === "active" ||
+          stripeStatus === "trialing" ||
+          stripeStatus === "active_trialing";
+        const isEnded =
+          endsAt && !isNaN(new Date(endsAt).getTime()) && new Date(endsAt) <= today;
+
+        const hasValidSubscription =
+          hasSubscription && (isTrialActive || isStatusActive) && !isEnded;
+
+        if (!hasValidSubscription) {
+          Swal.fire({
+            icon: "warning",
+            title: "Access Restricted",
+            text: "Please purchase a subscription to continue.",
+            confirmButtonText: "OK",
+          }).then(() => navigate("/menu/our-products"));
+          return;
+        }
+      } catch (subErr) {
+        console.error("Subscription check failed:", subErr);
+        Swal.fire({
+          icon: "error",
+          title: "Unable to verify access",
+          text: "Please try again after a moment.",
+          confirmButtonText: "OK",
+        }).then(() => navigate("/menu/our-products"));
+        return;
+      }
+
         const contractId = await fetchContractDetails();
 
         await Promise.allSettled([
