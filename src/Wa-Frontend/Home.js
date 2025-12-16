@@ -419,6 +419,7 @@ const Home = () => {
             title: "Error",
             text: "Could not retrieve user email. Please try again.",
           });
+          setLoading(false);
           return;
         }
       }
@@ -447,6 +448,46 @@ const Home = () => {
 
         return;
       }
+
+      // Check if user has an active subscription
+      Swal.fire({
+        title: "Checking subscription...",
+        text: "Please wait while we check your subscription status.",
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
+      try {
+        const subscriptionCheck = await Authapi.checkUserSubscription();
+        
+        // Check if user has subscription
+        // The API should return hasSubscription: true if user exists in subscription table
+        // Handle different possible response formats
+        const hasSubscription = 
+          subscriptionCheck?.hasSubscription === true || 
+          subscriptionCheck?.status === true ||
+          subscriptionCheck?.data?.hasSubscription === true ||
+          (subscriptionCheck?.data && subscriptionCheck?.data?.user_id) ||
+          (subscriptionCheck?.subscription && subscriptionCheck?.subscription?.user_id);
+
+        if (hasSubscription) {
+          // User has subscription, redirect directly to company page
+          Swal.close();
+          navigate("/company");
+          setLoading(false);
+          return;
+        }
+      } catch (subscriptionError) {
+        // If subscription check fails (e.g., user doesn't have subscription), continue to payment
+        console.log("No active subscription found, proceeding to payment");
+        // Close the loading dialog and continue to payment flow
+        Swal.close();
+      }
+
+      // User doesn't have subscription, proceed with Stripe checkout
       Swal.fire({
         title: "Processing...",
         text: "Please wait while we set up your payment.",

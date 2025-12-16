@@ -1146,4 +1146,29 @@ export default new (class AuthApi {
     }
   }
 
+  async checkUserSubscription() {
+    try {
+      const url = `${Config.waapiurl}${Config.authApis.checkUserSubscription}`;
+      this.setHeaders("get");
+      const authToken = ls.get("WAauthToken") || "";
+      
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+      
+      return response.data;
+    } catch (error) {
+      console.error("API Error:", error);
+      if (error.response) {
+        // If user doesn't have subscription, API might return 404 or specific error
+        return { hasSubscription: false, data: error.response.data };
+      }
+      throw error;
+    }
+  }
+
 })();
