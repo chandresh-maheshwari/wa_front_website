@@ -562,6 +562,9 @@ const Home = () => {
         Swal.close();
       }
 
+      // Ensure any previous loading dialog is closed before showing the next one
+      Swal.close();
+
       // User doesn't have subscription, proceed with Stripe checkout
       Swal.fire({
         title: "Processing...",

@@ -20,6 +20,10 @@ const Navlayout = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false); 
+    const [userRole, setUserRole] = useState(null);
+    const [isFrontCreated, setIsFrontCreated] = useState(null);
+    const [userEmail, setUserEmail] = useState(null);
+    const [hasCompanyUser, setHasCompanyUser] = useState(false);
     const allowedPageNames = Array.isArray(pagegetnav)
         ? pagegetnav.map(item => item.page_name)
         : [];
@@ -60,27 +64,35 @@ const Navlayout = () => {
     useEffect(() => {
         const savedUserData = localStorage.getItem('userData');
         const savedLoginStatus = localStorage.getItem('isLoggedIn');
-        
-        if (savedUserData && savedLoginStatus === 'true') {
-            setUserData(JSON.parse(savedUserData)); 
-            setIsLoggedIn(true);
-        } else {
-            setIsLoggedIn(false);
-        }
 
+        const initializeUser = async () => {
+            if (savedUserData && savedLoginStatus === 'true') {
+                setUserData(JSON.parse(savedUserData));
+                setIsLoggedIn(true);
+                await checkCompanyAccess();
+            } else {
+                setUserData(null);
+                setIsLoggedIn(false);
+                setHasCompanyUser(false);
+            }
+        };
+
+        initializeUser();
         fetchData();
         hardik();
 
         // Listen for login event
-        const handleUserLogin = () => {
+        const handleUserLogin = async () => {
             const updatedUserData = localStorage.getItem('userData');
             const updatedLoginStatus = localStorage.getItem('isLoggedIn');
             if (updatedUserData && updatedLoginStatus === 'true') {
                 setUserData(JSON.parse(updatedUserData));
                 setIsLoggedIn(true);
+                await checkCompanyAccess();
             } else {
                 setUserData(null);
                 setIsLoggedIn(false);
+                setHasCompanyUser(false);
             }
         };
         window.addEventListener('userLogin', handleUserLogin);
@@ -88,6 +100,78 @@ const Navlayout = () => {
             window.removeEventListener('userLogin', handleUserLogin);
         };
     }, []);
+
+    const getUserEmail = async () => {
+        try {
+            const token = localStorage.getItem("WAauthToken");
+
+            if (!token) {
+                return {};
+            }
+
+            const response = await Authapi.getUser({
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+            });
+
+            const email =
+                response?.data?.user?.email || response?.user?.email || response?.email;
+            const Role = response?.user?.user_type_id;
+            const is_front_created = response?.user?.is_front_created;
+
+            setUserRole(Role);
+            setIsFrontCreated(is_front_created);
+            if (email) {
+                setUserEmail(email);
+            }
+
+            return { email, Role, is_front_created };
+        } catch (error) {
+            console.error("Error in getUserEmail:", error);
+            return {};
+        }
+    };
+
+    const checkCompanyAccess = async () => {
+        try {
+            const companyRes = await Authapi.getusercompanydetail();
+            console.log("checkCompanyAccess response:", companyRes);
+
+            const companyUsers =
+                companyRes?.company_users ||
+                companyRes?.data?.company_users ||
+                companyRes?.companyUsers ||
+                companyRes?.data?.companyUsers;
+
+            const companyData =
+                companyRes?.company ||
+                companyRes?.companies ||
+                companyRes?.data?.company ||
+                companyRes?.data?.companies;
+
+            const hasCompanyUsers =
+                Array.isArray(companyUsers) ? companyUsers.length > 0 : !!companyUsers;
+            const hasCompany =
+                Array.isArray(companyData) ? companyData.length > 0 : !!companyData;
+
+            const isOk =
+                companyRes &&
+                (companyRes.status === 200 ||
+                    companyRes.status === true ||
+                    companyRes.status === "success");
+
+            const finalHasCompanyUser = Boolean(isOk && (hasCompanyUsers || hasCompany));
+            console.log("checkCompanyAccess resolved hasCompanyUser:", finalHasCompanyUser);
+
+            setHasCompanyUser(finalHasCompanyUser);
+        } catch (error) {
+            console.error("checkCompanyAccess error:", error);
+            setHasCompanyUser(false);
+        }
+    };
 
     const hardik = async () => {
         const response = await Authapi.Alldynamicpagegetnav();
@@ -151,6 +235,8 @@ const Navlayout = () => {
         localStorage.setItem('userData', JSON.stringify(data));
         setShowLoginPopup(false);
         // console.log('Login successful:', data);
+        // Immediately refresh company access so dropdown reflects new state without refresh
+        checkCompanyAccess();
     };
 
     const toggleDropdown = () => {
@@ -163,6 +249,7 @@ const Navlayout = () => {
             // console.log('Logout successful:', response); 
             setUserData(null);
             setIsLoggedIn(false);
+            setHasCompanyUser(false);
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('userData');
             localStorage.removeItem('WAauthToken');
@@ -183,12 +270,114 @@ const Navlayout = () => {
         navigate('/');
     };
 
-     const handleMyAccount = () => {
-          const userData = localStorage.getItem("userData");
-      const dynamicHost = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
-      const token = localStorage.getItem("WAauthToken");
-      window.location.href = `${dynamicHost}/admin/user/dashboard/?token=${token}`;
-        // navigate('/');
+    // const handleMyAccount = async () => {
+    //     try {
+    //         setIsLoading(true);
+    //         const result = await getUserEmail();
+    //         const Role = result?.Role;
+    //         const is_front_created = result?.is_front_created;
+
+    //         if (Role === 2 || is_front_created === 1) {
+    //             try {
+    //                 const companyRes = await Authapi.getusercompanydetail();
+    //                 const companyUsers =
+    //                     companyRes?.company_users ||
+    //                     companyRes?.data?.company_users ||
+    //                     companyRes?.companyUsers ||
+    //                     companyRes?.data?.companyUsers;
+    //                 const hasCompanyUser = Array.isArray(companyUsers)
+    //                     ? companyUsers.length > 0
+    //                     : !!companyUsers;
+    //                 const isOk =
+    //                     companyRes &&
+    //                     (companyRes.status === 200 ||
+    //                         companyRes.status === true ||
+    //                         companyRes.status === "success");
+
+    //                 if (isOk && hasCompanyUser) {
+    //                     const dynamicHost = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
+    //                     const token = localStorage.getItem("WAauthToken");
+    //                     window.location.href = `${dynamicHost}/admin/user/dashboard/?token=${token}`;
+    //                     return;
+    //                 }
+
+    //                 // If no company user found, prompt to purchase/ create company
+    //                 Swal.fire({
+    //                     icon: "info",
+    //                     title: "Action Required",
+    //                     html: "Purchase plan and create company after that you access admin panel",
+    //                     confirmButtonText: "OK",
+    //                 });
+    //             } catch (companyError) {
+    //                 console.error("Company check failed:", companyError);
+    //                 // Gracefully fall back to the same action-required guidance
+    //                 Swal.fire({
+    //                     icon: "info",
+    //                     title: "Action Required",
+    //                     html: "Purchase plan and create company after that you access admin panel",
+    //                     confirmButtonText: "OK",
+    //                 });
+    //             }
+    //         } else {
+    //             Swal.fire({
+    //                 icon: "warning",
+    //                 title: "Access Denied",
+    //                 text: "You need a company account to access the admin panel.",
+    //             });
+    //         }
+    //     } catch (error) {
+    //         console.error("handleMyAccount error:", error);
+    //         Swal.fire({
+    //             icon: "error",
+    //             title: "Error",
+    //             text: "Something went wrong. Please try again.",
+    //         });
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // };
+
+    const handleMyAccount = async () => {
+        try {
+            setIsLoading(true);
+
+            // Re-validate role/front flags (optional safety)
+            const result = await getUserEmail();
+            const Role = result?.Role;
+            const is_front_created = result?.is_front_created;
+
+            // if (!(Role === 2 || is_front_created === 1)) {
+            //     Swal.fire({
+            //         icon: "warning",
+            //         title: "Access Denied",
+            //         text: "You need a company account to access the admin panel.",
+            //     });
+            //     return;
+            // }
+
+            if (!hasCompanyUser) {
+                // Button should not be visible without company, but double-check
+                Swal.fire({
+                    icon: "warning",
+                    title: "Access Denied",
+                    text: "You need a company to access the admin panel.",
+                });
+                return;
+            }
+
+            const dynamicHost = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
+            const token = localStorage.getItem("WAauthToken");
+            window.location.href = `${dynamicHost}/admin/user/dashboard/?token=${token}`;
+        } catch (error) {
+            console.error("handleMyAccount error:", error);
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Something went wrong. Please try again.",
+            });
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     // const handleDashboard = async () => {
@@ -320,7 +509,9 @@ const Navlayout = () => {
                                         <div className="dropdown-menu">
                                             <button onClick={handleViewProfile}>View Profile</button>
                                             <button onClick={handleEditProfile}>Edit Profile</button>
-                                            <button onClick={handleMyAccount}>Go to Admin Dashboard</button>
+                                            {hasCompanyUser && (
+                                                <button onClick={handleMyAccount}>Go to Admin Dashboard</button>
+                                            )}
                                             <button onClick={handleLogout}>Logout</button>
                                         </div>
                                     )}
