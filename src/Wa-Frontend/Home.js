@@ -651,9 +651,9 @@ const Home = () => {
       //   ? (priceDetails[priceId].amount / 100).toFixed(2) // Convert cents to dollars
       //   : purchaseButtonSection?.[purchaseButtonSection?.Field_Slug_amount];
 
-       const amount = priceDetails[priceId]?.amount
+      const amount = priceDetails[priceId]?.amount
         ? (priceDetails[priceId].amount / 100).toFixed(2) // Convert cents to dollars
-        : 0 ;
+        : 0;
 
       return (
         <div className={`col-lg-4`} id={`card${index + 1}`} key={card.Id}>
@@ -1317,11 +1317,12 @@ const Home = () => {
         ordering: statu.page_image_section?.ordering || 0,
         content: (
           <section className="imagesection" id="parallaximagesection">
+            {console.log("Page Image Section Data:", statu.page_image_section)}
             <div className="container-fluid">
               <div className="row">
                 <div className="col-12 p-0">
                   <div
-                    className="parallax-image"
+                    className="parallax-img"
                     style={{
                       backgroundImage: `url(${statu.page_image_section?.image})`,
                     }}
