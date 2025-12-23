@@ -63,6 +63,18 @@ const Home = () => {
   const [pendingPurchaseData, setPendingPurchaseData] = useState(null);
   const [priceDetails, setPriceDetails] = useState({});
 
+    useEffect(() => {
+    document.body.classList.add("image-scrollbar");
+
+    return () => {
+      document.body.classList.remove(
+        "image-scrollbar",
+        "scrolled-top",
+        "scrolled-down"
+      );
+    };
+  }, []);
+  
   useEffect(() => {
     if (sliderRef) {
       if (isPlaying) {

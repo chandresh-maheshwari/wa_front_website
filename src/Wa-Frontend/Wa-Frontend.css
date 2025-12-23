@@ -1308,78 +1308,6 @@ footer #footer {
   } */
 
 
-/* Code for main scroller css start */
-body {
-    /* width: 250px;
-    height: 300px;
-    padding: 2px; */
-    overflow-y: scroll;
-    /* border: 2.5px solid black; */
-
-}
-
-p {
-    margin: 0;
-}
-
-/*   
-  body::-webkit-scrollbar { 
-    width: 30px; 
-  }
-
-  body::-webkit-scrollbar-track { 
-    background-color: #113b4f;
-    background: none;
-  }
-  
-
-body.scrolled-top::-webkit-scrollbar-thumb {
-    background-image: url('../Images/scroll-top.png'); 
-    background-size: cover;
-    background-position: top;
-    height: 99PX;
-}
-
-body.scrolled-down::-webkit-scrollbar-thumb {
-    background-image: url('../Images/scroll-down.png'); 
-    background-size: cover;
-    background-position: top;
-    height: 99px;
-} */
-
-
-/* / Default scrollbar styles / */
-body::-webkit-scrollbar {
-    width: 30px;
-    height: 30px;
-
-}
-
-body::-webkit-scrollbar-track {
-    background-color: #113b4f;
-    background: none;
-}
-
-body::-webkit-scrollbar-thumb {
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    transition: height 0.1s ease;
-}
-
-body.scrolled-top::-webkit-scrollbar-thumb {
-    background-image: url('../Images/scroll-top.png');
-    background-size: 290%;
-}
-
-body.scrolled-down::-webkit-scrollbar-thumb {
-    background-image: url('../Images/scroll-down.png');
-    background-size: 290%;
-}
-
-
-
-/* Code for main scroller css end */
 
 
 /* css for steps for payment integration START */
@@ -1768,7 +1696,7 @@ body.scrolled-down::-webkit-scrollbar-thumb {
 
 .tellmemore {
     background-color: #f0f5f3;
-  /* background-color: #23e99a; */
+    /* background-color: #23e99a; */
     padding-bottom: 5%;
 }
 
@@ -1794,20 +1722,145 @@ body.scrolled-down::-webkit-scrollbar-thumb {
     /* margin-top: -12% !important; */
     /* margin-left: 45%; */
 }
-.purchase-button:hover, #button1:hover, #tellmemore:hover, .Contact-us-package:hover, .blue-btn-Find-out-More:hover, .sky-blue-btn-tellmemore:hover, .sky-blue-btn-sendmeasge:hover {
+
+.purchase-button:hover,
+#button1:hover,
+#tellmemore:hover,
+.Contact-us-package:hover,
+.blue-btn-Find-out-More:hover,
+.sky-blue-btn-tellmemore:hover,
+.sky-blue-btn-sendmeasge:hover {
     color: black !important;
     border-color: #79d7ed !important;
     background-color: #fff !important;
 }
 
-.card3-sec-2-text .card-liner-inside-2{
+.card3-sec-2-text .card-liner-inside-2 {
     width: 93%;
-    margin-left: 12px; 
+    margin-left: 12px;
 }
-.card-text-container{
+
+.card-text-container {
     padding-left: 40px;
 }
 
 .medaltype {
-        margin-bottom: 5%;
+    margin-bottom: 5%;
+}
+
+ 
+
+/* Code for main scroller css start */
+/* body {
+    overflow-y: scroll;
+}
+
+p {
+    margin: 0;
+}
+
+body::-webkit-scrollbar {
+    width: 30px;
+    height: 30px;
+
+}
+
+body::-webkit-scrollbar-track {
+    background-color: #113b4f;
+    background: none;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: height 0.1s ease;
+}
+
+body.scrolled-top::-webkit-scrollbar-thumb {
+    background-image: url('../Images/scroll-top.png');
+    background-size: 290%;
+}
+
+body.scrolled-down::-webkit-scrollbar-thumb {
+    background-image: url('../Images/scroll-down.png');
+    background-size: 290%;
+} */
+
+/* ============================================================================================================================= */
+/* .MuiDataGrid-virtualScroller::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+.MuiDataGrid-virtualScroller::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+}
+
+.MuiDataGrid-virtualScroller::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+    background-color: #113B4F;
+    border-radius: 10px;
+}
+
+.MuiDataGrid-virtualScroller::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+} */
+/* ============================================================================================================================= */
+
+
+/* Code for main scroller css end */
+body.image-scrollbar {
+  overflow-y: scroll;
+}
+
+/* Width */
+body.image-scrollbar::-webkit-scrollbar {
+  width: 30px;
+}
+
+/* Track */
+body.image-scrollbar::-webkit-scrollbar-track {
+  background: none;
+}
+
+/* Thumb base */
+body.image-scrollbar::-webkit-scrollbar-thumb {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 290%;
+}
+
+/* 🔼 Scroll up */
+body.image-scrollbar.scrolled-top::-webkit-scrollbar-thumb {
+  background-image: url("../Images/scroll-top.png");
+}
+
+/* 🔽 Scroll down */
+body.image-scrollbar.scrolled-down::-webkit-scrollbar-thumb {
+  background-image: url("../Images/scroll-down.png");
+}
+
+
+
+body:not(.image-scrollbar)::-webkit-scrollbar {
+  width: 12px;
+}
+
+body:not(.image-scrollbar)::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+  border-radius: 10px;
+}
+
+body:not(.image-scrollbar)::-webkit-scrollbar-thumb {
+  background-color: #113b4f;
+  border-radius: 10px;
+}
+
+body:not(.image-scrollbar)::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
 }
