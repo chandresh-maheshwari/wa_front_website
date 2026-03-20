@@ -463,11 +463,6 @@ const Navlayout = () => {
 
     const renderLoginButton = () => {
         return Object.entries(buttonData).map(([buttonNum, data]) => {
-            // console.log("DATA=>");
-            // console.log(data[data?.Field_Slug_buttontitle2]);
-            if (isLoggedIn && data[data?.Field_Slug_buttontitle2] === 'Login') {
-                return null;
-            }
             if (data[data?.Field_Slug_buttontitle2] === 'Login') {
                 return (
                     <button
@@ -522,9 +517,9 @@ const Navlayout = () => {
                             <form className="d-flex nav-form">
                                 {renderContactUsButtons()} 
                                 {renderFreeTrialButton()}
-                                {(!isLoggedIn || !['/company', '/contract', '/depot', '/site', '/registration'].includes(window.location.pathname.toLowerCase())) && renderLoginButton()}
+                                {(!isLoggedIn || window.location.pathname === '/') && renderLoginButton()}
                             </form>
-                            {isLoggedIn && userData && ['/company', '/contract', '/depot', '/site', '/registration'].includes(window.location.pathname.toLowerCase()) && (
+                            {isLoggedIn && userData && window.location.pathname !== '/' && (
                                 <div className="user-dropdown-container" ref={dropdownRef}>
                                     <div className="user-icon" onClick={toggleDropdown}>
                                         {userData.avatar ? (
