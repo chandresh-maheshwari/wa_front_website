@@ -92,7 +92,44 @@ const Navlayout = () => {
             if (savedUserData && savedLoginStatus === 'true') {
                 setUserData(JSON.parse(savedUserData));
                 setIsLoggedIn(true);
-                await checkCompanyAccess();
+
+                let hasValidSubscription = false;
+                try {
+                    const subscriptionCheck = await Authapi.checkUserSubscription();
+                    const subscription = subscriptionCheck?.subscription || subscriptionCheck?.data?.subscription || subscriptionCheck?.data || null;
+                    const hasSubscription = subscriptionCheck?.hasSubscription === true || subscriptionCheck?.status === true || subscriptionCheck?.data?.hasSubscription === true || (!!subscription && !!subscription.user_id);
+                    
+                    const trialEndsAt = subscription?.trial_ends_at || subscription?.trial_end || subscription?.trialEndsAt;
+                    const endsAt = subscription?.ends_at || subscription?.ended_at;
+                    const stripeStatus = subscription?.stripe_status || subscription?.status;
+                    
+                    const today = new Date();
+                    const isTrialActive = trialEndsAt && !isNaN(new Date(trialEndsAt).getTime()) && new Date(trialEndsAt) >= today;
+                    const isStatusActive = stripeStatus === "active" || stripeStatus === "trialing" || stripeStatus === "active_trialing";
+                    const isEnded = endsAt && !isNaN(new Date(endsAt).getTime()) && new Date(endsAt) <= today;
+                    
+                    hasValidSubscription = hasSubscription && (isTrialActive || isStatusActive) && !isEnded;
+                } catch (error) {
+                    console.error("subscription error:", error);
+                }
+
+                const currentPath = window.location.pathname.toLowerCase();
+                const isOnOurProductsPage = currentPath.includes('/menu/our-products') || currentPath.includes('/menu/our-product');
+
+                if (!hasValidSubscription) {
+                    if (!isOnOurProductsPage) {
+                        navigate('/menu/our-products');
+                    }
+                } else {
+                    const hasCompany = await checkCompanyAccess();
+                    const dynamicHost = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
+                    const token = localStorage.getItem("WAauthToken");
+                    if (hasCompany) {
+                        window.location.href = `${dynamicHost}/admin/user/dashboard/?token=${token}`;
+                    } else {
+                        navigate('/company');
+                    }
+                }
             } else {
                 setUserData(null);
                 setIsLoggedIn(false);
@@ -111,8 +148,49 @@ const Navlayout = () => {
             if (updatedUserData && updatedLoginStatus === 'true') {
                 setUserData(JSON.parse(updatedUserData));
                 setIsLoggedIn(true);
-                await checkCompanyAccess();
+               // await checkCompanyAccess(); // old code 
+                // New code start
+
+                let hasValidSubscription = false;
+                try {
+                    const subscriptionCheck = await Authapi.checkUserSubscription();
+                    const subscription = subscriptionCheck?.subscription || subscriptionCheck?.data?.subscription || subscriptionCheck?.data || null;
+                    const hasSubscription = subscriptionCheck?.hasSubscription === true || subscriptionCheck?.status === true || subscriptionCheck?.data?.hasSubscription === true || (!!subscription && !!subscription.user_id);
+                    
+                    const trialEndsAt = subscription?.trial_ends_at || subscription?.trial_end || subscription?.trialEndsAt;
+                    const endsAt = subscription?.ends_at || subscription?.ended_at;
+                    const stripeStatus = subscription?.stripe_status || subscription?.status;
+                    
+                    const today = new Date();
+                    const isTrialActive = trialEndsAt && !isNaN(new Date(trialEndsAt).getTime()) && new Date(trialEndsAt) >= today;
+                    const isStatusActive = stripeStatus === "active" || stripeStatus === "trialing" || stripeStatus === "active_trialing";
+                    const isEnded = endsAt && !isNaN(new Date(endsAt).getTime()) && new Date(endsAt) <= today;
+                    
+                    hasValidSubscription = hasSubscription && (isTrialActive || isStatusActive) && !isEnded;
+                } catch (error) {
+                    console.error("subscription error:", error);
+                }
+
+                const currentPath = window.location.pathname.toLowerCase();
+                const isOnOurProductsPage = currentPath.includes('/menu/our-products') || currentPath.includes('/menu/our-product');
+
+                if (!hasValidSubscription) {
+                    if (!isOnOurProductsPage) {
+                        navigate('/menu/our-products');
+                    }
+                } else {
+                    const hasCompany = await checkCompanyAccess();
+                    const dynamicHost = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
+                    const token = localStorage.getItem("WAauthToken");
+                    if (hasCompany) {
+                        window.location.href = `${dynamicHost}/admin/user/dashboard/?token=${token}`;
+                    } else {
+                        navigate('/company');
+                    }
+                }
             } else {
+                // New code end
+
                 setUserData(null);
                 setIsLoggedIn(false);
                 setHasCompanyUser(false);
@@ -190,9 +268,11 @@ const Navlayout = () => {
             console.log("checkCompanyAccess resolved hasCompanyUser:", finalHasCompanyUser);
 
             setHasCompanyUser(finalHasCompanyUser);
+            return finalHasCompanyUser;
         } catch (error) {
             console.error("checkCompanyAccess error:", error);
             setHasCompanyUser(false);
+            return false;
         }
     };
 
