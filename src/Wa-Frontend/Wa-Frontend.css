@@ -1752,7 +1752,7 @@ footer #footer {
     margin-bottom: 5%;
 }
 
- 
+
 
 /* Code for main scroller css start */
 /* body {
@@ -1819,56 +1819,64 @@ body::-webkit-scrollbar-thumb:hover {
 
 /* Code for main scroller css end */
 body.image-scrollbar {
-  overflow-y: scroll;
+    overflow-y: scroll;
 }
 
 /* Width */
 body.image-scrollbar::-webkit-scrollbar {
-  width: 30px;
+    width: 30px;
 }
 
 /* Track */
 body.image-scrollbar::-webkit-scrollbar-track {
-  background: none;
+    background: none;
 }
 
 /* Thumb base */
 body.image-scrollbar::-webkit-scrollbar-thumb {
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 290%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 290%;
 }
 
 /* 🔼 Scroll up */
 body.image-scrollbar.scrolled-top::-webkit-scrollbar-thumb {
-  background-image: url("../Images/scroll-top.png");
+    background-image: url("../Images/scroll-top.png");
 }
 
 /* 🔽 Scroll down */
 body.image-scrollbar.scrolled-down::-webkit-scrollbar-thumb {
-  background-image: url("../Images/scroll-down.png");
+    background-image: url("../Images/scroll-down.png");
 }
 
 
 
 body:not(.image-scrollbar)::-webkit-scrollbar {
-  width: 12px;
+    width: 12px;
 }
 
 body:not(.image-scrollbar)::-webkit-scrollbar-track {
-  background-color: #f1f1f1;
-  border-radius: 10px;
+    background-color: #f1f1f1;
+    border-radius: 10px;
 }
 
 body:not(.image-scrollbar)::-webkit-scrollbar-thumb {
-  background-color: #113b4f;
-  border-radius: 10px;
+    background-color: #113b4f;
+    border-radius: 10px;
 }
 
 body:not(.image-scrollbar)::-webkit-scrollbar-thumb:hover {
-  background-color: #555;
+    background-color: #555;
 }
 
-.nav-form{
+.nav-form {
     padding-right: 8px;
+}
+
+.sign-up {
+    padding: 3%;
+    background-color: #0d3b66;
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px #0000001a;
 }

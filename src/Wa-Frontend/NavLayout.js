@@ -76,7 +76,8 @@ const Navlayout = () => {
              style={{
                 backgroundColor: "rgb(44, 157, 212)",
                 color: "rgb(255, 255, 255)",
-                marginLeft: '10px'
+                marginLeft: '10px',
+                borderColor: "rgb(255, 255, 255)"
             }}
         >
             Free Trial
@@ -92,44 +93,6 @@ const Navlayout = () => {
             if (savedUserData && savedLoginStatus === 'true') {
                 setUserData(JSON.parse(savedUserData));
                 setIsLoggedIn(true);
-
-                let hasValidSubscription = false;
-                try {
-                    const subscriptionCheck = await Authapi.checkUserSubscription();
-                    const subscription = subscriptionCheck?.subscription || subscriptionCheck?.data?.subscription || subscriptionCheck?.data || null;
-                    const hasSubscription = subscriptionCheck?.hasSubscription === true || subscriptionCheck?.status === true || subscriptionCheck?.data?.hasSubscription === true || (!!subscription && !!subscription.user_id);
-                    
-                    const trialEndsAt = subscription?.trial_ends_at || subscription?.trial_end || subscription?.trialEndsAt;
-                    const endsAt = subscription?.ends_at || subscription?.ended_at;
-                    const stripeStatus = subscription?.stripe_status || subscription?.status;
-                    
-                    const today = new Date();
-                    const isTrialActive = trialEndsAt && !isNaN(new Date(trialEndsAt).getTime()) && new Date(trialEndsAt) >= today;
-                    const isStatusActive = stripeStatus === "active" || stripeStatus === "trialing" || stripeStatus === "active_trialing";
-                    const isEnded = endsAt && !isNaN(new Date(endsAt).getTime()) && new Date(endsAt) <= today;
-                    
-                    hasValidSubscription = hasSubscription && (isTrialActive || isStatusActive) && !isEnded;
-                } catch (error) {
-                    console.error("subscription error:", error);
-                }
-
-                const currentPath = window.location.pathname.toLowerCase();
-                const isOnOurProductsPage = currentPath.includes('/menu/our-products') || currentPath.includes('/menu/our-product');
-
-                if (!hasValidSubscription) {
-                    if (!isOnOurProductsPage) {
-                        navigate('/menu/our-products');
-                    }
-                } else {
-                    const hasCompany = await checkCompanyAccess();
-                    const dynamicHost = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
-                    const token = localStorage.getItem("WAauthToken");
-                    if (hasCompany) {
-                        window.location.href = `${dynamicHost}/admin/user/dashboard/?token=${token}`;
-                    } else {
-                        navigate('/company');
-                    }
-                }
             } else {
                 setUserData(null);
                 setIsLoggedIn(false);
@@ -148,49 +111,9 @@ const Navlayout = () => {
             if (updatedUserData && updatedLoginStatus === 'true') {
                 setUserData(JSON.parse(updatedUserData));
                 setIsLoggedIn(true);
-               // await checkCompanyAccess(); // old code 
-                // New code start
-
-                let hasValidSubscription = false;
-                try {
-                    const subscriptionCheck = await Authapi.checkUserSubscription();
-                    const subscription = subscriptionCheck?.subscription || subscriptionCheck?.data?.subscription || subscriptionCheck?.data || null;
-                    const hasSubscription = subscriptionCheck?.hasSubscription === true || subscriptionCheck?.status === true || subscriptionCheck?.data?.hasSubscription === true || (!!subscription && !!subscription.user_id);
-                    
-                    const trialEndsAt = subscription?.trial_ends_at || subscription?.trial_end || subscription?.trialEndsAt;
-                    const endsAt = subscription?.ends_at || subscription?.ended_at;
-                    const stripeStatus = subscription?.stripe_status || subscription?.status;
-                    
-                    const today = new Date();
-                    const isTrialActive = trialEndsAt && !isNaN(new Date(trialEndsAt).getTime()) && new Date(trialEndsAt) >= today;
-                    const isStatusActive = stripeStatus === "active" || stripeStatus === "trialing" || stripeStatus === "active_trialing";
-                    const isEnded = endsAt && !isNaN(new Date(endsAt).getTime()) && new Date(endsAt) <= today;
-                    
-                    hasValidSubscription = hasSubscription && (isTrialActive || isStatusActive) && !isEnded;
-                } catch (error) {
-                    console.error("subscription error:", error);
-                }
-
-                const currentPath = window.location.pathname.toLowerCase();
-                const isOnOurProductsPage = currentPath.includes('/menu/our-products') || currentPath.includes('/menu/our-product');
-
-                if (!hasValidSubscription) {
-                    if (!isOnOurProductsPage) {
-                        navigate('/menu/our-products');
-                    }
-                } else {
-                    const hasCompany = await checkCompanyAccess();
-                    const dynamicHost = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
-                    const token = localStorage.getItem("WAauthToken");
-                    if (hasCompany) {
-                        window.location.href = `${dynamicHost}/admin/user/dashboard/?token=${token}`;
-                    } else {
-                        navigate('/company');
-                    }
-                }
+                // When explicitly logging in via event (from popup), we can check company access and redirect 
+                // OR we can just let handleLoginSuccess handle the navigation.
             } else {
-                // New code end
-
                 setUserData(null);
                 setIsLoggedIn(false);
                 setHasCompanyUser(false);
@@ -599,9 +522,9 @@ const Navlayout = () => {
                             <form className="d-flex nav-form">
                                 {renderContactUsButtons()} 
                                 {renderFreeTrialButton()}
-                                {!isLoggedIn && renderLoginButton()}
+                                {(!isLoggedIn || !['/company', '/contract', '/depot', '/site', '/registration'].includes(window.location.pathname.toLowerCase())) && renderLoginButton()}
                             </form>
-                            {isLoggedIn && userData && (
+                            {isLoggedIn && userData && ['/company', '/contract', '/depot', '/site', '/registration'].includes(window.location.pathname.toLowerCase()) && (
                                 <div className="user-dropdown-container" ref={dropdownRef}>
                                     <div className="user-icon" onClick={toggleDropdown}>
                                         {userData.avatar ? (
@@ -617,6 +540,7 @@ const Navlayout = () => {
                                         <div className="dropdown-menu">
                                             <button onClick={handleViewProfile}>View Profile</button>
                                             <button onClick={handleEditProfile}>Edit Profile</button>
+                                            {/* We can temporarily hide Go to Admin Dashboard if needed or leave it */}
                                             {hasCompanyUser && (
                                                 <button onClick={handleMyAccount}>Go to Admin Dashboard</button>
                                             )}

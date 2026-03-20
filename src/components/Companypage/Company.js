@@ -149,53 +149,57 @@ const Company = () => {
 
     const fetchDataForCompanyDetail = async () => {
       try {
-        // Require an active subscription before allowing access
+        // Require an active subscription before allowing access (unless just returning from Stripe)
         try {
-          const subscriptionCheck = await Authapi.checkUserSubscription();
-          const subscription =
-            subscriptionCheck?.subscription ||
-            subscriptionCheck?.data?.subscription ||
-            subscriptionCheck?.data ||
-            null;
-          const hasSubscription =
-            subscriptionCheck?.hasSubscription === true ||
-            subscriptionCheck?.status === true ||
-            subscriptionCheck?.data?.hasSubscription === true ||
-            (!!subscription && !!subscription.user_id);
+          const queryParams = new URLSearchParams(window.location.search);
+          const isSuccess = queryParams.get("success") === "true";
 
-          const trialEndsAt =
-            subscription?.trial_ends_at ||
-            subscription?.trial_end ||
-            subscription?.trialEndsAt;
-          const endsAt = subscription?.ends_at || subscription?.ended_at;
-          const stripeStatus = subscription?.stripe_status || subscription?.status;
-          const today = new Date();
-          const isTrialActive =
-            trialEndsAt &&
-            !isNaN(new Date(trialEndsAt).getTime()) &&
-            new Date(trialEndsAt) >= today;
-          const isStatusActive =
-            stripeStatus === "active" ||
-            stripeStatus === "trialing" ||
-            stripeStatus === "active_trialing";
-          const isEnded =
-            endsAt && !isNaN(new Date(endsAt).getTime()) && new Date(endsAt) <= today;
+          if (!isSuccess) {
+            const subscriptionCheck = await Authapi.checkUserSubscription();
+            const subscription =
+              subscriptionCheck?.subscription ||
+              subscriptionCheck?.data?.subscription ||
+              subscriptionCheck?.data ||
+              null;
+            const hasSubscription =
+              subscriptionCheck?.hasSubscription === true ||
+              subscriptionCheck?.status === true ||
+              subscriptionCheck?.data?.hasSubscription === true ||
+              (!!subscription && !!subscription.user_id);
 
-          const hasValidSubscription =
-            hasSubscription && (isTrialActive || isStatusActive) && !isEnded;
+            const trialEndsAt =
+              subscription?.trial_ends_at ||
+              subscription?.trial_end ||
+              subscription?.trialEndsAt;
+            const endsAt = subscription?.ends_at || subscription?.ended_at;
+            const stripeStatus = subscription?.stripe_status || subscription?.status;
+            const today = new Date();
+            const isTrialActive =
+              trialEndsAt &&
+              !isNaN(new Date(trialEndsAt).getTime()) &&
+              new Date(trialEndsAt) >= today;
+            const isStatusActive =
+              stripeStatus === "active" ||
+              stripeStatus === "trialing" ||
+              stripeStatus === "active_trialing";
+            const isEnded =
+              endsAt && !isNaN(new Date(endsAt).getTime()) && new Date(endsAt) <= today;
 
-          if (!hasValidSubscription) {
-            if (isMounted) {
-              setHasAccess(false);
-              setCheckingAccess(false);
-              Swal.fire({
-                icon: "warning",
-                title: "Access Restricted",
-                text: "Please purchase a subscription to continue.",
-                confirmButtonText: "OK",
-              }).then(() => navigate("/menu/our-products"));
+            const hasValidSubscription =
+              hasSubscription && (isTrialActive || isStatusActive) && !isEnded;
+            if (!hasValidSubscription) {
+              if (isMounted) {
+                setHasAccess(false);
+                setCheckingAccess(false);
+                Swal.fire({
+                  icon: "warning",
+                  title: "Access Restricted",
+                  text: "Please purchase a subscription to continue.",
+                  confirmButtonText: "OK",
+                }).then(() => navigate("/menu/our-products"));
+              }
+              return;
             }
-            return;
           }
           if (isMounted) setHasAccess(true);
         } catch (subErr) {
@@ -392,24 +396,24 @@ const Company = () => {
       if (/^\d{0,12}$/.test(value)) {
         setFormData({ ...formData, [name]: value });
 
-          if (value.length === 0) {
-            setFormErrors({
-              ...formErrors,
-              contactNumber: "Phone Number is required",
-            });
-          } else if (value.length < 10) {
-            setFormErrors({
-              ...formErrors,
-              contactNumber: "Phone Number must be at least 10 digits",
-            });
-          } else if (value.length > 12) {
-            setFormErrors({
-              ...formErrors,
-              contactNumber: "Phone Number must not exceed 12 digits",
-            });
-          } else {
-            setFormErrors({ ...formErrors, contactNumber: "" });
-          }
+        if (value.length === 0) {
+          setFormErrors({
+            ...formErrors,
+            contactNumber: "Phone Number is required",
+          });
+        } else if (value.length < 10) {
+          setFormErrors({
+            ...formErrors,
+            contactNumber: "Phone Number must be at least 10 digits",
+          });
+        } else if (value.length > 12) {
+          setFormErrors({
+            ...formErrors,
+            contactNumber: "Phone Number must not exceed 12 digits",
+          });
+        } else {
+          setFormErrors({ ...formErrors, contactNumber: "" });
+        }
       }
     } else {
       setFormData({ ...formData, [name]: value });
@@ -879,7 +883,7 @@ const Company = () => {
                             value={formData.contactNumber}
                             onChange={handleInputChange}
                             required
-                            placeholder="Company Telephone"   
+                            placeholder="Company Telephone"
                           />
                           {formErrors.contactNumber && (
                             <div className="invalid-feedback">
@@ -891,7 +895,7 @@ const Company = () => {
                     </div>
 
                     <div className="form-row">
-                      
+
 
                       <div className="form-group col-md-6">
                         <div className="input-with-icon">
@@ -925,7 +929,7 @@ const Company = () => {
                           )}
                         </div>
                       </div>
-                       <div className="form-group col-md-6"></div>
+                      <div className="form-group col-md-6"></div>
                       {/* <div className="form-group col-md-6">
                         <div className="input-with-icon">
                           <label className="label">Company Active</label>
@@ -992,13 +996,14 @@ const Company = () => {
               className="btn next btn-primary"
             >
               <Tooltip title="Click 'Submit' to save your company details." arrow>
-              <span>Next Step</span>
+                <span>Next Step</span>
               </Tooltip>{" "}
             </button>
           </div>
           <Tooltip place="top" type="dark" effect="solid" event="click" />
         </>
       )}
+
     </>
   );
 };

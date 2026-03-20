@@ -194,72 +194,38 @@ const MenuPage = () => {
         if (!token) {
             // Store purchase intent in localStorage
             localStorage.setItem("purchaseIntent", JSON.stringify({ price_id, trail_days }));
-            // toggleLoginPopup(); //old code
             localStorage.setItem("returnUrl", window.location.pathname + window.location.search);
             navigate('/registration');
             return;
         }
 
         setLoading(true);
-
         try {
-            let email = userEmail;
-            let Role = userRole;
-            let is_front_created = isFrontCreated;
+            Swal.fire({
+                title: "Checking status...",
+                text: "Please wait while we verify your account.",
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+            });
 
-            if (!email) {
-                const result = await getUserEmail();
-                console.log("testing");
-                console.log(result);
-                email = result?.email;
-                Role = result?.Role;
-                is_front_created = result?.is_front_created;
-
-                if (!email) {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error",
-                        text: "Could not retrieve user email. Please try again.",
-                    });
-                    setLoading(false);
-                    return;
-                }
-            }
-
-            // Restrict access if user is not the correct role or has not created front
-            if (Role !== 2 || is_front_created === 0) {
-                Swal.fire({
-                    icon: "warning",
-                    title: "Access Denied",
-                    html: `You are not authenticate user.<br>
-                            Please logout and signup / login as company user.`,
-                    confirmButtonText: "OK",
-                });
-                setLoading(false);
-                setUserRole(null);
-                setUserEmail(null);
-                return;
-            }
-
-            // ---------------- Subscription check logic (from Home.js) ----------------
+            // Check if user already has an active subscription
             try {
                 const subscriptionCheck = await Authapi.checkUserSubscription();
-
-                // Normalize subscription payload
                 const subscription =
                     subscriptionCheck?.subscription ||
                     subscriptionCheck?.data?.subscription ||
                     subscriptionCheck?.data ||
                     null;
 
-                // Determine hasSubscription from multiple possible flags
                 const hasSubscription =
                     subscriptionCheck?.hasSubscription === true ||
                     subscriptionCheck?.status === true ||
                     subscriptionCheck?.data?.hasSubscription === true ||
                     (!!subscription && !!subscription.user_id);
 
-                // Evaluate subscription validity (active or trial and not ended)
                 const trialEndsAt =
                     subscription?.trial_ends_at ||
                     subscription?.trial_end ||
@@ -285,9 +251,8 @@ const MenuPage = () => {
                     hasSubscription && (isTrialActive || isStatusActive) && !isEnded;
 
                 if (hasValidSubscription) {
-                    // User has active subscription or active trial; decide where to resume based on existing data
+                    // Decide where to resume based on existing data
                     let nextPath = "/company";
-
                     try {
                         const [companyRes, contractRes, depotRes] = await Promise.allSettled([
                             Authapi.getusercompanydetail(),
@@ -336,23 +301,17 @@ const MenuPage = () => {
                             nextPath = "/contract";
                         }
                     } catch (progressCheckError) {
-                        console.error(
-                            "Progress check failed, defaulting to company page",
-                            progressCheckError
-                        );
+                        console.error("Progress check failed, defaulting to company page", progressCheckError);
                     }
 
+                    Swal.close();
                     navigate(nextPath);
                     setLoading(false);
                     return;
                 }
             } catch (subscriptionError) {
-                console.error(
-                    "Subscription check failed in MenuPage, continuing to checkout",
-                    subscriptionError
-                );
+                console.log("No active subscription found, proceeding to payment");
             }
-            // -------------------------------------------------------------------------
 
             Swal.fire({
                 title: "Processing...",
@@ -365,15 +324,17 @@ const MenuPage = () => {
             });
 
             const response = await Authapi.createsub(price_id, trail_days);
-            window.location.href = response.checkout_url;
+            if (response && response.checkout_url) {
+                window.location.href = response.checkout_url;
+            } else {
+                throw new Error("Invalid response from server");
+            }
         } catch (error) {
             console.error("Purchase Error:", error);
             Swal.fire({
                 icon: "error",
                 title: "Payment Error",
-                text:
-                    error.message ||
-                    "There was an error processing your payment. Please try again.",
+                text: error.message || "There was an error processing your payment. Please try again.",
                 background: "#f8f9fa",
                 showConfirmButton: true,
                 confirmButtonText: "OK",

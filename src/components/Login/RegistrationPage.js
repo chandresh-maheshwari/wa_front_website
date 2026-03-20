@@ -375,7 +375,7 @@ const RegistrationPage = () => {
               </div>
 
               <div className="company-setup-container mt-1 pt-3 d-flex justify-content-center">
-                <button type="submit" className="btn next btn-primary px-5">
+                <button type="submit" className="btn sign-up btn-primary px-5">
                   Sign Up
                 </button>
               </div>
