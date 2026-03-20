@@ -1194,10 +1194,14 @@ footer #footer {
 }
 
 .user-icon {
-    display: flex;
+    /* display: flex;
     align-items: center;
     gap: 8px;
-    padding: 5px;
+    padding: 5px; */
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 0px;
 }
 
 
@@ -1863,4 +1867,8 @@ body:not(.image-scrollbar)::-webkit-scrollbar-thumb {
 
 body:not(.image-scrollbar)::-webkit-scrollbar-thumb:hover {
   background-color: #555;
+}
+
+.nav-form{
+    padding-right: 8px;
 }

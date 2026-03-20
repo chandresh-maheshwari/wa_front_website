@@ -28,6 +28,8 @@ const Navlayout = () => {
         ? pagegetnav.map(item => item.page_name)
         : [];
     const [isLoading, setIsLoading] = useState(false);
+    const baseUrl = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
+    const baseUrlFront = `${window.location.protocol}//${window.location.host}`;
 
     const renderContactUsButtons = () => {
         return Object.entries(buttonData).map(([buttonNum, data]) => {
@@ -60,6 +62,27 @@ const Navlayout = () => {
             return null;
         });
     };
+
+    const renderFreeTrialButton = () => {
+    return (
+        <button
+            type="button"
+            className="btn btn-warning"
+            // style={{ marginLeft: '10px' }}
+            onClick={() => {
+                // window.location.href = "http://localhost:3000/menu/our-products";
+                window.location.href = `${baseUrlFront}/menu/our-products`;
+            }}
+             style={{
+                backgroundColor: "rgb(44, 157, 212)",
+                color: "rgb(255, 255, 255)",
+                marginLeft: '10px'
+            }}
+        >
+            Free Trial
+        </button>
+    );
+};
 
     useEffect(() => {
         const savedUserData = localStorage.getItem('userData');
@@ -448,7 +471,11 @@ const Navlayout = () => {
                         key={buttonNum}
                         type="button"
                         className="btn btn-outline-light"
-                        onClick={toggleLoginPopup}
+                        // onClick={toggleLoginPopup}
+                        onClick={() => {
+                            // window.location.href = "http://walara.localhost.com/admin/login";
+                            window.location.href = `${baseUrl}/admin/login`;
+                        }}
                         id={`button${buttonNum}`}
                         style={{
                             backgroundColor: data[data?.Field_Slug_buttonbackgroundcolor2] || '',
@@ -489,8 +516,9 @@ const Navlayout = () => {
                             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                                 {renderMenuItems()}
                             </ul>
-                            <form className="d-flex">
+                            <form className="d-flex nav-form">
                                 {renderContactUsButtons()} 
+                                {renderFreeTrialButton()}
                                 {!isLoggedIn && renderLoginButton()}
                             </form>
                             {isLoggedIn && userData && (

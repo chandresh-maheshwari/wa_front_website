@@ -129,7 +129,7 @@ const OurProducts = () => {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button type="button" onClick={() => navigate("/Contact")} className="btn sky-blue-btn">Contact Us</button>
+                            <button type="button" onClick={() => navigate("/registration")} className="btn sky-blue-btn">Register Now</button>
                         </div>
                     </div>
 

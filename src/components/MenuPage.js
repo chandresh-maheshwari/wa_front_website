@@ -194,7 +194,9 @@ const MenuPage = () => {
         if (!token) {
             // Store purchase intent in localStorage
             localStorage.setItem("purchaseIntent", JSON.stringify({ price_id, trail_days }));
-            toggleLoginPopup();
+            // toggleLoginPopup(); //old code
+            localStorage.setItem("returnUrl", window.location.pathname + window.location.search);
+            navigate('/registration');
             return;
         }
 
@@ -416,6 +418,8 @@ const MenuPage = () => {
     useEffect(() => {
         fetchData();
     }, [currentMenu]);
+
+
 
     const fetchData = async () => {
         setIsLoading(true);
