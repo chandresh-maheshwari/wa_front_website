@@ -12,7 +12,7 @@ import TopNav from "./Wa-Frontend/TopNav";
 import Footer from "./Wa-Frontend/Footer";
 import MenuPage from "./components/MenuPage";
 import NoPage from "./NoPage";
-// import ProductRegistration from "./Wa-Frontend/Our Products/ProductRegistration";
+// import ProductRegistration from "./Wa-Frontend/OurProducts/ProductRegistration";
 import RegistrationPage from "./components/Login/RegistrationPage";
 
 // Protected pages

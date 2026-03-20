@@ -1,11 +1,11 @@
-import plushicon from '../Our Products/Ourproductimages/plush.png';
-import righticon from '../Our Products/Ourproductimages/righticon.png';
+import plushicon from '../OurProducts/Ourproductimages/plush.png';
+import righticon from '../OurProducts/Ourproductimages/righticon.png';
 import { useNavigate } from "react-router-dom";
 
 
 const OurProducts = () => {
 
-     const navigate = useNavigate();
+    const navigate = useNavigate();
     const cardTextStyle = {
         display: 'flex',
         alignItems: 'center',
