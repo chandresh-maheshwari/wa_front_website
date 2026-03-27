@@ -28,6 +28,8 @@ const Navlayout = () => {
         ? pagegetnav.map(item => item.page_name)
         : [];
     const [isLoading, setIsLoading] = useState(false);
+    const baseUrl = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
+    const baseUrlFront = `${window.location.protocol}//${window.location.host}`;
 
     const renderContactUsButtons = () => {
         return Object.entries(buttonData).map(([buttonNum, data]) => {
@@ -61,6 +63,29 @@ const Navlayout = () => {
         });
     };
 
+    const renderFreeTrialButton = () => {
+    return (
+        <button
+            type="button"
+            className="btn btn-warning"
+            // style={{ marginLeft: '10px' }}
+            onClick={() => {
+                // window.location.href = "http://localhost:3000/menu/our-products";
+                window.location.href = `${baseUrlFront}/menu/our-products`;
+            }}
+             style={{
+                backgroundColor: "rgb(44, 157, 212)",
+                color: "rgb(255, 255, 255)",
+                marginLeft: '10px',
+                borderColor: "rgb(255, 255, 255)"
+            }}
+        >
+            Free Trial
+            
+        </button>
+    );
+};
+
     useEffect(() => {
         const savedUserData = localStorage.getItem('userData');
         const savedLoginStatus = localStorage.getItem('isLoggedIn');
@@ -69,7 +94,6 @@ const Navlayout = () => {
             if (savedUserData && savedLoginStatus === 'true') {
                 setUserData(JSON.parse(savedUserData));
                 setIsLoggedIn(true);
-                await checkCompanyAccess();
             } else {
                 setUserData(null);
                 setIsLoggedIn(false);
@@ -88,7 +112,8 @@ const Navlayout = () => {
             if (updatedUserData && updatedLoginStatus === 'true') {
                 setUserData(JSON.parse(updatedUserData));
                 setIsLoggedIn(true);
-                await checkCompanyAccess();
+                // When explicitly logging in via event (from popup), we can check company access and redirect 
+                // OR we can just let handleLoginSuccess handle the navigation.
             } else {
                 setUserData(null);
                 setIsLoggedIn(false);
@@ -167,9 +192,11 @@ const Navlayout = () => {
             console.log("checkCompanyAccess resolved hasCompanyUser:", finalHasCompanyUser);
 
             setHasCompanyUser(finalHasCompanyUser);
+            return finalHasCompanyUser;
         } catch (error) {
             console.error("checkCompanyAccess error:", error);
             setHasCompanyUser(false);
+            return false;
         }
     };
 
@@ -437,18 +464,17 @@ const Navlayout = () => {
 
     const renderLoginButton = () => {
         return Object.entries(buttonData).map(([buttonNum, data]) => {
-            // console.log("DATA=>");
-            // console.log(data[data?.Field_Slug_buttontitle2]);
-            if (isLoggedIn && data[data?.Field_Slug_buttontitle2] === 'Login') {
-                return null;
-            }
             if (data[data?.Field_Slug_buttontitle2] === 'Login') {
                 return (
                     <button
                         key={buttonNum}
                         type="button"
                         className="btn btn-outline-light"
-                        onClick={toggleLoginPopup}
+                        // onClick={toggleLoginPopup}
+                        onClick={() => {
+                            // window.location.href = "http://walara.localhost.com/admin/login";
+                            window.location.href = `${baseUrl}/admin/login`;
+                        }}
                         id={`button${buttonNum}`}
                         style={{
                             backgroundColor: data[data?.Field_Slug_buttonbackgroundcolor2] || '',
@@ -489,11 +515,12 @@ const Navlayout = () => {
                             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                                 {renderMenuItems()}
                             </ul>
-                            <form className="d-flex">
+                            <form className="d-flex nav-form">
                                 {renderContactUsButtons()} 
-                                {!isLoggedIn && renderLoginButton()}
+                                {renderFreeTrialButton()}
+                                {(!isLoggedIn || window.location.pathname === '/') && renderLoginButton()}
                             </form>
-                            {isLoggedIn && userData && (
+                            {isLoggedIn && userData && window.location.pathname !== '/' && (
                                 <div className="user-dropdown-container" ref={dropdownRef}>
                                     <div className="user-icon" onClick={toggleDropdown}>
                                         {userData.avatar ? (
@@ -509,6 +536,7 @@ const Navlayout = () => {
                                         <div className="dropdown-menu">
                                             <button onClick={handleViewProfile}>View Profile</button>
                                             <button onClick={handleEditProfile}>Edit Profile</button>
+                                            {/* We can temporarily hide Go to Admin Dashboard if needed or leave it */}
                                             {hasCompanyUser && (
                                                 <button onClick={handleMyAccount}>Go to Admin Dashboard</button>
                                             )}

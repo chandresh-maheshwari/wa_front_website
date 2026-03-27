@@ -8,7 +8,7 @@ import Contact from "./Contactus/Contact us";
 // import buldingimag from '../Images/bulding.png';
 import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
-// import OurProducts from './Our Products/OurProducts';
+// import OurProducts from './OurProducts/OurProducts';
 import { useNavigate, Link } from "react-router-dom";
 import Authapi from "../Authapi";
 import plushicon from "./Ourproductimages/plush.png";
@@ -63,7 +63,7 @@ const Home = () => {
   const [pendingPurchaseData, setPendingPurchaseData] = useState(null);
   const [priceDetails, setPriceDetails] = useState({});
 
-    useEffect(() => {
+  useEffect(() => {
     document.body.classList.add("image-scrollbar");
 
     return () => {
@@ -74,7 +74,7 @@ const Home = () => {
       );
     };
   }, []);
-  
+
   useEffect(() => {
     if (sliderRef) {
       if (isPlaying) {
@@ -88,6 +88,8 @@ const Home = () => {
   useEffect(() => {
     fetchdata();
   }, []);
+
+
 
   useEffect(() => {
     const fetchAllPriceDetails = async () => {
@@ -408,63 +410,16 @@ const Home = () => {
     if (!token) {
       // Store purchase intent in localStorage
       localStorage.setItem('purchaseIntent', JSON.stringify({ price_id, trail_days }));
-      toggleLoginPopup();
+      localStorage.setItem("returnUrl", window.location.pathname + window.location.search);
+      navigate('/registration');
       return;
     }
+
     setLoading(true);
     try {
-      let email = userEmail;
-      // console.log(email);
-      let Role = userRole
-      let is_front_created = isFrontCreated
-        ;
-      if (!email) {
-        const result = await getUserEmail();
-        console.log("testing");
-        console.log(result);
-        email = result.email;
-        Role = result.Role;
-        is_front_created = result.is_front_created;
-        if (!email) {
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Could not retrieve user email. Please try again.",
-          });
-          setLoading(false);
-          return;
-        }
-      }
-      console.log("AAAAAAAAAAAAAAAAAAAAAAA");
-      // console.log(8);
-      // console.log(Role !== 2);
-      // console.log(is_front_created);
-      // console.log(is_front_created === 0);
-      // console.log(8 !== 2 || is_front_created === 0);
-      console.log("BBBBBBBBBBBBBBBBBBB");
-
-      // if (Role !== 2) {
-      if (Role !== 2 || is_front_created === 0) {
-        Swal.fire({
-          icon: "warning",
-          title: "Access Denied",
-          // text: "You are not the right user to access this feature.",
-          // text: "You are not authenticate user.\n please logout and signup / login as company user.",
-          html: `You are not authenticate user.<br>
-                  Please logout and signup / login as company user.`,
-          confirmButtonText: "OK",
-        });
-        setLoading(false);
-        setUserRole(null);
-        setUserEmail(null);
-
-        return;
-      }
-
-      // Check if user has an active subscription
       Swal.fire({
-        title: "Checking subscription...",
-        text: "Please wait while we check your subscription status.",
+        title: "Checking status...",
+        text: "Please wait while we verify your account.",
         allowOutsideClick: false,
         showConfirmButton: false,
         didOpen: () => {
@@ -472,24 +427,21 @@ const Home = () => {
         },
       });
 
+      // Check if user already has an active subscription
       try {
         const subscriptionCheck = await Authapi.checkUserSubscription();
-
-        // Normalize subscription payload
         const subscription =
           subscriptionCheck?.subscription ||
           subscriptionCheck?.data?.subscription ||
           subscriptionCheck?.data ||
           null;
 
-        // Determine hasSubscription from multiple possible flags
         const hasSubscription =
           subscriptionCheck?.hasSubscription === true ||
           subscriptionCheck?.status === true ||
           subscriptionCheck?.data?.hasSubscription === true ||
           (!!subscription && !!subscription.user_id);
 
-        // Evaluate subscription validity (active or trial and not ended)
         const trialEndsAt =
           subscription?.trial_ends_at ||
           subscription?.trial_end ||
@@ -499,20 +451,24 @@ const Home = () => {
 
         const today = new Date();
         const isTrialActive =
-          trialEndsAt && !isNaN(new Date(trialEndsAt).getTime()) && new Date(trialEndsAt) >= today;
+          trialEndsAt &&
+          !isNaN(new Date(trialEndsAt).getTime()) &&
+          new Date(trialEndsAt) >= today;
         const isStatusActive =
           stripeStatus === "active" ||
           stripeStatus === "trialing" ||
           stripeStatus === "active_trialing";
         const isEnded =
-          endsAt && !isNaN(new Date(endsAt).getTime()) && new Date(endsAt) <= today;
+          endsAt &&
+          !isNaN(new Date(endsAt).getTime()) &&
+          new Date(endsAt) <= today;
 
-        const hasValidSubscription = hasSubscription && (isTrialActive || isStatusActive) && !isEnded;
+        const hasValidSubscription =
+          hasSubscription && (isTrialActive || isStatusActive) && !isEnded;
 
         if (hasValidSubscription) {
-          // User has active subscription or active trial; decide where to resume based on existing data
+          // Decide where to resume based on existing data
           let nextPath = "/company";
-
           try {
             const [companyRes, contractRes, depotRes] = await Promise.allSettled([
               Authapi.getusercompanydetail(),
@@ -522,7 +478,9 @@ const Home = () => {
 
             const isOk = (res) =>
               res &&
-              (res.status === 200 || res.status === true || res.status === "success");
+              (res.status === 200 ||
+                res.status === true ||
+                res.status === "success");
 
             const hasCompany =
               companyRes.status === "fulfilled" &&
@@ -568,16 +526,9 @@ const Home = () => {
           return;
         }
       } catch (subscriptionError) {
-        // If subscription check fails (e.g., user doesn't have subscription), continue to payment
         console.log("No active subscription found, proceeding to payment");
-        // Close the loading dialog and continue to payment flow
-        Swal.close();
       }
 
-      // Ensure any previous loading dialog is closed before showing the next one
-      Swal.close();
-
-      // User doesn't have subscription, proceed with Stripe checkout
       Swal.fire({
         title: "Processing...",
         text: "Please wait while we set up your payment.",
@@ -589,7 +540,11 @@ const Home = () => {
       });
 
       const response = await Authapi.createsub(price_id, trail_days);
-      window.location.href = response.checkout_url;
+      if (response && response.checkout_url) {
+        window.location.href = response.checkout_url;
+      } else {
+        throw new Error("Invalid response from server");
+      }
     } catch (error) {
       console.error("Purchase Error:", error);
       Swal.fire({

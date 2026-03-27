@@ -12,6 +12,8 @@ import TopNav from "./Wa-Frontend/TopNav";
 import Footer from "./Wa-Frontend/Footer";
 import MenuPage from "./components/MenuPage";
 import NoPage from "./NoPage";
+// import ProductRegistration from "./Wa-Frontend/OurProducts/ProductRegistration";
+import RegistrationPage from "./components/Login/RegistrationPage";
 
 // Protected pages
 import Company from "./components/companypage/Company";
@@ -86,6 +88,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/menu/:menuName" element={<MenuPage />} />
+        {/* <Route path="/registration" element={<ProductRegistration />} /> */}
+        <Route path="/registration" element={<RegistrationPage />} />
 
         <Route path="/company" element={<ProtectedRoute><Company /></ProtectedRoute>} />
         <Route path="/contract" element={<ProtectedRoute><Contract /></ProtectedRoute>} />

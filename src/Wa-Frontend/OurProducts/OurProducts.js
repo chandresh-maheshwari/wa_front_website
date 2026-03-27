@@ -1,11 +1,11 @@
-import plushicon from '../Our Products/Ourproductimages/plush.png';
-import righticon from '../Our Products/Ourproductimages/righticon.png';
+import plushicon from '../OurProducts/Ourproductimages/plush.png';
+import righticon from '../OurProducts/Ourproductimages/righticon.png';
 import { useNavigate } from "react-router-dom";
 
 
 const OurProducts = () => {
 
-     const navigate = useNavigate();
+    const navigate = useNavigate();
     const cardTextStyle = {
         display: 'flex',
         alignItems: 'center',
@@ -129,7 +129,7 @@ const OurProducts = () => {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button type="button" onClick={() => navigate("/Contact")} className="btn sky-blue-btn">Contact Us</button>
+                            <button type="button" onClick={() => navigate("/registration")} className="btn sky-blue-btn">Register Now</button>
                         </div>
                     </div>
 
